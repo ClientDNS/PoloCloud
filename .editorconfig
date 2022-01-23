@@ -1,0 +1,22 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+charset = utf-8
+
+[*.{java, kt, kts}]
+indent_style = space
+indent_size = 4
+
+[*.{kt, kts}]
+ij_kotlin_imports_layout = *
+
+[*.{yml, yaml}]
+indent_style = space
+indent_size = 4
+
+[*{.xml, json}]
+indent_style = space
+indent_size = 4
