@@ -24,7 +24,7 @@ public class DatabaseSqlImpl implements IDatabase {
     @Override
     public void connect() {
         connection = DriverManager.getConnection("jdbc:mysql://37.114.60.81:3306"
-            + "/cloudsystem?useUnicode=true&autoReconnect=true", "outroddet_", "BgiPID8KkS");
+            + "/cloudsystem?useUnicode=true&autoReconnect=true", "marco", "1Marco2Polo3");
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
             " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, version VARCHAR(100))");
