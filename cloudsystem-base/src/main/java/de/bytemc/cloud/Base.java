@@ -36,11 +36,22 @@ public class Base extends CloudAPI {
         this.serviceManager = new ServiceManager();
         this.node = new BaseNode();
 
+        //registered commands
+        getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
+
         //print finish successfully message
         getLoggerProvider().logMessage("               ", LogType.EMPTY);
         getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
         getLoggerProvider().logMessage("               ", LogType.EMPTY);
 
+        //add a shutdown hook for fast closes
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
+
+    }
+
+    public void onShutdown() {
+        this.node.shutdownConnection();
+        this.databaseManager.shutdown();
     }
 
 }
