@@ -6,6 +6,8 @@ import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.DefaultCommandSender;
+import de.bytemc.cloud.database.IDatabaseManager;
+import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.services.ServiceManager;
@@ -18,21 +20,27 @@ public class Base extends CloudAPI {
     @Getter private final DefaultCommandSender commandSender = new DefaultCommandSender();
 
     private BaseNode node;
+    private IDatabaseManager databaseManager;
     private IGroupManager groupManager;
     private IServiceManager serviceManager;
 
     public Base() {
         super(CloudAPITypes.NODE);
 
+        instance = this;
         getLoggerProvider().logMessage("§7Cloudsystem » §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
         getLoggerProvider().logMessage(" ", LogType.EMPTY);
 
-
+        this.databaseManager = new DatabaseManager();
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
         this.node = new BaseNode();
 
-        instance = this;
+        //print finish successfully message
+        getLoggerProvider().logMessage("               ", LogType.EMPTY);
+        getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
+        getLoggerProvider().logMessage("               ", LogType.EMPTY);
+
     }
 
 }
