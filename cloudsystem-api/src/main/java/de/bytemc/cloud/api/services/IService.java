@@ -13,6 +13,8 @@ public interface IService {
 
     IServiceGroup getServiceGroup();
 
+    void setServiceState(ServiceState serviceState);
+
     ServiceState getServiceState();
 
 }
