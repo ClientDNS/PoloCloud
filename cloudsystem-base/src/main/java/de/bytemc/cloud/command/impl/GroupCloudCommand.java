@@ -61,6 +61,8 @@ public class GroupCloudCommand extends CloudCommand {
             }
             groupManager.removeServiceGroup(groupManager.getServiceGroupByNameOrNull(name));
             log.logMessage("The group '§b" + name + "§7' is now deleted.");
+
+            //TODO STOP ALL ONLINE SERVICES
             return;
         }
 
