@@ -17,16 +17,17 @@ public class BaseNode extends AbstractNodeClustering {
 
     @Override
     public void onNodeConnected(ClusteringConnectedClient clusteringConnectedClient) {
-
+        CloudAPI.getInstance().getLoggerProvider().logMessage("The node '§b" + clusteringConnectedClient.getName() + "§7' logged in the cluster.");
     }
 
     @Override
     public void onNodeDisconnected(ClusteringConnectedClient clusteringConnectedClient) {
-
+        CloudAPI.getInstance().getLoggerProvider().logMessage("The node '§b" + clusteringConnectedClient.getName() + "§7' leaves in the cluster.");
     }
 
     @Override
     public void onServiceConnected(ClusteringConnectedClient clusteringConnectedClient) {
+
 
     }
 
