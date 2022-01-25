@@ -20,4 +20,11 @@ public class SimpleGroupManager extends AbstractGroupManager {
         Base.getInstance().getDatabaseManager().getDatabase().addGroup(serviceGroup);
         super.addServiceGroup(serviceGroup);
     }
+
+
+    @Override
+    public void removeServiceGroup(IServiceGroup serviceGroup) {
+        Base.getInstance().getDatabaseManager().getDatabase().removeGroup(serviceGroup);
+        super.removeServiceGroup(serviceGroup);
+    }
 }
