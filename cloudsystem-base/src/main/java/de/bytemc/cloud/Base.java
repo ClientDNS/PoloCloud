@@ -11,6 +11,7 @@ import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.services.ServiceManager;
+import de.bytemc.cloud.services.queue.QueueService;
 import lombok.Getter;
 
 @Getter
@@ -46,6 +47,8 @@ public class Base extends CloudAPI {
 
         //add a shutdown hook for fast closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
+
+        new QueueService();
 
     }
 
