@@ -55,6 +55,7 @@ public class Base extends CloudAPI {
     public void onShutdown() {
         this.node.shutdownConnection();
         this.databaseManager.shutdown();
+        System.exit(-1);
     }
 
 }
