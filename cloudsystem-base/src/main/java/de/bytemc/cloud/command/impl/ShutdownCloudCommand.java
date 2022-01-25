@@ -13,7 +13,7 @@ public class ShutdownCloudCommand extends CloudCommand {
 
     @Override
     public void execute(ICommandSender sender, String[] args) {
-        ((Base) Base.getInstance()).onShutdown();
+        Base.getInstance().onShutdown();
     }
 
 
