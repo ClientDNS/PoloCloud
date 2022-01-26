@@ -28,6 +28,9 @@ public class ProcessServiceStarter {
 
         String jar = service.getServiceGroup().getGameServerVersion().getJar();
         FileUtils.copyFile(new File("storage/jars/" + jar), new File("tmp/" + service.getName() + "/" + jar));
+
+        //copy plugin
+        FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File("tmp/" + service.getName() + "/plugins/plugin.jar"));
     }
 
     @SneakyThrows
