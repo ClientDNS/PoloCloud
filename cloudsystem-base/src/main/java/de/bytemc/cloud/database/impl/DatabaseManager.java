@@ -3,6 +3,7 @@ package de.bytemc.cloud.database.impl;
 import de.bytemc.cloud.database.IDatabase;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.sql.DatabaseSqlImpl;
+import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.Getter;
 
 public class DatabaseManager implements IDatabaseManager {
@@ -15,8 +16,8 @@ public class DatabaseManager implements IDatabaseManager {
         this.database.connect();
     }
 
-    public void shutdown(){
-        this.database.disconnect();
+    public ICommunicationPromise<Void> shutdown(){
+        return this.database.disconnect();
     }
 
 
