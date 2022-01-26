@@ -1,6 +1,8 @@
 package de.bytemc.cloud.node;
 
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.services.IService;
+import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.network.cluster.impl.AbstractNodeClustering;
 import de.bytemc.network.cluster.impl.ClusteringConnectedClient;
 
@@ -29,12 +31,15 @@ public class BaseNode extends AbstractNodeClustering {
 
     @Override
     public void onServiceConnected(ClusteringConnectedClient clusteringConnectedClient) {
+        //set online
+        IService service = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(clusteringConnectedClient.getName());
+        service.setServiceState(ServiceState.ONLINE);
 
-
+        CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7' connect to the cluster. (" + service.getServiceState().getName() + "§7)");
     }
 
     @Override
     public void onServiceDisconnected(ClusteringConnectedClient clusteringConnectedClient) {
-
+        CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7' disconnect.");
     }
 }
