@@ -14,7 +14,7 @@ public class ServiceGroupExecutePacket implements IPacket {
     private IServiceGroup group;
     private executor executorType;
 
-    private enum executor {
+    public enum executor {
         REMOVE, CREATE;
     }
 
