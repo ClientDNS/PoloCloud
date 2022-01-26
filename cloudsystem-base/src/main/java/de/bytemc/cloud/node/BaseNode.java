@@ -10,6 +10,8 @@ public class BaseNode extends AbstractNodeClustering {
     public BaseNode() {
         //TODO place in configuration
         super("node-1");
+
+        //TODO CONFIG
         connectEstablish("127.0.0.1", 9943)
             .addResultListener(unused -> CloudAPI.getInstance().getLoggerProvider().logMessage("§7The node clustering is§a successfully §7started."))
             .addFailureListener(throwable -> throwable.printStackTrace());
