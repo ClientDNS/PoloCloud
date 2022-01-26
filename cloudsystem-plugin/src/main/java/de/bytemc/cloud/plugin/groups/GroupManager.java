@@ -8,7 +8,6 @@ public class GroupManager extends AbstractGroupManager {
 
     public GroupManager() {
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupCacheUpdatePacket.class, (ctx, packet) -> {
-            System.out.println("packet packet packet");
             setAllCachedServiceGroups(packet.getGroups());
         });
     }
