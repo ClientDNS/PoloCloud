@@ -3,6 +3,7 @@ package de.bytemc.cloud.api.services;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.network.promise.ICommunicationPromise;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,5 +27,7 @@ public interface IServiceManager {
     default IService getServiceByNameOrNull(String name){
         return getAllCachedServices().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findAny().orElse(null);
     }
+
+    ICommunicationPromise<IService> startService(IService service);
 
 }
