@@ -10,7 +10,7 @@ public class PluginClient extends NodeClient {
     public PluginClient(String clientName, String hostname, int port) {
         super(clientName, NetworkType.SERVICE);
 
-        connectEstablishment(hostname, port).addFailureListener(it -> {
+        connectEstablishment(hostname, port).addResultListener(it -> {
             CloudAPI.getInstance().getLoggerProvider().logMessage("The service start successfully network service.");
         }).addFailureListener(it -> it.printStackTrace());
     }
