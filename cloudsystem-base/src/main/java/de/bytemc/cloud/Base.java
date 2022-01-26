@@ -5,6 +5,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
+import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.DefaultCommandSender;
 import de.bytemc.cloud.database.IDatabaseManager;
@@ -59,6 +60,7 @@ public class Base extends CloudAPI {
         CloudAPI.getInstance().getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
         ICommunicationPromise.combineAll(Lists.newArrayList(node.shutdownConnection(), databaseManager.shutdown())).addCompleteListener(it -> System.exit(0)).addResultListener(unused -> {
             CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+            ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().shutdownReading();
         });
     }
 
