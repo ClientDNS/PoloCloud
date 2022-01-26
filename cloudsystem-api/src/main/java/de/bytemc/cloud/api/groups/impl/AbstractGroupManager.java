@@ -4,13 +4,14 @@ import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Getter
+@Getter @Setter
 public abstract class AbstractGroupManager implements IGroupManager {
 
-    private final List<IServiceGroup> allCachedServiceGroups = Lists.newArrayList();
+    private List<IServiceGroup> allCachedServiceGroups = Lists.newArrayList();
 
     @Override
     public void addServiceGroup(IServiceGroup serviceGroup) {
