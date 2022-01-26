@@ -40,4 +40,23 @@ public class SimpleService implements IService {
        if(process != null && process.isAlive()) process.destroy();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimpleService that = (SimpleService) o;
+
+        if (serviceID != that.serviceID) return false;
+        if (port != that.port) return false;
+        return group.equals(that.group);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = group.hashCode();
+        result = 31 * result + serviceID;
+        result = 31 * result + port;
+        return result;
+    }
 }
