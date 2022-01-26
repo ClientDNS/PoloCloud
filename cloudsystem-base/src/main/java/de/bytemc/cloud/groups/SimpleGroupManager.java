@@ -4,27 +4,39 @@ import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.impl.AbstractGroupManager;
+import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
+import de.bytemc.cloud.database.IDatabase;
+import de.bytemc.cloud.node.BaseNode;
 
 import java.util.stream.Collectors;
 
 public class SimpleGroupManager extends AbstractGroupManager {
 
+    private IDatabase database;
+    private BaseNode baseNode;
+
     public SimpleGroupManager(){
-        getAllCachedServiceGroups().addAll(Base.getInstance().getDatabaseManager().getDatabase().getAllServiceGroups());
-        CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b" +
-            String.join(", ", getAllCachedServiceGroups().stream().map(it -> it.getGroup()).collect(Collectors.joining())));
+
+        this.database = Base.getInstance().getDatabaseManager().getDatabase();
+        this.baseNode = Base.getInstance().getNode();
+
+        //loading all database groups
+        getAllCachedServiceGroups().addAll(database.getAllServiceGroups());
+        CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b" + String.join(", ", getAllCachedServiceGroups().stream().map(it -> it.getGroup()).collect(Collectors.joining())));
     }
 
     @Override
     public void addServiceGroup(IServiceGroup serviceGroup) {
-        Base.getInstance().getDatabaseManager().getDatabase().addGroup(serviceGroup);
+        database.addGroup(serviceGroup);
+        baseNode.sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.CREATE));
         super.addServiceGroup(serviceGroup);
     }
 
 
     @Override
     public void removeServiceGroup(IServiceGroup serviceGroup) {
-        Base.getInstance().getDatabaseManager().getDatabase().removeGroup(serviceGroup);
+        database.removeGroup(serviceGroup);
+        baseNode.sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.REMOVE));
         super.removeServiceGroup(serviceGroup);
     }
 }
