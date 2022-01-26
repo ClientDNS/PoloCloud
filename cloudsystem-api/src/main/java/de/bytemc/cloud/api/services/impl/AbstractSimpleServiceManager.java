@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class AbstractSimpleServiceManager implements IServiceManager {
+public abstract class AbstractSimpleServiceManager implements IServiceManager {
 
     private final List<IService> allCachedServices = Lists.newArrayList();
 
