@@ -1,10 +1,13 @@
 package de.bytemc.cloud.services.process;
 
+import de.bytemc.cloud.api.common.ConfigSplitSpacer;
+import de.bytemc.cloud.api.common.ConfigurationFileEditor;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.process.args.ProcessJavaArgs;
 import de.bytemc.cloud.services.process.file.PropertyFileWriter;
+import de.bytemc.cloud.services.properties.BungeeProperties;
 import de.bytemc.network.promise.CommunicationPromise;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.SneakyThrows;
@@ -37,6 +40,18 @@ public class ProcessServiceStarter {
 
         //write property for identify service
         new PropertyFileWriter(service);
+
+        //check properties and modify
+        if(service.getServiceGroup().getGameServerVersion().isProxy()) {
+            //TODO OPTIMIZE
+            var file = new File("tmp/" + service.getName() + "/config.yml");
+            if(file.exists()) {
+                var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
+                editor.setValue("host", "0.0.0.0:" + service.getPort());
+                editor.saveFile();
+            }else new BungeeProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
+        }
+        //TODO SPIGOT
     }
 
     @SneakyThrows
