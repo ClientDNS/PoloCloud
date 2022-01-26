@@ -4,6 +4,7 @@ import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.process.args.ProcessJavaArgs;
+import de.bytemc.cloud.services.process.file.PropertyFileWriter;
 import de.bytemc.network.promise.CommunicationPromise;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.SneakyThrows;
@@ -33,17 +34,20 @@ public class ProcessServiceStarter {
 
         //copy plugin
         FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File("tmp/" + service.getName() + "/plugins/plugin.jar"));
+
+        //write property for identify service
+        new PropertyFileWriter(service);
     }
 
     @SneakyThrows
     public ICommunicationPromise<IService> start() {
         var communicationPromise = new CommunicationPromise<IService>();
-        String[] command = ProcessJavaArgs.args(service);
+        var command = ProcessJavaArgs.args(service);
 
-        ProcessBuilder processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + service.getName() + "/"));
-        Process process = processBuilder.start();
+        var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + service.getName() + "/"));
+        var process = processBuilder.start();
 
-        Thread thread = new Thread(() -> {
+        var thread = new Thread(() -> {
             ((SimpleService) service).setProcess(process);
             communicationPromise.setSuccess(service);
 

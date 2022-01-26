@@ -49,6 +49,8 @@ public class Base extends CloudAPI {
         getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
         getLoggerProvider().logMessage("               ", LogType.EMPTY);
 
+        ((SimpleLoggerProvider)CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
+
         //add a shutdown hook for fast closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
 

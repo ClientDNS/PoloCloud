@@ -9,6 +9,7 @@ import de.bytemc.cloud.plugin.console.DefaultCommandSender;
 import de.bytemc.cloud.plugin.groups.GroupManager;
 import de.bytemc.cloud.plugin.network.PluginClient;
 import de.bytemc.cloud.plugin.services.ServiceManager;
+import de.bytemc.cloud.plugin.services.file.PluginPropertyFileReader;
 import lombok.Getter;
 
 @Getter
@@ -22,10 +23,12 @@ public class CloudPlugin extends CloudAPI {
     public CloudPlugin() {
         super(CloudAPITypes.SERVICE);
 
+        var property = new PluginPropertyFileReader();
+
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager();
 
-        this.pluginClient = new PluginClient("pxt-1", "127.0.0.1", 9943);
+        this.pluginClient = new PluginClient(property.getService(), property.getHostname(), property.getPort());
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }

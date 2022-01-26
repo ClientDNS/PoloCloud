@@ -1,5 +1,6 @@
 package de.bytemc.cloud.services.queue;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.IService;
@@ -11,21 +12,22 @@ public class QueueService {
     private static final int MAX_BOOTABLE_SERVICES = 1;
 
     public QueueService() {
-        CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream().filter(it -> getAmountOfGroupServices(it) <= it.getMinOnlineService()).forEach(it -> {
-            IService service = it.newService(getPossibleServiceIDByGroup(it));
-            CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
-            CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
-            //TODO change
-            ((ServiceManager)CloudAPI.getInstance().getServiceManager()).start(service);
-        });
+        CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups()
+            .stream()
+            .filter(it -> getAmountOfGroupServices(it) <= it.getMinOnlineService())
+            .filter(it -> it.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName()))
+            .forEach(it -> {
+                IService service = it.newService(getPossibleServiceIDByGroup(it));
+                CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
+                CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
+                //TODO
+                ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(service);
+            });
         check();
     }
 
     public void check() {
         if(minBootableServiceExists()) return;
-
-
-
     }
 
 
@@ -51,6 +53,4 @@ public class QueueService {
     private boolean isServiceIDAlreadyExists(final IServiceGroup serviceGroup, int id) {
         return CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(serviceGroup).stream().anyMatch(it -> id == it.getServiceID());
     }
-
-
 }
