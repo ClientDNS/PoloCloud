@@ -1,6 +1,7 @@
 package de.bytemc.cloud.database;
 
 import de.bytemc.cloud.api.groups.IServiceGroup;
+import de.bytemc.network.promise.ICommunicationPromise;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface IDatabase {
 
     void connect();
 
-    void disconnect();
+    ICommunicationPromise<Void> disconnect();
 
     List<IServiceGroup> getAllServiceGroups();
 
