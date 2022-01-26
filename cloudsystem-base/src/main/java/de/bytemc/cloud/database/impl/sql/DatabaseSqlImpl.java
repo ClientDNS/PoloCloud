@@ -7,6 +7,8 @@ import de.bytemc.cloud.api.groups.impl.ServiceGroup;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.cloud.database.IDatabase;
 import de.bytemc.cloud.database.impl.DatabaseFunction;
+import de.bytemc.network.promise.CommunicationPromise;
+import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.SneakyThrows;
 
 import java.sql.Connection;
@@ -34,8 +36,11 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @SneakyThrows
     @Override
-    public void disconnect() {
+    public ICommunicationPromise<Void> disconnect() {
+        ICommunicationPromise<Void> shutdownPromise = new CommunicationPromise<>();
         if (connection != null) this.connection.close();
+        shutdownPromise.setSuccess(null);
+        return shutdownPromise;
     }
 
     @Override
