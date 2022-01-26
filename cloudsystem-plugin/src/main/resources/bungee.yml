@@ -1,4 +1,5 @@
-name: Cloudplugin
+name: CloudPlugin
+api-version: 1.17
 version: 1.0
 author: HttpMarco
-main: de.bytemc.cloud.plugin.bootstrap.ProxyBootstrap
+main: de.bytemc.cloud.plugin.bootstrap.proxy.ProxyBootstrap

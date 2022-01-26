@@ -25,7 +25,7 @@ public interface IServiceManager {
     }
 
     default IService getServiceByNameOrNull(String name){
-        return getAllCachedServices().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+        return getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findAny().orElse(null);
     }
 
     ICommunicationPromise<IService> startService(IService service);
