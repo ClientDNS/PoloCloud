@@ -25,7 +25,7 @@ public class CloudPlugin extends CloudAPI {
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager();
 
-        this.pluginClient = new PluginClient("pxt-1", "127.0.0.1", 8876);
+        this.pluginClient = new PluginClient("pxt-1", "127.0.0.1", 9943);
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }
