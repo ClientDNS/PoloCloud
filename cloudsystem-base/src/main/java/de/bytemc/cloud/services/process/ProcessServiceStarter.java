@@ -20,6 +20,8 @@ public class ProcessServiceStarter {
         this.service = service;
         this.service.setServiceState(ServiceState.STARTING);
 
+        this.service.getServiceGroup().getGameServerVersion().download();
+
         //create tmp file
         FileUtils.mkdir("tmp/" + service.getName());
 

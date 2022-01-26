@@ -13,6 +13,7 @@ public class QueueService {
     public QueueService() {
         CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream().filter(it -> getAmountOfGroupServices(it) <= it.getMinOnlineService()).forEach(it -> {
             IService service = it.newService(getPossibleServiceIDByGroup(it));
+            CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
             CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
             //TODO change
             ((ServiceManager)CloudAPI.getInstance().getServiceManager()).start(service);
