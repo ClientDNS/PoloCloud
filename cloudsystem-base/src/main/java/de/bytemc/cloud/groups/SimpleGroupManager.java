@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class SimpleGroupManager extends AbstractGroupManager {
 
     public SimpleGroupManager(){
-        Base.getInstance().getDatabaseManager().getDatabase().getAllServiceGroups().forEach(it -> addServiceGroup(it));
+        getAllCachedServiceGroups().addAll(Base.getInstance().getDatabaseManager().getDatabase().getAllServiceGroups());
         CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b" +
             String.join(", ", getAllCachedServiceGroups().stream().map(it -> it.getGroup()).collect(Collectors.joining())));
     }
