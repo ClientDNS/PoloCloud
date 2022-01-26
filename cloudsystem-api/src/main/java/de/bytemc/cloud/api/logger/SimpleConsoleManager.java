@@ -21,7 +21,6 @@ public class SimpleConsoleManager {
         this.lineReader = DefaultLineReader.read().preparedTerminal().addOptions().complete();
         this.loggerProvider = loggerProvider;
 
-        start();
         loggerProvider.clearConsole();
     }
 
