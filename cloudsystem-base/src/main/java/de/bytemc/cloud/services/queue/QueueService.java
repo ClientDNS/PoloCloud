@@ -1,11 +1,10 @@
 package de.bytemc.cloud.services.queue;
 
-import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
-import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.services.ServiceManager;
 
 public class QueueService {
 
@@ -15,12 +14,15 @@ public class QueueService {
         CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream().filter(it -> getAmountOfGroupServices(it) <= it.getMinOnlineService()).forEach(it -> {
             IService service = it.newService(getPossibleServiceIDByGroup(it));
             CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
+            //TODO change
+            ((ServiceManager)CloudAPI.getInstance().getServiceManager()).start(service);
         });
         check();
     }
 
     public void check() {
         if(minBootableServiceExists()) return;
+
 
 
     }
@@ -37,12 +39,6 @@ public class QueueService {
 
     public int getAmountOfGroupServices(IServiceGroup serviceGroup) {
         return (int) CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().filter(it -> it.getServiceGroup().equals(serviceGroup)).count();
-    }
-
-    public void startService(IService service) {
-        service.setServiceState(ServiceState.STARTING);
-
-        //TODO
     }
 
     private int getPossibleServiceIDByGroup(final IServiceGroup serviceGroup){
