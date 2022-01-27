@@ -21,6 +21,4 @@ public interface IServiceGroup {
 
     GameServerVersion getGameServerVersion();
 
-    IService newService(int id);
-
 }
