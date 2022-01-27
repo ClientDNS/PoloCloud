@@ -36,10 +36,6 @@ public class SimpleService implements IService {
         return CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
     }
 
-    public void shutdown() {
-       if(process != null && process.isAlive()) process.destroy();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
