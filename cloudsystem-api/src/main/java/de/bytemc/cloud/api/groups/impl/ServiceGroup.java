@@ -18,7 +18,4 @@ public class ServiceGroup implements IServiceGroup {
     private boolean staticService;
     private GameServerVersion gameServerVersion;
 
-    public IService newService(int id){
-        return new SimpleService(group, id, 25565);
-    }
 }
