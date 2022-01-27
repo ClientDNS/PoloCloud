@@ -22,12 +22,15 @@ public class PluginPropertyFileReader {
     @SneakyThrows
     public PluginPropertyFileReader() {
         var parser = new JsonParser();
-        var data = (JsonObject) parser.parse(new FileReader("property.json"));
+        FileReader fileReader = new FileReader("property.json");
+        var data = (JsonObject) parser.parse(fileReader);
 
         this.hostname = data.get("service.node.hostname").getAsString();
         this.port = data.get("service.node.port").getAsInt();
         this.service = data.get("service.name").getAsString();
         this.node = data.get("service.node").getAsString();
+
+        fileReader.close();
     }
 
 }
