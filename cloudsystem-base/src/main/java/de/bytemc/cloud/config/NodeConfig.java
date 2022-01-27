@@ -31,7 +31,7 @@ public class NodeConfig {
             FileReader fileReader = new FileReader(file.getPath());
             var data = (JsonObject) parser.parse(fileReader);
 
-            return new NodeConfig(data.get("current.node.name").getAsString(), data.get("service.node.hostname").getAsString(), data.get("service.node.port").getAsInt());
+            return new NodeConfig(data.get("current.node.name").getAsString(), data.get("current.node.hostname").getAsString(), data.get("current.node.port").getAsInt());
         } else {
             var company = new JsonObject();
             company.addProperty("current.node.name", "node-1");
