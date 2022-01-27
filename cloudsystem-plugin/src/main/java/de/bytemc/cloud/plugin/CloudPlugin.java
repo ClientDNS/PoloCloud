@@ -16,19 +16,25 @@ import lombok.Getter;
 public class CloudPlugin extends CloudAPI {
 
     private final DefaultCommandSender commandSender = new DefaultCommandSender();
+
+    @Getter private static CloudPlugin instance;
+
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
-    private final PluginClient pluginClient;
+    private PluginClient pluginClient;
+    private IPlugin plugin;
 
-    public CloudPlugin() {
+    public CloudPlugin(IPlugin plugin) {
         super(CloudAPITypes.SERVICE);
 
+        instance = this;
+
+        this.plugin = plugin;
         var property = new PluginPropertyFileReader();
 
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager();
-
-        this.pluginClient = new PluginClient(property.getService(), property.getHostname(), property.getPort());
+        pluginClient = new PluginClient(property.getService(), property.getHostname(), property.getPort());
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }
