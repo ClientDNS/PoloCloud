@@ -1,0 +1,5 @@
+name: CloudPlugin
+api-version: 1.17
+version: 1.0
+author: HttpMarco
+main: de.bytemc.cloud.plugin.bootstrap.spigot.SpigotBootstrap
