@@ -20,10 +20,6 @@ public interface IServiceManager {
         return getAllCachedServices().stream().filter(it -> it.getServiceState() == serviceState).collect(Collectors.toList());
     }
 
-    default void shutdownAllServices(){
-        getAllCachedServices().forEach(it -> ((SimpleService) it).shutdown());
-    }
-
     default IService getServiceByNameOrNull(String name){
         return getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findAny().orElse(null);
     }
