@@ -4,6 +4,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.network.cluster.impl.AbstractNodeClustering;
 import de.bytemc.network.cluster.impl.ClusteringConnectedClient;
 import lombok.Getter;
@@ -14,14 +15,12 @@ public class BaseNode extends AbstractNodeClustering {
     private String hostname;
     private int port;
 
-    public BaseNode() {
-        //TODO place in configuration
-        super("node-1");
+    public BaseNode(NodeConfig nodeConfig) {
+        super(nodeConfig.getNodeName());
 
-        this.hostname = "127.0.0.1";
-        this.port = 9943;
+        this.hostname = nodeConfig.getHostname();
+        this.port = nodeConfig.getPort();
 
-        //TODO CONFIG
         connectEstablish(hostname, port).addResultListener(unused -> CloudAPI.getInstance().getLoggerProvider().logMessage("§7The node clustering is§a successfully §7started."))
             .addFailureListener(throwable -> throwable.printStackTrace());
     }

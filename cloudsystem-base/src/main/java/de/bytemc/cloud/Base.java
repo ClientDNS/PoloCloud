@@ -3,11 +3,13 @@ package de.bytemc.cloud;
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.common.GsonFactory;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.DefaultCommandSender;
+import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.groups.SimpleGroupManager;
@@ -42,7 +44,7 @@ public class Base extends CloudAPI {
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
         this.groupTemplateService = new GroupTemplateService();
-        this.node = new BaseNode();
+        this.node = new BaseNode(NodeConfig.read());
 
         //registered commands
         getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
