@@ -1,9 +1,12 @@
 package de.bytemc.cloud.services.properties;
 
+import lombok.Getter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+@Getter
 public abstract class ServiceProperties {
 
     private File file;
@@ -36,14 +39,4 @@ public abstract class ServiceProperties {
             } catch (IOException ignored) { }
         }
     }
-
-    public File getFile() {
-        return file;
-    }
-
-
-    public int getPort() {
-        return port;
-    }
-
 }
