@@ -4,8 +4,10 @@ import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.IService;
+import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.ServiceManager;
+import de.bytemc.cloud.services.ports.PortHandler;
 
 public class QueueService {
 
@@ -17,7 +19,7 @@ public class QueueService {
             .filter(it -> getAmountOfGroupServices(it) <= it.getMinOnlineService())
             .filter(it -> it.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName()))
             .forEach(it -> {
-                IService service = it.newService(getPossibleServiceIDByGroup(it));
+                IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it), PortHandler.getNextPort(it));
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
                 //TODO
