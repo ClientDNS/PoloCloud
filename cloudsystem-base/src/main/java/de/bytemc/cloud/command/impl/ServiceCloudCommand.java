@@ -6,13 +6,13 @@ import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IService;
-import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.services.ServiceManager;
 
 public class ServiceCloudCommand extends CloudCommand {
 
     public ServiceCloudCommand() {
-        super("service", "Manage services", ExecutorType.CONSOLE);
+        super("service", "Manage services", ExecutorType.CONSOLE, "ser");
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ServiceCloudCommand extends CloudCommand {
                 return;
             }
 
-            ((SimpleService) service).shutdown();
+            ((ServiceManager)CloudAPI.getInstance().getServiceManager()).shutdownService(service);
             log.logMessage("The service '§b"+ service.getName() + "§7' is now stopped.");
             //TODO CHECK QUEUE
             return;
