@@ -41,10 +41,7 @@ public class GroupCloudCommand extends CloudCommand {
                 serviceGroup.getGameServerVersion().download();
 
                 log.logMessage("The group '§b" + name + "§7' is now registered and online.");
-
-                //TODO CHECK
-                //((AbstractSimpleServiceManager) CloudAPI.getInstance().getServiceManager()).addMinServicesByGroup(serviceGroup);
-
+                //TODO check queue
                 return;
             }catch (NumberFormatException exception){}
             log.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
