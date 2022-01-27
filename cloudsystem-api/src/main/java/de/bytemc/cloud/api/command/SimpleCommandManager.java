@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -21,7 +22,10 @@ public class SimpleCommandManager implements CommandManager {
     public boolean execute(String command){
         List<String> args = Lists.newArrayList(command.split(" "));
         if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
-           CloudCommand cloudCommand = cachedCloudCommands.stream().filter(it -> it.getCommandName().equalsIgnoreCase(args.get(0))).findFirst().orElse(null);
+           CloudCommand cloudCommand = cachedCloudCommands.stream()
+               .filter(it -> it.getCommandName().equalsIgnoreCase(args.get(0)) || Arrays.stream(it.getAlias()).anyMatch(s -> s.equalsIgnoreCase(args.get(0))))
+               .findFirst()
+               .orElse(null);
             if (cloudCommand == null) return false;
             args.remove(0);
             cloudCommand.execute(CloudAPI.getInstance().getCommandSender(), args.toArray(new String[]{}));
