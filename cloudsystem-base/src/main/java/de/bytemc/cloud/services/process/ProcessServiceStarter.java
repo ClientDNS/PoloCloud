@@ -1,5 +1,6 @@
 package de.bytemc.cloud.services.process;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
@@ -29,10 +30,10 @@ public class ProcessServiceStarter {
         this.service.getServiceGroup().getGameServerVersion().download();
 
         //create tmp file
-        FileUtils.mkdir("tmp/" + service.getName());
+        FileUtils.forceMkdir(new File("tmp/" + service.getName() + "/"));
 
         //load all current group templates
-        //service.getServiceGroup().getTemplate()
+        Base.getInstance().getGroupTemplateService().copyTemplates(service);
 
         String jar = service.getServiceGroup().getGameServerVersion().getJar();
         FileUtils.copyFile(new File("storage/jars/" + jar), new File("tmp/" + service.getName() + "/" + jar));
@@ -72,7 +73,7 @@ public class ProcessServiceStarter {
                 process.waitFor();
 
                 //stop service
-                FileUtils.deleteDirectory("tmp/" + service.getName() + "/");
+                FileUtils.deleteDirectory(new File("tmp/" + service.getName() + "/"));
                 CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + service.getName() + "§7' is now successfully offline.");
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().remove(service);
 
