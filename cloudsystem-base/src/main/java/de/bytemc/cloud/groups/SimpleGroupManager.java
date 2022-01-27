@@ -13,12 +13,10 @@ import java.util.stream.Collectors;
 public class SimpleGroupManager extends AbstractGroupManager {
 
     private IDatabase database;
-    private BaseNode baseNode;
 
     public SimpleGroupManager(){
 
         this.database = Base.getInstance().getDatabaseManager().getDatabase();
-        this.baseNode = Base.getInstance().getNode();
 
         //loading all database groups
         getAllCachedServiceGroups().addAll(database.getAllServiceGroups());
@@ -28,7 +26,7 @@ public class SimpleGroupManager extends AbstractGroupManager {
     @Override
     public void addServiceGroup(IServiceGroup serviceGroup) {
         database.addGroup(serviceGroup);
-        baseNode.sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.CREATE));
+        Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.CREATE));
         super.addServiceGroup(serviceGroup);
     }
 
@@ -36,7 +34,7 @@ public class SimpleGroupManager extends AbstractGroupManager {
     @Override
     public void removeServiceGroup(IServiceGroup serviceGroup) {
         database.removeGroup(serviceGroup);
-        baseNode.sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.REMOVE));
+        Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.REMOVE));
         super.removeServiceGroup(serviceGroup);
     }
 }
