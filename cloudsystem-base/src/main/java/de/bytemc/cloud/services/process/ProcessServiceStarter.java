@@ -10,6 +10,7 @@ import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.process.args.ProcessJavaArgs;
 import de.bytemc.cloud.services.process.file.PropertyFileWriter;
 import de.bytemc.cloud.services.properties.BungeeProperties;
+import de.bytemc.cloud.services.properties.SpigotProperties;
 import de.bytemc.network.promise.CommunicationPromise;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.SneakyThrows;
@@ -53,8 +54,12 @@ public class ProcessServiceStarter {
                 editor.setValue("host", "0.0.0.0:" + service.getPort());
                 editor.saveFile();
             }else new BungeeProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
+        } else {
+            var file = new File("tmp/" + service.getName() + "/config.properties");
+            if(file.exists()) {
+                //TODO
+            } else new SpigotProperties(new File("tmp/" + service.getName() + "/config.properties"), service.getPort());
         }
-        //TODO SPIGOT
     }
 
     @SneakyThrows
