@@ -58,7 +58,7 @@ public class ProcessServiceStarter {
             var file = new File("tmp/" + service.getName() + "/config.properties");
             if(file.exists()) {
                 //TODO
-            } else new SpigotProperties(new File("tmp/" + service.getName() + "/config.properties"), service.getPort());
+            } else new SpigotProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
         }
     }
 
