@@ -14,6 +14,7 @@ import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.services.ServiceManager;
 import de.bytemc.cloud.services.queue.QueueService;
+import de.bytemc.cloud.templates.GroupTemplateService;
 import de.bytemc.network.promise.CommunicationPromise;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Base extends CloudAPI {
     private IDatabaseManager databaseManager;
     private IGroupManager groupManager;
     private IServiceManager serviceManager;
+    private GroupTemplateService groupTemplateService;
 
     public Base() {
         super(CloudAPITypes.NODE);
@@ -39,6 +41,7 @@ public class Base extends CloudAPI {
         this.databaseManager = new DatabaseManager();
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
+        this.groupTemplateService = new GroupTemplateService();
         this.node = new BaseNode();
 
         //registered commands
