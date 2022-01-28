@@ -25,6 +25,10 @@ public class SimpleService implements IService {
         this.serviceID = id;
         this.port = port;
     }
+    public SimpleService(String group, int id, int port, ServiceState serviceState) {
+        this(group, id, port);
+        this.serviceState = serviceState;
+    }
 
     @Override
     public String getName() {

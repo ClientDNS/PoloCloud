@@ -4,6 +4,7 @@ import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.network.NetworkManager;
 import de.bytemc.network.packets.IPacket;
@@ -12,7 +13,13 @@ import de.bytemc.network.packets.IPacketListener;
 public class NetworkHandler implements INetworkHandler {
 
     public NetworkHandler() {
-        registerPackets(ServiceGroupExecutePacket.class, ServiceGroupCacheUpdatePacket.class, ServiceShutdownPacket.class, RedirectPacket.class);
+        registerPackets(
+            ServiceGroupExecutePacket.class,
+            ServiceGroupCacheUpdatePacket.class,
+            ServiceShutdownPacket.class,
+            RedirectPacket.class,
+            ServiceCacheUpdatePacket.class
+        );
     }
 
     @Override
