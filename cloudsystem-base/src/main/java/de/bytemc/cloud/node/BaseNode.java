@@ -1,5 +1,6 @@
 package de.bytemc.cloud.node;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
@@ -50,6 +51,7 @@ public class BaseNode extends AbstractNodeClustering {
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7' connect to the cluster. (" +
             service.getServiceState().getName() + "§7)");
+        Base.getInstance().getQueueService().checkForQueue();
     }
 
     @Override
