@@ -22,6 +22,8 @@ public class BaseNode extends AbstractNodeClustering {
         this.hostname = nodeConfig.getHostname();
         this.port = nodeConfig.getPort();
 
+        new BaseNodeNetwork();
+
         connectEstablish(hostname, port).addResultListener(unused -> CloudAPI.getInstance().getLoggerProvider().logMessage("§7The node clustering is§a successfully §7started."))
             .addFailureListener(throwable -> throwable.printStackTrace());
     }
