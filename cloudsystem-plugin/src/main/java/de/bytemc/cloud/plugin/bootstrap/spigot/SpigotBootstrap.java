@@ -1,5 +1,6 @@
 package de.bytemc.cloud.plugin.bootstrap.spigot;
 
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.plugin.CloudPlugin;
 import de.bytemc.cloud.plugin.IPlugin;
 import org.bukkit.Bukkit;
