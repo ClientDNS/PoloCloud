@@ -49,6 +49,11 @@ public class Base extends CloudAPI {
         //registered commands
         getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
 
+        QueueService queueService = new QueueService();
+
+        //add a shutdown hook for fast closes
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
+
         //print finish successfully message
         getLoggerProvider().logMessage("               ", LogType.EMPTY);
         getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
@@ -56,11 +61,7 @@ public class Base extends CloudAPI {
 
         ((SimpleLoggerProvider)CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
 
-        //add a shutdown hook for fast closes
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
-
-        new QueueService();
-
+        queueService.start();
     }
 
     public void onShutdown() {
