@@ -1,7 +1,6 @@
 package de.bytemc.cloud.api.network.impl;
 
 import de.bytemc.cloud.api.network.INetworkHandler;
-import de.bytemc.cloud.api.network.packets.CloudQueryPacket;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
@@ -24,7 +23,6 @@ public class NetworkHandler implements INetworkHandler {
             ServiceShutdownPacket.class,
             RedirectPacket.class,
             ServiceCacheUpdatePacket.class,
-            CloudQueryPacket.class,
             CloudPlayerLoginPacket.class,
             CloudPlayerDisconnectPacket.class,
             ServiceAddPacket.class,
