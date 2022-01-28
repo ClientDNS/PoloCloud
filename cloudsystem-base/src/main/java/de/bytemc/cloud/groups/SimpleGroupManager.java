@@ -15,11 +15,20 @@ public class SimpleGroupManager extends AbstractGroupManager {
     private IDatabase database;
 
     public SimpleGroupManager(){
-
         this.database = Base.getInstance().getDatabaseManager().getDatabase();
 
         //loading all database groups
         getAllCachedServiceGroups().addAll(database.getAllServiceGroups());
+
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupExecutePacket.class, (ctx, packet) -> {
+            if(packet.getExecutorType().equals(ServiceGroupExecutePacket.executor.CREATE)){
+                getAllCachedServiceGroups().add(packet.getGroup());
+                Base.getInstance().getGroupTemplateService().createTemplateFolder(packet.getGroup());
+                //TODO CHECK QUEUE
+            } else {
+                getAllCachedServiceGroups().remove(packet.getGroup());
+            }
+        });
         CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b" + String.join("§7, §b", getAllCachedServiceGroups().stream().map(it -> it.getGroup()).collect(Collectors.toList())));
     }
 
