@@ -8,6 +8,7 @@ import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.DefaultGroup;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.versions.GameServerVersion;
+import de.bytemc.cloud.services.ServiceManager;
 
 public class GroupCloudCommand extends CloudCommand {
 
@@ -58,9 +59,11 @@ public class GroupCloudCommand extends CloudCommand {
                 return;
             }
             groupManager.removeServiceGroup(groupManager.getServiceGroupByNameOrNull(name));
-            log.logMessage("The group '§b" + name + "§7' is now deleted.");
 
-            //TODO STOP ALL ONLINE SERVICES
+            CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(groupManager.getServiceGroupByNameOrNull(name))
+                .forEach(it -> ((ServiceManager)CloudAPI.getInstance().getServiceManager()).shutdownService(it));
+
+            log.logMessage("The group '§b" + name + "§7' is now deleted.");
             return;
         }
 
