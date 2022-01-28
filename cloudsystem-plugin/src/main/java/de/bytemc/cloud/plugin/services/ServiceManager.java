@@ -30,6 +30,8 @@ public class ServiceManager extends AbstractSimpleServiceManager {
         });
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> {
             getAllCachedServices().add(packet.getService());
+
+            //register proxy service
             CloudAPI.getInstance().getLoggerProvider().logMessage("Service add: " + packet.getService().getName());
         });
     }

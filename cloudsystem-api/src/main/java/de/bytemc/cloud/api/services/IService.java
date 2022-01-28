@@ -11,6 +11,8 @@ public interface IService {
 
     int getPort();
 
+    String getHostName();
+
     IServiceGroup getServiceGroup();
 
     void setServiceState(ServiceState serviceState);

@@ -15,18 +15,20 @@ public class SimpleService implements IService {
     private int serviceID;
 
     private int port;
+    private String hostName;
 
     private Process process;
 
     private ServiceState serviceState = ServiceState.PREPARED;
 
-    public SimpleService(String group, int id, int port) {
+    public SimpleService(String group, int id, int port, String hostname) {
         this.group = group;
         this.serviceID = id;
         this.port = port;
+        this.hostName = hostname;
     }
-    public SimpleService(String group, int id, int port, ServiceState serviceState) {
-        this(group, id, port);
+    public SimpleService(String group, int id, int port, String hostName, ServiceState serviceState) {
+        this(group, id, port, hostName);
         this.serviceState = serviceState;
     }
 

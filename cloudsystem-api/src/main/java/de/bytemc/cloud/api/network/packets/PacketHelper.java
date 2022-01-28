@@ -15,11 +15,12 @@ public class PacketHelper {
         packet.writeString(byteBuf, service.getServiceGroup().getGroup());
         byteBuf.writeInt(service.getServiceID());
         byteBuf.writeInt(service.getPort());
+        packet.writeString(byteBuf, service.getHostName());
         byteBuf.writeInt(service.getServiceState().ordinal());
     }
 
     public static IService readService(ByteBuf byteBuf, IPacket packet){
-        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()]);
+        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), packet.readString(byteBuf), ServiceState.values()[byteBuf.readInt()]);
     }
 
     public static void writeServiceGroup(ByteBuf byteBuf, IServiceGroup group, IPacket packet) {
