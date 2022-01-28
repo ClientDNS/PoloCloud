@@ -4,6 +4,8 @@ import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
+import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
@@ -80,8 +82,8 @@ public class ProcessServiceStarter {
                 //stop service
                 FileUtils.deleteDirectory(new File("tmp/" + service.getName() + "/"));
                 CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + service.getName() + "§7' is now successfully offline.");
+                Base.getInstance().getNode().sendPacketToAll(new ServiceRemovePacket(service.getName()));
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().remove(service);
-
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
