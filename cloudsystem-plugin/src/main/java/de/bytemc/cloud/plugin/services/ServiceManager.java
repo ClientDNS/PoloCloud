@@ -1,7 +1,9 @@
 package de.bytemc.cloud.plugin.services;
 
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
@@ -20,6 +22,15 @@ public class ServiceManager extends AbstractSimpleServiceManager {
         });
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> {
             setAllCachedServices(packet.getAllCachedServices());
+        });
+
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceRemovePacket.class, (ctx, packet) -> {
+            getAllCachedServices().remove(getServiceByNameOrNull(packet.getService()));
+            CloudAPI.getInstance().getLoggerProvider().logMessage("Service remove: " + packet.getService());
+        });
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> {
+            getAllCachedServices().add(packet.getService());
+            CloudAPI.getInstance().getLoggerProvider().logMessage("Service add: " + packet.getService().getName());
         });
     }
 
