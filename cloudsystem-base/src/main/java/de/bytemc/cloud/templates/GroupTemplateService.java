@@ -1,5 +1,7 @@
 package de.bytemc.cloud.templates;
 
+import de.bytemc.cloud.Base;
+import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.IService;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
@@ -20,8 +22,20 @@ public class GroupTemplateService {
     }
 
     public void copyTemplates(IService service) throws IOException {
-        FileUtils.copyDirectory(new File(EVERY_FOLDER), new File("tmp/" + service.getName() + "/"));
-        FileUtils.copyDirectory(new File(service.getServiceGroup().getGameServerVersion().isProxy() ? EVERY_PROXY_FOLDER : EVERY_SERVICE_FOLDER), new File("tmp/" + service.getName() + "/"));
+        var serviceFolder = new File("tmp/" + service.getName() + "/");
+        FileUtils.copyDirectory(new File(EVERY_FOLDER), serviceFolder);
+        FileUtils.copyDirectory(new File(service.getServiceGroup().getGameServerVersion().isProxy() ? EVERY_PROXY_FOLDER : EVERY_SERVICE_FOLDER), serviceFolder);
+
+        var templateDirection = new File("templates/" + service.getServiceGroup().getTemplate());
+        if(templateDirection.exists()){
+            FileUtils.copyDirectory(templateDirection, serviceFolder);
+        }
+    }
+
+    public void createTemplateFolder(IServiceGroup group) {
+        if(!group.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) return;
+        var file = new File("templates/" + group.getTemplate());
+        if(!file.exists()) file.mkdirs();
     }
 
     @SneakyThrows

@@ -1,5 +1,6 @@
 package de.bytemc.cloud.command.impl;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.executor.ExecutorType;
@@ -40,6 +41,7 @@ public class GroupCloudCommand extends CloudCommand {
                 groupManager.addServiceGroup(serviceGroup);
                 serviceGroup.getGameServerVersion().download();
 
+                Base.getInstance().getGroupTemplateService().createTemplateFolder(serviceGroup);
                 log.logMessage("The group '§b" + name + "§7' is now registered and online.");
                 //TODO check queue
                 return;
