@@ -57,7 +57,6 @@ public class ConfigurationFileEditor {
             property[index] = line;
         });
 
-        File file = new File("config.yml");
         file.delete();
         try {
             if (!file.exists()) file.createNewFile();
