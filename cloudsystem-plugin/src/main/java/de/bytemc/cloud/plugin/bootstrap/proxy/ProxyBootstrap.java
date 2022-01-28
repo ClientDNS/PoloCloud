@@ -16,10 +16,7 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println("services:");
-        CloudAPI.getInstance().getServiceManager().getAllCachedServices().forEach(it -> {
-            System.out.println("name: " + it.getName() + "; port:" + it.getPort() + "; group:" + it.getServiceGroup() + "; state:" + it.getServiceState());
-        });
+
     }
 
     @Override
