@@ -3,7 +3,6 @@ package de.bytemc.cloud.services;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
-import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
@@ -12,12 +11,6 @@ import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.ICommunicationPromise;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
-
-    public ServiceManager(){
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> {
-            setAllCachedServices(packet.getAllCachedServices());
-        });
-    }
 
     public void start(IService service){
         startService(service).addResultListener(it -> {

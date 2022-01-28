@@ -1,6 +1,7 @@
 package de.bytemc.cloud.plugin.services;
 
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
@@ -16,6 +17,9 @@ public class ServiceManager extends AbstractSimpleServiceManager {
         this.property = property;
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceShutdownPacket.class, (ctx, packet) -> {
             CloudPlugin.getInstance().getPlugin().shutdown();
+        });
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> {
+            setAllCachedServices(packet.getAllCachedServices());
         });
     }
 
