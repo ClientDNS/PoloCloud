@@ -33,7 +33,9 @@ public class Base extends CloudAPI {
     private IGroupManager groupManager;
     private IServiceManager serviceManager;
     private ICloudPlayerManager cloudPlayerManager;
+
     private GroupTemplateService groupTemplateService;
+    private QueueService queueService;
 
     public Base() {
         super(CloudAPITypes.NODE);
@@ -52,7 +54,7 @@ public class Base extends CloudAPI {
         //registered commands
         getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
 
-        QueueService queueService = new QueueService();
+        queueService = new QueueService();
 
         //add a shutdown hook for fast closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
@@ -64,7 +66,7 @@ public class Base extends CloudAPI {
 
         ((SimpleLoggerProvider)CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
 
-        queueService.start();
+        queueService.checkForQueue();
     }
 
     public void onShutdown() {
