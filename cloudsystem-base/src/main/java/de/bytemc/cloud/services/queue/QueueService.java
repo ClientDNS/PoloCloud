@@ -29,7 +29,9 @@ public class QueueService {
         if(minBootableServiceExists()) return;
 
         //TODO
-       // ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(service);
+        for (IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
+            ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(allCachedService);
+        }
     }
 
 
