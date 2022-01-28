@@ -55,7 +55,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
                 lineReader.callWidget(LineReader.REDRAW_LINE);
                 lineReader.callWidget(LineReader.REDISPLAY);
             }
-        }else System.out.println(text);
+        }else CloudAPI.getInstance().getCommandSender().sendMessage(text);
     }
 
     @Override
