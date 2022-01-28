@@ -38,14 +38,14 @@ public enum GameServerVersion {
     }
 
     public void download() {
-        File file = new File("storage/jars");
+        var file = new File("storage/jars");
         if(!file.exists()) file.mkdirs();
 
         if(isDownloaded()) return;
 
         CloudAPI.getInstance().getLoggerProvider().logMessage( "§7Downloading §bVersion§7... (§3" + this.getTitle() + "§7)");
 
-        File downloadedVersion = new File("storage/jars", this.getJar());
+        var downloadedVersion = new File("storage/jars", this.getJar());
         downloadedVersion.getParentFile().mkdirs();
         try {
             FileUtils.copyURLToFile(new URL(this.getUrl()), downloadedVersion);
