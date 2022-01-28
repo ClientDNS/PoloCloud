@@ -1,5 +1,6 @@
 package de.bytemc.cloud.command.impl;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.executor.ExecutorType;
@@ -42,7 +43,6 @@ public class ServiceCloudCommand extends CloudCommand {
 
             ((ServiceManager)CloudAPI.getInstance().getServiceManager()).shutdownService(service);
             log.logMessage("The service '§b"+ service.getName() + "§7' is now stopped.");
-            //TODO CHECK QUEUE
             return;
         }
         if (args.length == 4) {

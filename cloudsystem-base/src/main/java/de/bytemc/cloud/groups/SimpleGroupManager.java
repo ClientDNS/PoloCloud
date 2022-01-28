@@ -24,7 +24,7 @@ public class SimpleGroupManager extends AbstractGroupManager {
             if(packet.getExecutorType().equals(ServiceGroupExecutePacket.executor.CREATE)){
                 getAllCachedServiceGroups().add(packet.getGroup());
                 Base.getInstance().getGroupTemplateService().createTemplateFolder(packet.getGroup());
-                //TODO CHECK QUEUE
+                Base.getInstance().getQueueService().checkForQueue();
             } else {
                 getAllCachedServiceGroups().remove(packet.getGroup());
             }
