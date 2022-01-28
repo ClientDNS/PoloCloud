@@ -5,6 +5,8 @@ import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 
+import java.util.UUID;
+
 public interface ICloudAPI {
 
     IGroupManager getGroupManager();
@@ -12,5 +14,6 @@ public interface ICloudAPI {
     IServiceManager getServiceManager();
 
     ICloudPlayerManager getCloudPlayerManager();
+
 
 }
