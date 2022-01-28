@@ -1,6 +1,7 @@
 package de.bytemc.cloud.api.player;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ICloudPlayerManager {
 
@@ -8,8 +9,16 @@ public interface ICloudPlayerManager {
 
     List<ICloudPlayer> getAllServicePlayers();
 
+    ICloudPlayer getCloudPlayerByUniqueIdOrNull(UUID uniqueID);
+
+    ICloudPlayer getCloudPlayerByNameOrNull(String username);
+
     default int getCloudPlayerOnlineAmount(){
         return getAllCachedCloudPlayers().size();
     }
+
+    void registerCloudPlayer(UUID uniqueId, String username);
+
+    void unregisterCloudPlayer(UUID uuid);
 
 }
