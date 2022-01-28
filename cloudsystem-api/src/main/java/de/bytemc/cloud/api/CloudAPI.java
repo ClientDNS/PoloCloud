@@ -30,7 +30,6 @@ public abstract class CloudAPI implements ICloudAPI {
         this.loggerProvider = new SimpleLoggerProvider();
         this.networkHandler = new NetworkHandler();
         this.commandManager = new SimpleCommandManager();
-
     }
 
     public abstract ICommandSender getCommandSender();
