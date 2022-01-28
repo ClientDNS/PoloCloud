@@ -49,7 +49,6 @@ public class ProcessServiceStarter {
 
         //check properties and modify
         if(service.getServiceGroup().getGameServerVersion().isProxy()) {
-            //TODO OPTIMIZE
             var file = new File("tmp/" + service.getName() + "/config.yml");
             if(file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
@@ -57,9 +56,11 @@ public class ProcessServiceStarter {
                 editor.saveFile();
             }else new BungeeProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
         } else {
-            var file = new File("tmp/" + service.getName() + "/config.properties");
+            var file = new File("tmp/" + service.getName() + "/server.properties");
             if(file.exists()) {
-                //TODO
+                var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
+                editor.setValue("server-port", String.valueOf(service.getPort()));
+                editor.saveFile();
             } else new SpigotProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
         }
     }

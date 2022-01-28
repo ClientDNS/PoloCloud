@@ -1,7 +1,5 @@
 package de.bytemc.cloud.plugin.player;
 
-import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.network.packets.CloudQueryPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
@@ -23,15 +21,13 @@ public class CloudPlayerManager extends AbstractPlayerManager {
 
     @Override
     public void registerCloudPlayer(UUID uniqueID, String username) {
-        getAllServicePlayers().add(new SimpleCloudPlayer(uniqueID, username));
-        CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudQueryPacket(((ServiceManager)CloudAPI.getInstance().getServiceManager()).thisService().getName(),
-            new CloudPlayerLoginPacket(username,uniqueID)));
+        getAllCachedCloudPlayers().add(new SimpleCloudPlayer(uniqueID, username));
+        CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudPlayerLoginPacket(username,uniqueID));
     }
 
     @Override
-    public void unregisterCloudPlayer(UUID uuid) {
-        getAllServicePlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
-        CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudQueryPacket(((ServiceManager)CloudAPI.getInstance().getServiceManager()).thisService().getName(),
-            new CloudPlayerDisconnectPacket(uuid)));
+    public void unregisterCloudPlayer(UUID uuid, String username) {
+        getAllCachedCloudPlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
+         CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudPlayerDisconnectPacket(uuid, username));
     }
 }

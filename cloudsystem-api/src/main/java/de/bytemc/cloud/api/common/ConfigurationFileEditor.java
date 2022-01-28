@@ -37,7 +37,7 @@ public class ConfigurationFileEditor {
     }
 
     public void loadAllConfigOptions() {
-        lines.stream().filter(it -> it.contains(splitSpacer.getSplit())).map(it -> it.split(": ")).forEach(it -> keyToValues.put(it[0], it[1]));
+        lines.stream().filter(it -> it.contains(splitSpacer.getSplit())).map(it -> it.split(splitSpacer.getSplit())).forEach(it -> keyToValues.put(it[0], it.length == 1 ? "" : it[1]));
     }
 
     public String getValue(String key) {

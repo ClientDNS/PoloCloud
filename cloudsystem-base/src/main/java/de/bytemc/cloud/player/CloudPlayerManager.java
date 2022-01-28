@@ -19,7 +19,7 @@ public class CloudPlayerManager extends AbstractPlayerManager {
             registerCloudPlayer(packet.getUuid(), packet.getUsername());
         });
         handler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> {
-            unregisterCloudPlayer(packet.getUuid());
+            unregisterCloudPlayer(packet.getUuid(), packet.getName());
         });
     }
 
@@ -37,10 +37,10 @@ public class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void unregisterCloudPlayer(UUID uuid) {
+    public void unregisterCloudPlayer(UUID uuid, String name) {
        getAllServicePlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
 
-        CloudAPI.getInstance().getLoggerProvider().logMessage("The player '§b" + uuid.toString() + "§7' disconnected.");
+        CloudAPI.getInstance().getLoggerProvider().logMessage("The player '§b" + name + "§7' disconnected.");
 
     }
 }

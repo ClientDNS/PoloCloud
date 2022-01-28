@@ -15,7 +15,7 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
     public abstract void registerCloudPlayer(UUID uniqueID, String username);
 
-    public abstract void unregisterCloudPlayer(UUID uuid);
+    public abstract void unregisterCloudPlayer(UUID uuid, String name);
 
     @Override
     public ICloudPlayer getCloudPlayerByNameOrNull(String username) {

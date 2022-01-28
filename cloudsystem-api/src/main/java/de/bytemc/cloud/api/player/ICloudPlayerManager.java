@@ -19,6 +19,6 @@ public interface ICloudPlayerManager {
 
     void registerCloudPlayer(UUID uniqueId, String username);
 
-    void unregisterCloudPlayer(UUID uuid);
+    void unregisterCloudPlayer(UUID uuid, String name);
 
 }

@@ -8,7 +8,7 @@ public class BungeeProperties extends ServiceProperties {
         super(directory, "config.yml", port);
 
         setProperties(new String[]{
-                "connection_throttle: 4000",
+                "connection_throttle: -1",
                 "connection_throttle_limit: 3",
                 "timeout: 30000",
                 "permissions:",

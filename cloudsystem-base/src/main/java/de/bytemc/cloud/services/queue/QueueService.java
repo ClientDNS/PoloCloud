@@ -35,7 +35,8 @@ public class QueueService {
             .filter(it -> it.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName()))
             .filter(it -> getAmountOfGroupServices(it) < it.getMinOnlineService())
             .forEach(it -> {
-                IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it), PortHandler.getNextPort(it));
+                //TODO CHANGE NODE HOSTNAME
+                IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it), PortHandler.getNextPort(it), "127.0.0.1");
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 Base.getInstance().getNode().sendPacketToAll(new ServiceAddPacket(service));
                 CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
