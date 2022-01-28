@@ -83,8 +83,8 @@ public class GroupCloudCommand extends CloudCommand {
             return;
         }
 
-        log.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.INFO);
-        log.logMessage("Use following command: §bremove (name)", LogType.INFO);
-        log.logMessage("Use following command: §binfo (name)", LogType.INFO);
+        log.logMessage("§7Use following command: §bcreate §7(§bname§7) (§bmemory§7) (§bstatic§7) (§bversion§7)", LogType.INFO);
+        log.logMessage("§7Use following command: §bremove §7(§bname§7)", LogType.INFO);
+        log.logMessage("§7Use following command: §binfo §7(§bname§7)", LogType.INFO);
     }
 }

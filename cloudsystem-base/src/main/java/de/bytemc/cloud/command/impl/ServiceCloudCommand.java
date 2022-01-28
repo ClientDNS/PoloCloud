@@ -51,9 +51,8 @@ public class ServiceCloudCommand extends CloudCommand {
             }
             return;
         }
-        log.logMessage("Usage:");
-        log.logMessage("service <list> | List all available services");
-        log.logMessage("service <start> (name) | Starting a specific service that exists");
-        log.logMessage("service <stop> (name) | Stopping a specific service that exists");
+        log.logMessage("§7Use following command: §bservice list §7- List all available services.");
+        log.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that exists.");
+        log.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
     }
 }
