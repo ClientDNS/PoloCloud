@@ -3,44 +3,50 @@ package de.bytemc.cloud.services.queue;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
+import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.ServiceManager;
 import de.bytemc.cloud.services.ports.PortHandler;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class QueueService {
 
     private static final int MAX_BOOTABLE_SERVICES = 1;
 
     public QueueService() {
-        CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups()
-            .stream()
-            .filter(it -> getAmountOfGroupServices(it) <= it.getMinOnlineService())
+        addServiceToQueueWhereProvided();
+    }
+
+    public void checkForQueue() {
+        addServiceToQueueWhereProvided();
+        if (minBootableServiceExists()) return;
+
+        List<IService> services = CloudAPI.getInstance().getServiceManager().getAllServicesByState(ServiceState.PREPARED).stream().filter(it -> it.getServiceGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())).collect(Collectors.toList());
+        if(services.isEmpty()) return;
+        ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(services.get(0));
+    }
+
+    public void addServiceToQueueWhereProvided() {
+        CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream()
             .filter(it -> it.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName()))
+            .filter(it -> getAmountOfGroupServices(it) < it.getMinOnlineService())
             .forEach(it -> {
                 IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it), PortHandler.getNextPort(it));
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
+                Base.getInstance().getNode().sendPacketToAll(new ServiceAddPacket(service));
                 CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
             });
     }
 
-    public void start() {
-        if(minBootableServiceExists()) return;
-
-        //TODO
-        for (IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
-            ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(allCachedService);
-        }
-    }
-
-
-
-    private boolean minBootableServiceExists(){
+    private boolean minBootableServiceExists() {
         return getAmountOfBootableServices() >= MAX_BOOTABLE_SERVICES;
     }
 
-    private int getAmountOfBootableServices(){
+    private int getAmountOfBootableServices() {
         return CloudAPI.getInstance().getServiceManager().getAllServicesByState(ServiceState.STARTING).size();
     }
 
@@ -48,7 +54,7 @@ public class QueueService {
         return (int) CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().filter(it -> it.getServiceGroup().equals(serviceGroup)).count();
     }
 
-    private int getPossibleServiceIDByGroup(final IServiceGroup serviceGroup){
+    private int getPossibleServiceIDByGroup(final IServiceGroup serviceGroup) {
         int id = 1;
         while (isServiceIDAlreadyExists(serviceGroup, id)) id++;
         return id;
