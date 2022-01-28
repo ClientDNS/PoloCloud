@@ -8,4 +8,8 @@ public interface ICloudPlayerManager {
 
     List<ICloudPlayer> getAllServicePlayers();
 
+    default int getCloudPlayerOnlineAmount(){
+        return getAllCachedCloudPlayers().size();
+    }
+
 }

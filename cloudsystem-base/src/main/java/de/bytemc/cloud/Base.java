@@ -7,6 +7,7 @@ import de.bytemc.cloud.api.common.GsonFactory;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.DefaultCommandSender;
 import de.bytemc.cloud.config.NodeConfig;
@@ -14,6 +15,7 @@ import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.node.BaseNode;
+import de.bytemc.cloud.player.CloudPlayerManager;
 import de.bytemc.cloud.services.ServiceManager;
 import de.bytemc.cloud.services.queue.QueueService;
 import de.bytemc.cloud.templates.GroupTemplateService;
@@ -31,6 +33,7 @@ public class Base extends CloudAPI {
     private IDatabaseManager databaseManager;
     private IGroupManager groupManager;
     private IServiceManager serviceManager;
+    private ICloudPlayerManager cloudPlayerManager;
     private GroupTemplateService groupTemplateService;
 
     public Base() {
@@ -44,6 +47,7 @@ public class Base extends CloudAPI {
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
         this.groupTemplateService = new GroupTemplateService();
+        this.cloudPlayerManager = new CloudPlayerManager();
         this.node = new BaseNode(NodeConfig.read());
 
         //registered commands
