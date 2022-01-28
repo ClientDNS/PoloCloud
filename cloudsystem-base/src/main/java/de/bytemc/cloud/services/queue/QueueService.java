@@ -22,14 +22,14 @@ public class QueueService {
                 IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it), PortHandler.getNextPort(it));
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
-                //TODO
-                ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(service);
             });
-        check();
     }
 
-    public void check() {
+    public void start() {
         if(minBootableServiceExists()) return;
+
+        //TODO
+       // ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(service);
     }
 
 
