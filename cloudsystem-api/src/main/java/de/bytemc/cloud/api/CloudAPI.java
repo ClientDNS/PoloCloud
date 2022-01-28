@@ -7,7 +7,7 @@ import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.logger.exception.ExceptionHandler;
 import de.bytemc.cloud.api.network.INetworkHandler;
-import de.bytemc.cloud.api.network.NetworkHandler;
+import de.bytemc.cloud.api.network.impl.NetworkHandler;
 import lombok.Getter;
 
 @Getter

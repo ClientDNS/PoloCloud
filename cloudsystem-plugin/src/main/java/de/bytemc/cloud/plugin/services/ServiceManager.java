@@ -5,11 +5,15 @@ import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
 import de.bytemc.cloud.plugin.CloudPlugin;
+import de.bytemc.cloud.plugin.services.file.PluginPropertyFileReader;
 import de.bytemc.network.promise.ICommunicationPromise;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
 
-    public ServiceManager(){
+    private PluginPropertyFileReader property;
+
+    public ServiceManager(PluginPropertyFileReader property){
+        this.property = property;
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceShutdownPacket.class, (ctx, packet) -> {
             CloudPlugin.getInstance().getPlugin().shutdown();
         });
@@ -20,4 +24,9 @@ public class ServiceManager extends AbstractSimpleServiceManager {
         //TODO SEND PACKET
         return null;
     }
+
+    public IService thisService(){
+        return getAllCachedServices().stream().filter(it -> it.getName().equalsIgnoreCase(property.getService())).findAny().orElse(null);
+    }
+
 }
