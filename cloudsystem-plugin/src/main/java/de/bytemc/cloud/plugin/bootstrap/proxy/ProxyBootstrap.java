@@ -1,5 +1,6 @@
 package de.bytemc.cloud.plugin.bootstrap.proxy;
 
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.plugin.CloudPlugin;
 import de.bytemc.cloud.plugin.IPlugin;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -15,7 +16,10 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println("onEnable");
+        System.out.println("services:");
+        CloudAPI.getInstance().getServiceManager().getAllCachedServices().forEach(it -> {
+            System.out.println("name: " + it.getName() + "; port:" + it.getPort() + "; group:" + it.getServiceGroup() + "; state:" + it.getServiceState());
+        });
     }
 
     @Override
