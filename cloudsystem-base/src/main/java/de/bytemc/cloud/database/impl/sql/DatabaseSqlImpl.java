@@ -5,6 +5,8 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.impl.ServiceGroup;
 import de.bytemc.cloud.api.versions.GameServerVersion;
+import de.bytemc.cloud.config.NodeConfig;
+import de.bytemc.cloud.database.DatabaseConfiguration;
 import de.bytemc.cloud.database.IDatabase;
 import de.bytemc.cloud.database.impl.DatabaseFunction;
 import de.bytemc.network.promise.CommunicationPromise;
@@ -25,8 +27,10 @@ public class DatabaseSqlImpl implements IDatabase {
     @SneakyThrows
     @Override
     public void connect() {
-        this.connection = DriverManager.getConnection("jdbc:mysql://37.114.60.81:3306"
-            + "/cloudsystem?useUnicode=true&autoReconnect=true", "marco", "1Marco2Polo3");
+        final DatabaseConfiguration databaseConfiguration = NodeConfig.get().getDatabaseConfiguration();
+        this.connection = DriverManager.getConnection("jdbc:mysql://" + databaseConfiguration.getHost() + ":" + databaseConfiguration.getPort()
+            + "/" + databaseConfiguration.getDatabase() + "?useUnicode=true&autoReconnect=true",
+            databaseConfiguration.getUser(), databaseConfiguration.getPassword());
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
             " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, version VARCHAR(100))");

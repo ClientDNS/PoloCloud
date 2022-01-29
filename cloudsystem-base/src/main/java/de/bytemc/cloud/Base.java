@@ -57,7 +57,7 @@ public class Base extends CloudAPI {
         this.serviceManager = new ServiceManager();
         this.groupTemplateService = new GroupTemplateService();
         this.cloudPlayerManager = new CloudPlayerManager();
-        this.node = new BaseNode(NodeConfig.read());
+        this.node = new BaseNode(NodeConfig.get());
 
         // registered commands
         this.getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
