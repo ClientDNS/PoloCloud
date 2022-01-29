@@ -12,7 +12,7 @@ public class PluginClient extends NodeClient {
 
         connectEstablishment(hostname, port).addResultListener(it -> {
             CloudAPI.getInstance().getLoggerProvider().logMessage("The service start successfully network service.");
-        }).addFailureListener(it -> it.printStackTrace());
+        }).addFailureListener(Throwable::printStackTrace);
     }
 
     @Override
@@ -24,4 +24,5 @@ public class PluginClient extends NodeClient {
     public void onClose(ChannelHandlerContext channelHandlerContext) {
         CloudAPI.getInstance().getLoggerProvider().logMessage("This service disconnected from the cluster");
     }
+
 }

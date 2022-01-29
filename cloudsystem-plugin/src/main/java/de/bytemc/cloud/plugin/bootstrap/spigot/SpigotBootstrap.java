@@ -26,6 +26,7 @@ public class SpigotBootstrap extends JavaPlugin implements IPlugin {
 
     @Override
     public void shutdown() {
-        Bukkit.getScheduler().runTask(this, () -> Bukkit.shutdown());
+        Bukkit.getScheduler().runTask(this, Bukkit::shutdown);
     }
+
 }

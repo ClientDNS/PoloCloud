@@ -7,7 +7,7 @@ import net.md_5.bungee.api.ProxyServer;
 public class DefaultProxyCommandSender implements ICommandSender {
 
     @Override
-    public void sendMessage(String text) {
+    public void sendMessage(final String text) {
         ProxyServer.getInstance().getLogger().info(text);
     }
 
@@ -15,4 +15,5 @@ public class DefaultProxyCommandSender implements ICommandSender {
     public ExecutorType getCommandType() {
         return ExecutorType.CONSOLE;
     }
+
 }

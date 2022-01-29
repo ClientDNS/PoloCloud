@@ -13,23 +13,20 @@ import de.bytemc.network.promise.ICommunicationPromise;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
 
-    private PluginPropertyFileReader property;
+    private final PluginPropertyFileReader property;
 
-    public ServiceManager(PluginPropertyFileReader property){
+    public ServiceManager(PluginPropertyFileReader property) {
         this.property = property;
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceShutdownPacket.class, (ctx, packet) -> {
-            CloudPlugin.getInstance().getPlugin().shutdown();
-        });
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> {
-            setAllCachedServices(packet.getAllCachedServices());
-        });
-
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceShutdownPacket.class, (ctx, packet) ->
+            CloudPlugin.getInstance().getPlugin().shutdown());
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) ->
+            this.setAllCachedServices(packet.getAllCachedServices()));
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceRemovePacket.class, (ctx, packet) -> {
-            getAllCachedServices().remove(getServiceByNameOrNull(packet.getService()));
+            this.getAllCachedServices().remove(getServiceByNameOrNull(packet.getService()));
             CloudAPI.getInstance().getLoggerProvider().logMessage("Service remove: " + packet.getService());
         });
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> {
-            getAllCachedServices().add(packet.getService());
+            this.getAllCachedServices().add(packet.getService());
 
             //register proxy service
             CloudAPI.getInstance().getLoggerProvider().logMessage("Service add: " + packet.getService().getName());
@@ -42,8 +39,9 @@ public class ServiceManager extends AbstractSimpleServiceManager {
         return null;
     }
 
-    public IService thisService(){
-        return getAllCachedServices().stream().filter(it -> it.getName().equalsIgnoreCase(property.getService())).findAny().orElse(null);
+    public IService thisService() {
+        return this.getAllCachedServices().stream()
+            .filter(it -> it.getName().equalsIgnoreCase(this.property.getService())).findAny().orElse(null);
     }
 
 }

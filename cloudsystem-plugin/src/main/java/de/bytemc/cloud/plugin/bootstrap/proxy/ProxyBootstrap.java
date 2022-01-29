@@ -24,9 +24,11 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
 
 
         NetworkManager.registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> {
-            if(!packet.getService().getServiceGroup().getGameServerVersion().isProxy()) registerService(packet.getService());
+            if (!packet.getService().getServiceGroup().getGameServerVersion().isProxy())
+                this.registerService(packet.getService());
         });
-        NetworkManager.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) -> unregisterService(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.getService())));
+        NetworkManager.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) ->
+            this.unregisterService(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.getService())));
 
         new CloudPlugin(this);
     }
@@ -34,18 +36,19 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
     @Override
     public void onEnable() {
         for (IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
-            if(!allCachedService.getServiceGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
+            if (!allCachedService.getServiceGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
 
         NetworkManager.registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> {
             ProxyServer.getInstance().getServers().clear();
 
             for (IService allCachedService : packet.getAllCachedServices()) {
-                if(!allCachedService.getServiceGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
+                if (!allCachedService.getServiceGroup().getGameServerVersion().isProxy())
+                    registerService(allCachedService);
             }
         });
 
-        getProxy().getPluginManager().registerListener(this, new ProxyEvents());
+        this.getProxy().getPluginManager().registerListener(this, new ProxyEvents());
     }
 
     @Override
@@ -55,14 +58,15 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
 
     @Override
     public void shutdown() {
-        getProxy().getScheduler().schedule(this, () -> getProxy().stop(), 0, TimeUnit.MILLISECONDS);
+        this.getProxy().getScheduler().schedule(this, this.getProxy()::stop, 0, TimeUnit.MILLISECONDS);
     }
 
-    public void registerService(IService service){
-        ProxyServer.getInstance().getServers().put(service.getName(), ProxyServer.getInstance().constructServerInfo(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()), "PoloCloud", false));
+    public void registerService(IService service) {
+        ProxyServer.getInstance().getServers().put(service.getName(), ProxyServer.getInstance()
+            .constructServerInfo(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()), "PoloCloud", false));
     }
 
-    public void unregisterService(IService service){
+    public void unregisterService(IService service) {
         ProxyServer.getInstance().getServers().remove(service.getName());
     }
 

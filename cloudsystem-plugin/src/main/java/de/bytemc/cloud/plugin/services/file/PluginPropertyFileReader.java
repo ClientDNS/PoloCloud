@@ -12,18 +12,17 @@ import java.io.FileReader;
 @Getter
 public class PluginPropertyFileReader {
 
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private String node;
-    private String hostname;
-    private String service;
-    private int port;
+    private final String node;
+    private final String hostname;
+    private final String service;
+    private final int port;
 
     @SneakyThrows
     public PluginPropertyFileReader() {
-        var parser = new JsonParser();
-        FileReader fileReader = new FileReader("property.json");
-        var data = (JsonObject) parser.parse(fileReader);
+        final FileReader fileReader = new FileReader("property.json");
+        final var data = (JsonObject) JsonParser.parseReader(fileReader);
 
         this.hostname = data.get("service.node.hostname").getAsString();
         this.port = data.get("service.node.port").getAsInt();

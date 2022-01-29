@@ -7,8 +7,8 @@ import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 public class GroupManager extends AbstractGroupManager {
 
     public GroupManager() {
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupCacheUpdatePacket.class, (ctx, packet) -> {
-            setAllCachedServiceGroups(packet.getGroups());
-        });
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupCacheUpdatePacket.class, (ctx, packet) ->
+            this.setAllCachedServiceGroups(packet.getGroups()));
     }
+
 }

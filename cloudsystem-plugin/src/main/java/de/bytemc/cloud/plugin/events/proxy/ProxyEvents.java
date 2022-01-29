@@ -13,16 +13,15 @@ import net.md_5.bungee.event.EventHandler;
 public class ProxyEvents implements Listener {
 
     @EventHandler
-    public void handle(LoginEvent event){
+    public void handle(LoginEvent event) {
         CloudAPI.getInstance().getCloudPlayerManager().registerCloudPlayer(event.getConnection().getUniqueId(), event.getConnection().getName());
     }
 
     @EventHandler
-    public void handle(ServerConnectEvent event){
+    public void handle(ServerConnectEvent event) {
+        final ProxiedPlayer player = event.getPlayer();
 
-        ProxiedPlayer player = event.getPlayer();
-
-        if(player.getServer() == null){
+        if (player.getServer() == null) {
             //TODO
             ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo("lobby-1");
             event.setCancelled(false);
@@ -31,7 +30,7 @@ public class ProxyEvents implements Listener {
     }
 
     @EventHandler
-    public void handle(PlayerDisconnectEvent event){
+    public void handle(PlayerDisconnectEvent event) {
         CloudAPI.getInstance().getCloudPlayerManager().unregisterCloudPlayer(event.getPlayer().getUniqueId(), event.getPlayer().getName());
     }
 
