@@ -27,6 +27,7 @@ public class ConsoleReadingThread extends Thread {
             while (!Thread.currentThread().isInterrupted()) {
                 line.accept(lineReader.readLine(CONSOLE_PROMPT));
             }
-        } catch (UserInterruptException e) {}
+        } catch (UserInterruptException ignored) {}
     }
+
 }

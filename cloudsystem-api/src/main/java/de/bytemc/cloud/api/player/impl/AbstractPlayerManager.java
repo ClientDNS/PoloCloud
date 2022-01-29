@@ -19,11 +19,12 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
     @Override
     public ICloudPlayer getCloudPlayerByNameOrNull(String username) {
-        return allCachedCloudPlayers.stream().filter(it -> it.getUsername().equalsIgnoreCase(username)).findAny().orElse(null);
+        return this.allCachedCloudPlayers.stream().filter(it -> it.getUsername().equalsIgnoreCase(username)).findAny().orElse(null);
     }
 
     @Override
     public ICloudPlayer getCloudPlayerByUniqueIdOrNull(UUID uniqueID) {
-        return allCachedCloudPlayers.stream().filter(it -> it.getUniqueID().equals(uniqueID)).findAny().orElse(null);
+        return this.allCachedCloudPlayers.stream().filter(it -> it.getUniqueID().equals(uniqueID)).findAny().orElse(null);
     }
+
 }

@@ -12,8 +12,6 @@ public enum ServiceState {
     ONLINE("§aOnline"),
     STOPPING("§cStopping");
 
-    private String name;
-
-
+    private final String name;
 
 }

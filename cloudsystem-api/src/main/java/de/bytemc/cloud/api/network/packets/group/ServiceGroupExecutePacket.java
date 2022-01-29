@@ -8,7 +8,8 @@ import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter @NoArgsConstructor
+@Getter
+@NoArgsConstructor
 public class ServiceGroupExecutePacket implements IPacket {
 
     private IServiceGroup group;
@@ -25,23 +26,25 @@ public class ServiceGroupExecutePacket implements IPacket {
 
     @Override
     public void write(ByteBuf byteBuf) {
-        writeString(byteBuf, group.getGroup());
-        writeString(byteBuf, group.getTemplate());
-        writeString(byteBuf, group.getNode());
+        this.writeString(byteBuf, this.group.getGroup());
+        this.writeString(byteBuf, this.group.getTemplate());
+        this.writeString(byteBuf, this.group.getNode());
 
-        byteBuf.writeInt(group.getMemory());
-        byteBuf.writeInt(group.getMinOnlineService());
-        byteBuf.writeInt(group.getMaxOnlineService());
+        byteBuf.writeInt(this.group.getMemory());
+        byteBuf.writeInt(this.group.getMinOnlineService());
+        byteBuf.writeInt(this.group.getMaxOnlineService());
 
-        byteBuf.writeBoolean(group.isStaticService());
-        byteBuf.writeInt(group.getGameServerVersion().ordinal());
+        byteBuf.writeBoolean(this.group.isStaticService());
+        byteBuf.writeInt(this.group.getGameServerVersion().ordinal());
 
-        byteBuf.writeInt(executorType.ordinal());
+        byteBuf.writeInt(this.executorType.ordinal());
     }
 
     @Override
     public void read(ByteBuf byteBuf) {
-        this.group = new ServiceGroup(readString(byteBuf), readString(byteBuf), readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
+        this.group = new ServiceGroup(this.readString(byteBuf), this.readString(byteBuf), this.readString(byteBuf), byteBuf.readInt(),
+            byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
         this.executorType = executor.values()[byteBuf.readInt()];
     }
+
 }

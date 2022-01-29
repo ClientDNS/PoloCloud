@@ -19,7 +19,7 @@ public interface IGroupManager {
         return getServiceGroupByNameOrNull(group) != null;
     }
 
-    default List<IServiceGroup> getServiceGroup(String node){
+    default List<IServiceGroup> getServiceGroup(String node) {
         return getAllCachedServiceGroups().stream().filter(it -> it.getNode().equalsIgnoreCase(node)).collect(Collectors.toList());
     }
 

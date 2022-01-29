@@ -19,31 +19,31 @@ import java.util.Arrays;
 public enum GameServerVersion {
 
     BUNGEE("https://ci.md-5.net/job/BungeeCord/lastBuild/artifact/bootstrap/target/BungeeCord.jar", "BungeeCord", ServiceTypes.PROXY),
-    PAPERSPIGOT_1_17_1("https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/408/downloads/paper-1.17.1-408.jar","Paperspigot-1.17.1", ServiceTypes.SERVER);
+    PAPERSPIGOT_1_17_1("https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/408/downloads/paper-1.17.1-408.jar", "Paperspigot-1.17.1", ServiceTypes.SERVER);
 
-    private String url;
-    private String title;
-    private ServiceTypes serviceTypes;
+    private final String url;
+    private final String title;
+    private final ServiceTypes serviceTypes;
 
-    public boolean isProxy(){
-        return serviceTypes == ServiceTypes.PROXY;
+    public boolean isProxy() {
+        return this.serviceTypes == ServiceTypes.PROXY;
     }
 
-    public String getJar(){
+    public String getJar() {
         return this.title + ".jar";
     }
 
-    public static GameServerVersion getVersionByTitle(String value){
+    public static GameServerVersion getVersionByTitle(String value) {
         return Arrays.stream(values()).filter(it -> it.getTitle().equalsIgnoreCase(value)).findAny().orElse(null);
     }
 
     public void download() {
         var file = new File("storage/jars");
-        if(!file.exists()) file.mkdirs();
+        if (!file.exists()) file.mkdirs();
 
-        if(isDownloaded()) return;
+        if (isDownloaded()) return;
 
-        CloudAPI.getInstance().getLoggerProvider().logMessage( "§7Downloading §bVersion§7... (§3" + this.getTitle() + "§7)");
+        CloudAPI.getInstance().getLoggerProvider().logMessage("§7Downloading §bVersion§7... (§3" + this.getTitle() + "§7)");
 
         var downloadedVersion = new File("storage/jars", this.getJar());
         downloadedVersion.getParentFile().mkdirs();
@@ -57,13 +57,13 @@ public enum GameServerVersion {
         CloudAPI.getInstance().getLoggerProvider().logMessage("Downloading of (§3" + this.getTitle() + "§7)§a successfully §7completed.");
     }
 
-    private boolean isDownloaded(){
+    private boolean isDownloaded() {
         return new File("storage/jars", this.getJar()).exists();
     }
 
     @SneakyThrows
-    public void copy(IService service){
-        FileUtils.copyFile(new File("storage/jars", this.getJar()), new File("live/" + service.getName() + "/" +  this.getJar()));
+    public void copy(IService service) {
+        FileUtils.copyFile(new File("storage/jars", this.getJar()), new File("live/" + service.getName() + "/" + this.getJar()));
     }
 
 }

@@ -2,15 +2,14 @@ package de.bytemc.cloud.api.command;
 
 import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 public abstract class CloudCommand {
 
-    private String commandName, description;
-    private String[] alias;
-    private ExecutorType executorType;
+    private final String commandName, description;
+    private final String[] alias;
+    private final ExecutorType executorType;
 
     public CloudCommand(String commandName, String description, ExecutorType type, String... alias) {
         this.commandName = commandName;

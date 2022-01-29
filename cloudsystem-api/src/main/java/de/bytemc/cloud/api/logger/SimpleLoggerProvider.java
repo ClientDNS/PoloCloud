@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class SimpleLoggerProvider extends Logger implements LoggerProvider {
 
-    private SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
+    private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
 
     //only for console
     @Getter
@@ -28,7 +28,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
 
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\\$tT] [%4$-7s] %5\\$s %n");
 
-        if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)){
+        if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
             consoleManager = new SimpleConsoleManager(this);
         }
     }
@@ -38,7 +38,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
         String message = "§r" + text + "§r";
         if (logType != LogType.EMPTY) {
             message = " " + dataFormat.format(Calendar.getInstance().getTime()) + " §7" + (isWindows() ? "|" : "┃") + " §r" +
-                    logType.getTextField() + " " + (isWindows() ? ">" : "»")+ " §r" + message + "§r";
+                logType.getTextField() + " " + (isWindows() ? ">" : "»") + " §r" + message + "§r";
         }
         return LoggerAnsiFactory.toColorCode(message);
     }
@@ -55,7 +55,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
                 lineReader.callWidget(LineReader.REDRAW_LINE);
                 lineReader.callWidget(LineReader.REDISPLAY);
             }
-        }else CloudAPI.getInstance().getCommandSender().sendMessage(text);
+        } else CloudAPI.getInstance().getCommandSender().sendMessage(text);
     }
 
     @Override
@@ -70,12 +70,12 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
         }
     }
 
-    public boolean isWindows(){
+    public boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 
-    public void clearConsole(){
-        if(isWindows()){
+    public void clearConsole() {
+        if (isWindows()) {
             try {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } catch (IOException | InterruptedException exception) {

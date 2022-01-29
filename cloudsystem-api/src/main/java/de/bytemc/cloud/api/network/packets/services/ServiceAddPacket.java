@@ -8,18 +8,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor @Getter @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
 public class ServiceAddPacket implements IPacket {
 
     private IService service;
 
     @Override
     public void write(ByteBuf byteBuf) {
-        PacketHelper.writeService(service, byteBuf, this);
+        PacketHelper.writeService(this.service, byteBuf, this);
     }
 
     @Override
     public void read(ByteBuf byteBuf) {
-        service = PacketHelper.readService(byteBuf, this);
+        this.service = PacketHelper.readService(byteBuf, this);
     }
+
 }

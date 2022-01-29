@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@AllArgsConstructor @Getter @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
 public class CloudPlayerLoginPacket implements IPacket {
 
     private String username;
@@ -16,13 +18,14 @@ public class CloudPlayerLoginPacket implements IPacket {
 
     @Override
     public void read(ByteBuf byteBuf) {
-        username = readString(byteBuf);
-        uuid = readUUID(byteBuf);
+        this.username = this.readString(byteBuf);
+        this.uuid = this.readUUID(byteBuf);
     }
 
     @Override
     public void write(ByteBuf byteBuf) {
-        writeString(byteBuf, username);
-        writeUUID(byteBuf, uuid);
+        this.writeString(byteBuf, this.username);
+        this.writeUUID(byteBuf, this.uuid);
     }
+
 }

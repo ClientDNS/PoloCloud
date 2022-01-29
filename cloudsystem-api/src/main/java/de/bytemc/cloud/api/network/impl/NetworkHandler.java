@@ -17,7 +17,7 @@ import de.bytemc.network.packets.IPacketListener;
 public class NetworkHandler implements INetworkHandler {
 
     public NetworkHandler() {
-        registerPackets(
+        this.registerPackets(
             ServiceGroupExecutePacket.class,
             ServiceGroupCacheUpdatePacket.class,
             ServiceShutdownPacket.class,
@@ -36,12 +36,13 @@ public class NetworkHandler implements INetworkHandler {
         NetworkManager.getRegisteredPacket().add(packet);
     }
 
+    @SafeVarargs
     @Override
-    public void registerPackets(Class<? extends IPacket>... packet) {
+    public final void registerPackets(Class<? extends IPacket>... packet) {
         for (Class<? extends IPacket> aClass : packet) registerPacket(aClass);
     }
 
-    public <R extends IPacket> void registerPacketListener(Class<R> clazz, IPacketListener<R> packetListener){
+    public <R extends IPacket> void registerPacketListener(Class<R> clazz, IPacketListener<R> packetListener) {
         NetworkManager.registerPacketListener(clazz, packetListener);
     }
 

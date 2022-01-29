@@ -19,8 +19,9 @@ public class PacketHelper {
         byteBuf.writeInt(service.getServiceState().ordinal());
     }
 
-    public static IService readService(ByteBuf byteBuf, IPacket packet){
-        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), packet.readString(byteBuf), ServiceState.values()[byteBuf.readInt()]);
+    public static IService readService(ByteBuf byteBuf, IPacket packet) {
+        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(),
+            packet.readString(byteBuf), ServiceState.values()[byteBuf.readInt()]);
     }
 
     public static void writeServiceGroup(ByteBuf byteBuf, IServiceGroup group, IPacket packet) {
@@ -36,8 +37,9 @@ public class PacketHelper {
         byteBuf.writeInt(group.getGameServerVersion().ordinal());
     }
 
-    public static IServiceGroup readServiceGroup(ByteBuf byteBuf, IPacket packet){
-        return new ServiceGroup(packet.readString(byteBuf), packet.readString(byteBuf), packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
+    public static IServiceGroup readServiceGroup(ByteBuf byteBuf, IPacket packet) {
+        return new ServiceGroup(packet.readString(byteBuf), packet.readString(byteBuf), packet.readString(byteBuf),
+            byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
     }
 
 }

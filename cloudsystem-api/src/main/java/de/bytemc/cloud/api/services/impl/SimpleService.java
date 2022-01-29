@@ -27,6 +27,7 @@ public class SimpleService implements IService {
         this.port = port;
         this.hostName = hostname;
     }
+
     public SimpleService(String group, int id, int port, String hostName, ServiceState serviceState) {
         this(group, id, port, hostName);
         this.serviceState = serviceState;
@@ -34,12 +35,12 @@ public class SimpleService implements IService {
 
     @Override
     public String getName() {
-        return group + "-" + serviceID;
+        return this.group + "-" + this.serviceID;
     }
 
     @Override
     public IServiceGroup getServiceGroup() {
-        return CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
+        return CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(this.group);
     }
 
     @Override
@@ -47,18 +48,19 @@ public class SimpleService implements IService {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimpleService that = (SimpleService) o;
+        final SimpleService that = (SimpleService) o;
 
-        if (serviceID != that.serviceID) return false;
-        if (port != that.port) return false;
-        return group.equals(that.group);
+        if (this.serviceID != that.serviceID) return false;
+        if (this.port != that.port) return false;
+        return this.group.equals(that.group);
     }
 
     @Override
     public int hashCode() {
-        int result = group.hashCode();
-        result = 31 * result + serviceID;
-        result = 31 * result + port;
+        int result = this.group.hashCode();
+        result = 31 * result + this.serviceID;
+        result = 31 * result + this.port;
         return result;
     }
+
 }

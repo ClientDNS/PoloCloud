@@ -13,8 +13,8 @@ public class SimpleConsoleManager {
 
     private final LoggerProvider loggerProvider;
     private Thread consoleReadingThread;
-    private LineReader lineReader;
-    private boolean windowsSystem;
+    private final LineReader lineReader;
+    private final boolean windowsSystem;
 
     public SimpleConsoleManager(LoggerProvider loggerProvider) {
         this.windowsSystem = ((SimpleLoggerProvider) loggerProvider).isWindows();
@@ -39,11 +39,11 @@ public class SimpleConsoleManager {
         this.lineReader.getTerminal().close();
     }
 
-    public void shutdownReading(){
+    public void shutdownReading() {
         this.consoleReadingThread.interrupt();
     }
 
-    public void handleInput(String input){
+    public void handleInput(String input) {
 
     }
 

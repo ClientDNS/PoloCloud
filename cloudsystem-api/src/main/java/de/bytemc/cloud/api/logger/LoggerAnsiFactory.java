@@ -6,7 +6,7 @@ import org.fusesource.jansi.Ansi;
 @AllArgsConstructor
 public enum LoggerAnsiFactory {
 
-    RESET("reset", 'r',Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.DEFAULT).boldOff().toString()),
+    RESET("reset", 'r', Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.DEFAULT).boldOff().toString()),
     WHITE("white", 'f', Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).bold().toString()),
     BLACK("black", '0', Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).bold().toString()),
     RED("red", 'c', Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).bold().toString()),
@@ -25,11 +25,11 @@ public enum LoggerAnsiFactory {
 
     private static final char[] replacements = new char[]{'§', '&'};
 
-    private String name;
-    private char index;
-    private String code;
+    private final String name;
+    private final char index;
+    private final String code;
 
-    public static String toColorCode(String value){
+    public static String toColorCode(String value) {
         String message = value;
         for (LoggerAnsiFactory ansiColorFactory : values()) {
             for (char replacement : replacements) {

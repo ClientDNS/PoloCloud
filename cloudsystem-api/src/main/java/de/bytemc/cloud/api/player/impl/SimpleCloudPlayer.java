@@ -9,7 +9,8 @@ import lombok.Setter;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class SimpleCloudPlayer implements ICloudPlayer {
 
     private final UUID uniqueID;

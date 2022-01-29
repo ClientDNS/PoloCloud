@@ -13,8 +13,8 @@ public interface ICloudPlayerManager {
 
     ICloudPlayer getCloudPlayerByNameOrNull(String username);
 
-    default int getCloudPlayerOnlineAmount(){
-        return getAllCachedCloudPlayers().size();
+    default int getCloudPlayerOnlineAmount() {
+        return this.getAllCachedCloudPlayers().size();
     }
 
     void registerCloudPlayer(UUID uniqueId, String username);

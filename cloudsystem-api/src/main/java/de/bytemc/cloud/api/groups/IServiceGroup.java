@@ -1,6 +1,5 @@
 package de.bytemc.cloud.api.groups;
 
-import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 
 public interface IServiceGroup {

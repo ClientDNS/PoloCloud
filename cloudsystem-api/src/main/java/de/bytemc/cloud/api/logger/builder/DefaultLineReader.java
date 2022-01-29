@@ -9,26 +9,27 @@ import org.jline.terminal.TerminalBuilder;
 
 public class DefaultLineReader {
 
-    private LineReaderBuilder lineReader;
+    private final LineReaderBuilder lineReader;
 
-    public static DefaultLineReader read(){
+    public static DefaultLineReader read() {
         return new DefaultLineReader();
     }
+
     public DefaultLineReader() {
         this.lineReader = LineReaderBuilder.builder();
     }
 
-    public LineReader complete(){
+    public LineReader complete() {
         return this.lineReader.completer(new ConsoleAutoCompleteTool()).build();
     }
 
     @SneakyThrows
-    public DefaultLineReader preparedTerminal(){
+    public DefaultLineReader preparedTerminal() {
         this.lineReader.terminal(TerminalBuilder.builder().system(true).streams(System.in, System.out).encoding(Charsets.UTF_8).dumb(true).build());
         return this;
     }
 
-    public DefaultLineReader addOptions(){
+    public DefaultLineReader addOptions() {
         this.lineReader.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true);
         this.lineReader.option(LineReader.Option.AUTO_REMOVE_SLASH, false);
         this.lineReader.option(LineReader.Option.INSERT_TAB, false);

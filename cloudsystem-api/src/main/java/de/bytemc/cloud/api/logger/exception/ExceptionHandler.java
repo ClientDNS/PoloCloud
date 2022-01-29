@@ -10,13 +10,13 @@ public class ExceptionHandler {
     public ExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
 
-            if(CloudAPI.getInstance() == null) {
+            if (CloudAPI.getInstance() == null) {
                 e.printStackTrace();
                 return;
             }
             if (CloudAPI.getInstance().getCloudAPITypes() == CloudAPITypes.NODE) {
 
-                if(CloudAPI.getInstance().getLoggerProvider() == null){
+                if (CloudAPI.getInstance().getLoggerProvider() == null) {
                     e.printStackTrace();
                     return;
                 }
@@ -26,4 +26,5 @@ public class ExceptionHandler {
             }
         });
     }
+
 }
