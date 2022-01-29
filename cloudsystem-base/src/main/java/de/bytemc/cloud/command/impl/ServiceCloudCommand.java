@@ -60,11 +60,11 @@ public class ServiceCloudCommand extends CloudCommand {
             }
 
             log.logMessage("Service information:");
-            log.logMessage("Name: " + service.getName());
-            log.logMessage("ID: " + service.getServiceID());
-            log.logMessage("Group: " + service.getServiceGroup());
-            log.logMessage("Host: " + service.getHostName());
-            log.logMessage("Port: " + service.getPort());
+            log.logMessage("Name: §b" + service.getName());
+            log.logMessage("ID: §b" + service.getServiceID());
+            log.logMessage("Group: §b" + service.getServiceGroup());
+            log.logMessage("Host: §b" + service.getHostName());
+            log.logMessage("Port: §b" + service.getPort());
             return;
         }
         log.logMessage("§7Use following command: §bservice list §7- List all available services.");
