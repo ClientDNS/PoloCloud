@@ -9,6 +9,7 @@ import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
+import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.command.DefaultCommandSender;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
@@ -21,12 +22,18 @@ import de.bytemc.cloud.services.queue.QueueService;
 import de.bytemc.cloud.templates.GroupTemplateService;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 @Getter
 public class Base extends CloudAPI {
 
-    @Getter private static Base instance;
-    @Getter private final DefaultCommandSender commandSender = new DefaultCommandSender();
+    @Getter
+    private static Base instance;
+    @Getter
+    private final DefaultCommandSender commandSender = new DefaultCommandSender();
 
     private BaseNode node;
     private IDatabaseManager databaseManager;
@@ -36,6 +43,8 @@ public class Base extends CloudAPI {
 
     private GroupTemplateService groupTemplateService;
     private QueueService queueService;
+
+    private boolean running = true;
 
     public Base() {
         super(CloudAPITypes.NODE);
@@ -57,24 +66,40 @@ public class Base extends CloudAPI {
         queueService = new QueueService();
 
         //add a shutdown hook for fast closes
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
 
         //print finish successfully message
         getLoggerProvider().logMessage("               ", LogType.EMPTY);
         getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
         getLoggerProvider().logMessage("               ", LogType.EMPTY);
 
-        ((SimpleLoggerProvider)CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
+        ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
 
         queueService.checkForQueue();
     }
 
     public void onShutdown() {
+        this.running = false;
         CloudAPI.getInstance().getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
-        ICommunicationPromise.combineAll(Lists.newArrayList(node.shutdownConnection(), databaseManager.shutdown())).addCompleteListener(it -> System.exit(0)).addResultListener(unused -> {
-            CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-            ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().shutdownReading();
-        });
+        CloudAPI.getInstance().getServiceManager().getAllCachedServices()
+            .forEach(service -> {
+                if (((SimpleService) service).getProcess() != null) ((SimpleService) service).getProcess().destroyForcibly();
+            });
+        try {
+            FileUtils.deleteDirectory(new File("tmp"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ICommunicationPromise.combineAll(Lists.newArrayList(node.shutdownConnection(), databaseManager.shutdown()))
+            .addCompleteListener(it -> System.exit(0))
+            .addResultListener(unused -> {
+                CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+                ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().shutdownReading();
+            });
+    }
+
+    public boolean isRunning() {
+        return this.running;
     }
 
 }

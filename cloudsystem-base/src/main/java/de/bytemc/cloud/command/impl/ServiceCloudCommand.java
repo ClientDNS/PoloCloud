@@ -1,6 +1,5 @@
 package de.bytemc.cloud.command.impl;
 
-import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.executor.ExecutorType;
@@ -36,13 +35,13 @@ public class ServiceCloudCommand extends CloudCommand {
                 return;
             }
 
-            if(service.getServiceState() == ServiceState.PREPARED || service.getServiceState() == ServiceState.STOPPING) {
+            if (service.getServiceState() == ServiceState.PREPARED || service.getServiceState() == ServiceState.STOPPING) {
                 log.logMessage("This service ist not started or already in stopping state.", LogType.WARNING);
                 return;
             }
 
-            ((ServiceManager)CloudAPI.getInstance().getServiceManager()).shutdownService(service);
-            log.logMessage("The service '§b"+ service.getName() + "§7' is now stopped.");
+            ((ServiceManager) CloudAPI.getInstance().getServiceManager()).shutdownService(service);
+            log.logMessage("The service '§b" + service.getName() + "§7' is now stopped.");
             return;
         }
         if (args.length == 4) {
@@ -51,8 +50,26 @@ public class ServiceCloudCommand extends CloudCommand {
             }
             return;
         }
+        if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
+
+            IService service = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(args[1]);
+
+            if (service == null) {
+                log.logMessage("This service does not exists.", LogType.WARNING);
+                return;
+            }
+
+            log.logMessage("Service information:");
+            log.logMessage("Name: §b" + service.getName());
+            log.logMessage("ID: §b" + service.getServiceID());
+            log.logMessage("Group: §b" + service.getServiceGroup().getGroup());
+            log.logMessage("Host: §b" + service.getHostName());
+            log.logMessage("Port: §b" + service.getPort());
+            return;
+        }
         log.logMessage("§7Use following command: §bservice list §7- List all available services.");
         log.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that exists.");
         log.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
+        log.logMessage("§7Use following command: §bservice info (name) §7- Prints information about the specific service.");
     }
 }

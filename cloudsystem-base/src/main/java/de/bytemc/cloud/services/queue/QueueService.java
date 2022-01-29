@@ -22,6 +22,7 @@ public class QueueService {
     }
 
     public void checkForQueue() {
+        if (!Base.getInstance().isRunning()) return;
         addServiceToQueueWhereProvided();
         if (minBootableServiceExists()) return;
 
