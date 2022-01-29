@@ -28,8 +28,6 @@ public class ProcessJavaArgs {
             "-XX:MaxTenuringThreshold=1",
             "-Dusing.aikars.flags=https://mcflags.emc.gs",
             "-Daikars.new.flags=true",
-            "-XX:+UseG1GC",
-            "-XX:MaxGCPauseMillis=50",
             "-XX:-UseAdaptiveSizePolicy",
             "-XX:CompileThreshold=100",
             "-Dcom.mojang.eula.agree=true",
