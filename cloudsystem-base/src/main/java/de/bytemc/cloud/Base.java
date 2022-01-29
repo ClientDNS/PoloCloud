@@ -9,6 +9,7 @@ import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
+import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.command.DefaultCommandSender;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
@@ -57,7 +58,7 @@ public class Base extends CloudAPI {
         queueService = new QueueService();
 
         //add a shutdown hook for fast closes
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> onShutdown()));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
 
         //print finish successfully message
         getLoggerProvider().logMessage("               ", LogType.EMPTY);
@@ -71,7 +72,11 @@ public class Base extends CloudAPI {
 
     public void onShutdown() {
         CloudAPI.getInstance().getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
-        ICommunicationPromise.combineAll(Lists.newArrayList(node.shutdownConnection(), databaseManager.shutdown())).addCompleteListener(it -> System.exit(0)).addResultListener(unused -> {
+        CloudAPI.getInstance().getServiceManager().getAllCachedServices()
+            .forEach(service -> ((ServiceManager) CloudAPI.getInstance().getServiceManager()).shutdownService(service));
+        ICommunicationPromise.combineAll(Lists.newArrayList(node.shutdownConnection(), databaseManager.shutdown()))
+            .addCompleteListener(it -> System.exit(0))
+            .addResultListener(unused -> {
             CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
             ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().shutdownReading();
         });
