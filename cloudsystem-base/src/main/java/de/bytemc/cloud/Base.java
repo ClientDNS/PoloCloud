@@ -22,6 +22,10 @@ import de.bytemc.cloud.services.queue.QueueService;
 import de.bytemc.cloud.templates.GroupTemplateService;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 @Getter
 public class Base extends CloudAPI {
@@ -74,6 +78,11 @@ public class Base extends CloudAPI {
         CloudAPI.getInstance().getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
         CloudAPI.getInstance().getServiceManager().getAllCachedServices()
             .forEach(service -> ((ServiceManager) CloudAPI.getInstance().getServiceManager()).shutdownService(service));
+        try {
+            FileUtils.deleteDirectory(new File("tmp"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         ICommunicationPromise.combineAll(Lists.newArrayList(node.shutdownConnection(), databaseManager.shutdown()))
             .addCompleteListener(it -> System.exit(0))
             .addResultListener(unused -> {
