@@ -1,5 +1,6 @@
 package de.bytemc.cloud.services.queue;
 
+import com.google.common.collect.Maps;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
@@ -11,7 +12,6 @@ import de.bytemc.cloud.services.ServiceManager;
 import de.bytemc.cloud.services.ports.PortHandler;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class QueueService {
 

@@ -12,6 +12,7 @@ import de.bytemc.cloud.services.process.args.ProcessJavaArgs;
 import de.bytemc.cloud.services.process.file.PropertyFileWriter;
 import de.bytemc.cloud.services.properties.BungeeProperties;
 import de.bytemc.cloud.services.properties.SpigotProperties;
+import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
 import de.bytemc.network.promise.CommunicationPromise;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.SneakyThrows;
@@ -26,6 +27,9 @@ public record ProcessServiceStarter(IService service) {
     public ProcessServiceStarter(final IService service) {
         this.service = service;
         this.service.setServiceState(ServiceState.STARTING);
+
+        //add statistic to service
+        SimpleStatisticManager.registerStartingProcess(this.service);
 
         this.service.getServiceGroup().getGameServerVersion().download();
 

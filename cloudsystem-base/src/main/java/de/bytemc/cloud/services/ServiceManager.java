@@ -15,7 +15,7 @@ public class ServiceManager extends AbstractSimpleServiceManager {
     public void start(final IService service) {
         this.startService(service).addResultListener(it ->
             CloudAPI.getInstance().getLoggerProvider()
-                .logMessage("The service '§b" + service.getName() + "§7' selected and will now started. (" + service.getServiceState().getName() + "§7)")).addFailureListener(Throwable::printStackTrace);
+                .logMessage("The service '§b" + service.getName() + "§7' selected and will now started.")).addFailureListener(Throwable::printStackTrace);
     }
 
     public ICommunicationPromise<IService> startService(final IService service) {
