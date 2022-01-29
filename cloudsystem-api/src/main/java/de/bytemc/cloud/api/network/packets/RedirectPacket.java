@@ -19,7 +19,7 @@ public class RedirectPacket implements IPacket {
     @Override
     public void write(ByteBuf byteBuf) {
         this.writeString(byteBuf, this.node);
-        byteBuf.writeInt(NetworkManager.getIndexFromPacket(this.packet.getClass()));
+        byteBuf.writeInt(NetworkManager.getPacketId(this.packet.getClass()));
         this.packet.write(byteBuf);
     }
 
@@ -30,7 +30,7 @@ public class RedirectPacket implements IPacket {
         this.node = this.readString(byteBuf);
         var packetID = byteBuf.readInt();
 
-        final Class<? extends IPacket> r = NetworkManager.getClassFromId(packetID);
+        final Class<? extends IPacket> r = NetworkManager.getPacketClass(packetID);
         this.packet = r.getConstructor().newInstance();
         this.packet.read(byteBuf);
     }

@@ -36,13 +36,23 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
     @Override
     public void onEnable() {
         for (IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
+
+            System.out.println("service save: " + allCachedService.getName());
+
             if (!allCachedService.getServiceGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
+        System.out.println("chache update packet3123");
 
         NetworkManager.registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> {
+
+            System.out.println("chache update packet");
+
             ProxyServer.getInstance().getServers().clear();
 
             for (IService allCachedService : packet.getAllCachedServices()) {
+
+                System.out.println(allCachedService.getName());
+
                 if (!allCachedService.getServiceGroup().getGameServerVersion().isProxy())
                     registerService(allCachedService);
             }

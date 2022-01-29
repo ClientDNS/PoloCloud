@@ -17,32 +17,18 @@ import de.bytemc.network.packets.IPacketListener;
 public class NetworkHandler implements INetworkHandler {
 
     public NetworkHandler() {
-        this.registerPackets(
-            ServiceGroupExecutePacket.class,
-            ServiceGroupCacheUpdatePacket.class,
-            ServiceShutdownPacket.class,
-            RedirectPacket.class,
-            ServiceCacheUpdatePacket.class,
-            CloudPlayerLoginPacket.class,
-            CloudPlayerDisconnectPacket.class,
-            ServiceAddPacket.class,
-            ServiceRemovePacket.class
-        );
-
+        NetworkManager.registerPacket(ServiceGroupExecutePacket.class, 2);
+        NetworkManager.registerPacket(ServiceGroupCacheUpdatePacket.class, 3);
+        NetworkManager.registerPacket(ServiceShutdownPacket.class, 4);
+        NetworkManager.registerPacket(RedirectPacket.class, 5);
+        NetworkManager.registerPacket(CloudPlayerLoginPacket.class, 6);
+        NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 7);
+        NetworkManager.registerPacket(ServiceAddPacket.class, 8);
+        NetworkManager.registerPacket(ServiceRemovePacket.class, 9);
+        NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 10);
     }
 
-    @Override
-    public void registerPacket(Class<? extends IPacket> packet) {
-        NetworkManager.getRegisteredPacket().add(packet);
-    }
-
-    @SafeVarargs
-    @Override
-    public final void registerPackets(Class<? extends IPacket>... packet) {
-        for (Class<? extends IPacket> aClass : packet) registerPacket(aClass);
-    }
-
-    public <R extends IPacket> void registerPacketListener(Class<R> clazz, IPacketListener<R> packetListener) {
+    public <R extends IPacket> void registerPacketListener(Class<R> clazz, IPacketListener<R> packetListener){
         NetworkManager.registerPacketListener(clazz, packetListener);
     }
 
