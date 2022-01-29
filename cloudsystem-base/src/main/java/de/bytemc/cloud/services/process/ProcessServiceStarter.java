@@ -81,7 +81,8 @@ public class ProcessServiceStarter {
                 process.waitFor();
 
                 //stop service
-                FileUtils.deleteDirectory(new File("tmp/" + service.getName() + "/"));
+                final var file = new File("tmp/" + service.getName() + "/");
+                if (file.exists()) FileUtils.deleteDirectory(file);
                 CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + service.getName() + "§7' is now successfully offline.");
                 Base.getInstance().getNode().sendPacketToAll(new ServiceRemovePacket(service.getName()));
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().remove(service);
