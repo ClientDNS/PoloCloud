@@ -12,37 +12,38 @@ import java.util.stream.Collectors;
 
 public class SimpleGroupManager extends AbstractGroupManager {
 
-    private IDatabase database;
+    private final IDatabase database;
 
-    public SimpleGroupManager(){
+    public SimpleGroupManager() {
         this.database = Base.getInstance().getDatabaseManager().getDatabase();
 
-        //loading all database groups
-        getAllCachedServiceGroups().addAll(database.getAllServiceGroups());
+        // loading all database groups
+        this.getAllCachedServiceGroups().addAll(this.database.getAllServiceGroups());
 
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupExecutePacket.class, (ctx, packet) -> {
-            if(packet.getExecutorType().equals(ServiceGroupExecutePacket.executor.CREATE)){
+            if (packet.getExecutorType().equals(ServiceGroupExecutePacket.executor.CREATE)) {
                 getAllCachedServiceGroups().add(packet.getGroup());
                 Base.getInstance().getGroupTemplateService().createTemplateFolder(packet.getGroup());
                 Base.getInstance().getQueueService().checkForQueue();
             } else {
-                getAllCachedServiceGroups().remove(packet.getGroup());
+                this.getAllCachedServiceGroups().remove(packet.getGroup());
             }
         });
-        CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b" + String.join("§7, §b", getAllCachedServiceGroups().stream().map(it -> it.getGroup()).collect(Collectors.toList())));
+        CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b"
+            + this.getAllCachedServiceGroups().stream().map(IServiceGroup::getGroup).collect(Collectors.joining("§7, §b")));
     }
 
     @Override
-    public void addServiceGroup(IServiceGroup serviceGroup) {
-        database.addGroup(serviceGroup);
+    public void addServiceGroup(final IServiceGroup serviceGroup) {
+        this.database.addGroup(serviceGroup);
         Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.CREATE));
         super.addServiceGroup(serviceGroup);
     }
 
 
     @Override
-    public void removeServiceGroup(IServiceGroup serviceGroup) {
-        database.removeGroup(serviceGroup);
+    public void removeServiceGroup(final IServiceGroup serviceGroup) {
+        this.database.removeGroup(serviceGroup);
         Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.REMOVE));
         super.removeServiceGroup(serviceGroup);
     }

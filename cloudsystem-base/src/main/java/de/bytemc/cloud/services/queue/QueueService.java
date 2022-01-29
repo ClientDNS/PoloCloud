@@ -18,16 +18,17 @@ public class QueueService {
     private static final int MAX_BOOTABLE_SERVICES = 1;
 
     public QueueService() {
-        addServiceToQueueWhereProvided();
+        this.addServiceToQueueWhereProvided();
     }
 
     public void checkForQueue() {
         if (!Base.getInstance().isRunning()) return;
-        addServiceToQueueWhereProvided();
-        if (minBootableServiceExists()) return;
+        this.addServiceToQueueWhereProvided();
+        if (this.minBootableServiceExists()) return;
 
-        List<IService> services = CloudAPI.getInstance().getServiceManager().getAllServicesByState(ServiceState.PREPARED).stream().filter(it -> it.getServiceGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())).collect(Collectors.toList());
-        if(services.isEmpty()) return;
+        final List<IService> services = CloudAPI.getInstance().getServiceManager().getAllServicesByState(ServiceState.PREPARED)
+            .stream().filter(it -> it.getServiceGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())).toList();
+        if (services.isEmpty()) return;
         ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(services.get(0));
     }
 
@@ -37,15 +38,17 @@ public class QueueService {
             .filter(it -> getAmountOfGroupServices(it) < it.getMinOnlineService())
             .forEach(it -> {
                 //TODO CHANGE NODE HOSTNAME
-                IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it), PortHandler.getNextPort(it), "127.0.0.1");
+                final IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it),
+                    PortHandler.getNextPort(it), "127.0.0.1");
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 Base.getInstance().getNode().sendPacketToAll(new ServiceAddPacket(service));
-                CloudAPI.getInstance().getLoggerProvider().logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
+                CloudAPI.getInstance().getLoggerProvider()
+                    .logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
             });
     }
 
     private boolean minBootableServiceExists() {
-        return getAmountOfBootableServices() >= MAX_BOOTABLE_SERVICES;
+        return this.getAmountOfBootableServices() >= MAX_BOOTABLE_SERVICES;
     }
 
     private int getAmountOfBootableServices() {
@@ -58,11 +61,12 @@ public class QueueService {
 
     private int getPossibleServiceIDByGroup(final IServiceGroup serviceGroup) {
         int id = 1;
-        while (isServiceIDAlreadyExists(serviceGroup, id)) id++;
+        while (this.isServiceIDAlreadyExists(serviceGroup, id)) id++;
         return id;
     }
 
     private boolean isServiceIDAlreadyExists(final IServiceGroup serviceGroup, int id) {
         return CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(serviceGroup).stream().anyMatch(it -> id == it.getServiceID());
     }
+
 }

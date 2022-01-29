@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-@AllArgsConstructor @NoArgsConstructor @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class RedirectPacket implements IPacket {
 
     private String node;
@@ -16,20 +18,20 @@ public class RedirectPacket implements IPacket {
 
     @Override
     public void write(ByteBuf byteBuf) {
-        writeString(byteBuf, node);
-        byteBuf.writeInt(NetworkManager.getIndexFromPacket(packet.getClass()));
-        packet.write(byteBuf);
+        this.writeString(byteBuf, this.node);
+        byteBuf.writeInt(NetworkManager.getIndexFromPacket(this.packet.getClass()));
+        this.packet.write(byteBuf);
     }
 
 
     @SneakyThrows
     @Override
     public void read(ByteBuf byteBuf) {
-        this.node = readString(byteBuf);
+        this.node = this.readString(byteBuf);
         var packetID = byteBuf.readInt();
 
-        Class<? extends IPacket> r = NetworkManager.getClassFromId(packetID);
-        packet = r.getConstructor().newInstance();
-        packet.read(byteBuf);
+        final Class<? extends IPacket> r = NetworkManager.getClassFromId(packetID);
+        this.packet = r.getConstructor().newInstance();
+        this.packet.read(byteBuf);
     }
 }

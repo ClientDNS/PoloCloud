@@ -21,9 +21,8 @@ public class HelpCloudCommand extends CloudCommand {
         manager.getCachedCloudCommands().forEach(it -> CloudAPI.getInstance().getLoggerProvider().logMessage("§b" + it.getCommandName() + getAlias(it) + " - " + it.getDescription()));
     }
 
-    private String getAlias(CloudCommand command){
+    private String getAlias(CloudCommand command) {
         return command.getAlias().length == 0 ? "" : "§7(§b" + String.join(", ", command.getAlias()) + "§7)";
     }
-
 
 }

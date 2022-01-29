@@ -8,7 +8,6 @@ import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.DefaultGroup;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.cloud.services.ServiceManager;
 
@@ -55,7 +54,8 @@ public class GroupCloudCommand extends CloudCommand {
                 log.logMessage("The group '§b" + name + "§7' is now registered and online.");
                 Base.getInstance().getQueueService().checkForQueue();
                 return;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
             log.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
         }
@@ -102,4 +102,5 @@ public class GroupCloudCommand extends CloudCommand {
         log.logMessage("§7Use following command: §bgroup remove §7(§bname§7)");
         log.logMessage("§7Use following command: §bgroup info §7(§bname§7)");
     }
+
 }

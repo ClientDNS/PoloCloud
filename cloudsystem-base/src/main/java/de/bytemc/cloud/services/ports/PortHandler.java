@@ -8,7 +8,7 @@ public class PortHandler {
     private static final int PORTS_BOUNCE_PROXY = 25565;
     private static final int PORTS_BOUNCE = 30000;
 
-    public static int getNextPort(IServiceGroup service){
+    public static int getNextPort(IServiceGroup service) {
         int port = service.getGameServerVersion().isProxy() ? PORTS_BOUNCE_PROXY : PORTS_BOUNCE;
         while (isPortUsed(port)) {
             port++;
@@ -16,7 +16,7 @@ public class PortHandler {
         return port;
     }
 
-    private static boolean isPortUsed(int port){
+    private static boolean isPortUsed(int port) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().anyMatch(it -> it.getPort() == port);
     }
 

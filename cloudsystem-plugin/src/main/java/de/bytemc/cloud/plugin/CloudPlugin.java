@@ -18,15 +18,17 @@ import lombok.Setter;
 @Getter
 public class CloudPlugin extends CloudAPI {
 
-    @Setter private static DefaultProxyCommandSender commandSender;
+    @Setter
+    private static DefaultProxyCommandSender commandSender;
 
-    @Getter private static CloudPlugin instance;
+    @Getter
+    private static CloudPlugin instance;
 
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
-    private PluginClient pluginClient;
-    private IPlugin plugin;
+    private final PluginClient pluginClient;
+    private final IPlugin plugin;
 
     public CloudPlugin(IPlugin plugin) {
         super(CloudAPITypes.SERVICE);
@@ -40,7 +42,7 @@ public class CloudPlugin extends CloudAPI {
         this.serviceManager = new ServiceManager(property);
         this.cloudPlayerManager = new CloudPlayerManager();
 
-        pluginClient = new PluginClient(property.getService(), property.getHostname(), property.getPort());
+        this.pluginClient = new PluginClient(property.getService(), property.getHostname(), property.getPort());
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }
@@ -49,4 +51,5 @@ public class CloudPlugin extends CloudAPI {
     public DefaultProxyCommandSender getCommandSender() {
         return commandSender;
     }
+
 }

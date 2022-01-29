@@ -16,18 +16,21 @@ public class CloudPlayerManager extends AbstractPlayerManager {
 
     @Override
     public List<ICloudPlayer> getAllServicePlayers() {
-        return getAllServicePlayers().stream().filter(it -> it.getServer().getName().equalsIgnoreCase(((ServiceManager)CloudPlugin.getInstance().getServiceManager()).thisService().getName())).collect(Collectors.toList());
+        return this.getAllCachedCloudPlayers().stream()
+            .filter(it -> it.getServer().getName().equalsIgnoreCase(((ServiceManager) CloudPlugin.getInstance().getServiceManager())
+                .thisService().getName())).collect(Collectors.toList());
     }
 
     @Override
     public void registerCloudPlayer(UUID uniqueID, String username) {
         getAllCachedCloudPlayers().add(new SimpleCloudPlayer(uniqueID, username));
-        CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudPlayerLoginPacket(username,uniqueID));
+        CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudPlayerLoginPacket(username, uniqueID));
     }
 
     @Override
     public void unregisterCloudPlayer(UUID uuid, String username) {
         getAllCachedCloudPlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
-         CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudPlayerDisconnectPacket(uuid, username));
+        CloudPlugin.getInstance().getPluginClient().sendPacket(new CloudPlayerDisconnectPacket(uuid, username));
     }
+
 }

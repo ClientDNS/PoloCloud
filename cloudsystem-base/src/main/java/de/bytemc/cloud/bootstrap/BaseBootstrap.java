@@ -4,7 +4,7 @@ import de.bytemc.cloud.Base;
 
 public class BaseBootstrap {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new Base();
     }
 

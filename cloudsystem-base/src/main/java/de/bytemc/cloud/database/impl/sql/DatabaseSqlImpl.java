@@ -25,7 +25,7 @@ public class DatabaseSqlImpl implements IDatabase {
     @SneakyThrows
     @Override
     public void connect() {
-        connection = DriverManager.getConnection("jdbc:mysql://37.114.60.81:3306"
+        this.connection = DriverManager.getConnection("jdbc:mysql://37.114.60.81:3306"
             + "/cloudsystem?useUnicode=true&autoReconnect=true", "marco", "1Marco2Polo3");
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
@@ -37,14 +37,14 @@ public class DatabaseSqlImpl implements IDatabase {
     @SneakyThrows
     @Override
     public ICommunicationPromise<Void> disconnect() {
-        ICommunicationPromise<Void> shutdownPromise = new CommunicationPromise<>();
-        if (connection != null) this.connection.close();
+        final ICommunicationPromise<Void> shutdownPromise = new CommunicationPromise<>();
+        if (this.connection != null) this.connection.close();
         shutdownPromise.setSuccess(null);
         return shutdownPromise;
     }
 
     @Override
-    public void addGroup(IServiceGroup serviceGroup) {
+    public void addGroup(final IServiceGroup serviceGroup) {
         executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, version) VALUES (" +
             "'" + serviceGroup.getGroup() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0 + ", '" +
@@ -52,7 +52,7 @@ public class DatabaseSqlImpl implements IDatabase {
     }
 
     @Override
-    public void removeGroup(IServiceGroup serviceGroup) {
+    public void removeGroup(final IServiceGroup serviceGroup) {
         executeUpdate("DELETE FROM cloudsystem_groups WHERE name='" + serviceGroup.getGroup() + "'");
     }
 
@@ -68,7 +68,7 @@ public class DatabaseSqlImpl implements IDatabase {
                     resultSet.getInt("memory"),
                     resultSet.getInt("minOnlineService"),
                     resultSet.getInt("maxOnlineService"),
-                    resultSet.getInt("staticService") == 1 ? true : false,
+                    resultSet.getInt("staticService") == 1,
                     GameServerVersion.getVersionByTitle(resultSet.getString("version")));
                 groups.add(serviceGroup);
             }
@@ -77,8 +77,8 @@ public class DatabaseSqlImpl implements IDatabase {
     }
 
     public <T> T executeQuery(String query, DatabaseFunction<ResultSet, T> function, T defaultValue) {
-        Objects.requireNonNull(connection, "Try to execute a statement, but the connection is null.");
-        try (var preparedStatement = connection.prepareStatement(query)) {
+        Objects.requireNonNull(this.connection, "Try to execute a statement, but the connection is null.");
+        try (var preparedStatement = this.connection.prepareStatement(query)) {
             try (var resultSet = preparedStatement.executeQuery()) {
                 return function.apply(resultSet);
             } catch (Exception throwable) {
@@ -90,13 +90,14 @@ public class DatabaseSqlImpl implements IDatabase {
         return defaultValue;
     }
 
-    public int executeUpdate(String query) {
-        Objects.requireNonNull(connection, "Try to update a statement, but the connection is null.");
-        try (var preparedStatement = connection.prepareStatement(query)) {
+    public int executeUpdate(final String query) {
+        Objects.requireNonNull(this.connection, "Try to update a statement, but the connection is null.");
+        try (var preparedStatement = this.connection.prepareStatement(query)) {
             return preparedStatement.executeUpdate();
         } catch (SQLException exception) {
             exception.printStackTrace();
             return -1;
         }
     }
+
 }

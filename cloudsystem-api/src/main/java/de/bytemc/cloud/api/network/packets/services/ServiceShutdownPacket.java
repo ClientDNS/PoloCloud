@@ -6,18 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor @NoArgsConstructor @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class ServiceShutdownPacket implements IPacket {
 
     private String service;
 
     @Override
     public void write(ByteBuf byteBuf) {
-        writeString(byteBuf, service);
+        writeString(byteBuf, this.service);
     }
 
     @Override
     public void read(ByteBuf byteBuf) {
         this.service = readString(byteBuf);
     }
+
 }

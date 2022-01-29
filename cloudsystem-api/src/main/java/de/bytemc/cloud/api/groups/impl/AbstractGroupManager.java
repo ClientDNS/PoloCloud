@@ -8,18 +8,19 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter
+@Setter
 public abstract class AbstractGroupManager implements IGroupManager {
 
     private List<IServiceGroup> allCachedServiceGroups = Lists.newArrayList();
 
     @Override
-    public void addServiceGroup(IServiceGroup serviceGroup) {
-        allCachedServiceGroups.add(serviceGroup);
+    public void addServiceGroup(final IServiceGroup serviceGroup) {
+        this.allCachedServiceGroups.add(serviceGroup);
     }
 
-    public void removeServiceGroup(IServiceGroup serviceGroup) {
-        allCachedServiceGroups.remove(serviceGroup);
+    public void removeServiceGroup(final IServiceGroup serviceGroup) {
+        this.allCachedServiceGroups.remove(serviceGroup);
     }
 
 }

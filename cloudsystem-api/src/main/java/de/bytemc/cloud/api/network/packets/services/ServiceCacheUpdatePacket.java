@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor @NoArgsConstructor @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class ServiceCacheUpdatePacket implements IPacket {
 
     private List<IService> allCachedServices;
 
     @Override
     public void write(ByteBuf byteBuf) {
-        byteBuf.writeInt(allCachedServices.size());
-        allCachedServices.forEach(it -> PacketHelper.writeService(it, byteBuf, this));
+        byteBuf.writeInt(this.allCachedServices.size());
+        this.allCachedServices.forEach(it -> PacketHelper.writeService(it, byteBuf, this));
     }
 
     @Override
@@ -31,4 +33,5 @@ public class ServiceCacheUpdatePacket implements IPacket {
             this.allCachedServices.add(PacketHelper.readService(byteBuf, this));
         }
     }
+
 }

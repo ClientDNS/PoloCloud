@@ -5,7 +5,7 @@ import de.bytemc.cloud.api.services.IService;
 
 public class ProcessJavaArgs {
 
-    public static String[] args(IService service) {
+    public static String[] args(final IService service) {
         return new String[]{
             "java",
             "-XX:+UseG1GC",

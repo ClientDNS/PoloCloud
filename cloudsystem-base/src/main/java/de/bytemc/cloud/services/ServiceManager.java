@@ -12,25 +12,25 @@ import de.bytemc.network.promise.ICommunicationPromise;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
 
-    public void start(IService service){
-        startService(service).addResultListener(it -> {
-            CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + service.getName() + "§7' selected and will now started. (" + service.getServiceState().getName() + "§7)");
-        }).addFailureListener(it -> it.printStackTrace());
+    public void start(final IService service) {
+        this.startService(service).addResultListener(it ->
+            CloudAPI.getInstance().getLoggerProvider()
+                .logMessage("The service '§b" + service.getName() + "§7' selected and will now started. (" + service.getServiceState().getName() + "§7)")).addFailureListener(Throwable::printStackTrace);
     }
 
-    public ICommunicationPromise<IService> startService(IService service){
+    public ICommunicationPromise<IService> startService(final IService service) {
         return new ProcessServiceStarter(service).start();
     }
 
-    public void sendPacketToService(IService service, IPacket packet) {
+    public void sendPacketToService(final IService service, final IPacket packet) {
         Base.getInstance().getNode().getAllCachedConnectedClients().stream().filter(it -> it.getName().equals(service.getName())).findAny().ifPresent(it -> it.sendPacket(packet));
     }
 
-    public void shutdownService(IService service){
-        if(service.getServiceGroup().getNode().equals(Base.getInstance().getNode().getNodeName())){
-            sendPacketToService(service, new ServiceShutdownPacket(service.getName()));
-        }else{
-            Base.getInstance().getNode().sendPacketToAllNodes(new RedirectPacket(service.getServiceGroup().getNode(),new ServiceShutdownPacket(service.getName())));
+    public void shutdownService(final IService service) {
+        if (service.getServiceGroup().getNode().equals(Base.getInstance().getNode().getNodeName())) {
+            this.sendPacketToService(service, new ServiceShutdownPacket(service.getName()));
+        } else {
+            Base.getInstance().getNode().sendPacketToAllNodes(new RedirectPacket(service.getServiceGroup().getNode(), new ServiceShutdownPacket(service.getName())));
         }
     }
 

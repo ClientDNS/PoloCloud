@@ -3,7 +3,8 @@ package de.bytemc.cloud.api.logger;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor @Getter
+@AllArgsConstructor
+@Getter
 public enum LogType {
 
     SUCCESS("§aSUCCESS§7"),
@@ -12,6 +13,6 @@ public enum LogType {
     WARNING("§6WARNING§7"),
     EMPTY("");
 
-    private String textField;
+    private final String textField;
 
 }

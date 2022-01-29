@@ -6,7 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class DefaultSpigotCommandSender extends DefaultProxyCommandSender {
 
     @Override
-    public void sendMessage(String text) {
+    public void sendMessage(final String text) {
         JavaPlugin.getPlugin(SpigotBootstrap.class).getLogger().info(text);
     }
+
 }

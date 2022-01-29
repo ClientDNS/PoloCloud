@@ -15,20 +15,20 @@ import java.util.List;
 @NoArgsConstructor
 public class GsonFactory<T> {
 
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private File file;
 
-    public GsonFactory(String path) {
+    public GsonFactory(final String path) {
         this.file = new File(path);
     }
 
     @SneakyThrows
-    public T load(Class<T> clazz){
-        return gson.fromJson(new FileReader(file), clazz);
+    public T load(Class<T> clazz) {
+        return GSON.fromJson(new FileReader(this.file), clazz);
     }
 
     public List<T> loadAll(Class<T> clazz, List<File> files) {
-        List<T> items = Lists.newArrayList();
+        final List<T> items = Lists.newArrayList();
         for (File fileList : files) {
             setFile(fileList);
             items.add(load(clazz));
@@ -36,10 +36,9 @@ public class GsonFactory<T> {
         return items;
     }
 
-    public static Gson build(){
-        return gson;
+    public static Gson build() {
+        return GSON;
     }
-
 
 
 }

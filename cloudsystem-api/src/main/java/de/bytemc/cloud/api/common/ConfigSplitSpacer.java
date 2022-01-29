@@ -9,6 +9,6 @@ public enum ConfigSplitSpacer {
 
     YAML(": "),
     PROPERTIES("=");
-    private String split;
+    private final String split;
 
 }

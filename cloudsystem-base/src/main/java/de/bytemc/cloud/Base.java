@@ -3,7 +3,6 @@ package de.bytemc.cloud;
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
-import de.bytemc.cloud.api.common.GsonFactory;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
@@ -35,14 +34,14 @@ public class Base extends CloudAPI {
     @Getter
     private final DefaultCommandSender commandSender = new DefaultCommandSender();
 
-    private BaseNode node;
-    private IDatabaseManager databaseManager;
-    private IGroupManager groupManager;
-    private IServiceManager serviceManager;
-    private ICloudPlayerManager cloudPlayerManager;
+    private final BaseNode node;
+    private final IDatabaseManager databaseManager;
+    private final IGroupManager groupManager;
+    private final IServiceManager serviceManager;
+    private final ICloudPlayerManager cloudPlayerManager;
 
-    private GroupTemplateService groupTemplateService;
-    private QueueService queueService;
+    private final GroupTemplateService groupTemplateService;
+    private final QueueService queueService;
 
     private boolean running = true;
 
@@ -60,41 +59,42 @@ public class Base extends CloudAPI {
         this.cloudPlayerManager = new CloudPlayerManager();
         this.node = new BaseNode(NodeConfig.read());
 
-        //registered commands
-        getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
+        // registered commands
+        this.getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
 
-        queueService = new QueueService();
+        this.queueService = new QueueService();
 
-        //add a shutdown hook for fast closes
+        // add a shutdown hook for fast closes
         Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
 
-        //print finish successfully message
-        getLoggerProvider().logMessage("               ", LogType.EMPTY);
-        getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
-        getLoggerProvider().logMessage("               ", LogType.EMPTY);
+        // print finish successfully message
+        this.getLoggerProvider().logMessage("               ", LogType.EMPTY);
+        this.getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
+        this.getLoggerProvider().logMessage("               ", LogType.EMPTY);
 
         ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
 
-        queueService.checkForQueue();
+        this.queueService.checkForQueue();
     }
 
     public void onShutdown() {
         this.running = false;
-        CloudAPI.getInstance().getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
-        CloudAPI.getInstance().getServiceManager().getAllCachedServices()
+        this.getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
+        this.getServiceManager().getAllCachedServices()
             .forEach(service -> {
-                if (((SimpleService) service).getProcess() != null) ((SimpleService) service).getProcess().destroyForcibly();
+                if (((SimpleService) service).getProcess() != null)
+                    ((SimpleService) service).getProcess().destroyForcibly();
             });
         try {
             FileUtils.deleteDirectory(new File("tmp"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ICommunicationPromise.combineAll(Lists.newArrayList(node.shutdownConnection(), databaseManager.shutdown()))
+        ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
             .addCompleteListener(it -> System.exit(0))
             .addResultListener(unused -> {
-                CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().shutdownReading();
+                this.getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+                ((SimpleLoggerProvider) this.getLoggerProvider()).getConsoleManager().shutdownReading();
             });
     }
 

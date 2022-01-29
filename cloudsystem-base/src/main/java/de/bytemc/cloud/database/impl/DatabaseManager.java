@@ -9,7 +9,7 @@ import lombok.Getter;
 public class DatabaseManager implements IDatabaseManager {
 
     @Getter
-    private IDatabase database;
+    private final IDatabase database;
 
     public DatabaseManager() {
         this.database = new DatabaseSqlImpl();

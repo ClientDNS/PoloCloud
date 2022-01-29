@@ -8,12 +8,14 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter
+@Setter
 public abstract class AbstractSimpleServiceManager implements IServiceManager {
 
     private List<IService> allCachedServices = Lists.newArrayList();
 
-    public void registerService(IService service){
+    public void registerService(IService service) {
         allCachedServices.add(service);
     }
+
 }
