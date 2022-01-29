@@ -62,7 +62,7 @@ public class ServiceCloudCommand extends CloudCommand {
             log.logMessage("Service information:");
             log.logMessage("Name: §b" + service.getName());
             log.logMessage("ID: §b" + service.getServiceID());
-            log.logMessage("Group: §b" + service.getServiceGroup());
+            log.logMessage("Group: §b" + service.getServiceGroup().getGroup());
             log.logMessage("Host: §b" + service.getHostName());
             log.logMessage("Port: §b" + service.getPort());
             return;
