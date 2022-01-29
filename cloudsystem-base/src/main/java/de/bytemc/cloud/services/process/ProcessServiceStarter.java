@@ -4,7 +4,6 @@ import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
-import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
@@ -21,12 +20,10 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class ProcessServiceStarter {
-
-    private IService service;
+public record ProcessServiceStarter(IService service) {
 
     @SneakyThrows
-    public ProcessServiceStarter(IService service) {
+    public ProcessServiceStarter(final IService service) {
         this.service = service;
         this.service.setServiceState(ServiceState.STARTING);
 
@@ -48,16 +45,16 @@ public class ProcessServiceStarter {
         new PropertyFileWriter(service);
 
         //check properties and modify
-        if(service.getServiceGroup().getGameServerVersion().isProxy()) {
+        if (service.getServiceGroup().getGameServerVersion().isProxy()) {
             var file = new File("tmp/" + service.getName() + "/config.yml");
-            if(file.exists()) {
+            if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
                 editor.setValue("host", "0.0.0.0:" + service.getPort());
                 editor.saveFile();
-            }else new BungeeProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
+            } else new BungeeProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
         } else {
             var file = new File("tmp/" + service.getName() + "/server.properties");
-            if(file.exists()) {
+            if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
                 editor.setValue("server-port", String.valueOf(service.getPort()));
                 editor.saveFile();
@@ -67,25 +64,25 @@ public class ProcessServiceStarter {
 
     @SneakyThrows
     public ICommunicationPromise<IService> start() {
-        var communicationPromise = new CommunicationPromise<IService>();
-        var command = ProcessJavaArgs.args(service);
+        final var communicationPromise = new CommunicationPromise<IService>();
+        final var command = ProcessJavaArgs.args(this.service);
 
-        var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + service.getName() + "/"));
-        var process = processBuilder.start();
+        final var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + this.service.getName() + "/"));
+        final var process = processBuilder.start();
 
-        var thread = new Thread(() -> {
-            ((SimpleService) service).setProcess(process);
-            communicationPromise.setSuccess(service);
+        final var thread = new Thread(() -> {
+            ((SimpleService) this.service).setProcess(process);
+            communicationPromise.setSuccess(this.service);
 
             try {
                 process.waitFor();
 
                 //stop service
-                final var file = new File("tmp/" + service.getName() + "/");
+                final var file = new File("tmp/" + this.service.getName() + "/");
                 if (file.exists()) FileUtils.deleteDirectory(file);
-                CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + service.getName() + "§7' is now successfully offline.");
-                Base.getInstance().getNode().sendPacketToAll(new ServiceRemovePacket(service.getName()));
-                CloudAPI.getInstance().getServiceManager().getAllCachedServices().remove(service);
+                CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + this.service.getName() + "§7' is now successfully offline.");
+                Base.getInstance().getNode().sendPacketToAll(new ServiceRemovePacket(this.service.getName()));
+                CloudAPI.getInstance().getServiceManager().getAllCachedServices().remove(this.service);
 
                 //check queue
                 Base.getInstance().getQueueService().checkForQueue();

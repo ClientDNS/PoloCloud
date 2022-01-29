@@ -11,16 +11,16 @@ import de.bytemc.cloud.api.services.IServiceManager;
 public class BaseNodeNetwork {
 
     public BaseNodeNetwork() {
-        INetworkHandler networkHandler = CloudAPI.getInstance().getNetworkHandler();
+        final INetworkHandler networkHandler = CloudAPI.getInstance().getNetworkHandler();
 
         networkHandler.registerPacketListener(RedirectPacket.class, (ctx, packet) ->
             Base.getInstance().getNode().getAllCachedConnectedClients().stream().filter(it ->
                 it.getName().equalsIgnoreCase(packet.getNode())).forEach(it -> it.sendPacket(packet.getPacket())));
 
 
-        IServiceManager serviceManager = CloudAPI.getInstance().getServiceManager();
+        final IServiceManager serviceManager = CloudAPI.getInstance().getServiceManager();
         networkHandler.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) ->
-            serviceManager.getAllCachedServices().remove( serviceManager.getServiceByNameOrNull(packet.getService())));
+            serviceManager.getAllCachedServices().remove(serviceManager.getServiceByNameOrNull(packet.getService())));
         networkHandler.registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> serviceManager.getAllCachedServices().add(packet.getService()));
 
     }

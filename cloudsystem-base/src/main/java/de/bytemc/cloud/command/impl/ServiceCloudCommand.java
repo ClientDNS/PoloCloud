@@ -72,4 +72,5 @@ public class ServiceCloudCommand extends CloudCommand {
         log.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
         log.logMessage("§7Use following command: §bservice info (name) §7- Prints information about the specific service.");
     }
+
 }

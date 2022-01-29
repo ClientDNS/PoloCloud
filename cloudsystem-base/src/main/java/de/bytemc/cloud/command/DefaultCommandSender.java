@@ -15,4 +15,5 @@ public class DefaultCommandSender implements ICommandSender {
     public ExecutorType getCommandType() {
         return ExecutorType.CONSOLE;
     }
+
 }

@@ -25,22 +25,22 @@ public class CloudPlayerManager extends AbstractPlayerManager {
 
     @Override
     public List<ICloudPlayer> getAllServicePlayers() {
-        return getAllCachedCloudPlayers();
+        return this.getAllCachedCloudPlayers();
     }
-
 
     @Override
     public void registerCloudPlayer(UUID uniqueID, String username) {
-        getAllServicePlayers().add(new SimpleCloudPlayer(uniqueID, username));
+        this.getAllServicePlayers().add(new SimpleCloudPlayer(uniqueID, username));
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The player '§b" + username + "§7' is now connected.");
     }
 
     @Override
     public void unregisterCloudPlayer(UUID uuid, String name) {
-       getAllServicePlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
+        this.getAllServicePlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The player '§b" + name + "§7' disconnected.");
 
     }
+
 }

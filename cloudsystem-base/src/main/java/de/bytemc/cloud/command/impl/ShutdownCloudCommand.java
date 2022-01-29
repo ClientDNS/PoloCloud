@@ -8,13 +8,12 @@ import de.bytemc.cloud.api.command.executor.ICommandSender;
 public class ShutdownCloudCommand extends CloudCommand {
 
     public ShutdownCloudCommand() {
-        super("stop","Stop the cloudsystem", ExecutorType.CONSOLE);
+        super("stop", "Stop the cloudsystem", ExecutorType.CONSOLE);
     }
 
     @Override
     public void execute(ICommandSender sender, String[] args) {
         Base.getInstance().onShutdown();
     }
-
 
 }

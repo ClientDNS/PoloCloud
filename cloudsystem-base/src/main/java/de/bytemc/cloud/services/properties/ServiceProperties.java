@@ -9,34 +9,32 @@ import java.io.IOException;
 @Getter
 public abstract class ServiceProperties {
 
-    private File file;
-    private int port;
+    private final File file;
+    private final int port;
     private String[] properties;
 
     private final boolean can;
 
-    public ServiceProperties(File file, String child, int port) {
-        can = new File(file.getPath(), child).exists();
+    public ServiceProperties(final File file, final String child, final int port) {
+        this.can = new File(file.getPath(), child).exists();
         this.file = new File(file.getPath(), child);
 
         this.port = port;
     }
 
-    public void setProperties(String[] properties) {
+    public void setProperties(final String[] properties) {
         this.properties = properties;
     }
 
     public void writeFile() {
-        if (!can) {
-            try {
-                FileWriter fileWriter = new FileWriter(file);
-
-                for (String line : properties) {
+        if (!this.can) {
+            try (final FileWriter fileWriter = new FileWriter(this.file)) {
+                for (final String line : this.properties) {
                     fileWriter.write(line + "\n");
                 }
-                fileWriter.close();
-
-            } catch (IOException ignored) { }
+            } catch (IOException ignored) {
+            }
         }
     }
+
 }
