@@ -8,8 +8,7 @@ public class SpigotBootstrap extends JavaPlugin implements IPlugin {
 
     @Override
     public void onLoad() {
-        //CloudPlugin.setCommandSender(new DefaultSpigotCommandSender());
-        //new CloudPlugin(this);
+
     }
 
     @Override
