@@ -3,6 +3,7 @@ package de.bytemc.cloud.api.logger;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.jline.reader.LineReader;
 import org.jline.utils.InfoCmp;
 
@@ -34,7 +35,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
     }
 
     @Override
-    public String getLog(String text, LogType logType) {
+    public String getLog(@NotNull String text, @NotNull LogType logType) {
         String message = "§r" + text + "§r";
         if (logType != LogType.EMPTY) {
             message = " " + dataFormat.format(Calendar.getInstance().getTime()) + " §7" + (isWindows() ? "|" : "┃") + " §r" +
@@ -44,7 +45,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
     }
 
     @Override
-    public void logMessage(String text, LogType logType) {
+    public void logMessage(@NotNull String text, @NotNull LogType logType) {
         String coloredMessage = getLog(text, logType);
         if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
             LineReader lineReader = consoleManager.getLineReader();
@@ -59,7 +60,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
     }
 
     @Override
-    public void logMessage(String text) {
+    public void logMessage(@NotNull String text) {
         logMessage(text, LogType.INFO);
     }
 

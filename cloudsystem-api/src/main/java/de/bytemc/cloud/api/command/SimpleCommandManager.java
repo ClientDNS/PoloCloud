@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +20,7 @@ public class SimpleCommandManager implements CommandManager {
         this.cachedCloudCommands = Lists.newArrayList();
     }
 
-    public boolean execute(String command){
+    public boolean execute(final @NotNull String command){
         List<String> args = Lists.newArrayList(command.split(" "));
         if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
            CloudCommand cloudCommand = cachedCloudCommands.stream()
@@ -36,16 +37,16 @@ public class SimpleCommandManager implements CommandManager {
 
 
     @Override
-    public void registerCommand(CloudCommand command) {
+    public void registerCommand(final @NotNull CloudCommand command) {
         this.cachedCloudCommands.add(command);
     }
 
     @Override
-    public void unregisterCommand(CloudCommand command) {
+    public void unregisterCommand(final @NotNull CloudCommand command) {
         this.cachedCloudCommands.remove(command);
     }
 
-    public void registerCommandByPackage(String packageInput){
+    public void registerCommandByPackage(@NotNull String packageInput){
         Reflections reflections = new Reflections(packageInput);
 
         reflections.getSubTypesOf(CloudCommand.class).forEach(it -> {

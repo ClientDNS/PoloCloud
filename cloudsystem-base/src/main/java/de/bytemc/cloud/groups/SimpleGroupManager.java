@@ -7,6 +7,7 @@ import de.bytemc.cloud.api.groups.impl.AbstractGroupManager;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
 import de.bytemc.cloud.database.IDatabase;
 import de.bytemc.cloud.node.BaseNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;
 
@@ -30,11 +31,11 @@ public class SimpleGroupManager extends AbstractGroupManager {
             }
         });
         CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b"
-            + this.getAllCachedServiceGroups().stream().map(IServiceGroup::getGroup).collect(Collectors.joining("§7, §b")));
+            + this.getAllCachedServiceGroups().stream().map(IServiceGroup::getName).collect(Collectors.joining("§7, §b")));
     }
 
     @Override
-    public void addServiceGroup(final IServiceGroup serviceGroup) {
+    public void addServiceGroup(final @NotNull IServiceGroup serviceGroup) {
         this.database.addGroup(serviceGroup);
         Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.CREATE));
         super.addServiceGroup(serviceGroup);
@@ -42,7 +43,7 @@ public class SimpleGroupManager extends AbstractGroupManager {
 
 
     @Override
-    public void removeServiceGroup(final IServiceGroup serviceGroup) {
+    public void removeServiceGroup(final @NotNull IServiceGroup serviceGroup) {
         this.database.removeGroup(serviceGroup);
         Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.REMOVE));
         super.removeServiceGroup(serviceGroup);

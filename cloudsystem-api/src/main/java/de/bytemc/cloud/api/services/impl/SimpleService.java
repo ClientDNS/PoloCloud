@@ -6,6 +6,7 @@ import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
@@ -34,12 +35,12 @@ public class SimpleService implements IService {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return this.group + "-" + this.serviceID;
     }
 
     @Override
-    public IServiceGroup getServiceGroup() {
+    public @NotNull IServiceGroup getServiceGroup() {
         return CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(this.group);
     }
 

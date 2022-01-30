@@ -13,6 +13,7 @@ import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.network.NetworkManager;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.packets.IPacketListener;
+import org.jetbrains.annotations.NotNull;
 
 public class NetworkHandler implements INetworkHandler {
 
@@ -28,7 +29,7 @@ public class NetworkHandler implements INetworkHandler {
         NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 10);
     }
 
-    public <R extends IPacket> void registerPacketListener(Class<R> clazz, IPacketListener<R> packetListener){
+    public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){
         NetworkManager.registerPacketListener(clazz, packetListener);
     }
 

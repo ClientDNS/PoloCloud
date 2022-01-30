@@ -1,24 +1,54 @@
 package de.bytemc.cloud.api.player;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.UUID;
 
 public interface ICloudPlayerManager {
 
-    List<ICloudPlayer> getAllCachedCloudPlayers();
+    /**
+     * @return a list of all cloud players
+     */
+    @NotNull List<ICloudPlayer> getAllCachedCloudPlayers();
 
-    List<ICloudPlayer> getAllServicePlayers();
+    /**
+     * @return a list of all cloud players on the service
+     */
+    @NotNull List<ICloudPlayer> getAllServicePlayers();
 
-    ICloudPlayer getCloudPlayerByUniqueIdOrNull(UUID uniqueID);
+    /**
+     * @param uniqueId the unique id to get the player
+     * @return the player
+     */
+    @Nullable ICloudPlayer getCloudPlayerByUniqueIdOrNull(final @NotNull UUID uniqueId);
 
-    ICloudPlayer getCloudPlayerByNameOrNull(String username);
+    /**
+     * @param username the username to get the player
+     * @return the player
+     */
+    @Nullable ICloudPlayer getCloudPlayerByNameOrNull(final @NotNull String username);
 
+    /**
+     * @return the online count
+     */
     default int getCloudPlayerOnlineAmount() {
         return this.getAllCachedCloudPlayers().size();
     }
 
-    void registerCloudPlayer(UUID uniqueId, String username);
+    /**
+     * registers a cloud player
+     * @param uniqueId the unique id of the player
+     * @param username the username of the player
+     */
+    void registerCloudPlayer(final @NotNull UUID uniqueId, final @NotNull String username);
 
-    void unregisterCloudPlayer(UUID uuid, String name);
+    /**
+     * unregisters a cloud player
+     * @param uniqueId the unique id of the player
+     * @param username the username of the player
+     */
+    void unregisterCloudPlayer(final @NotNull UUID uniqueId, final @NotNull String username);
 
 }

@@ -50,14 +50,14 @@ public class DatabaseSqlImpl implements IDatabase {
     @Override
     public void addGroup(final IServiceGroup serviceGroup) {
         executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, version) VALUES (" +
-            "'" + serviceGroup.getGroup() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
+            "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0 + ", '" +
             serviceGroup.getGameServerVersion().getTitle() + "');"));
     }
 
     @Override
     public void removeGroup(final IServiceGroup serviceGroup) {
-        executeUpdate("DELETE FROM cloudsystem_groups WHERE name='" + serviceGroup.getGroup() + "'");
+        executeUpdate("DELETE FROM cloudsystem_groups WHERE name='" + serviceGroup.getName() + "'");
     }
 
     @Override
