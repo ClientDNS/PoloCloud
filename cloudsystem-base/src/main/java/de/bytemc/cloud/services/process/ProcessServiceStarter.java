@@ -43,7 +43,7 @@ public record ProcessServiceStarter(IService service) {
         FileUtils.copyFile(new File("storage/jars/" + jar), new File("tmp/" + service.getName() + "/" + jar));
 
         //copy plugin
-        //FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File("tmp/" + service.getName() + "/plugins/plugin.jar"));
+        FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File("tmp/" + service.getName() + "/plugins/plugin.jar"));
 
         //write property for identify service
         new PropertyFileWriter(service);
