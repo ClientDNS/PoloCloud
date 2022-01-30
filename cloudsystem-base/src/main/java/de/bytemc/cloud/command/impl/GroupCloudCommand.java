@@ -97,10 +97,52 @@ public class GroupCloudCommand extends CloudCommand {
             return;
         }
 
+        if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {
+            final var name = args[1];
+
+            if (!groupManager.isServiceGroupExists(name)) {
+                log.logMessage("This group does not exists", LogType.WARNING);
+                return;
+            }
+
+            final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
+
+            switch (args[2].toLowerCase()) {
+                case "memory":
+                    try {
+                        serviceGroup.setMemory(Integer.parseInt(args[3]));
+                    } catch (NumberFormatException e) {
+                        log.logMessage("§7Use following command: §bgroup edit " + serviceGroup.getName() + " memory §7(§bint§7)");
+                    }
+                    serviceGroup.setMemory(Integer.parseInt(args[3]));
+                case "minservicecount":
+                    try {
+                        serviceGroup.setMinOnlineService(Integer.parseInt(args[3]));
+                    } catch (NumberFormatException e) {
+                        log.logMessage("§7Use following command: §bgroup edit " + serviceGroup.getName() + " minServiceCount §7(§bint§7)");
+                    }
+                    break;
+                case "maxservicecount":
+                    try {
+                        serviceGroup.setMaxOnlineService(Integer.parseInt(args[3]));
+                    } catch (NumberFormatException e) {
+                        log.logMessage("§7Use following command: §bgroup edit " + serviceGroup.getName() + " maxServiceCount §7(§bint§7)");
+                    }
+                    break;
+                case "static":
+                    serviceGroup.setStatic(Boolean.parseBoolean(args[3]));
+                    break;
+                case "version":
+                    serviceGroup.setGameVersion(GameServerVersion.valueOf(args[3]));
+                    break;
+            }
+        }
+
         log.logMessage("§7Use following command: §bgroup list - List all groups");
         log.logMessage("§7Use following command: §bgroup create §7(§bname§7) (§bmemory§7) (§bstatic§7) (§bversion§7)");
         log.logMessage("§7Use following command: §bgroup remove §7(§bname§7)");
         log.logMessage("§7Use following command: §bgroup info §7(§bname§7)");
+        log.logMessage("§7Use following command: §bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
     }
 
 }
