@@ -17,11 +17,10 @@ public class PropertyFileWriter {
     public PropertyFileWriter(final IService service) {
 
         final var company = new JsonObject();
-        company.addProperty("service.name", service.getName());
-        company.addProperty("service.node", service.getServiceGroup().getNode());
-        company.addProperty("service.node.hostname", Base.getInstance().getNode().getHostName());
-        company.addProperty("service.node.port", Base.getInstance().getNode().getPort());
-
+        company.addProperty("service", service.getName());
+        company.addProperty("node", service.getServiceGroup().getNode());
+        company.addProperty("hostname", Base.getInstance().getNode().getHostName());
+        company.addProperty("port", Base.getInstance().getNode().getPort());
 
         final var fileWriter = new FileWriter("tmp/" + service.getName() + "/property.json");
         fileWriter.write(GSON.toJson(company));
