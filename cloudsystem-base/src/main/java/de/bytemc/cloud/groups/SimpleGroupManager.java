@@ -30,7 +30,7 @@ public class SimpleGroupManager extends AbstractGroupManager {
             }
         });
         CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b"
-            + this.getAllCachedServiceGroups().stream().map(IServiceGroup::getGroup).collect(Collectors.joining("§7, §b")));
+            + this.getAllCachedServiceGroups().stream().map(IServiceGroup::getName).collect(Collectors.joining("§7, §b")));
     }
 
     @Override

@@ -12,7 +12,7 @@ public interface IGroupManager {
     void removeServiceGroup(IServiceGroup serviceGroup);
 
     default IServiceGroup getServiceGroupByNameOrNull(String name) {
-        return getAllCachedServiceGroups().stream().filter(it -> it.getGroup().equalsIgnoreCase(name)).findAny().orElse(null);
+        return getAllCachedServiceGroups().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findAny().orElse(null);
     }
 
     default boolean isServiceGroupExists(String group) {

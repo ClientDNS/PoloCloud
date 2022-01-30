@@ -12,7 +12,7 @@ import io.netty.buffer.ByteBuf;
 public class PacketHelper {
 
     public static void writeService(IService service, ByteBuf byteBuf, IPacket packet) {
-        packet.writeString(byteBuf, service.getServiceGroup().getGroup());
+        packet.writeString(byteBuf, service.getServiceGroup().getName());
         byteBuf.writeInt(service.getServiceID());
         byteBuf.writeInt(service.getPort());
         packet.writeString(byteBuf, service.getHostName());
@@ -25,7 +25,7 @@ public class PacketHelper {
     }
 
     public static void writeServiceGroup(ByteBuf byteBuf, IServiceGroup group, IPacket packet) {
-        packet.writeString(byteBuf, group.getGroup());
+        packet.writeString(byteBuf, group.getName());
         packet.writeString(byteBuf, group.getTemplate());
         packet.writeString(byteBuf, group.getNode());
 

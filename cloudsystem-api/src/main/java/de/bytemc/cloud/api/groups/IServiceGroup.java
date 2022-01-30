@@ -6,13 +6,6 @@ public interface IServiceGroup {
 
     String getName();
 
-    /**
-     * @return the name of the group
-     * @deprecated use getName()
-     */
-    @Deprecated(forRemoval = true)
-    String getGroup();
-
     String getTemplate();
 
     String getNode();

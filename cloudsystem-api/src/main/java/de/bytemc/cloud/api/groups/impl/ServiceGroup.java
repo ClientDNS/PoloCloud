@@ -15,11 +15,6 @@ public class ServiceGroup implements IServiceGroup {
     private GameServerVersion gameServerVersion;
 
     @Override
-    public String getGroup() {
-        return this.name;
-    }
-
-    @Override
     public void setMemory(final int memory) {
         this.memory = memory;
     }

@@ -38,12 +38,12 @@ public class QueueService {
             .filter(it -> getAmountOfGroupServices(it) < it.getMinOnlineService())
             .forEach(it -> {
                 //TODO CHANGE NODE HOSTNAME
-                final IService service = new SimpleService(it.getGroup(), getPossibleServiceIDByGroup(it),
+                final IService service = new SimpleService(it.getName(), getPossibleServiceIDByGroup(it),
                     PortHandler.getNextPort(it), "127.0.0.1");
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 Base.getInstance().getNode().sendPacketToAll(new ServiceAddPacket(service));
                 CloudAPI.getInstance().getLoggerProvider()
-                    .logMessage("The group '§b" + it.getGroup() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
+                    .logMessage("The group '§b" + it.getName() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
             });
     }
 

@@ -26,7 +26,7 @@ public class ServiceGroupExecutePacket implements IPacket {
 
     @Override
     public void write(ByteBuf byteBuf) {
-        this.writeString(byteBuf, this.group.getGroup());
+        this.writeString(byteBuf, this.group.getName());
         this.writeString(byteBuf, this.group.getTemplate());
         this.writeString(byteBuf, this.group.getNode());
 
