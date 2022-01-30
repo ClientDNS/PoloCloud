@@ -1,50 +1,41 @@
 package de.bytemc.cloud.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import de.bytemc.cloud.api.json.Document;
+import de.bytemc.cloud.database.DatabaseConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.SneakyThrows;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 
 @Getter
 @AllArgsConstructor
 public class NodeConfig {
 
     private static final File FILE = new File("node.json");
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static NodeConfig NODE_CONFIG;
 
     private String nodeName;
     private String hostname;
     private int port;
+    private final DatabaseConfiguration databaseConfiguration;
 
-    @SneakyThrows
-    public static NodeConfig read() {
+    static {
+        read();
+    }
 
+    public static void read() {
         if (FILE.exists()) {
-            final FileReader fileReader = new FileReader(FILE.getPath());
-            var data = (JsonObject) JsonParser.parseReader(fileReader);
-
-            return new NodeConfig(data.get("current.node.name").getAsString(), data.get("current.node.hostname").getAsString(),
-                data.get("current.node.port").getAsInt());
+            NODE_CONFIG = new Document(FILE).get(NodeConfig.class);
         } else {
-            final var company = new JsonObject();
-            company.addProperty("current.node.name", "node-1");
-            company.addProperty("current.node.hostname", "127.0.0.1");
-            company.addProperty("current.node.port", 8876);
-
-            final var fileWriter = new FileWriter(FILE.getPath());
-            fileWriter.write(GSON.toJson(company));
-            fileWriter.flush();
-            fileWriter.close();
-
-            return new NodeConfig("node-1", "127.0.0.1", 8876);
+            final var nodeConfig = new NodeConfig("node-1", "127.0.0.1", 8876,
+                new DatabaseConfiguration("127.0.0.1", 3306, "cloud", "cloud", "password123"));
+            new Document(nodeConfig).write(FILE);
+            NODE_CONFIG = nodeConfig;
         }
+    }
+
+    public static NodeConfig get() {
+        return NODE_CONFIG;
     }
 
 }
