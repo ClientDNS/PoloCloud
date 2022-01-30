@@ -56,9 +56,9 @@
         </dependency>
         <dependency>
             <groupId>de.bytemc</groupId>
-            <artifactId>cloudsystem-api</artifactId>
+            <artifactId>cloudsystem-wrapper</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.bytemc.network</groupId>

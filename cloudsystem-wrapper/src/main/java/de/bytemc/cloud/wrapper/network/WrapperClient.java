@@ -1,18 +1,18 @@
-package de.bytemc.cloud.plugin.network;
+package de.bytemc.cloud.wrapper.network;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.network.cluster.impl.client.NodeClient;
 import de.bytemc.network.cluster.types.NetworkType;
 import io.netty.channel.ChannelHandlerContext;
 
-public class PluginClient extends NodeClient {
+public class WrapperClient extends NodeClient {
 
-    public PluginClient(String clientName, String hostname, int port) {
+    public WrapperClient(final String clientName, final String hostname, final int port) {
         super(clientName, NetworkType.SERVICE);
 
-        connectEstablishment(hostname, port).addResultListener(it -> {
-            CloudAPI.getInstance().getLoggerProvider().logMessage("The service start successfully network service.");
-        }).addFailureListener(Throwable::printStackTrace);
+        this.connectEstablishment(hostname, port).addResultListener(it ->
+            CloudAPI.getInstance().getLoggerProvider().logMessage("The service start successfully network service."))
+            .addFailureListener(Throwable::printStackTrace);
     }
 
     @Override

@@ -12,6 +12,7 @@
         <module>cloudsystem-api</module>
         <module>cloudsystem-plugin</module>
         <module>cloudsystem-base</module>
+        <module>cloudsystem-wrapper</module>
     </modules>
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
