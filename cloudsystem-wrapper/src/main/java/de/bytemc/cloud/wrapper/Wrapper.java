@@ -5,6 +5,7 @@ import de.bytemc.cloud.api.CloudAPITypes;
 import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.IGroupManager;
+import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
@@ -14,6 +15,7 @@ import de.bytemc.cloud.wrapper.player.CloudPlayerManager;
 import de.bytemc.cloud.wrapper.service.ServiceManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +57,7 @@ public class Wrapper extends CloudAPI {
 
         instance = this;
 
-        final var property = new PropertyFileReader();
+        final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager(property);

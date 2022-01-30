@@ -8,15 +8,15 @@ import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
-import de.bytemc.cloud.wrapper.PropertyFileReader;
+import de.bytemc.cloud.wrapper.PropertyFile;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
 
-    private final PropertyFileReader property;
+    private final PropertyFile property;
 
-    public ServiceManager(final PropertyFileReader property) {
+    public ServiceManager(final PropertyFile property) {
         this.property = property;
         INetworkHandler networkHandler = CloudAPI.getInstance().getNetworkHandler();
         networkHandler.registerPacketListener(ServiceShutdownPacket.class, (ctx, packet) -> System.exit(0) /*TODO better*/);
