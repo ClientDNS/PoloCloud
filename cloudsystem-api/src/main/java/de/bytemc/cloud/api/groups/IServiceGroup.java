@@ -4,7 +4,7 @@ import de.bytemc.cloud.api.versions.GameServerVersion;
 
 public interface IServiceGroup {
 
-    String getGroup();
+    String getName();
 
     String getTemplate();
 
