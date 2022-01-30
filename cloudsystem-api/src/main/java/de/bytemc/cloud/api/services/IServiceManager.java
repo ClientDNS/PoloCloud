@@ -48,4 +48,11 @@ public interface IServiceManager {
      */
     ICommunicationPromise<IService> startService(final @NotNull IService service);
 
+    default List<IService> getAllPossibleOnlineFallbackServices() {
+        return this.getAllCachedServices().stream()
+            .filter(it -> it.getServiceState() == ServiceState.ONLINE)
+            .filter(it -> !it.getServiceGroup().getGameServerVersion().isProxy())
+            .filter(it -> it.getServiceGroup().isFallbackGroup()).collect(Collectors.toList());
+    }
+
 }

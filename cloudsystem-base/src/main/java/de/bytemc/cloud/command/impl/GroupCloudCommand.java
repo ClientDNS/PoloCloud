@@ -112,18 +112,18 @@ public class GroupCloudCommand extends CloudCommand {
             final String key = args[2].toLowerCase();
             switch (key) {
                 case "memory":
-                    this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMemory);
+                 //   this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMemory);
                 case "minservicecount":
-                    this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMinOnlineService);
+                  //  this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMinOnlineService);
                     break;
                 case "maxservicecount":
-                    this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMaxOnlineService);
+                  //  this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMaxOnlineService);
                     break;
                 case "static":
-                    serviceGroup.setStatic(Boolean.parseBoolean(args[3]));
+                 //   serviceGroup.setStatic(Boolean.parseBoolean(args[3]));
                     break;
                 case "version":
-                    serviceGroup.setGameVersion(GameServerVersion.valueOf(args[3]));
+                    //serviceGroup.setGameVersion(GameServerVersion.valueOf(args[3]));
                     break;
             }
         }

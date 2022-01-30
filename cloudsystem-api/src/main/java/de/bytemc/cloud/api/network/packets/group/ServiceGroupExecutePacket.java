@@ -2,6 +2,7 @@ package de.bytemc.cloud.api.network.packets.group;
 
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.impl.ServiceGroup;
+import de.bytemc.cloud.api.network.packets.PacketHelper;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.network.packets.IPacket;
 import io.netty.buffer.ByteBuf;
@@ -38,12 +39,13 @@ public class ServiceGroupExecutePacket implements IPacket {
         byteBuf.writeInt(this.group.getGameServerVersion().ordinal());
 
         byteBuf.writeInt(this.executorType.ordinal());
+        PacketHelper.writeServiceGroup(byteBuf, group, this);
+        byteBuf.writeInt(executorType.ordinal());
     }
 
     @Override
     public void read(ByteBuf byteBuf) {
-        this.group = new ServiceGroup(this.readString(byteBuf), this.readString(byteBuf), this.readString(byteBuf), byteBuf.readInt(),
-            byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
+        this.group = PacketHelper.readServiceGroup(byteBuf, this);
         this.executorType = executor.values()[byteBuf.readInt()];
     }
 

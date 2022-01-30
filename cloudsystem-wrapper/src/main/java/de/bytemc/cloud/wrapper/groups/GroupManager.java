@@ -1,4 +1,4 @@
-package de.bytemc.cloud.plugin.groups;
+package de.bytemc.cloud.wrapper.groups;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.impl.AbstractGroupManager;

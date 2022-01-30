@@ -1,5 +1,6 @@
 package de.bytemc.cloud.api.services;
 
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import org.jetbrains.annotations.NotNull;
@@ -41,5 +42,9 @@ public interface IService {
      * @return the state of the service
      */
     @NotNull ServiceState getServiceState();
+
+    default int getOnlinePlayers() {
+        return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer().equals(this)).count();
+    }
 
 }
