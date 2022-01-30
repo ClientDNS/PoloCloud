@@ -27,7 +27,7 @@ public class GroupCloudCommand extends CloudCommand {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
-                log.logMessage("Name of group '§b" + serviceGroup.getGroup() + "§7' (§7Version '§b"
+                log.logMessage("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
             return;
@@ -88,7 +88,7 @@ public class GroupCloudCommand extends CloudCommand {
 
             var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
             log.logMessage("Group information's: ");
-            log.logMessage("Groupname: §b" + serviceGroup.getGroup());
+            log.logMessage("Groupname: §b" + serviceGroup.getName());
             log.logMessage("Template: §b" + serviceGroup.getTemplate());
             log.logMessage("Node: §b" + serviceGroup.getNode());
             log.logMessage("Memory: §b" + serviceGroup.getMemory() + "mb");
