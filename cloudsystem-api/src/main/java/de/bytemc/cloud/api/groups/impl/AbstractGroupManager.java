@@ -5,6 +5,7 @@ import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -15,11 +16,11 @@ public abstract class AbstractGroupManager implements IGroupManager {
     private List<IServiceGroup> allCachedServiceGroups = Lists.newArrayList();
 
     @Override
-    public void addServiceGroup(final IServiceGroup serviceGroup) {
+    public void addServiceGroup(final @NotNull IServiceGroup serviceGroup) {
         this.allCachedServiceGroups.add(serviceGroup);
     }
 
-    public void removeServiceGroup(final IServiceGroup serviceGroup) {
+    public void removeServiceGroup(final @NotNull IServiceGroup serviceGroup) {
         this.allCachedServiceGroups.remove(serviceGroup);
     }
 

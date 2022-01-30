@@ -1,15 +1,33 @@
 package de.bytemc.cloud.api.logger;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface LoggerProvider {
 
-    void logMessage(String text, LogType logType);
+    /**
+     * logs a message
+     * @param text the text to log
+     * @param logType the type to log
+     */
+    void logMessage(final @NotNull String text, final @NotNull LogType logType);
 
-    void logMessage(String text);
+    /**
+     * logs a message
+     * @param text the text to log
+     */
+    void logMessage(final @NotNull String text);
 
-    void logMessages(String... text);
+    /**
+     * logs messages
+     * @param text the messages to log
+     */
+    void logMessages(final @NotNull String... text);
 
-    String getLog(String text, LogType logType);
+    String getLog(final @NotNull String text, final @NotNull LogType logType);
 
+    /**
+     * clears the console
+     */
     void clearConsole();
 
 }

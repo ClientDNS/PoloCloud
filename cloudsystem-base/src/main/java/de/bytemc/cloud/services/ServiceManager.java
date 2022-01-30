@@ -9,6 +9,7 @@ import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
 import de.bytemc.cloud.services.process.ProcessServiceStarter;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.ICommunicationPromise;
+import org.jetbrains.annotations.NotNull;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
 
@@ -18,7 +19,7 @@ public class ServiceManager extends AbstractSimpleServiceManager {
                 .logMessage("The service '§b" + service.getName() + "§7' selected and will now started.")).addFailureListener(Throwable::printStackTrace);
     }
 
-    public ICommunicationPromise<IService> startService(final IService service) {
+    public ICommunicationPromise<IService> startService(final @NotNull IService service) {
         return new ProcessServiceStarter(service).start();
     }
 

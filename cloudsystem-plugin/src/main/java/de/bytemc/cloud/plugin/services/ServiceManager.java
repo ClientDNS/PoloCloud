@@ -11,6 +11,7 @@ import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
 import de.bytemc.cloud.plugin.CloudPlugin;
 import de.bytemc.cloud.plugin.services.file.PluginPropertyFileReader;
 import de.bytemc.network.promise.ICommunicationPromise;
+import org.jetbrains.annotations.NotNull;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
 
@@ -26,7 +27,7 @@ public class ServiceManager extends AbstractSimpleServiceManager {
     }
 
     @Override
-    public ICommunicationPromise<IService> startService(IService service) {
+    public ICommunicationPromise<IService> startService(@NotNull IService service) {
         //TODO SEND PACKET
         return null;
     }

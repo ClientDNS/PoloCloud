@@ -4,6 +4,7 @@ import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @AllArgsConstructor
@@ -38,7 +39,7 @@ public class ServiceGroup implements IServiceGroup {
     }
 
     @Override
-    public void setGameVersion(final GameServerVersion gameServerVersion) {
+    public void setGameVersion(final @NotNull GameServerVersion gameServerVersion) {
         this.gameServerVersion = gameServerVersion;
         // TODO update
     }
