@@ -2,6 +2,7 @@ package de.bytemc.cloud.plugin;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
@@ -19,7 +20,7 @@ import lombok.Setter;
 public class CloudPlugin extends CloudAPI {
 
     @Setter
-    private static DefaultProxyCommandSender commandSender;
+    private static ICommandSender commandSender;
 
     @Getter
     private static CloudPlugin instance;
@@ -48,7 +49,7 @@ public class CloudPlugin extends CloudAPI {
     }
 
     @Override
-    public DefaultProxyCommandSender getCommandSender() {
+    public ICommandSender getCommandSender() {
         return commandSender;
     }
 

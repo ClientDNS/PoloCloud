@@ -22,7 +22,6 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
     public void onLoad() {
         CloudPlugin.setCommandSender(new DefaultProxyCommandSender());
 
-
         NetworkManager.registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> {
             if (!packet.getService().getServiceGroup().getGameServerVersion().isProxy())
                 this.registerService(packet.getService());

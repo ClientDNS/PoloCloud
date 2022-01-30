@@ -3,10 +3,19 @@ package de.bytemc.cloud.services.process.args;
 import de.bytemc.cloud.api.groups.utils.ServiceTypes;
 import de.bytemc.cloud.api.services.IService;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.jar.JarInputStream;
+
 public class ProcessJavaArgs {
 
     public static String[] args(final IService service) {
-        return new String[]{
+        final List<String> arguments = new ArrayList<>(Arrays.asList(
             "java",
             "-XX:+UseG1GC",
             "-XX:+ParallelRefProcEnabled",
@@ -34,11 +43,32 @@ public class ProcessJavaArgs {
             "-Dio.netty.recycler.maxCapacity=0",
             "-Dio.netty.recycler.maxCapacity.default=0",
             "-Djline.terminal=jline.UnsupportedTerminal",
-            "-Xmx" + service.getServiceGroup().getMemory() + "M",
-            "-jar",
-            service.getServiceGroup().getGameServerVersion().getJar(),
-            service.getServiceGroup().getGameServerVersion().getServiceTypes() == ServiceTypes.SERVER ? "nogui" : ""
-        };
+            "-Xms" + service.getServiceGroup().getMemory() + "M",
+            "-Xmx" + service.getServiceGroup().getMemory() + "M"));
+
+        final var wrapperFile = Paths.get("storage", "jars", "wrapper.jar");
+        final var applicationFile = new File("tmp/" + service.getName() + "/"
+            + service.getServiceGroup().getGameServerVersion().getJar());
+
+        arguments.addAll(Arrays.asList(
+            "-cp", wrapperFile.toAbsolutePath() + File.pathSeparator + applicationFile.toPath().toAbsolutePath()));
+
+        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(wrapperFile))) {
+            arguments.add(jarInputStream.getManifest().getMainAttributes().getValue("Main-Class"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(applicationFile.toPath()))) {
+            arguments.add(jarInputStream.getManifest().getMainAttributes().getValue("Main-Class"));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        if (service.getServiceGroup().getGameServerVersion().getServiceTypes() == ServiceTypes.SERVER) {
+            arguments.add("nogui");
+        }
+
+        return arguments.toArray(new String[]{});
     }
 
 }
