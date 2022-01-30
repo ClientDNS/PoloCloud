@@ -18,6 +18,8 @@ public interface IServiceGroup {
 
     boolean isStaticService();
 
+    boolean isFallbackGroup();
+
     GameServerVersion getGameServerVersion();
 
 }

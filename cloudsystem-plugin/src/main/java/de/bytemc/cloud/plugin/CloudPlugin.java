@@ -27,8 +27,9 @@ public class CloudPlugin extends CloudAPI {
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
-    private final PluginClient pluginClient;
     private final IPlugin plugin;
+
+    private PluginClient pluginClient;
 
     public CloudPlugin(IPlugin plugin) {
         super(CloudAPITypes.SERVICE);
@@ -40,11 +41,16 @@ public class CloudPlugin extends CloudAPI {
 
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager(property);
-        this.cloudPlayerManager = new CloudPlayerManager();
+        this.cloudPlayerManager = new CloudPlayerManager((ServiceManager) this.serviceManager);
 
-        this.pluginClient = new PluginClient(property.getService(), property.getHostname(), property.getPort());
 
-        CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
+        Thread thread = new Thread(() -> {
+            pluginClient = new PluginClient(property.getService(), property.getHostname(), property.getPort());
+            CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
+        });
+        thread.setDaemon(false);
+        thread.setContextClassLoader(this.getClass().getClassLoader());
+        thread.start();
     }
 
     @Override

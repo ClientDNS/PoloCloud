@@ -23,6 +23,13 @@ public interface IServiceManager {
         return this.getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findAny().orElse(null);
     }
 
+    default List<IService> getAllPossibleOnlineFallbackServices() {
+        return this.getAllCachedServices().stream()
+            .filter(it -> it.getServiceState() == ServiceState.ONLINE)
+            .filter(it -> !it.getServiceGroup().getGameServerVersion().isProxy())
+            .filter(it -> it.getServiceGroup().isFallbackGroup()).collect(Collectors.toList());
+    }
+
     ICommunicationPromise<IService> startService(IService service);
 
 }

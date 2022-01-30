@@ -33,7 +33,7 @@ public class DatabaseSqlImpl implements IDatabase {
             databaseConfiguration.getUser(), databaseConfiguration.getPassword());
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
-            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, version VARCHAR(100))");
+            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100))");
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The connection is now established to the database.");
     }
@@ -49,10 +49,10 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @Override
     public void addGroup(final IServiceGroup serviceGroup) {
-        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, version) VALUES (" +
+        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version) VALUES (" +
             "'" + serviceGroup.getGroup() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
-            serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0 + ", '" +
-            serviceGroup.getGameServerVersion().getTitle() + "');"));
+            serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0) +
+            ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "');");
     }
 
     @Override
@@ -73,6 +73,7 @@ public class DatabaseSqlImpl implements IDatabase {
                     resultSet.getInt("minOnlineService"),
                     resultSet.getInt("maxOnlineService"),
                     resultSet.getInt("staticService") == 1,
+                    resultSet.getInt("fallbackGroup") == 1,
                     GameServerVersion.getVersionByTitle(resultSet.getString("version")));
                 groups.add(serviceGroup);
             }

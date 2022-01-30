@@ -34,12 +34,13 @@ public class PacketHelper {
         byteBuf.writeInt(group.getMaxOnlineService());
 
         byteBuf.writeBoolean(group.isStaticService());
+        byteBuf.writeBoolean(group.isFallbackGroup());
         byteBuf.writeInt(group.getGameServerVersion().ordinal());
     }
 
     public static IServiceGroup readServiceGroup(ByteBuf byteBuf, IPacket packet) {
         return new ServiceGroup(packet.readString(byteBuf), packet.readString(byteBuf), packet.readString(byteBuf),
-            byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
+            byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
     }
 
 }

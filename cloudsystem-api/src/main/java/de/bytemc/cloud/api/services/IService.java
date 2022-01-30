@@ -1,5 +1,6 @@
 package de.bytemc.cloud.api.services;
 
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 
@@ -18,5 +19,9 @@ public interface IService {
     void setServiceState(ServiceState serviceState);
 
     ServiceState getServiceState();
+
+    default int getOnlinePlayers() {
+        return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer().equals(this)).count();
+    }
 
 }

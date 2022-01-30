@@ -13,7 +13,7 @@ public class ServiceGroup implements IServiceGroup {
 
     private String group, template, node;
     private int memory, minOnlineService, maxOnlineService;
-    private boolean staticService;
+    private boolean staticService, fallbackGroup;
     private GameServerVersion gameServerVersion;
 
 }
