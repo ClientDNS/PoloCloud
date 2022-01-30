@@ -11,6 +11,8 @@ import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.cloud.services.ServiceManager;
 
+import java.util.function.Consumer;
+
 public class GroupCloudCommand extends CloudCommand {
 
     public GroupCloudCommand() {
@@ -109,25 +111,12 @@ public class GroupCloudCommand extends CloudCommand {
 
             switch (args[2].toLowerCase()) {
                 case "memory":
-                    try {
-                        serviceGroup.setMemory(Integer.parseInt(args[3]));
-                    } catch (NumberFormatException e) {
-                        log.logMessage("§7Use following command: §bgroup edit " + serviceGroup.getName() + " memory §7(§bint§7)");
-                    }
-                    serviceGroup.setMemory(Integer.parseInt(args[3]));
+                    this.getAndSetInt("memory", args[3], serviceGroup.getName(), serviceGroup::setMemory);
                 case "minservicecount":
-                    try {
-                        serviceGroup.setMinOnlineService(Integer.parseInt(args[3]));
-                    } catch (NumberFormatException e) {
-                        log.logMessage("§7Use following command: §bgroup edit " + serviceGroup.getName() + " minServiceCount §7(§bint§7)");
-                    }
+                    this.getAndSetInt("minservicecount", args[3], serviceGroup.getName(), serviceGroup::setMinOnlineService);
                     break;
                 case "maxservicecount":
-                    try {
-                        serviceGroup.setMaxOnlineService(Integer.parseInt(args[3]));
-                    } catch (NumberFormatException e) {
-                        log.logMessage("§7Use following command: §bgroup edit " + serviceGroup.getName() + " maxServiceCount §7(§bint§7)");
-                    }
+                    this.getAndSetInt("maxservicecount", args[3], serviceGroup.getName(), serviceGroup::setMaxOnlineService);
                     break;
                 case "static":
                     serviceGroup.setStatic(Boolean.parseBoolean(args[3]));
@@ -143,6 +132,15 @@ public class GroupCloudCommand extends CloudCommand {
         log.logMessage("§7Use following command: §bgroup remove §7(§bname§7)");
         log.logMessage("§7Use following command: §bgroup info §7(§bname§7)");
         log.logMessage("§7Use following command: §bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
+    }
+
+    private void getAndSetInt(final String key, final String value, final String group, final Consumer<Integer> consumer) {
+        try {
+            consumer.accept(Integer.parseInt(value));
+        } catch (NumberFormatException e) {
+            CloudAPI.getInstance().getLoggerProvider()
+                .logMessage("§7Use following command: §bgroup edit " + group + " " + key + " §7(§bint§7)");
+        }
     }
 
 }
