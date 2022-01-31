@@ -22,6 +22,7 @@ import java.util.Objects;
 @Getter
 public enum GameServerVersion {
 
+    // TODO fix paperclip
     BUNGEE("https://ci.md-5.net/job/BungeeCord/lastBuild/artifact/bootstrap/target/BungeeCord.jar",
         "BungeeCord", "latest", ServiceTypes.PROXY),
     WATERFALL("https://papermc.io/api/v2/projects/%title%/versions/%version%/builds/%build%/downloads/waterfall-%version%-%build%.jar",
