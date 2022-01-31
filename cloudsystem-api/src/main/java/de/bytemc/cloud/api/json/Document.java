@@ -5,10 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 
 public class Document {
@@ -19,6 +16,10 @@ public class Document {
 
     public Document(final File file) {
         this.read(file);
+    }
+
+    public Document(final Reader reader) {
+        this.read(reader);
     }
 
     public Document(final JsonObject jsonObject) {
@@ -56,6 +57,11 @@ public class Document {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return this;
+    }
+
+    public Document read(final Reader reader) {
+        this.jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
         return this;
     }
 
