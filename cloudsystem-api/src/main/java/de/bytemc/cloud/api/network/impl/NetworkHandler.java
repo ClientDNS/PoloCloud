@@ -1,5 +1,6 @@
 package de.bytemc.cloud.api.network.impl;
 
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
@@ -24,7 +25,8 @@ public class NetworkHandler implements INetworkHandler {
         NetworkManager.registerPacket(ServiceAddPacket.class, 8);
         NetworkManager.registerPacket(ServiceRemovePacket.class, 9);
         NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 10);
-        NetworkManager.registerPacket(ServiceStateUpdatePacket.class, 10);
+        NetworkManager.registerPacket(ServiceStateUpdatePacket.class, 11);
+        NetworkManager.registerPacket(ServiceRequestShutdownPacket.class, 12);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){

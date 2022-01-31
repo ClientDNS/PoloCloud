@@ -44,7 +44,7 @@ public interface IService {
     @NotNull ServiceState getServiceState();
 
     default int getOnlinePlayers() {
-        return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer().equals(this)).count();
+        return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer() != null && it.getServer().equals(this)).count();
     }
 
 }

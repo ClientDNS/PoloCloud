@@ -72,11 +72,14 @@ public record ProcessServiceStarter(IService service) {
         final var command = ProcessJavaArgs.args(this.service);
 
         final var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + this.service.getName() + "/"));
+        processBuilder.redirectError(new File("tmp/" + service.getName() + "/erros.log"));
         final var process = processBuilder.start();
+
 
         final var thread = new Thread(() -> {
             ((SimpleService) this.service).setProcess(process);
             communicationPromise.setSuccess(this.service);
+
 
             try {
                 process.waitFor();
@@ -90,10 +93,10 @@ public record ProcessServiceStarter(IService service) {
 
                 //check queue
                 Base.getInstance().getQueueService().checkForQueue();
-
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+
         });
         thread.start();
         return communicationPromise;

@@ -33,7 +33,6 @@ public class ProxyEvents implements Listener {
             || name.equalsIgnoreCase("outroddet_")
             || name.equalsIgnoreCase("Forumat")
             || name.equalsIgnoreCase("Sogares")
-            || name.equalsIgnoreCase("Forumat")
             || name.equalsIgnoreCase("Einfxch")
             || name.equalsIgnoreCase("NervigesLilli")) {
 

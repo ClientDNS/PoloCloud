@@ -15,6 +15,17 @@ import java.util.UUID;
 public class CloudPlayerManager extends AbstractPlayerManager {
 
     public CloudPlayerManager() {
+
+
+
+        //TODO REPLACEMENT
+
+
+
+
+
+
+
         INetworkHandler handler = CloudAPI.getInstance().getNetworkHandler();
         handler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> {
             registerCloudPlayer(packet.getUuid(), packet.getUsername());
