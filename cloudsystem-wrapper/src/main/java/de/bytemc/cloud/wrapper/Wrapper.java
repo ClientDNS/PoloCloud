@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Wrapper extends CloudAPI {
 
-    public static void main(String[] args) {System.out.println("WRAPPER");
+    public static void main(String[] args) {
         try {
             new Wrapper();
 

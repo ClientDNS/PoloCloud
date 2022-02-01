@@ -10,7 +10,7 @@ import lombok.Getter;
 public class ServiceGroup implements IServiceGroup {
 
     private String name, template, node;
-    private int memory, minOnlineService, maxOnlineService;
+    private int memory, defaultMaxPlayers, minOnlineService, maxOnlineService;
     private boolean staticService, fallbackGroup;
     private GameServerVersion gameServerVersion;
 

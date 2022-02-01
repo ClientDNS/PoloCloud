@@ -12,36 +12,34 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 public class SimpleService implements IService {
 
-    private String group;
+    private IServiceGroup serviceGroup;
     private int serviceID;
 
     private int port;
     private String hostName;
+    private int maxPlayers;
 
     private Process process;
 
     private ServiceState serviceState = ServiceState.PREPARED;
 
     public SimpleService(String group, int id, int port, String hostname) {
-        this.group = group;
+        this.serviceGroup = CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
         this.serviceID = id;
         this.port = port;
         this.hostName = hostname;
+        this.maxPlayers = serviceGroup.getDefaultMaxPlayers();
     }
 
-    public SimpleService(String group, int id, int port, String hostName, ServiceState serviceState) {
+    public SimpleService(String group, int id, int port, String hostName, int maxPlayers, ServiceState serviceState) {
         this(group, id, port, hostName);
+        this.maxPlayers = maxPlayers;
         this.serviceState = serviceState;
     }
 
     @Override
     public @NotNull String getName() {
-        return this.group + "-" + this.serviceID;
-    }
-
-    @Override
-    public @NotNull IServiceGroup getServiceGroup() {
-        return CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(this.group);
+        return this.serviceGroup.getName() + "-" + this.serviceID;
     }
 
     @Override
@@ -53,12 +51,12 @@ public class SimpleService implements IService {
 
         if (this.serviceID != that.serviceID) return false;
         if (this.port != that.port) return false;
-        return this.group.equals(that.group);
+        return this.serviceGroup.equals(that.serviceGroup);
     }
 
     @Override
     public int hashCode() {
-        int result = this.group.hashCode();
+        int result = this.serviceGroup.hashCode();
         result = 31 * result + this.serviceID;
         result = 31 * result + this.port;
         return result;

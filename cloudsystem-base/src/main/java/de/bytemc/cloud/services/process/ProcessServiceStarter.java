@@ -73,6 +73,7 @@ public record ProcessServiceStarter(IService service) {
 
         final var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + this.service.getName() + "/"));
         processBuilder.redirectError(new File("tmp/" + service.getName() + "/erros.log"));
+        processBuilder.redirectOutput(new File("tmp/" + service.getName() + "/wrapper.log"));
         final var process = processBuilder.start();
 
 

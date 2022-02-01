@@ -4,6 +4,8 @@ import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.packets.IPacketListener;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+
 public interface INetworkHandler {
 
     /**
@@ -12,5 +14,7 @@ public interface INetworkHandler {
      * @param packetListener the packet listener to register
      */
     <R extends IPacket> void registerPacketListener(final @NotNull Class<R> clazz, final @NotNull IPacketListener<R> packetListener);
+
+    Collection<Class<? extends IPacket>> getAllCachedPackets();
 
 }
