@@ -48,10 +48,7 @@ public class ProxyEvents implements Listener {
         ServerInfo fallback = event.getTarget().getName().equalsIgnoreCase("fallback") ? CloudAPI.getInstance().getServiceManager().getAllPossibleOnlineFallbackServices()
             .stream()
             .min(Comparator.comparing(IService::getOnlinePlayers))
-            .map(it -> {
-                System.out.println(it.getName());
-                return ProxyServer.getInstance().getServerInfo(it.getName());
-            }).orElse(null) : event.getTarget();
+            .map(it -> ProxyServer.getInstance().getServerInfo(it.getName())).orElse(null) : event.getTarget();
 
         if(fallback == null) {
             event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender fallback gefunden werden."));
