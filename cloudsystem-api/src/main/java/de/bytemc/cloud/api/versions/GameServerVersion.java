@@ -69,12 +69,13 @@ public enum GameServerVersion {
     }
 
     public void download() {
-        if (this.isDownloaded()) return;
+        final var file = new File("storage/jars", this.getJar());
+
+        if (file.exists()) return;
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("§7Downloading §bVersion§7... (§3" + this.getTitle() + "§7)");
 
-        final var downloadedVersion = new File("storage/jars", this.getJar());
-        downloadedVersion.getParentFile().mkdirs();
+        file.getParentFile().mkdirs();
         try {
             var url = this.getUrl();
             if (url.contains("%build%")) {
@@ -82,7 +83,7 @@ public enum GameServerVersion {
                 url = url.replaceAll("%build%", String.valueOf(buildNumber));
             }
             CloudAPI.getInstance().getLoggerProvider().logMessage(url); // debug
-            FileUtils.copyURLToFile(new URL(url), downloadedVersion);
+            FileUtils.copyURLToFile(new URL(url), file);
         } catch (IOException e) {
             e.printStackTrace();
             CloudAPI.getInstance().getLoggerProvider().logMessage("§cFailed to download version§7... (§3" + this.getTitle() + "§7)", LogType.ERROR);
