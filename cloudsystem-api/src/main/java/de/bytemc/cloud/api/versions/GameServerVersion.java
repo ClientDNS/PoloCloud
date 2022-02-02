@@ -20,7 +20,6 @@ import java.util.Objects;
 @Getter
 public enum GameServerVersion {
 
-    // TODO fix paperclip
     BUNGEE("https://ci.md-5.net/job/BungeeCord/lastBuild/artifact/bootstrap/target/BungeeCord.jar",
         "BungeeCord", "latest", ServiceTypes.PROXY),
     WATERFALL("waterfall", "latest", ServiceTypes.PROXY),
@@ -80,11 +79,18 @@ public enum GameServerVersion {
             FileUtils.copyURLToFile(new URL(url), file);
 
             if (this.title.equals("paper")) {
-                final Process process = new ProcessBuilder("java", "-jar", file.getName()).start();
-                final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                System.out.println(bufferedReader.read());
-                System.out.println(bufferedReader.read());
-                System.out.println(bufferedReader.read());
+                final Process process = new ProcessBuilder("java", "-jar", this.getJar())
+                    .directory(file.getParentFile()).start();
+                final InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
+                final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                bufferedReader.readLine();
+                bufferedReader.readLine();
+                bufferedReader.readLine();
+                process.destroyForcibly();
+                bufferedReader.close();
+                inputStreamReader.close();
+                FileUtils.copyFile(new File("storage/jars/cache/patched_" + this.version + ".jar"), file);
+                FileUtils.deleteDirectory(new File("storage/jars/cache"));
             }
         } catch (IOException e) {
             e.printStackTrace();
