@@ -24,9 +24,4 @@ public class SimpleCloudPlayer implements ICloudPlayer {
         return this.uniqueId;
     }
 
-    @Override
-    public @NotNull UUID getUniqueID() {
-        return this.getUniqueId();
-    }
-
 }
