@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class SimpleStatisticManager {
 
-    private static Map<IService, Long> serviceStartUp = Maps.newConcurrentMap();
+    private static final Map<IService, Long> serviceStartUp = Maps.newConcurrentMap();
 
     public static void registerStartingProcess(IService service){
         serviceStartUp.put(service, System.currentTimeMillis());

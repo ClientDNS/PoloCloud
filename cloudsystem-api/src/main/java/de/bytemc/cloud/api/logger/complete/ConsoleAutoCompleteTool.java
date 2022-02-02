@@ -10,7 +10,6 @@ import org.jline.reader.ParsedLine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ConsoleAutoCompleteTool implements Completer {
 

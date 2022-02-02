@@ -1,6 +1,5 @@
 package de.bytemc.cloud.services.queue;
 
-import com.google.common.collect.Maps;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
