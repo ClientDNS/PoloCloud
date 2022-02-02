@@ -4,6 +4,6 @@ public enum ExecutorType {
 
     ALL,
     INGAME,
-    CONSOLE;
+    CONSOLE
 
 }

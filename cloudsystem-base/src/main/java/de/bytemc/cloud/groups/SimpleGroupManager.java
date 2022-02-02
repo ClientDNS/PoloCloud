@@ -6,7 +6,6 @@ import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.impl.AbstractGroupManager;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
 import de.bytemc.cloud.database.IDatabase;
-import de.bytemc.cloud.node.BaseNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;

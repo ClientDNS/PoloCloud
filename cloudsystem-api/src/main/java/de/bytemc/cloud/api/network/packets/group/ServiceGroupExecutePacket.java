@@ -1,9 +1,7 @@
 package de.bytemc.cloud.api.network.packets.group;
 
 import de.bytemc.cloud.api.groups.IServiceGroup;
-import de.bytemc.cloud.api.groups.impl.ServiceGroup;
 import de.bytemc.cloud.api.network.packets.PacketHelper;
-import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.network.packets.IPacket;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
@@ -17,7 +15,7 @@ public class ServiceGroupExecutePacket implements IPacket {
     private executor executorType;
 
     public enum executor {
-        REMOVE, CREATE;
+        REMOVE, CREATE
     }
 
     public ServiceGroupExecutePacket(IServiceGroup group, executor executorType) {
