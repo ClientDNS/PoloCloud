@@ -16,12 +16,12 @@ public class PacketHelper {
         byteBuf.writeInt(service.getServiceID());
         byteBuf.writeInt(service.getPort());
         packet.writeString(byteBuf, service.getHostName());
+        byteBuf.writeInt(service.getMaxPlayers());
         byteBuf.writeInt(service.getServiceState().ordinal());
     }
 
     public static IService readService(ByteBuf byteBuf, IPacket packet) {
-        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(),
-            packet.readString(byteBuf), ServiceState.values()[byteBuf.readInt()]);
+        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), packet.readString(byteBuf), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()]);
     }
 
     public static void writeServiceGroup(ByteBuf byteBuf, IServiceGroup group, IPacket packet) {
@@ -30,6 +30,7 @@ public class PacketHelper {
         packet.writeString(byteBuf, group.getNode());
 
         byteBuf.writeInt(group.getMemory());
+        byteBuf.writeInt(group.getDefaultMaxPlayers());
         byteBuf.writeInt(group.getMinOnlineService());
         byteBuf.writeInt(group.getMaxOnlineService());
 
@@ -39,8 +40,16 @@ public class PacketHelper {
     }
 
     public static IServiceGroup readServiceGroup(ByteBuf byteBuf, IPacket packet) {
-        return new ServiceGroup(packet.readString(byteBuf), packet.readString(byteBuf), packet.readString(byteBuf),
-            byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readBoolean(), byteBuf.readBoolean(), GameServerVersion.values()[byteBuf.readInt()]);
+        return new ServiceGroup(packet.readString(byteBuf),
+            packet.readString(byteBuf),
+            packet.readString(byteBuf),
+            byteBuf.readInt(),
+            byteBuf.readInt(),
+            byteBuf.readInt(),
+            byteBuf.readInt(),
+            byteBuf.readBoolean(),
+            byteBuf.readBoolean(),
+            GameServerVersion.values()[byteBuf.readInt()]);
     }
 
 }

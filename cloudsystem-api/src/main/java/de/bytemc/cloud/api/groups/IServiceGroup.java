@@ -12,6 +12,8 @@ public interface IServiceGroup {
 
     int getMemory();
 
+    int getDefaultMaxPlayers();
+
     int getMinOnlineService();
 
     int getMaxOnlineService();

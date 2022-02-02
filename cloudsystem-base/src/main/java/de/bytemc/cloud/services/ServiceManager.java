@@ -3,6 +3,7 @@ package de.bytemc.cloud.services;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceRequestShutdownPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
@@ -12,6 +13,12 @@ import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 
 public class ServiceManager extends AbstractSimpleServiceManager {
+
+    public ServiceManager() {
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceRequestShutdownPacket.class, (channelHandlerContext, serviceRequestShutdownPacket) -> {
+            shutdownService(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(serviceRequestShutdownPacket.getService()));
+        });
+    }
 
     public void start(final IService service) {
         this.startService(service).addResultListener(it ->

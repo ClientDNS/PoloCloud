@@ -5,6 +5,9 @@ import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.plugin.IPlugin;
+import de.bytemc.cloud.plugin.bootstrap.proxy.commands.CloudProxyCommand;
+import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyCloudEvents;
+import de.bytemc.cloud.plugin.bootstrap.proxy.reconnect.ReconnectHandlerImpl;
 import de.bytemc.cloud.plugin.events.proxy.ProxyEvents;
 import de.bytemc.network.NetworkManager;
 import net.md_5.bungee.api.ProxyServer;
@@ -21,13 +24,13 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
     public void onLoad() {
         ProxyServer.getInstance().setReconnectHandler(new ReconnectHandlerImpl());
 
+        new ProxyCloudEvents();
+
         NetworkManager.registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> {
             if (!packet.getService().getServiceGroup().getGameServerVersion().isProxy())
                 this.registerService(packet.getService());
         });
-        NetworkManager.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) ->
-            this.unregisterService(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.getService())));
-
+        NetworkManager.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) -> this.unregisterService(packet.getService()));
     }
 
     @Override
@@ -49,6 +52,7 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
         }
 
         this.getProxy().getPluginManager().registerListener(this, new ProxyEvents());
+        getProxy().getPluginManager().registerCommand(this, new CloudProxyCommand());
     }
 
     @Override
@@ -56,18 +60,18 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
 
     }
 
+
     @Override
     public void shutdown() {
         this.getProxy().getScheduler().schedule(this, this.getProxy()::stop, 0, TimeUnit.MILLISECONDS);
     }
 
     public void registerService(IService service) {
-        ProxyServer.getInstance().getServers().put(service.getName(), ProxyServer.getInstance()
-            .constructServerInfo(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()), "PoloCloud", false));
+        registerService(service.getName(), UUID.fromString("00000000-0000-0000-0000-000000000000"), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 
-    public void unregisterService(IService service) {
-        ProxyServer.getInstance().getServers().remove(service.getName());
+    public void unregisterService(String name) {
+        ProxyServer.getInstance().getServers().remove(name);
     }
 
     public void registerFallbackService() {
