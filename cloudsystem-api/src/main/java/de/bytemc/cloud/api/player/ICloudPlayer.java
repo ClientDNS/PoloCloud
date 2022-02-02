@@ -18,12 +18,6 @@ public interface ICloudPlayer {
     @NotNull UUID getUniqueId();
 
     /**
-     * @return the unique id of the player
-     */
-    @Deprecated(forRemoval = true)
-    @NotNull UUID getUniqueID();
-
-    /**
      * @return the proxy server who the player is
      */
     IService getProxyServer();
