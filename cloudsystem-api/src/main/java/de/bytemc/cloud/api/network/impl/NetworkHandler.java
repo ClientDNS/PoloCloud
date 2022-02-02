@@ -24,7 +24,6 @@ public class NetworkHandler implements INetworkHandler {
         NetworkManager.registerPacket(ServiceAddPacket.class, 8);
         NetworkManager.registerPacket(ServiceRemovePacket.class, 9);
         NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 10);
-        NetworkManager.registerPacket(ServiceStateUpdatePacket.class, 10);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){
