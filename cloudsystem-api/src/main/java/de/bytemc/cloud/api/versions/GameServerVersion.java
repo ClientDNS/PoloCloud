@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
@@ -25,12 +26,9 @@ public enum GameServerVersion {
     // TODO fix paperclip
     BUNGEE("https://ci.md-5.net/job/BungeeCord/lastBuild/artifact/bootstrap/target/BungeeCord.jar",
         "BungeeCord", "latest", ServiceTypes.PROXY),
-    WATERFALL("https://papermc.io/api/v2/projects/%title%/versions/%version%/builds/%build%/downloads/waterfall-%version%-%build%.jar",
-        "waterfall", "1.18", ServiceTypes.PROXY),
-    PAPER_1_18_1("https://papermc.io/api/v2/projects/%title%/versions/%version%/builds/%build%/downloads/paper-%version%-%build%.jar",
-        "paper", "1.18.1", ServiceTypes.SERVER),
-    PAPER_1_17_1("https://papermc.io/api/v2/projects/%title%/versions/%version%/builds/%build%/downloads/paper-%version%-%build%.jar",
-        "paper", "1.17.1", ServiceTypes.SERVER);
+    WATERFALL("waterfall", "latest", ServiceTypes.PROXY),
+    PAPER_1_18_1("paper", "1.18.1", ServiceTypes.SERVER),
+    PAPER_1_17_1("paper", "1.17.1", ServiceTypes.SERVER);
 
     private final String url;
     private final String title;
@@ -38,7 +36,20 @@ public enum GameServerVersion {
     private final ServiceTypes serviceTypes;
 
     GameServerVersion(final String url, final String title, final String version, final ServiceTypes serviceTypes) {
-        this.url = url.replaceAll("%title%", title).replaceAll("%version%", version);
+        this.url = url;
+        this.title = title;
+        this.version = version;
+        this.serviceTypes = serviceTypes;
+    }
+
+    GameServerVersion(final String title, String version, final ServiceTypes serviceTypes) {
+        final int build = this.getBuildNumber(title, version);
+        if (version.equals("latest")) {
+            version = this.getLatestVersion(title);
+        }
+        this.url =
+            "https://papermc.io/api/v2/projects/" + title + "/versions/" + version + "/builds/" + build
+                + "/downloads/" + title + "-" + version + "-" + build + ".jar";
         this.title = title;
         this.version = version;
         this.serviceTypes = serviceTypes;
@@ -49,11 +60,11 @@ public enum GameServerVersion {
     }
 
     public String getJar() {
-        return this.title + (!Objects.equals(this.version, "latest") ? "-"  + this.version : "") + ".jar";
+        return this.title + (!Objects.equals(this.version, "latest") ? "-" + this.version : "") + ".jar";
     }
 
     public static GameServerVersion getVersionByTitle(final String value) {
-        return Arrays.stream(values()).filter(it -> (it.getTitle()  + "-" + it.getVersion()).equalsIgnoreCase(value)).findAny().orElse(null);
+        return Arrays.stream(values()).filter(it -> (it.getTitle() + "-" + it.getVersion()).equalsIgnoreCase(value)).findAny().orElse(null);
     }
 
     public void download() {
@@ -89,17 +100,38 @@ public enum GameServerVersion {
     }
 
     private int getBuildNumber(final @NotNull String title, final @NotNull String version) {
-        try {
-            final var url = new URL("https://papermc.io/api/v2/projects/" + title + "/versions/" + version + "/");
-            final var inputStreamReader = new InputStreamReader(url.openStream());
-            final List<Integer> buildNumbers = new Document(inputStreamReader)
-                .get("builds", TypeToken.getParameterized(List.class, Integer.class).getType());
-            inputStreamReader.close();
+        final Document document = this.paperApiRequest("https://papermc.io/api/v2/projects/" + title + "/versions/" + version + "/");
+        if (document != null) {
+            final List<Integer> buildNumbers = document.get("builds", TypeToken.getParameterized(List.class, Integer.class).getType());
             return buildNumbers.get(buildNumbers.size() - 1);
+        } else {
+            return -1;
+        }
+    }
+
+    private String getLatestVersion(final @NotNull String title) {
+        final Document document = this.paperApiRequest("https://papermc.io/api/v2/projects/" + title);
+        if (document != null) {
+            final List<String> versions = document.get("builds", TypeToken.getParameterized(List.class, String.class).getType());
+            return versions.get(versions.size() - 1);
+        } else {
+            return "Unknown";
+        }
+    }
+
+    private Document paperApiRequest(final @NotNull String urlString) {
+        try {
+            final var url = new URL(urlString);
+            final InputStream inputStream = url.openStream();
+            final InputStreamReader inputStreamReader = new InputStreamReader(url.openStream());
+            final Document document = new Document(inputStreamReader);
+            inputStreamReader.close();
+            inputStream.close();
+            return document;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return -1;
+        return null;
     }
 
 }
