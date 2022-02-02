@@ -27,12 +27,8 @@ public class CloudPlayerManager extends AbstractPlayerManager {
 
 
         INetworkHandler handler = CloudAPI.getInstance().getNetworkHandler();
-        handler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> {
-            registerCloudPlayer(packet.getUuid(), packet.getUsername());
-        });
-        handler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> {
-            unregisterCloudPlayer(packet.getUuid(), packet.getName());
-        });
+        handler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> registerCloudPlayer(packet.getUuid(), packet.getUsername()));
+        handler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> unregisterCloudPlayer(packet.getUuid(), packet.getName()));
     }
 
     @Override

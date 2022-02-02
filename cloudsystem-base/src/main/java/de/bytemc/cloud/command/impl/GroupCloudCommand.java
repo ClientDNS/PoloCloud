@@ -63,15 +63,16 @@ public class GroupCloudCommand extends CloudCommand {
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
-            var name = args[1];
+            final var name = args[1];
+            final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
-            if (!groupManager.isServiceGroupExists(name)) {
+            if (serviceGroup == null) {
                 log.logMessage("This group does not exists", LogType.WARNING);
                 return;
             }
-            groupManager.removeServiceGroup(groupManager.getServiceGroupByNameOrNull(name));
+            groupManager.removeServiceGroup(serviceGroup);
 
-            CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(groupManager.getServiceGroupByNameOrNull(name))
+            CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(serviceGroup)
                 .forEach(it -> ((ServiceManager) CloudAPI.getInstance().getServiceManager()).shutdownService(it));
 
             log.logMessage("The group '§b" + name + "§7' is now deleted.");
@@ -79,14 +80,14 @@ public class GroupCloudCommand extends CloudCommand {
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
-            var name = args[1];
+            final var name = args[1];
+            final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
-            if (!groupManager.isServiceGroupExists(name)) {
+            if (serviceGroup == null) {
                 log.logMessage("This group does not exists", LogType.WARNING);
                 return;
             }
 
-            var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
             log.logMessage("Group information's: ");
             log.logMessage("Groupname: §b" + serviceGroup.getName());
             log.logMessage("Template: §b" + serviceGroup.getTemplate());
@@ -101,13 +102,12 @@ public class GroupCloudCommand extends CloudCommand {
 
         if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {
             final var name = args[1];
+            final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
-            if (!groupManager.isServiceGroupExists(name)) {
+            if (serviceGroup == null) {
                 log.logMessage("This group does not exists", LogType.WARNING);
                 return;
             }
-
-            final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
             final String key = args[2].toLowerCase();
             switch (key) {
