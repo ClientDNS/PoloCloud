@@ -46,7 +46,7 @@ public enum GameServerVersion {
             paperVersion = this.getLatestVersion(title);
         }
         this.url =
-            "https://papermc.io/api/v2/projects/" + title + "/versions/" + version + "/builds/" + build
+            "https://papermc.io/api/v2/projects/" + title + "/versions/" + paperVersion + "/builds/" + build
                 + "/downloads/" + title + "-" + paperVersion + "-" + build + ".jar";
         this.title = title;
         this.version = version;
@@ -62,7 +62,8 @@ public enum GameServerVersion {
     }
 
     public static GameServerVersion getVersionByTitle(final String value) {
-        return Arrays.stream(values()).filter(it -> (it.getTitle() + "-" + it.getVersion()).equalsIgnoreCase(value)).findAny().orElse(null);
+        return Arrays.stream(values()).filter(it -> (it.getTitle() +
+            (!Objects.equals(it.getVersion(), "latest") ? "-" + it.getVersion() : "")).equalsIgnoreCase(value)).findAny().orElse(null);
     }
 
     public void download() {
@@ -119,7 +120,7 @@ public enum GameServerVersion {
     private String getLatestVersion(final @NotNull String title) {
         final Document document = this.paperApiRequest("https://papermc.io/api/v2/projects/" + title);
         if (document != null) {
-            final List<String> versions = document.get("builds", TypeToken.getParameterized(List.class, String.class).getType());
+            final List<String> versions = document.get("versions", TypeToken.getParameterized(List.class, String.class).getType());
             return versions.get(versions.size() - 1);
         } else {
             return "Unknown";
