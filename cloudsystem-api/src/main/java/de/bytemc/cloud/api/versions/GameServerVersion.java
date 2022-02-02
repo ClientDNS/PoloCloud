@@ -42,14 +42,15 @@ public enum GameServerVersion {
         this.serviceTypes = serviceTypes;
     }
 
-    GameServerVersion(final String title, String version, final ServiceTypes serviceTypes) {
+    GameServerVersion(final String title, final String version, final ServiceTypes serviceTypes) {
         final int build = this.getBuildNumber(title, version);
-        if (version.equals("latest")) {
-            version = this.getLatestVersion(title);
+        String paperVersion = version;
+        if (paperVersion.equals("latest")) {
+            paperVersion = this.getLatestVersion(title);
         }
         this.url =
             "https://papermc.io/api/v2/projects/" + title + "/versions/" + version + "/builds/" + build
-                + "/downloads/" + title + "-" + version + "-" + build + ".jar";
+                + "/downloads/" + title + "-" + paperVersion + "-" + build + ".jar";
         this.title = title;
         this.version = version;
         this.serviceTypes = serviceTypes;
