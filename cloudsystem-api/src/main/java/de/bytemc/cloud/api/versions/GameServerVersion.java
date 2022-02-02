@@ -11,10 +11,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -84,6 +81,14 @@ public enum GameServerVersion {
             }
             CloudAPI.getInstance().getLoggerProvider().logMessage(url); // debug
             FileUtils.copyURLToFile(new URL(url), file);
+
+            if (this.title.equals("paper")) {
+                final Process process = new ProcessBuilder("java", "-jar", file.getName()).start();
+                final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                System.out.println(bufferedReader.read());
+                System.out.println(bufferedReader.read());
+                System.out.println(bufferedReader.read());
+            }
         } catch (IOException e) {
             e.printStackTrace();
             CloudAPI.getInstance().getLoggerProvider().logMessage("§cFailed to download version§7... (§3" + this.getTitle() + "§7)", LogType.ERROR);
@@ -102,7 +107,11 @@ public enum GameServerVersion {
     }
 
     private int getBuildNumber(final @NotNull String title, final @NotNull String version) {
-        final Document document = this.paperApiRequest("https://papermc.io/api/v2/projects/" + title + "/versions/" + version + "/");
+        String paperVersion = version;
+        if (paperVersion.equals("latest")) {
+            paperVersion = this.getLatestVersion(title);
+        }
+        final Document document = this.paperApiRequest("https://papermc.io/api/v2/projects/" + title + "/versions/" + paperVersion + "/");
         if (document != null) {
             final List<Integer> buildNumbers = document.get("builds", TypeToken.getParameterized(List.class, Integer.class).getType());
             return buildNumbers.get(buildNumbers.size() - 1);
