@@ -75,10 +75,6 @@ public enum GameServerVersion {
         file.getParentFile().mkdirs();
         try {
             var url = this.getUrl();
-            if (url.contains("%build%")) {
-                final int buildNumber = this.getBuildNumber(this.title, this.version);
-                url = url.replaceAll("%build%", String.valueOf(buildNumber));
-            }
             CloudAPI.getInstance().getLoggerProvider().logMessage(url); // debug
             FileUtils.copyURLToFile(new URL(url), file);
 
