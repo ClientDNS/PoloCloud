@@ -67,7 +67,7 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
     }
 
     public void registerService(IService service) {
-        registerService(service.getName(), UUID.fromString("00000000-0000-0000-0000-000000000000"), new InetSocketAddress(service.getHostName(), service.getPort()));
+        registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 
     public void unregisterService(String name) {
@@ -75,12 +75,12 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
     }
 
     public void registerFallbackService() {
-        registerService("fallback", UUID.fromString("00000000-0000-0000-0000-000000000000"), new InetSocketAddress("127.0.0.1", 0));
+        registerService("fallback", new InetSocketAddress("127.0.0.1", 0));
     }
 
 
-    private void registerService(String name, UUID uniqueId, InetSocketAddress socketAddress) {
-        var info = ProxyServer.getInstance().constructServerInfo(name, socketAddress, uniqueId.toString(), false);
+    private void registerService(String name, InetSocketAddress socketAddress) {
+        var info = ProxyServer.getInstance().constructServerInfo(name, socketAddress, "A PoloCloud service", false);
         ProxyServer.getInstance().getServers().put(name, info);
     }
 
