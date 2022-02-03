@@ -78,7 +78,6 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
         registerService("fallback", new InetSocketAddress("127.0.0.1", 0));
     }
 
-
     private void registerService(String name, InetSocketAddress socketAddress) {
         var info = ProxyServer.getInstance().constructServerInfo(name, socketAddress, "A PoloCloud service", false);
         ProxyServer.getInstance().getServers().put(name, info);
