@@ -1,11 +1,9 @@
 package de.bytemc.cloud.services.process;
 
 import de.bytemc.cloud.Base;
-import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
 import de.bytemc.cloud.api.json.Document;
-import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
@@ -19,7 +17,6 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 public record ProcessServiceStarter(IService service) {
 
@@ -82,7 +79,10 @@ public record ProcessServiceStarter(IService service) {
         processBuilder.redirectOutput(new File("tmp/" + service.getName() + "/wrapper.log"));
         final var process = processBuilder.start();
 
-        final var thread = new Thread(() -> {
+        ((SimpleService) this.service).setProcess(process);
+        communicationPromise.setSuccess(this.service);
+
+        /*final var thread = new Thread(() -> {
             ((SimpleService) this.service).setProcess(process);
             communicationPromise.setSuccess(this.service);
 
@@ -103,7 +103,7 @@ public record ProcessServiceStarter(IService service) {
             }
 
         });
-        thread.start();
+        thread.start();*/
         return communicationPromise;
     }
 

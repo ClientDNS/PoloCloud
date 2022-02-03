@@ -3,6 +3,7 @@ package de.bytemc.cloud.node;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceStateUpdatePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
@@ -11,6 +12,10 @@ import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
 import de.bytemc.network.cluster.impl.AbstractNodeClustering;
 import de.bytemc.network.cluster.impl.ClusteringConnectedClient;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 @Getter
 public final class BaseNode extends AbstractNodeClustering {
@@ -61,6 +66,19 @@ public final class BaseNode extends AbstractNodeClustering {
 
     @Override
     public void onServiceDisconnected(final ClusteringConnectedClient clusteringConnectedClient) {
-        Base.getInstance().getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7' disconnect.");
+        final var service = clusteringConnectedClient.getName();
+        final var base = Base.getInstance();
+        final var file = new File("tmp/" + service);
+        if (file.exists()) {
+            try {
+                FileUtils.deleteDirectory(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        base.getNode().sendPacketToAll(new ServiceRemovePacket(service));
+        base.getServiceManager().getAllCachedServices().remove(base.getServiceManager().getServiceByNameOrNull(service));
+        base.getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7' disconnect.");
+        base.getQueueService().checkForQueue();
     }
 }
