@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ConfigurationFileEditor {
+public final class ConfigurationFileEditor {
 
     private final File file;
 
@@ -37,7 +37,10 @@ public class ConfigurationFileEditor {
     }
 
     public void loadAllConfigOptions() {
-        lines.stream().filter(it -> it.contains(splitSpacer.getSplit())).map(it -> it.split(splitSpacer.getSplit())).forEach(it -> keyToValues.put(it[0], it.length == 1 ? "" : it[1]));
+        this.lines.stream()
+            .filter(it -> it.contains(this.splitSpacer.getSplit()))
+            .map(it -> it.split(this.splitSpacer.getSplit()))
+            .forEach(it -> this.keyToValues.put(it[0], it.length == 1 ? "" : it[1]));
     }
 
     public String getValue(final String key) {
@@ -49,10 +52,10 @@ public class ConfigurationFileEditor {
     }
 
     public void saveFile() {
-        String[] property = lines.toArray(new String[]{});
+        String[] property = this.lines.toArray(new String[]{});
 
-        keyToValues.forEach((key, value) -> {
-            String line = key + splitSpacer.getSplit() + value;
+        this.keyToValues.forEach((key, value) -> {
+            String line = key + this.splitSpacer.getSplit() + value;
             int index = getIndexFromLine(line);
             property[index] = line;
         });

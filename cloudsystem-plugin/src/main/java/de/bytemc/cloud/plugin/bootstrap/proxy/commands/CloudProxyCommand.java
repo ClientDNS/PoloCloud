@@ -9,7 +9,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
-public class CloudProxyCommand extends Command {
+public final class CloudProxyCommand extends Command {
 
     public CloudProxyCommand() {
         super("cloud");
@@ -17,17 +17,15 @@ public class CloudProxyCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+        if (args[0].equalsIgnoreCase("ks")) {
+            final IService service = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(args[1]);
 
-        if(args[0].equalsIgnoreCase("ks")){
-
-            IService service = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(args[1]);
-
-            if(service == null) {
+            if (service == null) {
                 sender.sendMessage(new TextComponent("§cDieser service existiert nicht."));
                 return;
             }
 
-            if(service.getServiceState() != ServiceState.ONLINE) {
+            if (service.getServiceState() != ServiceState.ONLINE) {
                 sender.sendMessage(new TextComponent("§cDieser ist noch nicht online."));
                 return;
             }
@@ -35,7 +33,6 @@ public class CloudProxyCommand extends Command {
             sender.sendMessage(new TextComponent("§cService " + service.getName() + " is trying to stop."));
             Wrapper.getInstance().getClient().sendPacket(new ServiceRequestShutdownPacket(service.getName()));
         }
-
-
     }
+
 }

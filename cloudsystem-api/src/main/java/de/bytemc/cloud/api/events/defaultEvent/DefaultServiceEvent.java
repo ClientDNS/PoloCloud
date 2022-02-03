@@ -5,7 +5,8 @@ import de.bytemc.cloud.api.services.IService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor @Getter
+@AllArgsConstructor
+@Getter
 public abstract class DefaultServiceEvent implements ICloudEvent {
 
     private IService service;

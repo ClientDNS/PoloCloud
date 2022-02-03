@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class EventHandler implements IEventHandler {
 
-    private Map<Class<? extends ICloudEvent>, List<Consumer>> events = Maps.newConcurrentMap();
+    private final Map<Class<? extends ICloudEvent>, List<Consumer>> events = Maps.newConcurrentMap();
 
     public EventHandler() {
         //service register event
@@ -31,13 +31,13 @@ public class EventHandler implements IEventHandler {
     }
 
     public <T extends ICloudEvent> void registerEvent(Class<T> clazz, Consumer<T> event) {
-        List<Consumer> consumers = events.getOrDefault(clazz, Lists.newArrayList());
+        final List<Consumer> consumers = events.getOrDefault(clazz, Lists.newArrayList());
         consumers.add(event);
-        events.put(clazz, consumers);
+        this.events.put(clazz, consumers);
     }
 
-    public <T extends ICloudEvent> void call(T t){
-        events.getOrDefault(t.getClass(), Lists.newArrayList()).forEach(it -> it.accept(t));
+    public <T extends ICloudEvent> void call(T t) {
+        this.events.getOrDefault(t.getClass(), Lists.newArrayList()).forEach(it -> it.accept(t));
     }
 
 }

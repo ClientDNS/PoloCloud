@@ -11,19 +11,19 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ConsoleAutoCompleteTool implements Completer {
+public final class ConsoleAutoCompleteTool implements Completer {
 
-    private List<String> getInputConsoleSuggestions(String input) {
+    private List<String> getInputConsoleSuggestions(final String input) {
         if (input.isEmpty() || input.indexOf(' ') == -1) {
-            List<String> registeredCommands = new ArrayList<>();
+            final List<String> registeredCommands = new ArrayList<>();
             for (CloudCommand cachedCloudCommand : CloudAPI.getInstance().getCommandManager().getCachedCloudCommands()) {
                 registeredCommands.add(cachedCloudCommand.getCommandName());
                 registeredCommands.addAll(List.of(cachedCloudCommand.getAlias()));
             }
-            String[] splitInput = input.split(" ");
-            String toTest = splitInput[splitInput.length - 1];
-            List<String> result = new LinkedList<>();
-            for (String s : registeredCommands) {
+            final String[] splitInput = input.split(" ");
+            final String toTest = splitInput[splitInput.length - 1];
+            final List<String> result = new LinkedList<>();
+            for (final String s : registeredCommands) {
                 if (s != null && (toTest.trim().isEmpty() || s.toLowerCase().contains(toTest.toLowerCase()))) {
                     result.add(s);
                 }
@@ -42,9 +42,10 @@ public class ConsoleAutoCompleteTool implements Completer {
     public void complete(LineReader lineReader, ParsedLine parsedLine, List<Candidate> list) {
         final String inputLine = parsedLine.line();
 
-        final List<String> suggestions = new ArrayList<>(getInputConsoleSuggestions(inputLine));
+        final List<String> suggestions = new ArrayList<>(this.getInputConsoleSuggestions(inputLine));
         if (suggestions.isEmpty()) return;
 
         list.addAll(suggestions.stream().map(Candidate::new).toList());
     }
+
 }

@@ -13,7 +13,7 @@ public interface IServiceManager {
     /**
      * @return all cached service
      */
-    List<IService> getAllCachedServices();
+    @NotNull List<IService> getAllCachedServices();
 
     /**
      * gets all services by a group

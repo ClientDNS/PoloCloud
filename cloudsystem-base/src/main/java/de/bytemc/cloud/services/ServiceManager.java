@@ -12,12 +12,12 @@ import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 
-public class ServiceManager extends AbstractSimpleServiceManager {
+public final class ServiceManager extends AbstractSimpleServiceManager {
 
     public ServiceManager() {
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceRequestShutdownPacket.class, (channelHandlerContext, serviceRequestShutdownPacket) -> {
-            shutdownService(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(serviceRequestShutdownPacket.getService()));
-        });
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceRequestShutdownPacket.class,
+            (channelHandlerContext, serviceRequestShutdownPacket) ->
+                shutdownService(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(serviceRequestShutdownPacket.getService())));
     }
 
     public void start(final IService service) {

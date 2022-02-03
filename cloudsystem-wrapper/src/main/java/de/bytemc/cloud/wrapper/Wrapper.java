@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Wrapper extends CloudAPI {
+public final class Wrapper extends CloudAPI {
 
     public static void main(String[] args) {
         try {
@@ -70,7 +70,7 @@ public class Wrapper extends CloudAPI {
             }
 
             @Override
-            public ExecutorType getCommandType() {
+            public @NotNull ExecutorType getCommandType() {
                 return ExecutorType.INGAME;
             }
         };

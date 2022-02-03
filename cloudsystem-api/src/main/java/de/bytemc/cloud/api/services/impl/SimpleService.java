@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
-public class SimpleService implements IService {
+public final class SimpleService implements IService {
 
     private IServiceGroup serviceGroup;
     private int serviceID;
@@ -28,6 +28,7 @@ public class SimpleService implements IService {
         this.serviceID = id;
         this.port = port;
         this.hostName = hostname;
+        assert serviceGroup != null;
         this.maxPlayers = serviceGroup.getDefaultMaxPlayers();
     }
 

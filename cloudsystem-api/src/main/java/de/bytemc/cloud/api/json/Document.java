@@ -14,6 +14,10 @@ public class Document {
 
     private JsonObject jsonObject;
 
+    public Document() {
+        this(new JsonObject());
+    }
+
     public Document(final File file) {
         this.read(file);
     }

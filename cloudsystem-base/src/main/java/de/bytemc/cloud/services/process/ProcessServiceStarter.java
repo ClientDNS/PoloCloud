@@ -1,15 +1,13 @@
 package de.bytemc.cloud.services.process;
 
 import de.bytemc.cloud.Base;
-import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
-import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
+import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.process.args.ProcessJavaArgs;
-import de.bytemc.cloud.services.process.file.PropertyFileWriter;
 import de.bytemc.cloud.services.properties.BungeeProperties;
 import de.bytemc.cloud.services.properties.SpigotProperties;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
@@ -19,7 +17,6 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 public record ProcessServiceStarter(IService service) {
 
@@ -28,41 +25,47 @@ public record ProcessServiceStarter(IService service) {
         this.service = service;
         this.service.setServiceState(ServiceState.STARTING);
 
-        //add statistic to service
+        // add statistic to service
         SimpleStatisticManager.registerStartingProcess(this.service);
 
         this.service.getServiceGroup().getGameServerVersion().download();
 
-        //create tmp file
-        FileUtils.forceMkdir(new File("tmp/" + service.getName() + "/"));
+        // create tmp file
+        final File tmpFolder = new File("tmp/" + service.getName());
+        FileUtils.forceMkdir(tmpFolder);
 
-        //load all current group templates
+        // load all current group templates
         Base.getInstance().getGroupTemplateService().copyTemplates(service);
 
-        String jar = service.getServiceGroup().getGameServerVersion().getJar();
-        FileUtils.copyFile(new File("storage/jars/" + jar), new File("tmp/" + service.getName() + "/" + jar));
+        final String jar = service.getServiceGroup().getGameServerVersion().getJar();
+        FileUtils.copyFile(new File("storage/jars/" + jar), new File(tmpFolder, jar));
 
-        //copy plugin
-        FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File("tmp/" + service.getName() + "/plugins/plugin.jar"));
+        // copy plugin
+        FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File(tmpFolder, "plugins/plugin.jar"));
 
-        //write property for identify service
-        new PropertyFileWriter(service);
+        // write property for identify service
+        new Document()
+            .set("service", service.getName())
+            .set("node", service.getServiceGroup().getNode())
+            .set("hostname", Base.getInstance().getNode().getHostName())
+            .set("port", Base.getInstance().getNode().getPort())
+            .write(new File(tmpFolder, "property.json"));
 
-        //check properties and modify
+        // check properties and modify
         if (service.getServiceGroup().getGameServerVersion().isProxy()) {
-            var file = new File("tmp/" + service.getName() + "/config.yml");
+            final var file = new File(tmpFolder, "config.yml");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
                 editor.setValue("host", "0.0.0.0:" + service.getPort());
                 editor.saveFile();
-            } else new BungeeProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
+            } else new BungeeProperties(tmpFolder, service.getPort());
         } else {
-            var file = new File("tmp/" + service.getName() + "/server.properties");
+            final var file = new File(tmpFolder, "server.properties");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
                 editor.setValue("server-port", String.valueOf(service.getPort()));
                 editor.saveFile();
-            } else new SpigotProperties(new File("tmp/" + service.getName() + "/"), service.getPort());
+            } else new SpigotProperties(tmpFolder, service.getPort());
         }
     }
 
@@ -72,15 +75,16 @@ public record ProcessServiceStarter(IService service) {
         final var command = ProcessJavaArgs.args(this.service);
 
         final var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + this.service.getName() + "/"));
-        processBuilder.redirectError(new File("tmp/" + service.getName() + "/erros.log"));
+        processBuilder.redirectError(new File("tmp/" + service.getName() + "/error.log"));
         processBuilder.redirectOutput(new File("tmp/" + service.getName() + "/wrapper.log"));
         final var process = processBuilder.start();
 
+        ((SimpleService) this.service).setProcess(process);
+        communicationPromise.setSuccess(this.service);
 
-        final var thread = new Thread(() -> {
+        /*final var thread = new Thread(() -> {
             ((SimpleService) this.service).setProcess(process);
             communicationPromise.setSuccess(this.service);
-
 
             try {
                 process.waitFor();
@@ -99,7 +103,7 @@ public record ProcessServiceStarter(IService service) {
             }
 
         });
-        thread.start();
+        thread.start();*/
         return communicationPromise;
     }
 

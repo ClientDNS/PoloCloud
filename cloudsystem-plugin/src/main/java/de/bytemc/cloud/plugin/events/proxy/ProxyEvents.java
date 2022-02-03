@@ -5,8 +5,6 @@ import de.bytemc.cloud.api.services.IService;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
@@ -16,14 +14,15 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.Comparator;
 
-public class ProxyEvents implements Listener {
+public final class ProxyEvents implements Listener {
 
     @EventHandler
-    public void handle(LoginEvent event){
+    public void handle(LoginEvent event) {
 
         //TODO IMPROVE WHITELIST
-        String name = event.getConnection().getName();
-        if(name.equalsIgnoreCase("HttpMarco")
+        final String name = event.getConnection().getName();
+
+        if (name.equalsIgnoreCase("HttpMarco")
             || name.equalsIgnoreCase("Siggii")
             || name.equalsIgnoreCase("xImNoxh")
             || name.equalsIgnoreCase("BauHD")
@@ -45,18 +44,15 @@ public class ProxyEvents implements Listener {
 
     @EventHandler
     public void handle(ServerConnectEvent event) {
-        ServerInfo fallback = event.getTarget().getName().equalsIgnoreCase("fallback") ? CloudAPI.getInstance().getServiceManager().getAllPossibleOnlineFallbackServices()
-            .stream()
-            .min(Comparator.comparing(IService::getOnlinePlayers))
-            .map(it -> ProxyServer.getInstance().getServerInfo(it.getName())).orElse(null) : event.getTarget();
-
-        if(fallback == null) {
-            event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender fallback gefunden werden."));
-            return;
+        if (event.getTarget().getName().equalsIgnoreCase("fallback")) {
+            CloudAPI.getInstance().getServiceManager().getAllPossibleOnlineFallbackServices()
+                .stream()
+                .min(Comparator.comparing(IService::getOnlinePlayers))
+                .map(it -> ProxyServer.getInstance().getServerInfo(it.getName())).ifPresentOrElse(event::setTarget, () -> {
+                    event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender fallback gefunden werden."));
+                });
         }
-        event.setTarget(fallback);
     }
-
 
     @EventHandler
     public void handle(PlayerDisconnectEvent event) {
@@ -64,11 +60,13 @@ public class ProxyEvents implements Listener {
     }
 
     @EventHandler
-    public void handle(ProxyPingEvent event){
-        ServerPing.Players players = event.getResponse().getPlayers();
+    public void handle(ProxyPingEvent event) {
+        final ServerPing response = event.getResponse();
+        final ServerPing.Players players = response.getPlayers();
 
-        ServerPing response = event.getResponse();
-        response.setPlayers(new ServerPing.Players(players.getMax(), CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayerOnlineAmount(), players.getSample()));
+        response.setPlayers(new ServerPing.Players(players.getMax(),
+            CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayerOnlineAmount(), players.getSample()));
+
         event.setResponse(response);
     }
 }

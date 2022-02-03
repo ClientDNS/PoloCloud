@@ -7,9 +7,9 @@ import org.jline.reader.UserInterruptException;
 
 import java.util.function.Consumer;
 
-public class ConsoleReadingThread extends Thread {
+public final class ConsoleReadingThread extends Thread {
 
-    private final String CONSOLE_PROMPT;
+    private final String consolePrompt;
 
     private final LineReader lineReader;
     private final Consumer<String> line;
@@ -18,14 +18,14 @@ public class ConsoleReadingThread extends Thread {
         this.lineReader = lineReader;
         this.line = handle;
 
-        this.CONSOLE_PROMPT = loggerProvider.getLog("§bCloudsystem §7" + (windows ? ">" : "»") + " §f", LogType.EMPTY);
+        this.consolePrompt = loggerProvider.getLog("§bCloudsystem §7" + (windows ? ">" : "»") + " §f", LogType.EMPTY);
     }
 
     @Override
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                line.accept(lineReader.readLine(CONSOLE_PROMPT));
+                this.line.accept(this.lineReader.readLine(this.consolePrompt));
             }
         } catch (UserInterruptException ignored) {}
     }

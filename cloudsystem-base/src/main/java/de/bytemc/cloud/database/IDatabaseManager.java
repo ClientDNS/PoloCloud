@@ -1,11 +1,12 @@
 package de.bytemc.cloud.database;
 
 import de.bytemc.network.promise.ICommunicationPromise;
+import org.jetbrains.annotations.NotNull;
 
 public interface IDatabaseManager {
 
-    IDatabase getDatabase();
+    @NotNull IDatabase getDatabase();
 
-    ICommunicationPromise<Void> shutdown();
+    @NotNull ICommunicationPromise<Void> shutdown();
 
 }

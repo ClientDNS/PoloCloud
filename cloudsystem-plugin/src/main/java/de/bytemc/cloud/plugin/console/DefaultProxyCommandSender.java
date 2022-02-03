@@ -13,7 +13,7 @@ public class DefaultProxyCommandSender implements ICommandSender {
     }
 
     @Override
-    public ExecutorType getCommandType() {
+    public @NotNull ExecutorType getCommandType() {
         return ExecutorType.CONSOLE;
     }
 

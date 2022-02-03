@@ -12,23 +12,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-public class CloudPlayerManager extends AbstractPlayerManager {
+public final class CloudPlayerManager extends AbstractPlayerManager {
 
     public CloudPlayerManager() {
 
-
-
         //TODO REPLACEMENT
 
+        final INetworkHandler handler = CloudAPI.getInstance().getNetworkHandler();
 
-
-
-
-
-
-        INetworkHandler handler = CloudAPI.getInstance().getNetworkHandler();
-        handler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> registerCloudPlayer(packet.getUuid(), packet.getUsername()));
-        handler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> unregisterCloudPlayer(packet.getUuid(), packet.getName()));
+        handler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> this.registerCloudPlayer(packet.getUuid(), packet.getUsername()));
+        handler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> this.unregisterCloudPlayer(packet.getUuid(), packet.getName()));
     }
 
     @Override
@@ -37,12 +30,12 @@ public class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void registerCloudPlayer(@NotNull UUID uniqueID, @NotNull String username) {
+    public void registerCloudPlayer(final @NotNull UUID uniqueID, final @NotNull String username) {
         this.getAllServicePlayers().add(new SimpleCloudPlayer(uniqueID, username));
     }
 
     @Override
-    public void unregisterCloudPlayer(@NotNull UUID uuid, @NotNull String name) {
+    public void unregisterCloudPlayer(final @NotNull UUID uuid, final @NotNull String name) {
         this.getAllServicePlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
     }
 

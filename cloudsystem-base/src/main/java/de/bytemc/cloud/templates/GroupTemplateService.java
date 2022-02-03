@@ -9,16 +9,16 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class GroupTemplateService {
+public final class GroupTemplateService {
 
     private static final String EVERY_FOLDER = "templates/EVERY/";
     private static final String EVERY_SERVICE_FOLDER = "templates/EVERY_SERVICE/";
     private static final String EVERY_PROXY_FOLDER = "templates/EVERY_PROXY/";
 
     public GroupTemplateService() {
-        initFolder(EVERY_FOLDER);
-        initFolder(EVERY_SERVICE_FOLDER);
-        initFolder(EVERY_PROXY_FOLDER);
+        this.initFolder(EVERY_FOLDER);
+        this.initFolder(EVERY_SERVICE_FOLDER);
+        this.initFolder(EVERY_PROXY_FOLDER);
     }
 
     public void copyTemplates(IService service) throws IOException {
@@ -34,7 +34,7 @@ public class GroupTemplateService {
 
     public void createTemplateFolder(IServiceGroup group) {
         if (!group.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) return;
-        var file = new File("templates/" + group.getTemplate());
+        final var file = new File("templates/" + group.getTemplate());
         if (!file.exists()) file.mkdirs();
     }
 

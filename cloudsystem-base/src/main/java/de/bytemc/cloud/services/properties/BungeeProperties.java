@@ -2,7 +2,7 @@ package de.bytemc.cloud.services.properties;
 
 import java.io.File;
 
-public class BungeeProperties extends ServiceProperties {
+public final class BungeeProperties extends ServiceProperties {
 
     public BungeeProperties(final File directory, final int port) {
         super(directory, "config.yml", port);

@@ -1,10 +1,11 @@
 package de.bytemc.cloud.plugin.bootstrap.proxy.reconnect;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class ReconnectHandlerImpl implements net.md_5.bungee.api.ReconnectHandler {
+public final class ReconnectHandlerImpl implements ReconnectHandler {
 
     @Override
     public ServerInfo getServer(ProxiedPlayer player) {
@@ -12,17 +13,12 @@ public class ReconnectHandlerImpl implements net.md_5.bungee.api.ReconnectHandle
     }
 
     @Override
-    public void setServer(ProxiedPlayer player) {
-
-    }
+    public void setServer(ProxiedPlayer player) {}
 
     @Override
-    public void save() {
-
-    }
+    public void save() {}
 
     @Override
-    public void close() {
+    public void close() {}
 
-    }
 }
