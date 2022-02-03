@@ -1,6 +1,5 @@
 package de.bytemc.cloud.services.process;
 
-import com.google.gson.JsonObject;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
