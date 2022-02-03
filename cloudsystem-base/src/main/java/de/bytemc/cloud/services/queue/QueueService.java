@@ -12,7 +12,7 @@ import de.bytemc.cloud.services.ports.PortHandler;
 
 import java.util.List;
 
-public class QueueService {
+public final class QueueService {
 
     private static final int MAX_BOOTABLE_SERVICES = 1;
 
@@ -33,16 +33,16 @@ public class QueueService {
 
     public void addServiceToQueueWhereProvided() {
         CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream()
-            .filter(it -> it.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName()))
-            .filter(it -> getAmountOfGroupServices(it) < it.getMinOnlineService())
-            .forEach(it -> {
+            .filter(serviceGroup -> serviceGroup.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName()))
+            .filter(serviceGroup -> this.getAmountOfGroupServices(serviceGroup) < serviceGroup.getMinOnlineService())
+            .forEach(serviceGroup -> {
                 //TODO CHANGE NODE HOSTNAME
-                final IService service = new SimpleService(it.getName(), getPossibleServiceIDByGroup(it),
-                    PortHandler.getNextPort(it), "127.0.0.1");
+                final IService service = new SimpleService(serviceGroup.getName(), this.getPossibleServiceIDByGroup(serviceGroup),
+                    PortHandler.getNextPort(serviceGroup), "127.0.0.1");
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 Base.getInstance().getNode().sendPacketToAll(new ServiceAddPacket(service));
                 CloudAPI.getInstance().getLoggerProvider()
-                    .logMessage("The group '§b" + it.getName() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
+                    .logMessage("The group '§b" + serviceGroup.getName() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
             });
     }
 
@@ -54,8 +54,9 @@ public class QueueService {
         return CloudAPI.getInstance().getServiceManager().getAllServicesByState(ServiceState.STARTING).size();
     }
 
-    public int getAmountOfGroupServices(IServiceGroup serviceGroup) {
-        return (int) CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().filter(it -> it.getServiceGroup().equals(serviceGroup)).count();
+    public int getAmountOfGroupServices(final IServiceGroup serviceGroup) {
+        return (int) CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
+            .filter(it -> it.getServiceGroup().equals(serviceGroup)).count();
     }
 
     private int getPossibleServiceIDByGroup(final IServiceGroup serviceGroup) {

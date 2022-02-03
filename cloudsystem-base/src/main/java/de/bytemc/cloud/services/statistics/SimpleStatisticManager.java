@@ -5,17 +5,17 @@ import de.bytemc.cloud.api.services.IService;
 
 import java.util.Map;
 
-public class SimpleStatisticManager {
+public final class SimpleStatisticManager {
 
-    private static final Map<IService, Long> serviceStartUp = Maps.newConcurrentMap();
+    private static final Map<IService, Long> SERVICE_START_UP = Maps.newConcurrentMap();
 
     public static void registerStartingProcess(IService service){
-        serviceStartUp.put(service, System.currentTimeMillis());
+        SERVICE_START_UP.put(service, System.currentTimeMillis());
     }
 
     public static long getProcessingTime(IService service){
-        long time = System.currentTimeMillis() - serviceStartUp.getOrDefault(service, (System.currentTimeMillis() - 1));
-        serviceStartUp.remove(service);
+        long time = System.currentTimeMillis() - SERVICE_START_UP.getOrDefault(service, (System.currentTimeMillis() - 1));
+        SERVICE_START_UP.remove(service);
         return time;
     }
 

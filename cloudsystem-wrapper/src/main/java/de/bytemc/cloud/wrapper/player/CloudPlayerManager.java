@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CloudPlayerManager extends AbstractPlayerManager {
+public final class CloudPlayerManager extends AbstractPlayerManager {
 
     @Override
     public @NotNull List<ICloudPlayer> getAllServicePlayers() {

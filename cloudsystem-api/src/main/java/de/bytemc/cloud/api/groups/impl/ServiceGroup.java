@@ -14,5 +14,4 @@ public class ServiceGroup implements IServiceGroup {
     private boolean staticService, fallbackGroup;
     private GameServerVersion gameServerVersion;
 
-
 }

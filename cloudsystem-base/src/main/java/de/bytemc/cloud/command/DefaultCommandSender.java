@@ -5,7 +5,7 @@ import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class DefaultCommandSender implements ICommandSender {
+public final class DefaultCommandSender implements ICommandSender {
 
     @Override
     public void sendMessage(@NotNull String text) {
@@ -13,7 +13,7 @@ public class DefaultCommandSender implements ICommandSender {
     }
 
     @Override
-    public ExecutorType getCommandType() {
+    public @NotNull ExecutorType getCommandType() {
         return ExecutorType.CONSOLE;
     }
 

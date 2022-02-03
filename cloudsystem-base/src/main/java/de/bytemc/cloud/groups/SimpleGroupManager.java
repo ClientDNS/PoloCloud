@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;
 
-public class SimpleGroupManager extends AbstractGroupManager {
+public final class SimpleGroupManager extends AbstractGroupManager {
 
     private final IDatabase database;
 

@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SimpleLoggerProvider extends Logger implements LoggerProvider {
+public final class SimpleLoggerProvider extends Logger implements LoggerProvider {
 
     private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -24,13 +24,13 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
     public SimpleLoggerProvider() {
         super("PoloCloud-Logger", null);
 
-        setLevel(Level.ALL);
-        setUseParentHandlers(false);
+        this.setLevel(Level.ALL);
+        this.setUseParentHandlers(false);
 
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\\$tT] [%4$-7s] %5\\$s %n");
 
         if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
-            consoleManager = new SimpleConsoleManager(this);
+            this.consoleManager = new SimpleConsoleManager(this);
         }
     }
 
@@ -46,9 +46,9 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
 
     @Override
     public void logMessage(@NotNull String text, @NotNull LogType logType) {
-        String coloredMessage = getLog(text, logType);
+        final String coloredMessage = this.getLog(text, logType);
         if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
-            LineReader lineReader = consoleManager.getLineReader();
+            final LineReader lineReader = this.consoleManager.getLineReader();
             lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
             lineReader.getTerminal().writer().println(coloredMessage);
             lineReader.getTerminal().flush();
@@ -61,14 +61,12 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
 
     @Override
     public void logMessage(@NotNull String text) {
-        logMessage(text, LogType.INFO);
+        this.logMessage(text, LogType.INFO);
     }
 
     @Override
-    public void logMessages(String... text) {
-        for (String s : text) {
-            logMessage(s);
-        }
+    public void logMessages(final String... text) {
+        for (final String s : text) this.logMessage(s);
     }
 
     public boolean isWindows() {
@@ -76,7 +74,7 @@ public class SimpleLoggerProvider extends Logger implements LoggerProvider {
     }
 
     public void clearConsole() {
-        if (isWindows()) {
+        if (this.isWindows()) {
             try {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } catch (IOException | InterruptedException exception) {

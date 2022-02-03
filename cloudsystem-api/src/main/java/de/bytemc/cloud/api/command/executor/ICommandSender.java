@@ -13,6 +13,6 @@ public interface ICommandSender {
     /**
      * @return the command type
      */
-    ExecutorType getCommandType();
+    @NotNull ExecutorType getCommandType();
 
 }

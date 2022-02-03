@@ -5,7 +5,7 @@ import de.bytemc.network.cluster.impl.client.NodeClient;
 import de.bytemc.network.cluster.types.NetworkType;
 import io.netty.channel.ChannelHandlerContext;
 
-public class WrapperClient extends NodeClient {
+public final class WrapperClient extends NodeClient {
 
     public WrapperClient(final String clientName, final String hostname, final int port) {
         super(clientName, NetworkType.SERVICE);

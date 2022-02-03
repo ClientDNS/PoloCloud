@@ -2,7 +2,7 @@ package de.bytemc.cloud.services.properties;
 
 import java.io.File;
 
-public class SpigotProperties extends ServiceProperties {
+public final class SpigotProperties extends ServiceProperties {
 
     public SpigotProperties(final File file, final int port) {
         super(file, "server.properties", port);

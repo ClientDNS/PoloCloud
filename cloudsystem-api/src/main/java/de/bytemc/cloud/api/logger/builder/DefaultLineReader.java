@@ -7,7 +7,7 @@ import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.TerminalBuilder;
 
-public class DefaultLineReader {
+public final class DefaultLineReader {
 
     private final LineReaderBuilder lineReader;
 

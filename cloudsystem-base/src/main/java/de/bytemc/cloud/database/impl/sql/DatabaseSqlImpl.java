@@ -12,6 +12,7 @@ import de.bytemc.cloud.database.impl.DatabaseFunction;
 import de.bytemc.network.promise.CommunicationPromise;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -40,7 +41,7 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @SneakyThrows
     @Override
-    public ICommunicationPromise<Void> disconnect() {
+    public @NotNull ICommunicationPromise<Void> disconnect() {
         final ICommunicationPromise<Void> shutdownPromise = new CommunicationPromise<>();
         if (this.connection != null) this.connection.close();
         shutdownPromise.setSuccess(null);
@@ -48,7 +49,7 @@ public class DatabaseSqlImpl implements IDatabase {
     }
 
     @Override
-    public void addGroup(final IServiceGroup serviceGroup) {
+    public void addGroup(final @NotNull IServiceGroup serviceGroup) {
         executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers) VALUES (" +
             "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0) +
@@ -56,7 +57,7 @@ public class DatabaseSqlImpl implements IDatabase {
     }
 
     @Override
-    public void removeGroup(final IServiceGroup serviceGroup) {
+    public void removeGroup(final @NotNull IServiceGroup serviceGroup) {
         executeUpdate("DELETE FROM cloudsystem_groups WHERE name='" + serviceGroup.getName() + "'");
     }
 

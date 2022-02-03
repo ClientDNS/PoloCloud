@@ -49,8 +49,9 @@ public class Base extends CloudAPI {
         super(CloudAPITypes.NODE);
 
         instance = this;
-        getLoggerProvider().logMessage("§7Cloudsystem > §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
-        getLoggerProvider().logMessage(" ", LogType.EMPTY);
+
+        this.getLoggerProvider().logMessage("§7Cloudsystem > §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
+        this.getLoggerProvider().logMessage(" ", LogType.EMPTY);
 
         this.databaseManager = new DatabaseManager();
         this.groupManager = new SimpleGroupManager();

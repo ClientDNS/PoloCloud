@@ -41,14 +41,14 @@ public record ProcessServiceStarter(IService service) {
         // load all current group templates
         Base.getInstance().getGroupTemplateService().copyTemplates(service);
 
-        String jar = service.getServiceGroup().getGameServerVersion().getJar();
+        final String jar = service.getServiceGroup().getGameServerVersion().getJar();
         FileUtils.copyFile(new File("storage/jars/" + jar), new File(tmpFolder, jar));
 
         // copy plugin
         FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File(tmpFolder, "plugins/plugin.jar"));
 
         // write property for identify service
-        new Document(new JsonObject())
+        new Document()
             .set("service", service.getName())
             .set("node", service.getServiceGroup().getNode())
             .set("hostname", Base.getInstance().getNode().getHostName())
@@ -57,14 +57,14 @@ public record ProcessServiceStarter(IService service) {
 
         // check properties and modify
         if (service.getServiceGroup().getGameServerVersion().isProxy()) {
-            var file = new File(tmpFolder, "config.yml");
+            final var file = new File(tmpFolder, "config.yml");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
                 editor.setValue("host", "0.0.0.0:" + service.getPort());
                 editor.saveFile();
             } else new BungeeProperties(tmpFolder, service.getPort());
         } else {
-            var file = new File(tmpFolder, "server.properties");
+            final var file = new File(tmpFolder, "server.properties");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
                 editor.setValue("server-port", String.valueOf(service.getPort()));
@@ -83,11 +83,9 @@ public record ProcessServiceStarter(IService service) {
         processBuilder.redirectOutput(new File("tmp/" + service.getName() + "/wrapper.log"));
         final var process = processBuilder.start();
 
-
         final var thread = new Thread(() -> {
             ((SimpleService) this.service).setProcess(process);
             communicationPromise.setSuccess(this.service);
-
 
             try {
                 process.waitFor();

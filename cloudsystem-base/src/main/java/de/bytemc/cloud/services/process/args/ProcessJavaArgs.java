@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarInputStream;
 
-public class ProcessJavaArgs {
+public final class ProcessJavaArgs {
 
     public static String[] args(final IService service) {
         final List<String> arguments = new ArrayList<>(Arrays.asList(

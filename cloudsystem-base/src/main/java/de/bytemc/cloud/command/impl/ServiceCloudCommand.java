@@ -9,7 +9,7 @@ import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.ServiceManager;
 
-public class ServiceCloudCommand extends CloudCommand {
+public final class ServiceCloudCommand extends CloudCommand {
 
     public ServiceCloudCommand() {
         super("service", "Manage services", ExecutorType.CONSOLE, "ser");

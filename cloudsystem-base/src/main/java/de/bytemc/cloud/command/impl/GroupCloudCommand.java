@@ -13,7 +13,7 @@ import de.bytemc.cloud.services.ServiceManager;
 
 import java.util.function.Consumer;
 
-public class GroupCloudCommand extends CloudCommand {
+public final class GroupCloudCommand extends CloudCommand {
 
     public GroupCloudCommand() {
         super("group", "Manage the cloud groups", ExecutorType.CONSOLE);

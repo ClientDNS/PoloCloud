@@ -5,7 +5,7 @@ import de.bytemc.cloud.api.events.events.CloudServiceRegisterEvent;
 import de.bytemc.cloud.api.events.events.CloudServiceRemoveEvent;
 import de.bytemc.cloud.api.events.events.CloudServiceUpdateEvent;
 
-public class ProxyCloudEvents {
+public final class ProxyCloudEvents {
 
     public ProxyCloudEvents() {
         CloudAPI.getInstance().getEventHandler().registerEvent(CloudServiceRegisterEvent.class, event -> {
@@ -20,4 +20,5 @@ public class ProxyCloudEvents {
             System.out.println("Service update: " + event.getService().getName());
         });
     }
+
 }

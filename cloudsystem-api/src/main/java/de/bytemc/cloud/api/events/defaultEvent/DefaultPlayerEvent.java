@@ -5,7 +5,8 @@ import de.bytemc.cloud.api.player.ICloudPlayer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter @AllArgsConstructor
+@Getter
+@AllArgsConstructor
 public abstract class DefaultPlayerEvent implements ICloudEvent {
 
     private ICloudPlayer cloudPlayer;

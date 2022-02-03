@@ -9,7 +9,7 @@ import de.bytemc.cloud.wrapper.PropertyFile;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 
-public class ServiceManager extends AbstractSimpleServiceManager {
+public final class ServiceManager extends AbstractSimpleServiceManager {
 
     private final PropertyFile property;
 

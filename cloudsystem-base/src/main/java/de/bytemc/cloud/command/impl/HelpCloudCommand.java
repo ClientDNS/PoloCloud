@@ -6,7 +6,7 @@ import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 
-public class HelpCloudCommand extends CloudCommand {
+public final class HelpCloudCommand extends CloudCommand {
 
     public HelpCloudCommand() {
         super("help", "All commands and help descriptions", ExecutorType.CONSOLE);

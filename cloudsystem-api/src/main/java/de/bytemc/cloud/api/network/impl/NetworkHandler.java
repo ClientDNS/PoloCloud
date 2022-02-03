@@ -14,10 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class NetworkHandler implements INetworkHandler {
+public final class NetworkHandler implements INetworkHandler {
 
     public NetworkHandler() {
-
 
         System.out.println("amount of packets bevor: " + getAllCachedPackets().size());
 
