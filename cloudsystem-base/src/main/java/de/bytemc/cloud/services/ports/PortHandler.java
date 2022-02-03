@@ -1,9 +1,11 @@
 package de.bytemc.cloud.services.ports;
 
-import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 
-public class PortHandler {
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+
+public final class PortHandler {
 
     private static final int PORTS_BOUNCE_PROXY = 25565;
     private static final int PORTS_BOUNCE = 30000;
@@ -17,7 +19,12 @@ public class PortHandler {
     }
 
     private static boolean isPortUsed(int port) {
-        return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().anyMatch(it -> it.getPort() == port);
+        try (final ServerSocket serverSocket = new ServerSocket()) {
+            serverSocket.bind(new InetSocketAddress(port));
+            return false;
+        } catch (Exception exception) {
+            return true;
+        }
     }
 
 }
