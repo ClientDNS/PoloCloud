@@ -3,6 +3,7 @@ package de.bytemc.cloud.api.services;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import org.jetbrains.annotations.NotNull;
 
 public interface IService {
@@ -44,6 +45,9 @@ public interface IService {
     @NotNull ServiceState getServiceState();
 
     int getMaxPlayers();
+
+    ServiceVisibility getServiceVisibility();
+
 
     default int getOnlinePlayers() {
         return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer() != null && it.getServer().equals(this)).count();
