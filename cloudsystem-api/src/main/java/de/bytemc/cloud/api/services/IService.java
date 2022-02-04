@@ -57,6 +57,10 @@ public interface IService {
         return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer() != null && it.getServer().equals(this)).count();
     }
 
+    default boolean isFull(){
+        return getOnlinePlayers() >= getMaxPlayers();
+    }
+
     void update();
 
 }
