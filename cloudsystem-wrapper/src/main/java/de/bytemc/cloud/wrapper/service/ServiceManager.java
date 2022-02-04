@@ -11,8 +11,6 @@ import de.bytemc.cloud.wrapper.Wrapper;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Base64;
-
 public final class ServiceManager extends AbstractSimpleServiceManager {
 
     private final PropertyFile property;
@@ -37,7 +35,7 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
     }
 
     @Override
-    public void updateService(IService service) {
+    public void updateService(@NotNull IService service) {
         Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new ServiceUpdatePacket(service), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 }

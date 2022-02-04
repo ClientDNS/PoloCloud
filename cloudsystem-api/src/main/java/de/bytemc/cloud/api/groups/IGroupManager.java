@@ -55,4 +55,10 @@ public interface IGroupManager {
             .collect(Collectors.toList());
     }
 
+    /**
+     * update a group
+     * @param serviceGroup the group to update
+     */
+    void updateServiceGroup(final @NotNull IServiceGroup serviceGroup);
+
 }

@@ -1,27 +1,46 @@
 package de.bytemc.cloud.api.groups;
 
 import de.bytemc.cloud.api.versions.GameServerVersion;
+import org.jetbrains.annotations.NotNull;
 
 public interface IServiceGroup {
 
-    String getName();
+    @NotNull String getName();
 
-    String getTemplate();
+    @NotNull String getTemplate();
 
-    String getNode();
+    void setTemplate(final @NotNull String template);
+
+    @NotNull String getNode();
+
+    void setNode(final @NotNull String node);
 
     int getMemory();
 
+    void setMemory(final int memory);
+
     int getDefaultMaxPlayers();
+
+    void setDefaultMaxPlayers(final int defaultMaxPlayers);
 
     int getMinOnlineService();
 
+    void setMinOnlineService(final int minOnlineService);
+
     int getMaxOnlineService();
+
+    void setMaxOnlineService(final int maxOnlineService);
 
     boolean isStaticService();
 
     boolean isFallbackGroup();
 
-    GameServerVersion getGameServerVersion();
+    void setFallbackGroup(final boolean fallbackGroup);
+
+    @NotNull GameServerVersion getGameServerVersion();
+
+    void setGameServerVersion(final @NotNull GameServerVersion gameServerVersion);
+
+    void update();
 
 }
