@@ -41,6 +41,7 @@ public interface IServiceGroup {
 
     void setGameServerVersion(final @NotNull GameServerVersion gameServerVersion);
 
+    // TODO update in Database
     void update();
 
 }
