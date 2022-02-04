@@ -1,9 +1,14 @@
 package de.bytemc.cloud.plugin.bootstrap.proxy;
 
+import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
+import de.bytemc.cloud.api.services.IService;
+import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.cloud.plugin.IPlugin;
 import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyCloudEvents;
 import de.bytemc.cloud.plugin.bootstrap.proxy.reconnect.ReconnectHandlerImpl;
 import de.bytemc.cloud.plugin.events.proxy.ProxyEvents;
+import de.bytemc.cloud.wrapper.service.ServiceManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -30,6 +35,11 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
 
         new ProxyCloudEvents();
         this.getProxy().getPluginManager().registerListener(this, new ProxyEvents());
+
+        //update that the service is ready to use
+        IService service = ((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService();
+        service.setServiceVisibility(ServiceVisibility.VISIBLE);
+        service.update();
     }
 
     @Override

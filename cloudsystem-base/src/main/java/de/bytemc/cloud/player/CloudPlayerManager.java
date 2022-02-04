@@ -1,12 +1,16 @@
 package de.bytemc.cloud.player;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.INetworkHandler;
+import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.impl.AbstractPlayerManager;
 import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
+import de.bytemc.network.cluster.types.NetworkType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,4 +43,12 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
         this.getAllServicePlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
     }
 
+    @Override
+    public void updateCloudPlayer(ICloudPlayer cloudPlayer) {
+        CloudPlayerUpdatePacket packet = new CloudPlayerUpdatePacket(cloudPlayer);
+        //update all other nodes and this connected services
+        Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
+        //update own service caches
+        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.SERVICE);
+    }
 }

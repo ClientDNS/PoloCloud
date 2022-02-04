@@ -4,7 +4,7 @@ import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
-import de.bytemc.cloud.api.network.packets.services.ServiceStateUpdatePacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.config.NodeConfig;
@@ -58,7 +58,8 @@ public final class BaseNode extends AbstractNodeClustering {
         // update cache
         clusteringConnectedClient.sendPacket(new ServiceGroupCacheUpdatePacket(Base.getInstance().getGroupManager().getAllCachedServiceGroups()));
         clusteringConnectedClient.sendPacket(new ServiceCacheUpdatePacket(Base.getInstance().getServiceManager().getAllCachedServices()));
-        Base.getInstance().getNode().sendPacketToAll(new ServiceStateUpdatePacket(service.getName(), service.getServiceState()));
+
+        service.update();
 
         Base.getInstance().getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7'§a successfully §7connect to the cluster. ("+ SimpleStatisticManager.getProcessingTime(service) + "ms)");
         Base.getInstance().getQueueService().checkForQueue();
