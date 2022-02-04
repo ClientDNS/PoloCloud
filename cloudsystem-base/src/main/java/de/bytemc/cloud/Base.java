@@ -79,6 +79,7 @@ public class Base extends CloudAPI {
     }
 
     public void onShutdown() {
+        if (!this.running) return;
         this.running = false;
         this.getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
         this.getServiceManager().getAllCachedServices()
@@ -86,16 +87,18 @@ public class Base extends CloudAPI {
                 if (((SimpleService) service).getProcess() != null)
                     ((SimpleService) service).getProcess().destroyForcibly();
             });
-        try {
-            FileUtils.deleteDirectory(new File("tmp"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
-            .addCompleteListener(it -> System.exit(0))
+            .addCompleteListener(voidICommunicationPromise -> {
+                try {
+                    FileUtils.deleteDirectory(new File("tmp"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            })
             .addResultListener(unused -> {
                 this.getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
                 ((SimpleLoggerProvider) this.getLoggerProvider()).getConsoleManager().shutdownReading();
+                System.exit(0);
             });
     }
 
