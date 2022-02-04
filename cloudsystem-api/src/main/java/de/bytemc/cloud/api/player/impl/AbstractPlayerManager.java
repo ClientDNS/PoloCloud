@@ -2,6 +2,8 @@ package de.bytemc.cloud.api.player.impl;
 
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
@@ -25,6 +27,15 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
             cloudPlayer.setProxyServer(packet.getProxyServer());
             cloudPlayer.setServer(packet.getServer());
         });
+
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> {
+            allCachedCloudPlayers.add(new SimpleCloudPlayer(packet.getUuid(), packet.getUsername()));
+        });
+
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> {
+            allCachedCloudPlayers.remove(getCloudPlayerByUniqueIdOrNull(packet.getUuid()));
+        });
+
     }
 
     public abstract void registerCloudPlayer(@NotNull UUID uniqueID, @NotNull String username);

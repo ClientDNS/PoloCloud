@@ -18,16 +18,6 @@ import java.util.UUID;
 
 public final class CloudPlayerManager extends AbstractPlayerManager {
 
-    public CloudPlayerManager() {
-
-        //TODO REPLACEMENT
-
-        final INetworkHandler handler = CloudAPI.getInstance().getNetworkHandler();
-
-        handler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> this.registerCloudPlayer(packet.getUuid(), packet.getUsername()));
-        handler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> this.unregisterCloudPlayer(packet.getUuid(), packet.getName()));
-    }
-
     @Override
     public @NotNull List<ICloudPlayer> getAllServicePlayers() {
         return this.getAllCachedCloudPlayers();
