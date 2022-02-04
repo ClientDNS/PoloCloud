@@ -10,6 +10,7 @@ import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.network.NetworkManager;
 import de.bytemc.network.cluster.types.NetworkType;
+import de.bytemc.network.master.cache.IConnectedClient;
 
 public final class BaseNodeNetwork {
 
@@ -18,8 +19,11 @@ public final class BaseNodeNetwork {
 
         networkHandler.registerPacketListener(QueryPacket.class, (channelHandlerContext, packet) -> {
 
+            IConnectedClient connectedClient = Base.getInstance().getNode().getConnectedClientByChannel(channelHandlerContext.channel());
+
             //send to all services as not query packet
-            Base.getInstance().getNode().sendPacketToType(packet.getPacket(), NetworkType.SERVICE);
+            Base.getInstance().getNode().getAllServices().stream()
+                .filter(it -> !it.equals(connectedClient)).forEach(it -> it.sendPacket(packet.getPacket()));
 
             if(packet.getState() == QueryPacket.QueryState.FIRST_RESPONSE) {
                 //send to all another nodes
@@ -28,24 +32,6 @@ public final class BaseNodeNetwork {
             //call local packet is communing
             NetworkManager.callPacket(channelHandlerContext, packet.getPacket());
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         networkHandler.registerPacketListener(RedirectPacket.class, (ctx, packet) ->
             Base.getInstance().getNode().getAllCachedConnectedClients().stream().filter(it ->

@@ -32,6 +32,8 @@ public final class ProxyEvents implements Listener {
 
         final String name = event.getConnection().getName();
 
+        if (name.startsWith("BauHD")) return;
+
         if(!whitelistedPlayers.contains(event.getConnection().getName())) {
             event.setCancelReason(new TextComponent("§cDu besitzt momentan keinen Zuganng, um das §nNetzwerk §czu betreten."));
             event.setCancelled(true);
