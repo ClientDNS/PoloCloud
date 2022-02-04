@@ -1,6 +1,8 @@
 package de.bytemc.cloud.services.ports;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.groups.IServiceGroup;
+import de.bytemc.cloud.api.services.IService;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -19,6 +21,11 @@ public final class PortHandler {
     }
 
     private static boolean isPortUsed(int port) {
+        for (final IService service : Base.getInstance().getServiceManager().getAllCachedServices()) {
+            if (service.getServiceGroup().getNode().equals(Base.getInstance().getNode().getNodeName())) {
+                if (service.getPort() == port) return true;
+            }
+        }
         try (final ServerSocket serverSocket = new ServerSocket()) {
             serverSocket.bind(new InetSocketAddress(port));
             return false;
