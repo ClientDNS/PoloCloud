@@ -9,10 +9,7 @@ import de.bytemc.cloud.wrapper.service.ServiceManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
-import net.md_5.bungee.api.event.ProxyPingEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -46,7 +43,11 @@ public final class ProxyEvents implements Listener {
             event.setCancelled(true);
             return;
         }
-        playerManager.registerCloudPlayer(event.getConnection().getUniqueId(), name);
+    }
+
+    @EventHandler
+    public void handle(LoginEvent event){
+        playerManager.registerCloudPlayer(event.getConnection().getUniqueId(), event.getConnection().getName());
     }
 
     @EventHandler

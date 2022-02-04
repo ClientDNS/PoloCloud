@@ -24,10 +24,6 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
             cloudPlayer.setProxyServer(packet.getProxyServer());
             cloudPlayer.setServer(packet.getServer());
-
-            //TODO
-            System.out.println("CloudPlayer update: " + packet.getUuid() + ";" + cloudPlayer.getProxyServer().getName() + ";" + cloudPlayer.getServer().getName());
-
         });
     }
 

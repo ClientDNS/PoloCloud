@@ -27,10 +27,6 @@ public abstract class AbstractSimpleServiceManager implements IServiceManager {
             service.setServiceState(packet.getState());
             service.setServiceVisibility(packet.getServiceVisibility());
             service.setMaxPlayers(packet.getMaxPlayers());
-
-            //TODO
-            System.out.println("Service update: " + packet.getService() + ";" + service.getServiceState() + ";" + service.getServiceVisibility());
-
         });
     }
 
