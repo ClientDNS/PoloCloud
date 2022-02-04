@@ -20,8 +20,6 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
     @Override
     public void onLoad() {
         ProxyServer.getInstance().setReconnectHandler(new ReconnectHandlerImpl());
-
-        new ProxyCloudEvents();
     }
 
     @Override
