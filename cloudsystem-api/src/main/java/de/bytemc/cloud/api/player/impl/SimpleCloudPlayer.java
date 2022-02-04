@@ -1,5 +1,6 @@
 package de.bytemc.cloud.api.player.impl;
 
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.services.IService;
 import lombok.Getter;
@@ -18,4 +19,23 @@ public class SimpleCloudPlayer implements ICloudPlayer {
     private IService server;
     private IService proxyServer;
 
+    @Override
+    public void connect(IService service) {
+        //TODO
+    }
+
+    @Override
+    public void kick() {
+        kick("");
+    }
+
+    @Override
+    public void kick(String reason) {
+        //TODO
+    }
+
+    @Override
+    public void update() {
+        CloudAPI.getInstance().getCloudPlayerManager().updateCloudPlayer(this);
+    }
 }

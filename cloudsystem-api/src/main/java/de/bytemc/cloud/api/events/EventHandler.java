@@ -8,7 +8,7 @@ import de.bytemc.cloud.api.events.events.CloudServiceRemoveEvent;
 import de.bytemc.cloud.api.events.events.CloudServiceUpdateEvent;
 import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
-import de.bytemc.cloud.api.network.packets.services.ServiceStateUpdatePacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
 import de.bytemc.network.NetworkManager;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class EventHandler implements IEventHandler {
         NetworkManager.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) -> call(new CloudServiceRemoveEvent(packet.getService())));
 
         //service state update event
-        NetworkManager.registerPacketListener(ServiceStateUpdatePacket.class, (ctx, packet) -> call(new CloudServiceUpdateEvent(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.getService()))));
+        NetworkManager.registerPacketListener(ServiceUpdatePacket.class, (ctx, packet) -> call(new CloudServiceUpdateEvent(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.getService()))));
     }
 
     public <T extends ICloudEvent> void registerEvent(Class<T> clazz, Consumer<T> event) {

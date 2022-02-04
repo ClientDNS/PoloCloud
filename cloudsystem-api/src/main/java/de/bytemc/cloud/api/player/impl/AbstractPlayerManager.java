@@ -1,12 +1,17 @@
 package de.bytemc.cloud.api.player.impl;
 
 import com.google.common.collect.Lists;
+import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -14,9 +19,30 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
     private final List<ICloudPlayer> allCachedCloudPlayers = Lists.newArrayList();
 
+    public AbstractPlayerManager() {
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) -> {
+            ICloudPlayer cloudPlayer = getCloudPlayerByUniqueIdOrNull(packet.getUuid());
+            Objects.requireNonNull(cloudPlayer, "Updated cloud player is null.");
+
+            cloudPlayer.setProxyServer(packet.getProxyServer());
+            cloudPlayer.setServer(packet.getServer());
+        });
+
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> {
+            allCachedCloudPlayers.add(new SimpleCloudPlayer(packet.getUuid(), packet.getUsername()));
+        });
+
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) -> {
+            allCachedCloudPlayers.remove(getCloudPlayerByUniqueIdOrNull(packet.getUuid()));
+        });
+
+    }
+
     public abstract void registerCloudPlayer(@NotNull UUID uniqueID, @NotNull String username);
 
     public abstract void unregisterCloudPlayer(@NotNull UUID uuid, @NotNull String name);
+
+    public abstract void updateCloudPlayer(ICloudPlayer cloudPlayer);
 
     @Override
     public ICloudPlayer getCloudPlayerByNameOrNull(@NotNull String username) {

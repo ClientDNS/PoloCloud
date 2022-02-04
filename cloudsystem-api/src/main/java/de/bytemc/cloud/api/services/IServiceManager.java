@@ -2,6 +2,7 @@ package de.bytemc.cloud.api.services;
 
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,11 +49,10 @@ public interface IServiceManager {
      */
     ICommunicationPromise<IService> startService(final @NotNull IService service);
 
-    default List<IService> getAllPossibleOnlineFallbackServices() {
-        return this.getAllCachedServices().stream()
-            .filter(it -> it.getServiceState() == ServiceState.ONLINE)
-            .filter(it -> !it.getServiceGroup().getGameServerVersion().isProxy())
-            .filter(it -> it.getServiceGroup().isFallbackGroup()).collect(Collectors.toList());
-    }
+    /**
+     * update a service
+     * @param service the service to start
+     */
+    void updateService(IService service);
 
 }

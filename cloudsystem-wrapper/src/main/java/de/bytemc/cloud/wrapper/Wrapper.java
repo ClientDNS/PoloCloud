@@ -13,6 +13,7 @@ import de.bytemc.cloud.wrapper.groups.GroupManager;
 import de.bytemc.cloud.wrapper.network.WrapperClient;
 import de.bytemc.cloud.wrapper.player.CloudPlayerManager;
 import de.bytemc.cloud.wrapper.service.ServiceManager;
+import de.bytemc.network.packets.IPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

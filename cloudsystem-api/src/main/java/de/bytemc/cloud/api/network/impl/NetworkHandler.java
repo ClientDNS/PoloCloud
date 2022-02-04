@@ -1,11 +1,13 @@
 package de.bytemc.cloud.api.network.impl;
 
 import de.bytemc.cloud.api.network.INetworkHandler;
+import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.*;
 import de.bytemc.network.NetworkManager;
 import de.bytemc.network.packets.IPacket;
@@ -18,22 +20,26 @@ public final class NetworkHandler implements INetworkHandler {
 
     public NetworkHandler() {
 
-        System.out.println("amount of packets bevor: " + getAllCachedPackets().size());
+        //Service packets
+        NetworkManager.registerPacket(ServiceShutdownPacket.class, 2);
+        NetworkManager.registerPacket(ServiceAddPacket.class, 3);
+        NetworkManager.registerPacket(ServiceRemovePacket.class, 4);
+        NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 5);
+        NetworkManager.registerPacket(ServiceUpdatePacket.class, 6);
+        NetworkManager.registerPacket(ServiceRequestShutdownPacket.class, 7);
 
-        NetworkManager.registerPacket(ServiceGroupExecutePacket.class, 2);
-        NetworkManager.registerPacket(ServiceGroupCacheUpdatePacket.class, 3);
-        NetworkManager.registerPacket(ServiceShutdownPacket.class, 4);
-        NetworkManager.registerPacket(RedirectPacket.class, 5);
-        NetworkManager.registerPacket(CloudPlayerLoginPacket.class, 6);
-        NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 7);
-        NetworkManager.registerPacket(ServiceAddPacket.class, 8);
-        NetworkManager.registerPacket(ServiceRemovePacket.class, 9);
-        NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 10);
-        NetworkManager.registerPacket(ServiceStateUpdatePacket.class, 11);
-        NetworkManager.registerPacket(ServiceRequestShutdownPacket.class, 12);
+        //service group packets
+        NetworkManager.registerPacket(ServiceGroupExecutePacket.class, 8);
+        NetworkManager.registerPacket(ServiceGroupCacheUpdatePacket.class, 9);
 
-        System.out.println("amount of packets: " + getAllCachedPackets().size());
+        //cloud player packets
+        NetworkManager.registerPacket(CloudPlayerLoginPacket.class, 10);
+        NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 11);
+        NetworkManager.registerPacket(CloudPlayerUpdatePacket.class, 12);
 
+        //util packets
+        NetworkManager.registerPacket(QueryPacket.class, 13);
+        NetworkManager.registerPacket(RedirectPacket.class, 14);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){

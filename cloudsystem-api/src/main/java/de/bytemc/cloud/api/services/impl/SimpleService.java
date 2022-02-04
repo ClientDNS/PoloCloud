@@ -4,6 +4,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,7 @@ public final class SimpleService implements IService {
     private Process process;
 
     private ServiceState serviceState = ServiceState.PREPARED;
+    private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
 
     public SimpleService(String group, int id, int port, String hostname) {
         this.serviceGroup = CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
@@ -32,10 +34,11 @@ public final class SimpleService implements IService {
         this.maxPlayers = serviceGroup.getDefaultMaxPlayers();
     }
 
-    public SimpleService(String group, int id, int port, String hostName, int maxPlayers, ServiceState serviceState) {
+    public SimpleService(String group, int id, int port, String hostName, int maxPlayers, ServiceState serviceState, ServiceVisibility serviceVisibility) {
         this(group, id, port, hostName);
         this.maxPlayers = maxPlayers;
         this.serviceState = serviceState;
+        this.serviceVisibility = serviceVisibility;
     }
 
     @Override
@@ -61,6 +64,10 @@ public final class SimpleService implements IService {
         result = 31 * result + this.serviceID;
         result = 31 * result + this.port;
         return result;
+    }
+
+    public void update(){
+        CloudAPI.getInstance().getServiceManager().updateService(this);
     }
 
 }
