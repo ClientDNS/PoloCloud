@@ -26,6 +26,14 @@ public class PacketHelper {
         return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), packet.readString(byteBuf), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()],  ServiceVisibility.values()[byteBuf.readInt()]);
     }
 
+    public static void writeCloudPlayer(ByteBuf byteBuf) {
+
+    }
+
+    public static void readCloudPlayer(ByteBuf byteBuf, IPacket packet){
+
+    }
+
     public static void writeServiceGroup(ByteBuf byteBuf, IServiceGroup group, IPacket packet) {
         packet.writeString(byteBuf, group.getName());
         packet.writeString(byteBuf, group.getTemplate());

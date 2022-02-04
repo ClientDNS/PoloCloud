@@ -45,6 +45,12 @@ public interface ICloudPlayerManager {
     void registerCloudPlayer(final @NotNull UUID uniqueId, final @NotNull String username);
 
     /**
+     * update a cloud player
+     * @param cloudPlayer the unique id of the player
+     */
+    void updateCloudPlayer(final @NotNull ICloudPlayer cloudPlayer);
+
+    /**
      * unregisters a cloud player
      * @param uniqueId the unique id of the player
      * @param username the username of the player

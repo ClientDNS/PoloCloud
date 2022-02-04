@@ -66,4 +66,8 @@ public final class SimpleService implements IService {
         return result;
     }
 
+    public void update(){
+        CloudAPI.getInstance().getServiceManager().updateService(this);
+    }
+
 }

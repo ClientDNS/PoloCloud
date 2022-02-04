@@ -46,11 +46,17 @@ public interface IService {
 
     int getMaxPlayers();
 
+    void setMaxPlayers(int slots);
+
     ServiceVisibility getServiceVisibility();
+
+    void setServiceVisibility(ServiceVisibility serviceVisibility);
 
 
     default int getOnlinePlayers() {
         return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer() != null && it.getServer().equals(this)).count();
     }
+
+    void update();
 
 }
