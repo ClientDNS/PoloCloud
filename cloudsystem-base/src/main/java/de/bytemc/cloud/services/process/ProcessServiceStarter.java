@@ -75,35 +75,10 @@ public record ProcessServiceStarter(IService service) {
         final var command = ProcessJavaArgs.args(this.service);
 
         final var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + this.service.getName() + "/"));
-        processBuilder.redirectError(new File("tmp/" + service.getName() + "/error.log"));
         processBuilder.redirectOutput(new File("tmp/" + service.getName() + "/wrapper.log"));
-        final var process = processBuilder.start();
 
-        ((SimpleService) this.service).setProcess(process);
+        ((SimpleService) this.service).setProcess(processBuilder.start());
         communicationPromise.setSuccess(this.service);
-
-        /*final var thread = new Thread(() -> {
-            ((SimpleService) this.service).setProcess(process);
-            communicationPromise.setSuccess(this.service);
-
-            try {
-                process.waitFor();
-
-                //stop service
-                final var file = new File("tmp/" + this.service.getName() + "/");
-                if (file.exists()) FileUtils.deleteDirectory(file);
-                CloudAPI.getInstance().getLoggerProvider().logMessage("The service '§b" + this.service.getName() + "§7' is now successfully offline.");
-                Base.getInstance().getNode().sendPacketToAll(new ServiceRemovePacket(this.service.getName()));
-                CloudAPI.getInstance().getServiceManager().getAllCachedServices().remove(this.service);
-
-                //check queue
-                Base.getInstance().getQueueService().checkForQueue();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        });
-        thread.start();*/
         return communicationPromise;
     }
 
