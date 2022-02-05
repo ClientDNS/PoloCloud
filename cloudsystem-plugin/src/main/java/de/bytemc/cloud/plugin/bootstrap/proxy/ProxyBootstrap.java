@@ -1,8 +1,8 @@
 package de.bytemc.cloud.plugin.bootstrap.proxy;
 
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
 import de.bytemc.cloud.api.services.IService;
+import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.cloud.plugin.IPlugin;
 import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyCloudEvents;
@@ -38,6 +38,14 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
         IService service = ((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService();
         service.setServiceVisibility(ServiceVisibility.VISIBLE);
         service.update();
+    }
+
+    @Override
+    public void onDisable() {
+        ((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService().edit(service -> {
+            service.setServiceState(ServiceState.STOPPING);
+            service.setServiceVisibility(ServiceVisibility.INVISIBLE);
+        });
     }
 
     @Override
