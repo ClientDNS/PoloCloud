@@ -21,12 +21,11 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
     public AbstractPlayerManager() {
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) -> {
-            ICloudPlayer cloudPlayer = getCloudPlayerByUniqueIdOrNull(packet.getUuid());
-            Objects.requireNonNull(cloudPlayer, "Updated cloud player is null.");
-
-            cloudPlayer.setProxyServer(packet.getProxyServer());
-            cloudPlayer.setServer(packet.getServer());
-            CloudAPI.getInstance().getEventHandler().call(new CloudPlayerUpdateEvent(cloudPlayer));
+            this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {
+                cloudPlayer.setProxyServer(packet.getProxyServer());
+                cloudPlayer.setServer(packet.getServer());
+                CloudAPI.getInstance().getEventHandler().call(new CloudPlayerUpdateEvent(cloudPlayer));
+            });
         });
 
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> {
@@ -38,9 +37,9 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) ->
             this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {
-            this.cachedCloudPlayers.remove(cloudPlayer.getUniqueId());
-            CloudAPI.getInstance().getEventHandler().call(new CloudPlayerDisconnectEvent(cloudPlayer));
-        }));
+                this.cachedCloudPlayers.remove(cloudPlayer.getUniqueId());
+                CloudAPI.getInstance().getEventHandler().call(new CloudPlayerDisconnectEvent(cloudPlayer));
+            }));
 
         CloudAPI.getInstance().getEventHandler().registerEvent(CloudServiceRemoveEvent.class, event ->
             this.cachedCloudPlayers.values().forEach(player -> {
