@@ -20,8 +20,8 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public final class ProxyEvents implements Listener {
 
@@ -66,6 +66,7 @@ public final class ProxyEvents implements Listener {
         if (event.getTarget().getName().equalsIgnoreCase("fallback")) {
             FallbackHandler.getLobbyFallbackOrNull().ifPresentOrElse(it -> {
                 event.setTarget(ProxyServer.getInstance().getServerInfo(it.getName()));
+                assert cloudPlayer != null;
                 cloudPlayer.setServer(it);
                 cloudPlayer.setProxyServer(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService());
                 cloudPlayer.update();
@@ -73,7 +74,8 @@ public final class ProxyEvents implements Listener {
                 event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."));
             });
         } else {
-            cloudPlayer.setServer(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(event.getTarget().getName()));
+            assert cloudPlayer != null;
+            cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(event.getTarget().getName())));
             cloudPlayer.setProxyServer(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService());
             cloudPlayer.update();
         }
@@ -107,7 +109,7 @@ public final class ProxyEvents implements Listener {
             .filter(service -> service.getServiceVisibility() == ServiceVisibility.VISIBLE)
             .filter(service -> !service.getServiceGroup().getGameServerVersion().isProxy())
             .filter(service -> service.getServiceGroup().isFallbackGroup())
-            .filter(service -> !service.getName().equals(player.getServer().getInfo().getName()))
+            .filter(service -> (player.getServer() == null || !player.getServer().getInfo().getName().equals(service.getName())))
             .min(Comparator.comparing(IService::getOnlinePlayers))
             .map(service -> ProxyServer.getInstance().getServerInfo(service.getName()));
     }
