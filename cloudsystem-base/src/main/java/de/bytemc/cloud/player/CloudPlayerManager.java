@@ -1,11 +1,7 @@
 package de.bytemc.cloud.player;
 
 import de.bytemc.cloud.Base;
-import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.impl.AbstractPlayerManager;
