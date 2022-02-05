@@ -34,7 +34,7 @@ public final class ProxyEvents implements Listener {
 
         if (name.startsWith("BauHD")) return;
 
-        if(!whitelistedPlayers.contains(event.getConnection().getName())) {
+        if (!whitelistedPlayers.contains(event.getConnection().getName())) {
             event.setCancelReason(new TextComponent("§cDu besitzt momentan keinen Zuganng, um das §nNetzwerk §czu betreten."));
             event.setCancelled(true);
             return;
@@ -48,7 +48,7 @@ public final class ProxyEvents implements Listener {
     }
 
     @EventHandler
-    public void handle(LoginEvent event){
+    public void handle(LoginEvent event) {
         playerManager.registerCloudPlayer(event.getConnection().getUniqueId(), event.getConnection().getName());
     }
 
@@ -84,4 +84,13 @@ public final class ProxyEvents implements Listener {
         response.setPlayers(new ServerPing.Players(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService().getMaxPlayers(), playerManager.getCloudPlayerOnlineAmount(), players.getSample()));
         event.setResponse(response);
     }
+
+    @EventHandler
+    public void handle(final ServerKickEvent event) {
+        FallbackHandler.getLobbyFallbackOrNull().ifPresent(service -> {
+            event.setCancelled(true);
+            event.setCancelServer(ProxyServer.getInstance().getServerInfo(service.getName()));
+        });
+    }
+
 }
