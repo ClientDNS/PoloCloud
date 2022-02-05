@@ -22,6 +22,10 @@ public interface ICloudPlayer {
      */
     IService getProxyServer();
 
+    /**
+     * sets the proxy server of the player
+     * @param service the service to set
+     */
     void setProxyServer(@NotNull IService service);
 
     /**
@@ -29,15 +33,32 @@ public interface ICloudPlayer {
      */
     IService getServer();
 
+    /**
+     * sets the server of the player
+     * @param service the service to set
+     */
     void setServer(@NotNull IService service);
 
+    /**
+     * connects the player to a service
+     * @param service the service to connect
+     */
     void connect(@NotNull IService service);
 
+    /**
+     * kicks the player
+     */
     void kick();
 
+    /**
+     * kicks the player with a reason
+     * @param reason the reason of the kick
+     */
     void kick(@NotNull String reason);
 
+    /**
+     * updates the properties of the player
+     */
     void update();
-
 
 }

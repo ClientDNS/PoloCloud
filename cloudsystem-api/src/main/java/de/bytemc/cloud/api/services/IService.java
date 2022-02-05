@@ -37,6 +37,7 @@ public interface IService {
 
     /**
      * sets the service state
+     *
      * @param serviceState the state to set
      */
     void setServiceState(@NotNull ServiceState serviceState);
@@ -46,29 +47,56 @@ public interface IService {
      */
     @NotNull ServiceState getServiceState();
 
+    /**
+     * @return the max players of the service
+     */
     int getMaxPlayers();
 
+    /**
+     * sets the max players of the service
+     * @param slots the amount to set
+     */
     void setMaxPlayers(int slots);
 
+    /**
+     * @return the service visibility of the service
+     */
     @NotNull ServiceVisibility getServiceVisibility();
 
+    /**
+     * sets the service visibility
+     * @param serviceVisibility the service visibility to set
+     */
     void setServiceVisibility(@NotNull ServiceVisibility serviceVisibility);
 
+    /**
+     * @return the online amount of the service
+     */
     default int getOnlinePlayers() {
         return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers()
             .stream()
-            .filter(it ->  {
+            .filter(it -> {
                 IService service = getServiceGroup().getGameServerVersion().isProxy() ? it.getProxyServer() : it.getServer();
                 return service != null && service.equals(this);
             }).count();
     }
 
-    default boolean isFull(){
-        return getOnlinePlayers() >= getMaxPlayers();
+    /**
+     * @return if the service is full
+     */
+    default boolean isFull() {
+        return this.getOnlinePlayers() >= this.getMaxPlayers();
     }
 
+    /**
+     * edits the properties of the service and update then
+     * @param serviceConsumer the consumer to change the properties
+     */
     void edit(@NotNull Consumer<IService> serviceConsumer);
 
+    /**
+     * updates the properties of the service
+     */
     void update();
 
 }
