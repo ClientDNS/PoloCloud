@@ -3,6 +3,8 @@ package de.bytemc.cloud.api.groups;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 public interface IServiceGroup {
 
     @NotNull String getName();
@@ -40,6 +42,8 @@ public interface IServiceGroup {
     @NotNull GameServerVersion getGameServerVersion();
 
     void setGameServerVersion(final @NotNull GameServerVersion gameServerVersion);
+
+    void edit(final @NotNull Consumer<IServiceGroup> serviceGroupConsumer);
 
     // TODO update in Database
     void update();
