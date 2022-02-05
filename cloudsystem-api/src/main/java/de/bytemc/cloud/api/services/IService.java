@@ -6,6 +6,8 @@ import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 public interface IService {
 
     /**
@@ -60,6 +62,8 @@ public interface IService {
     default boolean isFull(){
         return getOnlinePlayers() >= getMaxPlayers();
     }
+
+    void edit(final @NotNull Consumer<IService> serviceConsumer);
 
     void update();
 
