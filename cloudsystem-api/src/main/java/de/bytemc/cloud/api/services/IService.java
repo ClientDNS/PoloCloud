@@ -55,7 +55,12 @@ public interface IService {
     void setServiceVisibility(@NotNull ServiceVisibility serviceVisibility);
 
     default int getOnlinePlayers() {
-        return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers().stream().filter(it -> it.getServer() != null && it.getServer().equals(this)).count();
+        return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers()
+            .stream()
+            .filter(it ->  {
+                IService service = getServiceGroup().getGameServerVersion().isProxy() ? it.getProxyServer() : it.getServer();
+                return service != null && service.equals(this);
+            }).count();
     }
 
     default boolean isFull(){
