@@ -23,25 +23,25 @@ public interface ICloudPlayerManager {
      * @param uniqueId the unique id to get the player
      * @return the player in an optional
      */
-    @NotNull Optional<ICloudPlayer> getCloudPlayer(final @NotNull UUID uniqueId);
+    @NotNull Optional<ICloudPlayer> getCloudPlayer(@NotNull UUID uniqueId);
 
     /**
      * @param username the username to get the player
      * @return the player in an optional
      */
-    @NotNull Optional<ICloudPlayer> getCloudPlayer(final @NotNull String username);
+    @NotNull Optional<ICloudPlayer> getCloudPlayer(@NotNull String username);
 
     /**
      * @param uniqueId the unique id to get the player
      * @return the player
      */
-    @Nullable ICloudPlayer getCloudPlayerByUniqueIdOrNull(final @NotNull UUID uniqueId);
+    @Nullable ICloudPlayer getCloudPlayerByUniqueIdOrNull(@NotNull UUID uniqueId);
 
     /**
      * @param username the username to get the player
      * @return the player
      */
-    @Nullable ICloudPlayer getCloudPlayerByNameOrNull(final @NotNull String username);
+    @Nullable ICloudPlayer getCloudPlayerByNameOrNull(@NotNull String username);
 
     /**
      * @return the online count
@@ -55,19 +55,19 @@ public interface ICloudPlayerManager {
      * @param uniqueId the unique id of the player
      * @param username the username of the player
      */
-    void registerCloudPlayer(final @NotNull UUID uniqueId, final @NotNull String username);
+    void registerCloudPlayer(@NotNull UUID uniqueId, @NotNull String username);
 
     /**
      * update a cloud player
      * @param cloudPlayer the unique id of the player
      */
-    void updateCloudPlayer(final @NotNull ICloudPlayer cloudPlayer);
+    void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer);
 
     /**
      * unregisters a cloud player
      * @param uniqueId the unique id of the player
      * @param username the username of the player
      */
-    void unregisterCloudPlayer(final @NotNull UUID uniqueId, final @NotNull String username);
+    void unregisterCloudPlayer(@NotNull UUID uniqueId, @NotNull String username);
 
 }

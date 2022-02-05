@@ -11,39 +11,39 @@ public interface IServiceGroup {
 
     @NotNull String getTemplate();
 
-    void setTemplate(final @NotNull String template);
+    void setTemplate(@NotNull String template);
 
     @NotNull String getNode();
 
-    void setNode(final @NotNull String node);
+    void setNode(@NotNull String node);
 
     int getMemory();
 
-    void setMemory(final int memory);
+    void setMemory(int memory);
 
     int getDefaultMaxPlayers();
 
-    void setDefaultMaxPlayers(final int defaultMaxPlayers);
+    void setDefaultMaxPlayers(int defaultMaxPlayers);
 
     int getMinOnlineService();
 
-    void setMinOnlineService(final int minOnlineService);
+    void setMinOnlineService(int minOnlineService);
 
     int getMaxOnlineService();
 
-    void setMaxOnlineService(final int maxOnlineService);
+    void setMaxOnlineService(int maxOnlineService);
 
     boolean isStaticService();
 
     boolean isFallbackGroup();
 
-    void setFallbackGroup(final boolean fallbackGroup);
+    void setFallbackGroup(boolean fallbackGroup);
 
     @NotNull GameServerVersion getGameServerVersion();
 
-    void setGameServerVersion(final @NotNull GameServerVersion gameServerVersion);
+    void setGameServerVersion(@NotNull GameServerVersion gameServerVersion);
 
-    void edit(final @NotNull Consumer<IServiceGroup> serviceGroupConsumer);
+    void edit(@NotNull Consumer<IServiceGroup> serviceGroupConsumer);
 
     // TODO update in Database
     void update();

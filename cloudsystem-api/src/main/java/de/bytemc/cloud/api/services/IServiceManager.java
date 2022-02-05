@@ -2,7 +2,6 @@ package de.bytemc.cloud.api.services;
 
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.utils.ServiceState;
-import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +22,7 @@ public interface IServiceManager {
      * @param serviceGroup the group of the services
      * @return the services of a group
      */
-    default List<IService> getAllServicesByGroup(final @NotNull IServiceGroup serviceGroup) {
+    default List<IService> getAllServicesByGroup(@NotNull IServiceGroup serviceGroup) {
         return this.getAllCachedServices().stream().filter(it -> it.getServiceGroup().equals(serviceGroup)).collect(Collectors.toList());
     }
 
@@ -32,7 +31,7 @@ public interface IServiceManager {
      * @param serviceState the state of the services
      * @return the services of a state
      */
-    default List<IService> getAllServicesByState(final @NotNull ServiceState serviceState) {
+    default List<IService> getAllServicesByState(@NotNull ServiceState serviceState) {
         return this.getAllCachedServices().stream().filter(it -> it.getServiceState() == serviceState).collect(Collectors.toList());
     }
 
@@ -41,14 +40,14 @@ public interface IServiceManager {
      * @param name the name of the service
      * @return the service or null when the service does not exist
      */
-    @NotNull Optional<IService> getService(final @NotNull String name);
+    @NotNull Optional<IService> getService(@NotNull String name);
 
     /**
      * gets a service
      * @param name the name of the service
      * @return the service or null when the service does not exist
      */
-    default @Nullable IService getServiceByNameOrNull(final @NotNull String name) {
+    default @Nullable IService getServiceByNameOrNull(@NotNull String name) {
         return this.getService(name).orElse(null);
     }
 
@@ -56,7 +55,7 @@ public interface IServiceManager {
      * starts a service
      * @param service the service to start
      */
-    ICommunicationPromise<IService> startService(final @NotNull IService service);
+    ICommunicationPromise<IService> startService(@NotNull IService service);
 
     /**
      * update a service

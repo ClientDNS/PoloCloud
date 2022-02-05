@@ -39,7 +39,7 @@ public interface IService {
      * sets the service state
      * @param serviceState the state to set
      */
-    void setServiceState(final @NotNull ServiceState serviceState);
+    void setServiceState(@NotNull ServiceState serviceState);
 
     /**
      * @return the state of the service
@@ -62,7 +62,7 @@ public interface IService {
         return getOnlinePlayers() >= getMaxPlayers();
     }
 
-    void edit(final @NotNull Consumer<IService> serviceConsumer);
+    void edit(@NotNull Consumer<IService> serviceConsumer);
 
     void update();
 
