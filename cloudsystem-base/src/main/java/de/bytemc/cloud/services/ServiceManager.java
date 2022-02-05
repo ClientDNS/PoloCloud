@@ -50,7 +50,7 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
 
 
     @Override
-    public void updateService(IService service) {
+    public void updateService(@NotNull IService service) {
         ServiceUpdatePacket packet = new ServiceUpdatePacket(service);
         //update all other nodes and this connected services
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);

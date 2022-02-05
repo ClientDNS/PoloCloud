@@ -2,9 +2,7 @@ package de.bytemc.cloud.api.services.impl;
 
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
-import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
 import lombok.Getter;
@@ -34,5 +32,4 @@ public abstract class AbstractSimpleServiceManager implements IServiceManager {
         allCachedServices.add(service);
     }
 
-    public abstract void updateService(IService service);
 }

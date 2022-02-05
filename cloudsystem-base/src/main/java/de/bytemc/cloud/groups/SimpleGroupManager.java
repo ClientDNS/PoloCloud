@@ -2,10 +2,14 @@ package de.bytemc.cloud.groups;
 
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.events.events.CloudServiceGroupUpdateEvent;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.impl.AbstractGroupManager;
+import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
+import de.bytemc.cloud.api.network.packets.group.ServiceGroupUpdatePacket;
 import de.bytemc.cloud.database.IDatabase;
+import de.bytemc.network.cluster.types.NetworkType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;
@@ -29,6 +33,10 @@ public final class SimpleGroupManager extends AbstractGroupManager {
                 this.getAllCachedServiceGroups().remove(packet.getGroup());
             }
         });
+
+        CloudAPI.getInstance().getEventHandler().registerEvent(CloudServiceGroupUpdateEvent.class, event ->
+            Base.getInstance().getQueueService().checkForQueue());
+
         CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b"
             + this.getAllCachedServiceGroups().stream().map(IServiceGroup::getName).collect(Collectors.joining("§7, §b")));
     }
@@ -47,4 +55,16 @@ public final class SimpleGroupManager extends AbstractGroupManager {
         Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.REMOVE));
         super.removeServiceGroup(serviceGroup);
     }
+
+    @Override
+    public void updateServiceGroup(@NotNull IServiceGroup serviceGroup) {
+        final ServiceGroupUpdatePacket packet = new ServiceGroupUpdatePacket(serviceGroup);
+        // update all other nodes and this service groups
+        Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
+        // update own service group caches
+        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.SERVICE);
+
+        Base.getInstance().getQueueService().checkForQueue();
+    }
+
 }

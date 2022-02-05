@@ -112,19 +112,30 @@ public final class GroupCloudCommand extends CloudCommand {
             final String key = args[2].toLowerCase();
             switch (key) {
                 case "memory":
-                 //   this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMemory);
+                 this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMemory);
+                    log.logMessage("§7Successfully set memory to " + args[3] + "mb");
                 case "minservicecount":
-                  //  this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMinOnlineService);
-                    break;
+                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMinOnlineService);
+                    log.logMessage("§7Successfully set min service count to " + args[3]);
+                    return;
                 case "maxservicecount":
-                  //  this.getAndSetInt(key, args[3], serviceGroup.getName(), serviceGroup::setMaxOnlineService);
-                    break;
-                case "static":
-                 //   serviceGroup.setStatic(Boolean.parseBoolean(args[3]));
-                    break;
+                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxOnlineService);
+                    log.logMessage("§7Successfully set max service count to " + args[3]);
+                    return;
+                case "defaultmaxplayers":
+                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setDefaultMaxPlayers);
+                    log.logMessage("§7Successfully set default max players to " + args[3]);
+                    return;
+                case "fallback":
+                    serviceGroup.setFallbackGroup(Boolean.parseBoolean(args[3]));
+                    serviceGroup.update();
+                    log.logMessage("§7Successfully set fallback to " + args[3]);
+                    return;
                 case "version":
-                    //serviceGroup.setGameVersion(GameServerVersion.valueOf(args[3]));
-                    break;
+                    serviceGroup.setGameServerVersion(GameServerVersion.valueOf(args[3]));
+                    serviceGroup.update();
+                    log.logMessage("§7Successfully set version to " + args[3]);
+                    return;
             }
         }
 
@@ -135,12 +146,13 @@ public final class GroupCloudCommand extends CloudCommand {
         log.logMessage("§7Use following command: §bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
     }
 
-    private void getAndSetInt(final String key, final String value, final String group, final Consumer<Integer> consumer) {
+    private void getAndSetInt(final String key, final String value, final IServiceGroup group, final Consumer<Integer> consumer) {
         try {
             consumer.accept(Integer.parseInt(value));
+            group.update();
         } catch (NumberFormatException e) {
             CloudAPI.getInstance().getLoggerProvider()
-                .logMessage("§7Use following command: §bgroup edit " + group + " " + key + " §7(§bint§7)");
+                .logMessage("§7Use following command: §bgroup edit " + group.getName() + " " + key + " §7(§bint§7)");
         }
     }
 
