@@ -28,6 +28,7 @@ public final class PortHandler {
         }
         try (final ServerSocket serverSocket = new ServerSocket()) {
             serverSocket.bind(new InetSocketAddress(port));
+            serverSocket.close();
             return false;
         } catch (Exception exception) {
             return true;
