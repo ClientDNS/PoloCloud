@@ -2,12 +2,13 @@ package de.bytemc.cloud.api.events;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.graph.Network;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.events.events.CloudServiceGroupUpdateEvent;
-import de.bytemc.cloud.api.events.events.CloudServiceRegisterEvent;
-import de.bytemc.cloud.api.events.events.CloudServiceRemoveEvent;
-import de.bytemc.cloud.api.events.events.CloudServiceUpdateEvent;
+import de.bytemc.cloud.api.events.events.*;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupUpdatePacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
@@ -40,6 +41,21 @@ public class EventHandler implements IEventHandler {
         NetworkManager.registerPacketListener(ServiceGroupUpdatePacket.class, (ctx, packet) ->
             this.call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(
                 CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName())))));
+
+        // cloud player login event
+        NetworkManager.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) ->
+            CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer ->
+                this.call(new CloudPlayerLoginEvent(cloudPlayer))));
+
+        // cloud player disconnect event
+        NetworkManager.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) ->
+            CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer ->
+                this.call(new CloudPlayerDisconnectEvent(cloudPlayer))));
+
+        // cloud player update event
+        NetworkManager.registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) ->
+            CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer ->
+                this.call(new CloudPlayerUpdateEvent(cloudPlayer))));
     }
 
     public <T extends ICloudEvent> void registerEvent(@NotNull Class<T> clazz, @NotNull Consumer<T> event) {
