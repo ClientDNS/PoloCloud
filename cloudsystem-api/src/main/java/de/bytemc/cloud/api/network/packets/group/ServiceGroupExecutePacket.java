@@ -25,18 +25,6 @@ public class ServiceGroupExecutePacket implements IPacket {
 
     @Override
     public void write(ByteBuf byteBuf) {
-        this.writeString(byteBuf, this.group.getName());
-        this.writeString(byteBuf, this.group.getTemplate());
-        this.writeString(byteBuf, this.group.getNode());
-
-        byteBuf.writeInt(this.group.getMemory());
-        byteBuf.writeInt(this.group.getMinOnlineService());
-        byteBuf.writeInt(this.group.getMaxOnlineService());
-
-        byteBuf.writeBoolean(this.group.isStaticService());
-        byteBuf.writeInt(this.group.getGameServerVersion().ordinal());
-
-        byteBuf.writeInt(this.executorType.ordinal());
         PacketHelper.writeServiceGroup(byteBuf, group, this);
         byteBuf.writeInt(executorType.ordinal());
     }

@@ -21,6 +21,7 @@ public final class SimpleService implements IService {
     private int port;
     private String hostName;
     private int maxPlayers;
+    private String motd;
 
     private Process process;
 
@@ -32,15 +33,17 @@ public final class SimpleService implements IService {
         this.serviceID = id;
         this.port = port;
         this.hostName = hostname;
+        this.motd = serviceGroup.getMotd();
         assert serviceGroup != null;
         this.maxPlayers = serviceGroup.getDefaultMaxPlayers();
     }
 
-    public SimpleService(String group, int id, int port, String hostName, int maxPlayers, ServiceState serviceState, ServiceVisibility serviceVisibility) {
+    public SimpleService(String group, int id, int port, String hostName, int maxPlayers, ServiceState serviceState, ServiceVisibility serviceVisibility, String motd) {
         this(group, id, port, hostName);
         this.maxPlayers = maxPlayers;
         this.serviceState = serviceState;
         this.serviceVisibility = serviceVisibility;
+        this.motd = motd;
     }
 
     @Override

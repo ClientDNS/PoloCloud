@@ -14,6 +14,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
     private String name;
     private String node;
     private String template;
+    private String motd;
     private int memory;
     private int minOnlineService;
     private int maxOnlineService;
@@ -25,6 +26,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
         this.name = serviceGroup.getName();
         this.node = serviceGroup.getNode();
         this.template = serviceGroup.getTemplate();
+        this.motd = serviceGroup.getMotd();
         this.memory = serviceGroup.getMemory();
         this.minOnlineService = serviceGroup.getMinOnlineService();
         this.maxOnlineService = serviceGroup.getMaxOnlineService();
@@ -38,6 +40,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
         this.name = this.readString(byteBuf);
         this.node = this.readString(byteBuf);
         this.template = this.readString(byteBuf);
+        this.motd = readString(byteBuf);
         this.memory = byteBuf.readInt();
         this.minOnlineService = byteBuf.readInt();
         this.maxOnlineService = byteBuf.readInt();
@@ -51,6 +54,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
         this.writeString(byteBuf, this.name);
         this.writeString(byteBuf, this.node);
         this.writeString(byteBuf, this.template);
+        this.writeString(byteBuf, this.motd);
         byteBuf.writeInt(this.memory);
         byteBuf.writeInt(this.minOnlineService);
         byteBuf.writeInt(this.maxOnlineService);

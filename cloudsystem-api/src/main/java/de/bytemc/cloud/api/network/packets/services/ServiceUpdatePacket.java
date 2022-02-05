@@ -16,12 +16,14 @@ public class ServiceUpdatePacket implements IPacket {
     private ServiceState state;
 
     private int maxPlayers;
+    private String motd;
 
     public ServiceUpdatePacket(IService service) {
         this.service = service.getName();
         this.serviceVisibility = service.getServiceVisibility();
         this.state = service.getServiceState();
         this.maxPlayers = service.getMaxPlayers();
+        this.motd = service.getMotd();
     }
 
     @Override
@@ -30,6 +32,7 @@ public class ServiceUpdatePacket implements IPacket {
         byteBuf.writeInt(serviceVisibility.ordinal());
         byteBuf.writeInt(state.ordinal());
         byteBuf.writeInt(maxPlayers);
+        writeString(byteBuf, motd);
     }
 
     @Override
@@ -38,5 +41,6 @@ public class ServiceUpdatePacket implements IPacket {
         this.serviceVisibility = ServiceVisibility.values()[byteBuf.readInt()];
         this.state = ServiceState.values()[byteBuf.readInt()];
         this.maxPlayers = byteBuf.readInt();
+        this.motd = readString(byteBuf);
     }
 }

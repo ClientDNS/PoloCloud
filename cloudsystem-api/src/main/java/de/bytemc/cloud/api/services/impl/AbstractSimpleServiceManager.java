@@ -22,11 +22,12 @@ public abstract class AbstractSimpleServiceManager implements IServiceManager {
     public AbstractSimpleServiceManager() {
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceUpdatePacket.class, (ctx, packet) -> {
             IService service = getServiceByNameOrNull(packet.getService());
-            Objects.requireNonNull(service, "Updated cloud player is null.");
+            Objects.requireNonNull(service, "Updated cloud service is null.");
 
             service.setServiceState(packet.getState());
             service.setServiceVisibility(packet.getServiceVisibility());
             service.setMaxPlayers(packet.getMaxPlayers());
+            service.setMotd(packet.getMotd());
         });
     }
 

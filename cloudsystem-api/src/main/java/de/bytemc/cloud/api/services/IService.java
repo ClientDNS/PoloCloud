@@ -94,6 +94,10 @@ public interface IService {
      */
     void edit(@NotNull Consumer<IService> serviceConsumer);
 
+    String getMotd();
+
+    void setMotd(String motd);
+
     /**
      * updates the properties of the service
      */

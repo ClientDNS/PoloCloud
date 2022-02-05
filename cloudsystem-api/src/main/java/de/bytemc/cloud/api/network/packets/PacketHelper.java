@@ -23,10 +23,11 @@ public class PacketHelper {
         byteBuf.writeInt(service.getMaxPlayers());
         byteBuf.writeInt(service.getServiceState().ordinal());
         byteBuf.writeInt(service.getServiceVisibility().ordinal());
+        packet.writeString(byteBuf, service.getMotd());
     }
 
     public static IService readService(ByteBuf byteBuf, IPacket packet) {
-        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), packet.readString(byteBuf), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()],  ServiceVisibility.values()[byteBuf.readInt()]);
+        return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), packet.readString(byteBuf), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()],  ServiceVisibility.values()[byteBuf.readInt()], packet.readString(byteBuf));
     }
 
     public static void writeCloudPlayer(ByteBuf byteBuf, ICloudPlayer cloudPlayer, IPacket packet) {
@@ -47,7 +48,7 @@ public class PacketHelper {
         packet.writeString(byteBuf, group.getName());
         packet.writeString(byteBuf, group.getTemplate());
         packet.writeString(byteBuf, group.getNode());
-
+        packet.writeString(byteBuf, group.getMotd());
         byteBuf.writeInt(group.getMemory());
         byteBuf.writeInt(group.getDefaultMaxPlayers());
         byteBuf.writeInt(group.getMinOnlineService());
@@ -60,6 +61,7 @@ public class PacketHelper {
 
     public static IServiceGroup readServiceGroup(ByteBuf byteBuf, IPacket packet) {
         return new ServiceGroup(packet.readString(byteBuf),
+            packet.readString(byteBuf),
             packet.readString(byteBuf),
             packet.readString(byteBuf),
             byteBuf.readInt(),

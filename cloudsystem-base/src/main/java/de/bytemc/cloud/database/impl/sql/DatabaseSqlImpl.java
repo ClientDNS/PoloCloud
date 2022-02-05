@@ -34,7 +34,7 @@ public class DatabaseSqlImpl implements IDatabase {
             databaseConfiguration.getUser(), databaseConfiguration.getPassword());
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
-            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT)");
+            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT)");
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The connection is now established to the database.");
     }
@@ -50,10 +50,11 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @Override
     public void addGroup(final @NotNull IServiceGroup serviceGroup) {
-        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers) VALUES (" +
+        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers, motd) VALUES (" +
             "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0) +
-            ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "', 100);");
+            ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "', " + serviceGroup.getDefaultMaxPlayers() +
+            ",'" + serviceGroup.getMotd() + "');");
     }
 
     @Override
@@ -70,6 +71,7 @@ public class DatabaseSqlImpl implements IDatabase {
                     resultSet.getString("name"),
                     resultSet.getString("template"),
                     resultSet.getString("node"),
+                    resultSet.getString("motd"),
                     resultSet.getInt("memory"),
                     resultSet.getInt("maxPlayers"),
                     resultSet.getInt("minOnlineService"),

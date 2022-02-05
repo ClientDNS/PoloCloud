@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 @AllArgsConstructor
 public class ServiceGroup implements IServiceGroup {
 
-    private String name, template, node;
+    private String name, template, node, motd;
     private int memory, defaultMaxPlayers, minOnlineService, maxOnlineService;
     private boolean staticService, fallbackGroup;
     private GameServerVersion gameServerVersion;

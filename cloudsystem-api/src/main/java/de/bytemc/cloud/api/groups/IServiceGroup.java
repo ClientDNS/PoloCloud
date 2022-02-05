@@ -105,6 +105,10 @@ public interface IServiceGroup {
      */
     void setGameServerVersion(@NotNull GameServerVersion gameServerVersion);
 
+    String getMotd();
+
+    void setMotd(String motd);
+
     /**
      * edits the properties of the group and update then
      * @param serviceGroupConsumer the consumer to change the properties

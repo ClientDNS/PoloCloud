@@ -27,6 +27,7 @@ public abstract class AbstractGroupManager implements IGroupManager {
 
             serviceGroup.setNode(packet.getNode());
             serviceGroup.setTemplate(packet.getTemplate());
+            serviceGroup.setMotd(packet.getMotd());
             serviceGroup.setMemory(packet.getMemory());
             serviceGroup.setMinOnlineService(packet.getMinOnlineService());
             serviceGroup.setMaxOnlineService(packet.getMaxOnlineService());
