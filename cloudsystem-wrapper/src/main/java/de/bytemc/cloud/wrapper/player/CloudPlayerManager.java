@@ -44,7 +44,7 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void updateCloudPlayer(ICloudPlayer cloudPlayer) {
+    public void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer) {
         Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerUpdatePacket(cloudPlayer), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 }

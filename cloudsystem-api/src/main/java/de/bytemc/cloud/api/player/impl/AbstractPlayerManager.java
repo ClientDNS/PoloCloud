@@ -53,7 +53,7 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
     public abstract void unregisterCloudPlayer(@NotNull UUID uuid, @NotNull String name);
 
-    public abstract void updateCloudPlayer(ICloudPlayer cloudPlayer);
+    public abstract void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer);
 
     @Override
     public @NotNull Optional<ICloudPlayer> getCloudPlayer(final @NotNull UUID uniqueId) {

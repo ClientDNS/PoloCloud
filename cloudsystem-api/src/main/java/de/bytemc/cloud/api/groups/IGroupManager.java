@@ -13,7 +13,7 @@ public interface IGroupManager {
      * gets all cached service groups
      * @return the cached service groups
      */
-    List<IServiceGroup> getAllCachedServiceGroups();
+    @NotNull List<IServiceGroup> getAllCachedServiceGroups();
 
     /**
      * adds a service group
@@ -59,7 +59,7 @@ public interface IGroupManager {
      * @param node the node
      * @return all services of the node
      */
-    default List<IServiceGroup> getServiceGroup(final @NotNull String node) {
+    default @NotNull List<IServiceGroup> getServiceGroup(final @NotNull String node) {
         return this.getAllCachedServiceGroups().stream()
             .filter(it -> it.getNode().equalsIgnoreCase(node))
             .collect(Collectors.toList());

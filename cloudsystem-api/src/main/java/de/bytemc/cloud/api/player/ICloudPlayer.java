@@ -22,21 +22,20 @@ public interface ICloudPlayer {
      */
     IService getProxyServer();
 
-    void setProxyServer(IService service);
+    void setProxyServer(@NotNull IService service);
 
     /**
      * @return the server who the player is
      */
     IService getServer();
 
-    void setServer(IService service);
+    void setServer(@NotNull IService service);
 
-
-    void connect(IService service);
+    void connect(@NotNull IService service);
 
     void kick();
 
-    void kick(String reason);
+    void kick(@NotNull String reason);
 
     void update();
 

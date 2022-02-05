@@ -30,7 +30,7 @@ public interface CommandManager {
      * gets all cached commands
      * @return the cached commands
      */
-    List<CloudCommand> getCachedCloudCommands();
+    @NotNull List<CloudCommand> getCachedCloudCommands();
 
     /**
      * registers all commands in a package

@@ -51,7 +51,7 @@ public final class NetworkHandler implements INetworkHandler {
     }
 
     @Override
-    public Collection<Class<? extends IPacket>> getAllCachedPackets() {
+    public @NotNull Collection<Class<? extends IPacket>> getAllCachedPackets() {
         return NetworkManager.getRegisteredPackets().values();
     }
 

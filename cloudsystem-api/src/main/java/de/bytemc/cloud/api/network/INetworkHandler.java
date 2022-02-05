@@ -15,6 +15,6 @@ public interface INetworkHandler {
      */
     <R extends IPacket> void registerPacketListener(final @NotNull Class<R> clazz, final @NotNull IPacketListener<R> packetListener);
 
-    Collection<Class<? extends IPacket>> getAllCachedPackets();
+    @NotNull Collection<Class<? extends IPacket>> getAllCachedPackets();
 
 }
