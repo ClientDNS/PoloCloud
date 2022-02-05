@@ -1,11 +1,11 @@
 package de.bytemc.cloud.node;
 
 import de.bytemc.cloud.Base;
+import de.bytemc.cloud.api.events.events.CloudServiceRemoveEvent;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerCachePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
-import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.config.NodeConfig;
@@ -79,6 +79,7 @@ public final class BaseNode extends AbstractNodeClustering {
                 e.printStackTrace();
             }
         }
+        base.getEventHandler().call(new CloudServiceRemoveEvent(service));
         base.getNode().sendPacketToAll(new ServiceRemovePacket(service));
         base.getServiceManager().getAllCachedServices().remove(base.getServiceManager().getServiceByNameOrNull(service));
         base.getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7' disconnect.");
