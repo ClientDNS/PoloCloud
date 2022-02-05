@@ -1,7 +1,10 @@
 package de.bytemc.cloud.api.network.packets;
 
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.impl.ServiceGroup;
+import de.bytemc.cloud.api.player.ICloudPlayer;
+import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
@@ -26,12 +29,18 @@ public class PacketHelper {
         return new SimpleService(packet.readString(byteBuf), byteBuf.readInt(), byteBuf.readInt(), packet.readString(byteBuf), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()],  ServiceVisibility.values()[byteBuf.readInt()]);
     }
 
-    public static void writeCloudPlayer(ByteBuf byteBuf) {
-
+    public static void writeCloudPlayer(ByteBuf byteBuf, ICloudPlayer cloudPlayer, IPacket packet) {
+        packet.writeUUID(byteBuf, cloudPlayer.getUniqueId());
+        packet.writeString(byteBuf, cloudPlayer.getUsername());
+        packet.writeString(byteBuf, cloudPlayer.getProxyServer().getName());
+        packet.writeString(byteBuf, cloudPlayer.getServer().getName());
     }
 
-    public static void readCloudPlayer(ByteBuf byteBuf, IPacket packet){
-
+    public static ICloudPlayer readCloudPlayer(ByteBuf byteBuf, IPacket packet){
+        SimpleCloudPlayer simpleCloudPlayer = new SimpleCloudPlayer(packet.readUUID(byteBuf), packet.readString(byteBuf));
+        simpleCloudPlayer.setProxyServer(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.readString(byteBuf)));
+        simpleCloudPlayer.setServer(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.readString(byteBuf)));
+        return simpleCloudPlayer;
     }
 
     public static void writeServiceGroup(ByteBuf byteBuf, IServiceGroup group, IPacket packet) {

@@ -2,9 +2,11 @@ package de.bytemc.cloud.wrapper.player;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerCachePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
+import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.impl.AbstractPlayerManager;
 import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
@@ -17,6 +19,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class CloudPlayerManager extends AbstractPlayerManager {
+
+    public CloudPlayerManager() {
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerCachePacket.class, (ctx, packet) -> this.setAllCachedCloudPlayers(packet.getCloudPlayers()));
+    }
 
     @Override
     public @NotNull List<ICloudPlayer> getAllServicePlayers() {

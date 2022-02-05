@@ -5,6 +5,8 @@ import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
+import de.bytemc.cloud.api.network.packets.group.ServiceGroupUpdatePacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerCachePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
@@ -31,15 +33,17 @@ public final class NetworkHandler implements INetworkHandler {
         //service group packets
         NetworkManager.registerPacket(ServiceGroupExecutePacket.class, 8);
         NetworkManager.registerPacket(ServiceGroupCacheUpdatePacket.class, 9);
+        NetworkManager.registerPacket(ServiceGroupUpdatePacket.class, 10);
 
         //cloud player packets
-        NetworkManager.registerPacket(CloudPlayerLoginPacket.class, 10);
-        NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 11);
-        NetworkManager.registerPacket(CloudPlayerUpdatePacket.class, 12);
+        NetworkManager.registerPacket(CloudPlayerLoginPacket.class, 11);
+        NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 12);
+        NetworkManager.registerPacket(CloudPlayerUpdatePacket.class, 13);
+        NetworkManager.registerPacket(CloudPlayerCachePacket.class, 14);
 
         //util packets
-        NetworkManager.registerPacket(QueryPacket.class, 13);
-        NetworkManager.registerPacket(RedirectPacket.class, 14);
+        NetworkManager.registerPacket(QueryPacket.class, 15);
+        NetworkManager.registerPacket(RedirectPacket.class, 16);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){

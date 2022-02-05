@@ -2,6 +2,7 @@ package de.bytemc.cloud.node;
 
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerCachePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
@@ -58,6 +59,7 @@ public final class BaseNode extends AbstractNodeClustering {
         // update cache
         clusteringConnectedClient.sendPacket(new ServiceGroupCacheUpdatePacket(Base.getInstance().getGroupManager().getAllCachedServiceGroups()));
         clusteringConnectedClient.sendPacket(new ServiceCacheUpdatePacket(Base.getInstance().getServiceManager().getAllCachedServices()));
+        clusteringConnectedClient.sendPacket(new CloudPlayerCachePacket(Base.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers()));
 
         service.update();
 

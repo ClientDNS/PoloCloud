@@ -8,16 +8,18 @@ import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Setter
 @Getter
 public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
-    private final List<ICloudPlayer> allCachedCloudPlayers = Lists.newArrayList();
+    private List<ICloudPlayer> allCachedCloudPlayers = Lists.newCopyOnWriteArrayList();
 
     public AbstractPlayerManager() {
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) -> {
