@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ICloudPlayerManager {
@@ -17,6 +18,18 @@ public interface ICloudPlayerManager {
      * @return a list of all cloud players on the service
      */
     @NotNull List<ICloudPlayer> getAllServicePlayers();
+
+    /**
+     * @param uniqueId the unique id to get the player
+     * @return the player in an optional
+     */
+    @NotNull Optional<ICloudPlayer> getCloudPlayer(final @NotNull UUID uniqueId);
+
+    /**
+     * @param username the username to get the player
+     * @return the player in an optional
+     */
+    @NotNull Optional<ICloudPlayer> getCloudPlayer(final @NotNull String username);
 
     /**
      * @param uniqueId the unique id to get the player
