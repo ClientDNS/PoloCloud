@@ -5,8 +5,10 @@ import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.network.packets.IPacket;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public final class ServiceGroupUpdatePacket implements IPacket {
 
     private String name;

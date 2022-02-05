@@ -9,16 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CloudPlayerCachePacket implements IPacket {
 
-    private List<ICloudPlayer> cloudPlayers;
+    private Collection<ICloudPlayer> cloudPlayers;
 
     @Override
     public void write(ByteBuf byteBuf) {
