@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface IGroupManager {
@@ -29,10 +30,19 @@ public interface IGroupManager {
     /**
      * gets a service group
      * @param name the name of the service group
+     * @return the service group in an optional
+     */
+    default @NotNull Optional<IServiceGroup> getServiceGroupByName(final @NotNull String name) {
+        return this.getAllCachedServiceGroups().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findAny();
+    }
+
+    /**
+     * gets a service group
+     * @param name the name of the service group
      * @return the service group or null when it not exists
      */
     default @Nullable IServiceGroup getServiceGroupByNameOrNull(final @NotNull String name) {
-        return getAllCachedServiceGroups().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findAny().orElse(null);
+        return this.getServiceGroupByName(name).orElse(null);
     }
 
     /**
