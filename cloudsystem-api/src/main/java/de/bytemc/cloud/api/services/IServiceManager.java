@@ -5,8 +5,10 @@ import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface IServiceManager {
@@ -39,8 +41,15 @@ public interface IServiceManager {
      * @param name the name of the service
      * @return the service or null when the service does not exist
      */
-    default IService getServiceByNameOrNull(final @NotNull String name) {
-        return this.getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findAny().orElse(null);
+    @NotNull Optional<IService> getService(final @NotNull String name);
+
+    /**
+     * gets a service
+     * @param name the name of the service
+     * @return the service or null when the service does not exist
+     */
+    default @Nullable IService getServiceByNameOrNull(final @NotNull String name) {
+        return this.getService(name).orElse(null);
     }
 
     /**

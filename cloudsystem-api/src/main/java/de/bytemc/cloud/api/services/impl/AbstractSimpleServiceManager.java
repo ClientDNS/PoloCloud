@@ -7,9 +7,11 @@ import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -30,6 +32,11 @@ public abstract class AbstractSimpleServiceManager implements IServiceManager {
 
     public void registerService(IService service) {
         allCachedServices.add(service);
+    }
+
+    @Override
+    public @NotNull Optional<IService> getService(final @NotNull String name) {
+        return this.getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findAny();
     }
 
 }
