@@ -3,45 +3,117 @@ package de.bytemc.cloud.api.groups;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 public interface IServiceGroup {
 
+    /**
+     * @return the name of the group
+     */
     @NotNull String getName();
 
+    /**
+     * @return the template of the group
+     */
     @NotNull String getTemplate();
 
-    void setTemplate(final @NotNull String template);
+    /**
+     * sets the template of the group
+     * @param template the template to set
+     */
+    void setTemplate(@NotNull String template);
 
+    /**
+     * @return the node of the group
+     */
     @NotNull String getNode();
 
-    void setNode(final @NotNull String node);
+    /**
+     * sets the node of the group
+     * @param node the node to set
+     */
+    void setNode(@NotNull String node);
 
+    /**
+     * @return the max memory of a service of the group
+     */
     int getMemory();
 
-    void setMemory(final int memory);
+    /**
+     * sets the max memory of a service of the group
+     * @param memory the memory to set
+     */
+    void setMemory(int memory);
 
+    /**
+     * @return the max players of a service of the group
+     */
     int getDefaultMaxPlayers();
 
-    void setDefaultMaxPlayers(final int defaultMaxPlayers);
+    /**
+     * sets the max players of a service of the group
+     * @param defaultMaxPlayers the max players to set
+     */
+    void setDefaultMaxPlayers(int defaultMaxPlayers);
 
+    /**
+     * @return the minimum online services of the group
+     */
     int getMinOnlineService();
 
-    void setMinOnlineService(final int minOnlineService);
+    /**
+     * sets the minimum online services of the group
+     * @param minOnlineService the amount to set
+     */
+    void setMinOnlineService(int minOnlineService);
 
+    /**
+     * @return the maximum online services of the group
+     */
     int getMaxOnlineService();
 
-    void setMaxOnlineService(final int maxOnlineService);
+    /**
+     * sets the maximum online services of the group
+     * @param maxOnlineService the amount to set
+     */
+    void setMaxOnlineService(int maxOnlineService);
 
+    /**
+     * @return if the group is static or not
+     */
     boolean isStaticService();
 
+    /**
+     * @return if the group is a fallback group
+     */
     boolean isFallbackGroup();
 
-    void setFallbackGroup(final boolean fallbackGroup);
+    /**
+     * sets if the group is a fallback group
+     * @param fallbackGroup the value to set
+     */
+    void setFallbackGroup(boolean fallbackGroup);
 
+    /**
+     * @return the game server version of the group
+     */
     @NotNull GameServerVersion getGameServerVersion();
 
-    void setGameServerVersion(final @NotNull GameServerVersion gameServerVersion);
+    /**
+     * sets the game server version of the group
+     * @param gameServerVersion the game server version to set
+     */
+    void setGameServerVersion(@NotNull GameServerVersion gameServerVersion);
 
-    // TODO update in Database
+    /**
+     * edits the properties of the group and update then
+     * @param serviceGroupConsumer the consumer to change the properties
+     */
+    void edit(@NotNull Consumer<IServiceGroup> serviceGroupConsumer);
+
+    /**
+     * updates the properties of the group
+     */
     void update();
 
 }

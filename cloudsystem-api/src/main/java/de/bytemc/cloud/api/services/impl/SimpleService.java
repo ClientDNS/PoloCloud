@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 @Getter
 @Setter
 public final class SimpleService implements IService {
@@ -44,6 +46,12 @@ public final class SimpleService implements IService {
     @Override
     public @NotNull String getName() {
         return this.serviceGroup.getName() + "-" + this.serviceID;
+    }
+
+    @Override
+    public void edit(final @NotNull Consumer<IService> serviceConsumer) {
+        serviceConsumer.accept(this);
+        this.update();
     }
 
     @Override

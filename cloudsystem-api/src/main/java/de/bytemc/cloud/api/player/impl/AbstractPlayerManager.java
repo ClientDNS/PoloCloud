@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Setter
@@ -52,16 +53,26 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
     public abstract void unregisterCloudPlayer(@NotNull UUID uuid, @NotNull String name);
 
-    public abstract void updateCloudPlayer(ICloudPlayer cloudPlayer);
+    public abstract void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer);
+
+    @Override
+    public @NotNull Optional<ICloudPlayer> getCloudPlayer(final @NotNull UUID uniqueId) {
+        return  this.allCachedCloudPlayers.stream().filter(it -> it.getUniqueId().equals(uniqueId)).findAny();
+    }
+
+    @Override
+    public @NotNull Optional<ICloudPlayer> getCloudPlayer(final @NotNull String username) {
+        return this.allCachedCloudPlayers.stream().filter(it -> it.getUsername().equalsIgnoreCase(username)).findAny();
+    }
 
     @Override
     public ICloudPlayer getCloudPlayerByNameOrNull(@NotNull String username) {
-        return this.allCachedCloudPlayers.stream().filter(it -> it.getUsername().equalsIgnoreCase(username)).findAny().orElse(null);
+        return this.getCloudPlayer(username).orElse(null);
     }
 
     @Override
     public ICloudPlayer getCloudPlayerByUniqueIdOrNull(@NotNull UUID uniqueId) {
-        return this.allCachedCloudPlayers.stream().filter(it -> it.getUniqueId().equals(uniqueId)).findAny().orElse(null);
+        return this.getCloudPlayer(uniqueId).orElse(null);
     }
 
 }

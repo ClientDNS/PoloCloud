@@ -12,6 +12,7 @@ import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
 import de.bytemc.network.NetworkManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -41,13 +42,13 @@ public class EventHandler implements IEventHandler {
                 CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName())))));
     }
 
-    public <T extends ICloudEvent> void registerEvent(Class<T> clazz, Consumer<T> event) {
+    public <T extends ICloudEvent> void registerEvent(@NotNull Class<T> clazz, @NotNull Consumer<T> event) {
         final List<Consumer> consumers = events.getOrDefault(clazz, Lists.newArrayList());
         consumers.add(event);
         this.events.put(clazz, consumers);
     }
 
-    public <T extends ICloudEvent> void call(T t) {
+    public <T extends ICloudEvent> void call(@NotNull T t) {
         this.events.getOrDefault(t.getClass(), Lists.newArrayList()).forEach(it -> it.accept(t));
     }
 

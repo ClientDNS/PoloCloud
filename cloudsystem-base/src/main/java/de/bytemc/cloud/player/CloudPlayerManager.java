@@ -34,7 +34,7 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void updateCloudPlayer(ICloudPlayer cloudPlayer) {
+    public void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer) {
         CloudPlayerUpdatePacket packet = new CloudPlayerUpdatePacket(cloudPlayer);
         //update all other nodes and this connected services
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
