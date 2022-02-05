@@ -41,21 +41,6 @@ public class EventHandler implements IEventHandler {
         NetworkManager.registerPacketListener(ServiceGroupUpdatePacket.class, (ctx, packet) ->
             this.call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(
                 CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName())))));
-
-        // cloud player login event
-        NetworkManager.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) ->
-            CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer ->
-                this.call(new CloudPlayerLoginEvent(cloudPlayer))));
-
-        // cloud player disconnect event
-        NetworkManager.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) ->
-            CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer ->
-                this.call(new CloudPlayerDisconnectEvent(cloudPlayer))));
-
-        // cloud player update event
-        NetworkManager.registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) ->
-            CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer ->
-                this.call(new CloudPlayerUpdateEvent(cloudPlayer))));
     }
 
     public <T extends ICloudEvent> void registerEvent(@NotNull Class<T> clazz, @NotNull Consumer<T> event) {
