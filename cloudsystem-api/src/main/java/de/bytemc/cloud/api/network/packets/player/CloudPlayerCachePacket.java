@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -29,9 +30,9 @@ public class CloudPlayerCachePacket implements IPacket {
 
     @Override
     public void read(ByteBuf byteBuf) {
-        cloudPlayers = Lists.newArrayList();
+        this.cloudPlayers = Lists.newArrayList();
 
-        int amount = byteBuf.readInt();
+        final int amount = byteBuf.readInt();
         for (int i = 0; i < amount; i++) {
             cloudPlayers.add(PacketHelper.readCloudPlayer(byteBuf, this));
         }
