@@ -48,7 +48,7 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
         eventHandler.registerEvent(CloudServiceRemoveEvent.class, event ->
             this.cachedCloudPlayers.values().forEach(player -> {
-                if (player.getProxyServer().getName().equals(event.getService()))
+                if (player.getProxyServer() == null || player.getProxyServer().getName().equals(event.getService()))
                     this.cachedCloudPlayers.remove(player.getUniqueId());
             })
         );
