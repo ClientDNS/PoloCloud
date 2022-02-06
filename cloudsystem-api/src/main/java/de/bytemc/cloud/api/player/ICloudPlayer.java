@@ -1,5 +1,7 @@
 package de.bytemc.cloud.api.player;
 
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerKickPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerSendServicePacket;
 import de.bytemc.cloud.api.services.IService;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,18 +45,26 @@ public interface ICloudPlayer {
      * connects the player to a service
      * @param service the service to connect
      */
-    void connect(@NotNull IService service);
+    default void connect(@NotNull IService service) {
+        assert getProxyServer() != null;
+        this.getProxyServer().sendPacket(new CloudPlayerSendServicePacket(getUniqueId(),service.getName()));
+    }
 
     /**
      * kicks the player
      */
-    void kick();
+    default void kick() {
+        kick("");
+    }
 
     /**
      * kicks the player with a reason
      * @param reason the reason of the kick
      */
-    void kick(@NotNull String reason);
+    default void kick(@NotNull String reason) {
+        assert getProxyServer() != null;
+        this.getProxyServer().sendPacket(new CloudPlayerKickPacket(getUniqueId(), getProxyServer().getName(), reason));
+    }
 
     /**
      * updates the properties of the player

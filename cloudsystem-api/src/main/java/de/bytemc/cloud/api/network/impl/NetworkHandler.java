@@ -6,10 +6,7 @@ import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupExecutePacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupUpdatePacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerCachePacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
+import de.bytemc.cloud.api.network.packets.player.*;
 import de.bytemc.cloud.api.network.packets.services.*;
 import de.bytemc.network.NetworkManager;
 import de.bytemc.network.packets.IPacket;
@@ -40,10 +37,12 @@ public final class NetworkHandler implements INetworkHandler {
         NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 12);
         NetworkManager.registerPacket(CloudPlayerUpdatePacket.class, 13);
         NetworkManager.registerPacket(CloudPlayerCachePacket.class, 14);
+        NetworkManager.registerPacket(CloudPlayerKickPacket.class, 15);
+        NetworkManager.registerPacket(CloudPlayerSendServicePacket.class, 16);
 
         //util packets
-        NetworkManager.registerPacket(QueryPacket.class, 15);
-        NetworkManager.registerPacket(RedirectPacket.class, 16);
+        NetworkManager.registerPacket(QueryPacket.class, 17);
+        NetworkManager.registerPacket(RedirectPacket.class, 18);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){

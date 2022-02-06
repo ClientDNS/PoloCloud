@@ -5,8 +5,13 @@ import de.bytemc.cloud.api.events.IEventHandler;
 import de.bytemc.cloud.api.events.events.CloudServiceRegisterEvent;
 import de.bytemc.cloud.api.events.events.CloudServiceRemoveEvent;
 import de.bytemc.cloud.api.events.events.CloudServiceUpdateEvent;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerKickPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerSendServicePacket;
 import de.bytemc.cloud.api.services.IService;
+import de.bytemc.network.NetworkManager;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.net.InetSocketAddress;
 
@@ -29,6 +34,18 @@ public final class ProxyCloudEvents {
         });
 
         eventHandler.registerEvent(CloudServiceRemoveEvent.class, event -> unregisterService(event.getService()));
+
+        NetworkManager.registerPacketListener(CloudPlayerKickPacket.class, (ctx, packet) -> {
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
+            assert player != null;
+            player.disconnect(new TextComponent(packet.getReason()));
+        });
+        NetworkManager.registerPacketListener(CloudPlayerSendServicePacket.class, (ctx, packet) -> {
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
+            assert player != null;
+            if(player.getServer().getInfo().getName().equals(packet.getService())) return;
+            player.connect(ProxyServer.getInstance().getServerInfo(packet.getService()));
+        });
     }
 
     private void registerService(String name, InetSocketAddress socketAddress) {

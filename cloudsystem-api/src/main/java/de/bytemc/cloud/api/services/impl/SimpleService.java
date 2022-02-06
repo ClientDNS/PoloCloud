@@ -5,6 +5,7 @@ import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
+import de.bytemc.network.packets.IPacket;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +34,8 @@ public final class SimpleService implements IService {
         this.serviceID = id;
         this.port = port;
         this.hostName = hostname;
-        this.motd = serviceGroup.getMotd();
         assert serviceGroup != null;
+        this.motd = serviceGroup.getMotd();
         this.maxPlayers = serviceGroup.getDefaultMaxPlayers();
     }
 
@@ -81,4 +82,8 @@ public final class SimpleService implements IService {
         CloudAPI.getInstance().getServiceManager().updateService(this);
     }
 
+    @Override
+    public void sendPacket(IPacket packet) {
+        CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
+    }
 }

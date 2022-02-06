@@ -3,11 +3,14 @@ package de.bytemc.cloud.wrapper.service;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
+import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.services.*;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
 import de.bytemc.cloud.wrapper.PropertyFile;
 import de.bytemc.cloud.wrapper.Wrapper;
+import de.bytemc.network.NetworkManager;
+import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,5 +40,14 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
     @Override
     public void updateService(@NotNull IService service) {
         Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new ServiceUpdatePacket(service), QueryPacket.QueryState.FIRST_RESPONSE));
+    }
+
+    @Override
+    public void sendPacketToService(IService service, IPacket packet) {
+        if(service.equals(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService())) {
+            NetworkManager.callPacket(null, packet);
+            return;
+        }
+        Wrapper.getInstance().getClient().sendPacket(new RedirectPacket(service.getName(), packet));
     }
 }

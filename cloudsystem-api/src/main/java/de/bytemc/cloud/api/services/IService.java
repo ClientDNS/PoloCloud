@@ -4,6 +4,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
+import de.bytemc.network.packets.IPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -97,6 +98,8 @@ public interface IService {
     String getMotd();
 
     void setMotd(String motd);
+
+    void sendPacket(IPacket packet);
 
     /**
      * updates the properties of the service

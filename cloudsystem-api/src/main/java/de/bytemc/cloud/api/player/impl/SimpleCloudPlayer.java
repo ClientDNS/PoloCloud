@@ -21,21 +21,6 @@ public class SimpleCloudPlayer implements ICloudPlayer {
     private IService proxyServer;
 
     @Override
-    public void connect(@NotNull IService service) {
-        //TODO
-    }
-
-    @Override
-    public void kick() {
-        kick("");
-    }
-
-    @Override
-    public void kick(@NotNull String reason) {
-        //TODO
-    }
-
-    @Override
     public void update() {
         CloudAPI.getInstance().getCloudPlayerManager().updateCloudPlayer(this);
     }

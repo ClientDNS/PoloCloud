@@ -2,6 +2,7 @@ package de.bytemc.cloud.api.services;
 
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.ICommunicationPromise;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,5 +63,12 @@ public interface IServiceManager {
      * @param service the service to start
      */
     void updateService(IService service);
+
+    /**
+     * send a service a packet
+     * @param service the service to start
+     * @param packet the packet to send
+     */
+    void sendPacketToService(IService service, IPacket packet);
 
 }

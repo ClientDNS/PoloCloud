@@ -17,7 +17,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -103,6 +102,7 @@ public final class ProxyEvents implements Listener {
         });
     }
 
+    //TODO CHECK FALLBACKHANDLER DUPLICATED?
     private Optional<ServerInfo> getFallback(final ProxiedPlayer player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
             .filter(service -> service.getServiceState() == ServiceState.ONLINE)
@@ -113,5 +113,4 @@ public final class ProxyEvents implements Listener {
             .min(Comparator.comparing(IService::getOnlinePlayers))
             .map(service -> ProxyServer.getInstance().getServerInfo(service.getName()));
     }
-
 }

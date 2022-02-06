@@ -1,5 +1,7 @@
 package de.bytemc.cloud.api.player;
 
+import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerKickPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

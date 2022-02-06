@@ -13,12 +13,12 @@ import lombok.SneakyThrows;
 @Getter
 public class RedirectPacket implements IPacket {
 
-    private String node;
+    private String client;
     private IPacket packet;
 
     @Override
     public void write(ByteBuf byteBuf) {
-        this.writeString(byteBuf, this.node);
+        this.writeString(byteBuf, this.client);
         byteBuf.writeInt(NetworkManager.getPacketId(this.packet.getClass()));
         this.packet.write(byteBuf);
     }
@@ -27,7 +27,7 @@ public class RedirectPacket implements IPacket {
     @SneakyThrows
     @Override
     public void read(ByteBuf byteBuf) {
-        this.node = this.readString(byteBuf);
+        this.client = this.readString(byteBuf);
         var packetID = byteBuf.readInt();
 
         final Class<? extends IPacket> r = NetworkManager.getPacketClass(packetID);

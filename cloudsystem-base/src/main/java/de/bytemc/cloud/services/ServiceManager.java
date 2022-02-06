@@ -44,7 +44,6 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
             this.sendPacketToService(service, new ServiceShutdownPacket(service.getName()));
         } else {
             //TODO
-            Base.getInstance().getNode().sendPacketToType(new RedirectPacket(service.getServiceGroup().getNode(), new ServiceShutdownPacket(service.getName())), NetworkType.NODE);
         }
     }
 
