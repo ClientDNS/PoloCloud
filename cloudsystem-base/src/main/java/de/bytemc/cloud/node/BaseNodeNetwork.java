@@ -7,7 +7,6 @@ import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
-import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.network.NetworkManager;
 import de.bytemc.network.cluster.types.NetworkType;
@@ -28,7 +27,7 @@ public final class BaseNodeNetwork {
             Base.getInstance().getNode().getAllServices().stream()
                 .filter(it -> !it.equals(connectedClient)).forEach(it -> it.sendPacket(packet.getPacket()));
 
-            if(packet.getState() == QueryPacket.QueryState.FIRST_RESPONSE) {
+            if (packet.getState() == QueryPacket.QueryState.FIRST_RESPONSE) {
                 //send to all another nodes
                 Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet.getPacket(), QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
             }
@@ -36,19 +35,15 @@ public final class BaseNodeNetwork {
             NetworkManager.callPacket(ctx, packet.getPacket());
         });
 
-        networkHandler.registerPacketListener(RedirectPacket.class, (ctx, packet) -> {
-           CloudAPI.getInstance().getServiceManager().getService(packet.getClient()).ifPresent(it -> {
-                if(it.getServiceGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) {
-                    Base.getInstance().getNode().getAllCachedConnectedClients()
-                        .stream()
-                        .filter(client -> it.getName().equalsIgnoreCase(client.getName()))
-                        .findAny()
+        networkHandler.registerPacketListener(RedirectPacket.class, (ctx, packet) ->
+            CloudAPI.getInstance().getServiceManager().getService(packet.getClient()).ifPresent(it -> {
+                if (it.getServiceGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) {
+                    Base.getInstance().getNode().getClient(it.getName())
                         .ifPresent(service -> service.sendPacket(packet.getPacket()));
                 } else {
-                    //TODO CHECK OTHER NODES AND SEND TO REDIRECT
+                    // TODO CHECK OTHER NODES AND SEND TO REDIRECT
                 }
-           });
-        });
+            }));
 
         networkHandler.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) ->
             serviceManager.getAllCachedServices().remove(serviceManager.getServiceByNameOrNull(packet.getService())));
