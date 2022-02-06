@@ -60,7 +60,6 @@
                 <groupId>de.bytemc.network</groupId>
                 <artifactId>network</artifactId>
                 <version>1.0.14</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>net.md-5</groupId>
