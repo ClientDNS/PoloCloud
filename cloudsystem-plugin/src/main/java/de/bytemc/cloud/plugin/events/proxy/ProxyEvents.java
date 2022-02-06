@@ -62,23 +62,23 @@ public final class ProxyEvents implements Listener {
 
     @EventHandler
     public void handle(ServerConnectEvent event) {
-        ICloudPlayer cloudPlayer = CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayerByNameOrNull(event.getPlayer().getName());
-        if (event.getTarget().getName().equalsIgnoreCase("fallback")) {
-            FallbackHandler.getLobbyFallbackOrNull().ifPresentOrElse(it -> {
-                event.setTarget(ProxyServer.getInstance().getServerInfo(it.getName()));
-                assert cloudPlayer != null;
-                cloudPlayer.setServer(it);
+        this.playerManager.getCloudPlayer(event.getPlayer().getUniqueId()).ifPresent(cloudPlayer -> {
+            if (event.getTarget().getName().equalsIgnoreCase("fallback")) {
+                FallbackHandler.getLobbyFallbackOrNull().ifPresentOrElse(it -> {
+                    event.setTarget(ProxyServer.getInstance().getServerInfo(it.getName()));
+                    cloudPlayer.setServer(it);
+                    cloudPlayer.setProxyServer(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService());
+                    cloudPlayer.update();
+                }, () -> {
+                    event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."));
+                });
+            } else {
+                cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
+                    .getServiceByNameOrNull(event.getTarget().getName())));
                 cloudPlayer.setProxyServer(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService());
                 cloudPlayer.update();
-            }, () -> {
-                event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."));
-            });
-        } else {
-            assert cloudPlayer != null;
-            cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(event.getTarget().getName())));
-            cloudPlayer.setProxyServer(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService());
-            cloudPlayer.update();
-        }
+            }
+        });
     }
 
     @EventHandler

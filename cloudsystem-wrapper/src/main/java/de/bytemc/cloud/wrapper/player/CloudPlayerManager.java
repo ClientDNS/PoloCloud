@@ -1,6 +1,8 @@
 package de.bytemc.cloud.wrapper.player;
 
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.events.events.CloudPlayerDisconnectEvent;
+import de.bytemc.cloud.api.events.events.CloudPlayerLoginEvent;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerCachePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
@@ -37,14 +39,17 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void registerCloudPlayer(@NotNull UUID uniqueID, @NotNull String username) {
-        this.cachedCloudPlayers.put(uniqueID, new SimpleCloudPlayer(uniqueID, username));
-        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerLoginPacket(username, uniqueID), QueryPacket.QueryState.FIRST_RESPONSE));
+    public void registerCloudPlayer(@NotNull UUID uniqueId, @NotNull String username) {
+        final ICloudPlayer cloudPlayer = new SimpleCloudPlayer(uniqueId, username);
+
+        this.cachedCloudPlayers.put(uniqueId, cloudPlayer);
+        Wrapper.getInstance().getEventHandler().call(new CloudPlayerLoginEvent(cloudPlayer));
+        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerLoginPacket(username, uniqueId), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 
     @Override
     public void unregisterCloudPlayer(@NotNull UUID uuid, @NotNull String username) {
-        this.cachedCloudPlayers.remove(uuid);
+        Wrapper.getInstance().getEventHandler().call(new CloudPlayerDisconnectEvent(this.cachedCloudPlayers.remove(uuid)));
         Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerDisconnectPacket(uuid, username), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 
