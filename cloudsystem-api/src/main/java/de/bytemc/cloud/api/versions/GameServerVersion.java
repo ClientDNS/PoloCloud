@@ -79,13 +79,11 @@ public enum GameServerVersion {
             FileUtils.copyURLToFile(new URL(url), file);
 
             if (this.title.equals("paper")) {
-                final Process process = new ProcessBuilder("java", "-jar", this.getJar())
+                final Process process = new ProcessBuilder("java", "-Dpaperclip.patchonly=true -jar", this.getJar())
                     .directory(file.getParentFile()).start();
                 final InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
                 final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                bufferedReader.readLine();
-                bufferedReader.readLine();
-                bufferedReader.readLine();
+                process.waitFor();
                 process.destroyForcibly();
                 bufferedReader.close();
                 inputStreamReader.close();
@@ -96,6 +94,8 @@ public enum GameServerVersion {
             e.printStackTrace();
             CloudAPI.getInstance().getLoggerProvider().logMessage("§cFailed to download version§7... (§3" + this.getTitle() + "§7)", LogType.ERROR);
             return;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         CloudAPI.getInstance().getLoggerProvider().logMessage("Downloading of (§3" + this.getTitle() + "§7)§a successfully §7completed.");
     }
