@@ -16,7 +16,9 @@ import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 
 public record ProcessServiceStarter(IService service) {
 

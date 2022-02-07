@@ -23,6 +23,9 @@
                         <manifest>
                             <mainClass>de.bytemc.cloud.wrapper.Wrapper</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Premain-Class>de.bytemc.cloud.wrapper.Wrapper</Premain-Class>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
