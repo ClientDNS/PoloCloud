@@ -8,7 +8,7 @@ import de.bytemc.cloud.api.command.executor.ICommandSender;
 public final class ShutdownCloudCommand extends CloudCommand {
 
     public ShutdownCloudCommand() {
-        super("stop", "Stop the cloudsystem", ExecutorType.CONSOLE);
+        super("stop", "Stops the cloudsystem", ExecutorType.CONSOLE, "exit");
     }
 
     @Override

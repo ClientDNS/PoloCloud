@@ -9,7 +9,7 @@ import de.bytemc.cloud.api.logger.LoggerProvider;
 public final class InfoCloudCommand extends CloudCommand {
 
     public InfoCloudCommand() {
-        super("info", "Prints some information", ExecutorType.CONSOLE);
+        super("info", "Prints information about the cloud", ExecutorType.CONSOLE);
     }
 
     @Override
