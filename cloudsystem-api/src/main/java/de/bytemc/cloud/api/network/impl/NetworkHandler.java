@@ -1,6 +1,7 @@
 package de.bytemc.cloud.api.network.impl;
 
 import de.bytemc.cloud.api.network.INetworkHandler;
+import de.bytemc.cloud.api.network.packets.CustomPacket;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
@@ -44,6 +45,8 @@ public final class NetworkHandler implements INetworkHandler {
         //util packets
         NetworkManager.registerPacket(QueryPacket.class, 18);
         NetworkManager.registerPacket(RedirectPacket.class, 19);
+
+        NetworkManager.registerPacket(CustomPacket.class, 20);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){
