@@ -1,7 +1,7 @@
 package de.bytemc.cloud.api.network.packets.player;
 
 import de.bytemc.network.packets.IPacket;
-import io.netty.buffer.ByteBuf;
+import de.bytemc.network.packets.NetworkByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +17,14 @@ public class CloudPlayerMessagePacket implements IPacket {
     private String message;
 
     @Override
-    public void write(ByteBuf byteBuf) {
-        writeUUID(byteBuf, uuid);
-        writeString(byteBuf, message);
+    public void write(NetworkByteBuf byteBuf) {
+        byteBuf.writeUUID(uuid);
+        byteBuf.writeString(message);
     }
 
     @Override
-    public void read(ByteBuf byteBuf) {
-        this.uuid = readUUID(byteBuf);
-        this.message = readString(byteBuf);
+    public void read(NetworkByteBuf byteBuf) {
+        this.uuid = byteBuf.readUUID();
+        this.message = byteBuf.readString();
     }
 }
