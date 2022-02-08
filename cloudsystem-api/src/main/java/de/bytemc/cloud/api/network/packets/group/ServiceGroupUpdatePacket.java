@@ -3,6 +3,7 @@ package de.bytemc.cloud.api.network.packets.group;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.network.packets.IPacket;
+import de.bytemc.network.packets.NetworkByteBuf;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,11 +37,11 @@ public final class ServiceGroupUpdatePacket implements IPacket {
     }
 
     @Override
-    public void read(final ByteBuf byteBuf) {
-        this.name = this.readString(byteBuf);
-        this.node = this.readString(byteBuf);
-        this.template = this.readString(byteBuf);
-        this.motd = readString(byteBuf);
+    public void read(final NetworkByteBuf byteBuf) {
+        this.name = byteBuf.readString();
+        this.node = byteBuf.readString();
+        this.template = byteBuf.readString();
+        this.motd = byteBuf.readString();
         this.memory = byteBuf.readInt();
         this.minOnlineService = byteBuf.readInt();
         this.maxOnlineService = byteBuf.readInt();
@@ -50,11 +51,11 @@ public final class ServiceGroupUpdatePacket implements IPacket {
     }
 
     @Override
-    public void write(final ByteBuf byteBuf) {
-        this.writeString(byteBuf, this.name);
-        this.writeString(byteBuf, this.node);
-        this.writeString(byteBuf, this.template);
-        this.writeString(byteBuf, this.motd);
+    public void write(final NetworkByteBuf byteBuf) {
+        byteBuf.writeString(this.name);
+        byteBuf.writeString(this.node);
+        byteBuf.writeString(this.template);
+        byteBuf.writeString(this.motd);
         byteBuf.writeInt(this.memory);
         byteBuf.writeInt(this.minOnlineService);
         byteBuf.writeInt(this.maxOnlineService);

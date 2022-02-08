@@ -3,6 +3,7 @@ package de.bytemc.cloud.api.network.packets.group;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.network.packets.PacketHelper;
 import de.bytemc.network.packets.IPacket;
+import de.bytemc.network.packets.NetworkByteBuf;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,14 +25,14 @@ public class ServiceGroupExecutePacket implements IPacket {
     }
 
     @Override
-    public void write(ByteBuf byteBuf) {
-        PacketHelper.writeServiceGroup(byteBuf, group, this);
+    public void write(NetworkByteBuf byteBuf) {
+        PacketHelper.writeServiceGroup(byteBuf, group);
         byteBuf.writeInt(executorType.ordinal());
     }
 
     @Override
-    public void read(ByteBuf byteBuf) {
-        this.group = PacketHelper.readServiceGroup(byteBuf, this);
+    public void read(NetworkByteBuf byteBuf) {
+        this.group = PacketHelper.readServiceGroup(byteBuf);
         this.executorType = executor.values()[byteBuf.readInt()];
     }
 

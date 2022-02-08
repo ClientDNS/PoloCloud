@@ -4,7 +4,7 @@ import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.network.packets.IPacket;
-import io.netty.buffer.ByteBuf;
+import de.bytemc.network.packets.NetworkByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,20 +27,20 @@ public class ServiceUpdatePacket implements IPacket {
     }
 
     @Override
-    public void write(ByteBuf byteBuf) {
-        writeString(byteBuf, service);
+    public void write(NetworkByteBuf byteBuf) {
+        byteBuf. writeString(service);
         byteBuf.writeInt(serviceVisibility.ordinal());
         byteBuf.writeInt(state.ordinal());
         byteBuf.writeInt(maxPlayers);
-        writeString(byteBuf, motd);
+        byteBuf.writeString(motd);
     }
 
     @Override
-    public void read(ByteBuf byteBuf) {
-        this.service = readString(byteBuf);
+    public void read(NetworkByteBuf byteBuf) {
+        this.service =   byteBuf.readString();
         this.serviceVisibility = ServiceVisibility.values()[byteBuf.readInt()];
         this.state = ServiceState.values()[byteBuf.readInt()];
         this.maxPlayers = byteBuf.readInt();
-        this.motd = readString(byteBuf);
+        this.motd =   byteBuf.readString();
     }
 }

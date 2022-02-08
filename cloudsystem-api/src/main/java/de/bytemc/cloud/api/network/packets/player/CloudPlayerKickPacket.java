@@ -1,7 +1,7 @@
 package de.bytemc.cloud.api.network.packets.player;
 
 import de.bytemc.network.packets.IPacket;
-import io.netty.buffer.ByteBuf;
+import de.bytemc.network.packets.NetworkByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,17 +18,17 @@ public class CloudPlayerKickPacket implements IPacket {
     private String reason;
 
     @Override
-    public void write(ByteBuf byteBuf) {
-        writeUUID(byteBuf, uuid);
-        writeString(byteBuf, proxyService);
-        writeString(byteBuf, reason);
+    public void write(NetworkByteBuf byteBuf) {
+        byteBuf.writeUUID(uuid);
+        byteBuf.writeString(proxyService);
+        byteBuf.writeString(reason);
     }
 
 
     @Override
-    public void read(ByteBuf byteBuf) {
-        this.uuid = readUUID(byteBuf);
-        this.proxyService = readString(byteBuf);
-        this.reason = readString(byteBuf);
+    public void read(NetworkByteBuf byteBuf) {
+        this.uuid =  byteBuf.readUUID();
+        this.proxyService =  byteBuf.readString();
+        this.reason =  byteBuf.readString();
     }
 }

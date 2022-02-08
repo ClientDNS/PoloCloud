@@ -4,7 +4,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.network.packets.IPacket;
-import io.netty.buffer.ByteBuf;
+import de.bytemc.network.packets.NetworkByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,16 +25,16 @@ public class CloudPlayerUpdatePacket implements IPacket {
     }
 
     @Override
-    public void write(ByteBuf byteBuf) {
-       writeUUID(byteBuf, uuid);
-       writeString(byteBuf, proxyServer.getName());
-       writeString(byteBuf, server.getName());
+    public void write(NetworkByteBuf byteBuf) {
+        byteBuf.writeUUID(uuid);
+        byteBuf.writeString(proxyServer.getName());
+        byteBuf.writeString(server.getName());
     }
 
     @Override
-    public void read(ByteBuf byteBuf) {
-        this.uuid = readUUID(byteBuf);
-        this.proxyServer = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(readString(byteBuf));
-        this.server = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(readString(byteBuf));
+    public void read(NetworkByteBuf byteBuf) {
+        this.uuid = byteBuf.readUUID();
+        this.proxyServer = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString());
+        this.server = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString());
     }
 }

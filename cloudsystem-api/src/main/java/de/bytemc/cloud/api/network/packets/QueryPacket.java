@@ -2,7 +2,7 @@ package de.bytemc.cloud.api.network.packets;
 
 import de.bytemc.network.NetworkManager;
 import de.bytemc.network.packets.IPacket;
-import io.netty.buffer.ByteBuf;
+import de.bytemc.network.packets.NetworkByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class QueryPacket implements IPacket {
     }
 
     @Override
-    public void write(ByteBuf byteBuf) {
+    public void write(NetworkByteBuf byteBuf) {
         //write packet id to init
         byteBuf.writeInt(NetworkManager.getPacketId(this.packet.getClass()));
         packet.write(byteBuf);
@@ -33,7 +33,7 @@ public class QueryPacket implements IPacket {
 
     @SneakyThrows
     @Override
-    public void read(ByteBuf byteBuf) {
+    public void read(NetworkByteBuf byteBuf) {
         var packetID = byteBuf.readInt();
 
         final Class<? extends IPacket> r = NetworkManager.getPacketClass(packetID);
