@@ -33,7 +33,7 @@
             <groupId>de.bytemc</groupId>
             <artifactId>cloudsystem-api</artifactId>
             <version>1.0.2</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
