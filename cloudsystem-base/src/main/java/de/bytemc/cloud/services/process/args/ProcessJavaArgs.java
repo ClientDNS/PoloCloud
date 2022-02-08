@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
 public final class ProcessJavaArgs {
@@ -51,18 +52,27 @@ public final class ProcessJavaArgs {
             + service.getServiceGroup().getGameServerVersion().getJar());
 
         arguments.addAll(Arrays.asList(
-            "-cp", wrapperFile.toAbsolutePath() + File.pathSeparator + applicationFile.toPath().toAbsolutePath()));
+            "-cp", wrapperFile.toAbsolutePath().toString(),
+            "-javaagent:" + wrapperFile.toAbsolutePath()));
 
         try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(wrapperFile))) {
             arguments.add(jarInputStream.getManifest().getMainAttributes().getValue("Main-Class"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(applicationFile.toPath()))) {
-            arguments.add(jarInputStream.getManifest().getMainAttributes().getValue("Main-Class"));
+
+        boolean preLoadClasses = false;
+
+        try (final JarFile jarFile = new JarFile(applicationFile)) {
+            arguments.add(jarFile.getManifest().getMainAttributes().getValue("Main-Class"));
+            preLoadClasses = jarFile.getEntry("META-INF/versions.list") != null;
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+
+        arguments.add(applicationFile.toPath().toAbsolutePath().toString());
+
+        arguments.add(Boolean.toString(preLoadClasses));
 
         if (service.getServiceGroup().getGameServerVersion().getServiceTypes() == ServiceTypes.SERVER) {
             arguments.add("nogui");

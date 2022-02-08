@@ -24,7 +24,16 @@ public enum GameServerVersion {
         "BungeeCord", "latest", ServiceTypes.PROXY),
     WATERFALL("waterfall", "latest", ServiceTypes.PROXY),
     PAPER_1_18_1("paper", "1.18.1", ServiceTypes.SERVER),
-    PAPER_1_17_1("paper", "1.17.1", ServiceTypes.SERVER);
+    PAPER_1_17_1("paper", "1.17.1", ServiceTypes.SERVER),
+    PAPER_1_16_5("paper", "1.16.5", ServiceTypes.SERVER),
+    PAPER_1_15_2("paper", "1.15.2", ServiceTypes.SERVER),
+    PAPER_1_14_4("paper", "1.14.4", ServiceTypes.SERVER),
+    PAPER_1_13_2("paper", "1.13.2", ServiceTypes.SERVER),
+    PAPER_1_12_2("paper", "1.12.2", ServiceTypes.SERVER),
+    PAPER_1_11_2("paper", "1.11.2", ServiceTypes.SERVER),
+    PAPER_1_10_2("paper", "1.10.2", ServiceTypes.SERVER),
+    PAPER_1_9_4("paper", "1.17.1", ServiceTypes.SERVER),
+    PAPER_1_8_8("paper", "1.8.8", ServiceTypes.SERVER);
 
     private final String url;
     private final String title;
@@ -79,13 +88,11 @@ public enum GameServerVersion {
             FileUtils.copyURLToFile(new URL(url), file);
 
             if (this.title.equals("paper")) {
-                final Process process = new ProcessBuilder("java", "-jar", this.getJar())
+                final Process process = new ProcessBuilder("java", "-Dpaperclip.patchonly=true -jar", this.getJar())
                     .directory(file.getParentFile()).start();
                 final InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
                 final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                bufferedReader.readLine();
-                bufferedReader.readLine();
-                bufferedReader.readLine();
+                process.waitFor();
                 process.destroyForcibly();
                 bufferedReader.close();
                 inputStreamReader.close();
@@ -96,6 +103,8 @@ public enum GameServerVersion {
             e.printStackTrace();
             CloudAPI.getInstance().getLoggerProvider().logMessage("§cFailed to download version§7... (§3" + this.getTitle() + "§7)", LogType.ERROR);
             return;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         CloudAPI.getInstance().getLoggerProvider().logMessage("Downloading of (§3" + this.getTitle() + "§7)§a successfully §7completed.");
     }

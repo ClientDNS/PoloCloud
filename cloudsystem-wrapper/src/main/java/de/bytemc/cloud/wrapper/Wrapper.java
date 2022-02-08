@@ -13,32 +13,64 @@ import de.bytemc.cloud.wrapper.groups.GroupManager;
 import de.bytemc.cloud.wrapper.network.WrapperClient;
 import de.bytemc.cloud.wrapper.player.CloudPlayerManager;
 import de.bytemc.cloud.wrapper.service.ServiceManager;
-import de.bytemc.network.packets.IPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.lang.reflect.Method;
+import java.lang.instrument.Instrumentation;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 public final class Wrapper extends CloudAPI {
+
+    private static Instrumentation instrumentation;
+
+    public static void premain(final String s, final Instrumentation instrumentation) {
+        Wrapper.instrumentation = instrumentation;
+    }
 
     public static void main(String[] args) {
         try {
             new Wrapper();
 
-            final List<String> arguments = new ArrayList<>(Arrays.asList(args));
-            final Class<?> main = Class.forName(arguments.remove(0));
-            final Method method = main.getMethod("main", String[].class);
-            final Thread thread = new Thread(() -> {
+            final var arguments = new ArrayList<>(Arrays.asList(args));
+            final var main = arguments.remove(0);
+            final var applicationFile = Paths.get(arguments.remove(0));
+
+            var classLoader = ClassLoader.getSystemClassLoader();
+            if (Boolean.parseBoolean(arguments.remove(0))) {
+                classLoader = new URLClassLoader(new URL[]{applicationFile.toUri().toURL()}, ClassLoader.getSystemClassLoader());
+
+                try (final var jarInputStream = new JarInputStream(Files.newInputStream(applicationFile))) {
+                    JarEntry jarEntry;
+                    while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
+                        if (jarEntry.getName().endsWith(".class")) {
+                            final String className = jarEntry.getName()
+                                .replace('/', '.').replace(".class", "");
+                            Class.forName(className, false, classLoader);
+                        }
+                    }
+                }
+            }
+
+            instrumentation.appendToSystemClassLoaderSearch(new JarFile(applicationFile.toFile()));
+
+            final var mainClass = Class.forName(main, true, classLoader);
+            final var method = mainClass.getMethod("main", String[].class);
+            final var thread = new Thread(() -> {
                 try {
                     method.invoke(null, (Object) arguments.toArray(new String[0]));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }, "Minecraft-Thread");
-            thread.setContextClassLoader(ClassLoader.getSystemClassLoader());
+            thread.setContextClassLoader(classLoader);
             thread.start();
         } catch (Exception e) {
             e.printStackTrace();
