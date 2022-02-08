@@ -71,12 +71,17 @@ public final class ProxyEvents implements Listener {
                 }, () -> {
                     event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."));
                 });
-            } else {
-                cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
-                    .getServiceByNameOrNull(event.getTarget().getName())));
-                cloudPlayer.setProxyServer(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService());
-                cloudPlayer.update();
             }
+        });
+    }
+
+    @EventHandler
+    public void handle(final ServerSwitchEvent event) {
+        CloudAPI.getInstance().getCloudPlayerManager().getCloudPlayer(event.getPlayer().getUniqueId())
+            .ifPresent(cloudPlayer -> {
+                cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
+                    .getServiceByNameOrNull(event.getPlayer().getServer().getInfo().getName())));
+                cloudPlayer.update();
         });
     }
 
