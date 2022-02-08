@@ -3,7 +3,6 @@ package de.bytemc.cloud.api.network.packets;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.packets.NetworkByteBuf;
-import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 
 public final class CustomPacket implements IPacket {
