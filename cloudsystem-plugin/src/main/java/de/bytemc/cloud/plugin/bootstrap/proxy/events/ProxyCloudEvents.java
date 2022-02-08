@@ -4,8 +4,8 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.IEventHandler;
 import de.bytemc.cloud.api.events.events.CloudServiceRegisterEvent;
 import de.bytemc.cloud.api.events.events.CloudServiceRemoveEvent;
-import de.bytemc.cloud.api.events.events.CloudServiceUpdateEvent;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerKickPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerMessagePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerSendServicePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.network.NetworkManager;
@@ -40,6 +40,13 @@ public final class ProxyCloudEvents {
             assert player != null;
             player.disconnect(new TextComponent(packet.getReason()));
         });
+
+        NetworkManager.registerPacketListener(CloudPlayerMessagePacket.class, (ctx, packet) -> {
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
+            assert player != null;
+            player.sendMessage(new TextComponent(packet.getMessage()));
+        });
+
         NetworkManager.registerPacketListener(CloudPlayerSendServicePacket.class, (ctx, packet) -> {
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
             assert player != null;

@@ -2,8 +2,7 @@ package de.bytemc.cloud.player;
 
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
-import de.bytemc.cloud.api.network.packets.RedirectPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerKickPacket;
+import de.bytemc.cloud.api.network.packets.player.CloudPlayerMessagePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.impl.AbstractPlayerManager;
@@ -29,6 +28,11 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     @Override
     public void unregisterCloudPlayer(final @NotNull UUID uuid, final @NotNull String name) {
         this.getAllServicePlayers().remove(getCloudPlayerByUniqueIdOrNull(uuid));
+    }
+
+    @Override
+    public void sendCloudPlayerMessage(@NotNull ICloudPlayer cloudPlayer, @NotNull String message) {
+        cloudPlayer.getProxyServer().sendPacket(new CloudPlayerMessagePacket(cloudPlayer.getUniqueId(), message));
     }
 
     @Override

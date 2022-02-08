@@ -39,10 +39,11 @@ public final class NetworkHandler implements INetworkHandler {
         NetworkManager.registerPacket(CloudPlayerCachePacket.class, 14);
         NetworkManager.registerPacket(CloudPlayerKickPacket.class, 15);
         NetworkManager.registerPacket(CloudPlayerSendServicePacket.class, 16);
+        NetworkManager.registerPacket(CloudPlayerMessagePacket.class, 17);
 
         //util packets
-        NetworkManager.registerPacket(QueryPacket.class, 17);
-        NetworkManager.registerPacket(RedirectPacket.class, 18);
+        NetworkManager.registerPacket(QueryPacket.class, 18);
+        NetworkManager.registerPacket(RedirectPacket.class, 19);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){

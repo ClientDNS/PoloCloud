@@ -52,6 +52,11 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
+    public void sendCloudPlayerMessage(@NotNull ICloudPlayer cloudPlayer, @NotNull String message) {
+        cloudPlayer.getProxyServer().sendPacket(new CloudPlayerMessagePacket(cloudPlayer.getUniqueId(), message));
+    }
+
+    @Override
     public void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer) {
         Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerUpdatePacket(cloudPlayer), QueryPacket.QueryState.FIRST_RESPONSE));
     }

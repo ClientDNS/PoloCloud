@@ -72,4 +72,6 @@ public interface ICloudPlayerManager {
      */
     void unregisterCloudPlayer(@NotNull UUID uniqueId, @NotNull String username);
 
+    void sendCloudPlayerMessage(@NotNull ICloudPlayer cloudPlayer, @NotNull String message);
+
 }
