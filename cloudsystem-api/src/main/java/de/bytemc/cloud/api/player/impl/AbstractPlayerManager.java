@@ -10,8 +10,8 @@ import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
-import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
+import de.bytemc.cloud.api.player.ICloudPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -28,7 +28,6 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
         networkHandler.registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) -> {
             this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {
-                cloudPlayer.setProxyServer(packet.getProxyServer());
                 cloudPlayer.setServer(packet.getServer());
                 eventHandler.call(new CloudPlayerUpdateEvent(cloudPlayer));
             });
@@ -36,6 +35,7 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
 
         networkHandler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) -> {
             final ICloudPlayer cloudPlayer = new SimpleCloudPlayer(packet.getUuid(), packet.getUsername());
+            CloudAPI.getInstance().getServiceManager().getService(packet.getProxyServer()).ifPresent(it -> cloudPlayer.setProxyServer(it));
             this.cachedCloudPlayers.put(packet.getUuid(), cloudPlayer);
             eventHandler.call(new CloudPlayerLoginEvent(cloudPlayer));
         });

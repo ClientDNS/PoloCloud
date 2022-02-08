@@ -2,13 +2,9 @@ package de.bytemc.cloud.api.events;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.graph.Network;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.events.*;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupUpdatePacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerDisconnectPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerLoginPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;

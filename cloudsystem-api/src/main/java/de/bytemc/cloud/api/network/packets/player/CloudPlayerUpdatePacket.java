@@ -15,26 +15,22 @@ import java.util.UUID;
 public class CloudPlayerUpdatePacket implements IPacket {
 
     private UUID uuid;
-    private IService proxyServer;
     private IService server;
 
     public CloudPlayerUpdatePacket(ICloudPlayer cloudPlayer) {
         this.uuid = cloudPlayer.getUniqueId();
-        this.proxyServer = cloudPlayer.getProxyServer();
         this.server = cloudPlayer.getServer();
     }
 
     @Override
     public void write(NetworkByteBuf byteBuf) {
         byteBuf.writeUUID(uuid);
-        byteBuf.writeString(proxyServer.getName());
         byteBuf.writeString(server.getName());
     }
 
     @Override
     public void read(NetworkByteBuf byteBuf) {
         this.uuid = byteBuf.readUUID();
-        this.proxyServer = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString());
         this.server = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString());
     }
 }

@@ -79,6 +79,17 @@ public interface IServiceGroup {
     void setMaxOnlineService(int maxOnlineService);
 
     /**
+     * @return the maintenacne state
+     */
+    boolean isMaintenance();
+
+    /**
+     * sets the maintenance of the group
+     * @param maintenance the amount to set
+     */
+    void setMaintenance(boolean maintenance);
+
+    /**
      * @return if the group is static or not
      */
     boolean isStaticService();

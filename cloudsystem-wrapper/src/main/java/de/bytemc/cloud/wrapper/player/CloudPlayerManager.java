@@ -4,7 +4,6 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.events.CloudPlayerDisconnectEvent;
 import de.bytemc.cloud.api.events.events.CloudPlayerLoginEvent;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
-import de.bytemc.cloud.api.network.packets.RedirectPacket;
 import de.bytemc.cloud.api.network.packets.player.*;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.impl.AbstractPlayerManager;
@@ -42,7 +41,8 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
 
         this.cachedCloudPlayers.put(uniqueId, cloudPlayer);
         Wrapper.getInstance().getEventHandler().call(new CloudPlayerLoginEvent(cloudPlayer));
-        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerLoginPacket(username, uniqueId), QueryPacket.QueryState.FIRST_RESPONSE));
+        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerLoginPacket(username, uniqueId,
+            ((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService().getName()), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 
     @Override

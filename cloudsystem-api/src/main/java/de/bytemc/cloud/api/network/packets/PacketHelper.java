@@ -55,6 +55,7 @@ public class PacketHelper {
 
         byteBuf.writeBoolean(group.isStaticService());
         byteBuf.writeBoolean(group.isFallbackGroup());
+        byteBuf.writeBoolean(group.isMaintenance());
         byteBuf.writeInt(group.getGameServerVersion().ordinal());
     }
 
@@ -67,6 +68,7 @@ public class PacketHelper {
             byteBuf.readInt(),
             byteBuf.readInt(),
             byteBuf.readInt(),
+            byteBuf.readBoolean(),
             byteBuf.readBoolean(),
             byteBuf.readBoolean(),
             GameServerVersion.values()[byteBuf.readInt()]);

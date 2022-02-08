@@ -17,7 +17,7 @@ public class ServiceGroup implements IServiceGroup {
 
     private String name, template, node, motd;
     private int memory, defaultMaxPlayers, minOnlineService, maxOnlineService;
-    private boolean staticService, fallbackGroup;
+    private boolean staticService, fallbackGroup, maintenance;
     private GameServerVersion gameServerVersion;
 
     @Override

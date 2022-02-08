@@ -2,10 +2,7 @@ package de.bytemc.cloud.services;
 
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.events.events.CloudServiceUpdateEvent;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
-import de.bytemc.cloud.api.network.packets.RedirectPacket;
-import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRequestShutdownPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
