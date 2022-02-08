@@ -25,4 +25,8 @@ public final class CustomPacket implements IPacket {
         this.document = new Document(networkByteBuf.readString());
     }
 
+    public Document getDocument() {
+        return this.document;
+    }
+
 }
