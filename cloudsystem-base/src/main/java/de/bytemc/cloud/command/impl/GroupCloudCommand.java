@@ -97,6 +97,7 @@ public final class GroupCloudCommand extends CloudCommand {
             log.logMessage("Max online services: §b" + serviceGroup.getMaxOnlineService());
             log.logMessage("Static service: §b" + serviceGroup.isStaticService());
             log.logMessage("Version: §b" + serviceGroup.getGameServerVersion().getTitle());
+            log.logMessage("Maintenance: §b" + serviceGroup.isMaintenance());
             return;
         }
 
@@ -131,6 +132,11 @@ public final class GroupCloudCommand extends CloudCommand {
                     serviceGroup.update();
                     log.logMessage("§7Successfully set fallback to " + args[3]);
                     return;
+                case "maintenance":
+                    serviceGroup.setMaintenance(Boolean.parseBoolean(args[3]));
+                    serviceGroup.update();
+                    log.logMessage("§7Successfully set maintenance to " + args[3]);
+                    return;
                 case "version":
                     serviceGroup.setGameServerVersion(GameServerVersion.valueOf(args[3]));
                     serviceGroup.update();
@@ -155,5 +161,4 @@ public final class GroupCloudCommand extends CloudCommand {
                 .logMessage("§7Use following command: §bgroup edit " + group.getName() + " " + key + " §7(§bint§7)");
         }
     }
-
 }
