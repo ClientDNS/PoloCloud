@@ -31,7 +31,7 @@ public class Document {
     }
 
     public Document(final Object object) {
-        this.setJsonObject(GSON.toJsonTree(object));
+        this.setJsonObject(object);
     }
 
     public <T> T get(final String key, final Class<T> clazz) {
