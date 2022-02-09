@@ -7,7 +7,7 @@ import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
-import de.bytemc.cloud.wrapper.service.ServiceManager;
+import de.bytemc.cloud.wrapper.Wrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -65,7 +65,7 @@ public final class ProxyEvents implements Listener {
                 FallbackHandler.getLobbyFallbackOrNull().ifPresentOrElse(it -> {
                     event.setTarget(ProxyServer.getInstance().getServerInfo(it.getName()));
                     cloudPlayer.setServer(it);
-                    cloudPlayer.setProxyServer(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService());
+                    cloudPlayer.setProxyServer(Wrapper.getInstance().thisService());
                     cloudPlayer.update();
                 }, () -> {
                     event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."));
@@ -94,7 +94,7 @@ public final class ProxyEvents implements Listener {
         final ServerPing response = event.getResponse();
         final ServerPing.Players players = response.getPlayers();
 
-        response.setPlayers(new ServerPing.Players(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService().getMaxPlayers(), playerManager.getCloudPlayerOnlineAmount(), players.getSample()));
+        response.setPlayers(new ServerPing.Players(Wrapper.getInstance().thisService().getMaxPlayers(), playerManager.getCloudPlayerOnlineAmount(), players.getSample()));
         event.setResponse(response);
     }
 

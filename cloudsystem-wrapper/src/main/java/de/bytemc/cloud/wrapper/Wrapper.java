@@ -8,6 +8,7 @@ import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
+import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.wrapper.groups.GroupManager;
 import de.bytemc.cloud.wrapper.network.WrapperClient;
@@ -133,6 +134,10 @@ public final class Wrapper extends CloudAPI {
     @Override
     public @NotNull ICloudPlayerManager getCloudPlayerManager() {
         return this.cloudPlayerManager;
+    }
+
+    public IService thisService() {
+        return ((ServiceManager) serviceManager).thisService();
     }
 
     public WrapperClient getClient() {

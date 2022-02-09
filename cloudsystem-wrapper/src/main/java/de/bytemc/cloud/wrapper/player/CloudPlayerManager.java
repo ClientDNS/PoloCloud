@@ -9,7 +9,6 @@ import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.impl.AbstractPlayerManager;
 import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
 import de.bytemc.cloud.wrapper.Wrapper;
-import de.bytemc.cloud.wrapper.service.ServiceManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -31,8 +30,7 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     @Override
     public @NotNull List<ICloudPlayer> getAllServicePlayers() {
         return this.getAllCachedCloudPlayers().stream()
-            .filter(it -> it.getServer().getName().equalsIgnoreCase(((ServiceManager) CloudAPI.getInstance().getServiceManager())
-                .thisService().getName())).collect(Collectors.toList());
+            .filter(it -> it.getServer().getName().equalsIgnoreCase(Wrapper.getInstance().thisService().getName())).collect(Collectors.toList());
     }
 
     @Override
@@ -41,8 +39,7 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
 
         this.cachedCloudPlayers.put(uniqueId, cloudPlayer);
         Wrapper.getInstance().getEventHandler().call(new CloudPlayerLoginEvent(cloudPlayer));
-        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerLoginPacket(username, uniqueId,
-            ((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService().getName()), QueryPacket.QueryState.FIRST_RESPONSE));
+        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerLoginPacket(username, uniqueId, Wrapper.getInstance().thisService().getName()), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 
     @Override

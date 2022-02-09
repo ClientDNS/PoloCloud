@@ -34,7 +34,7 @@ public class DatabaseSqlImpl implements IDatabase {
             databaseConfiguration.getUser(), databaseConfiguration.getPassword());
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
-            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT)");
+            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT, maintenance INT)");
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The connection is now established to the database.");
     }
@@ -50,11 +50,11 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @Override
     public void addGroup(final @NotNull IServiceGroup serviceGroup) {
-        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers, motd) VALUES (" +
+        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers, motd, maintenance) VALUES (" +
             "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0) +
             ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "', " + serviceGroup.getDefaultMaxPlayers() +
-            ",'" + serviceGroup.getMotd() + "');");
+            ",'" + serviceGroup.getMotd() + "', '" + (serviceGroup.isMaintenance() ? 1 : 0) + "');");
     }
 
     @Override
@@ -76,8 +76,9 @@ public class DatabaseSqlImpl implements IDatabase {
                     resultSet.getInt("maxPlayers"),
                     resultSet.getInt("minOnlineService"),
                     resultSet.getInt("maxOnlineService"),
-                    resultSet.getInt("staticService") == 1,
-                    resultSet.getInt("fallbackGroup") == 1,
+                    resultSet.getBoolean("staticService"),
+                    resultSet.getBoolean("fallbackGroup"),
+                    resultSet.getBoolean("maintenance"),
                     GameServerVersion.getVersionByTitle(resultSet.getString("version")));
                 groups.add(serviceGroup);
             }

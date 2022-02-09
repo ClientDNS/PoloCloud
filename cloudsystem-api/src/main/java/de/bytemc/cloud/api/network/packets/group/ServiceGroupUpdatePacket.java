@@ -22,6 +22,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
     private int defaultMaxPlayers;
     private GameServerVersion gameServerVersion;
     private boolean fallback;
+    private boolean maintenance;
 
     public ServiceGroupUpdatePacket(final IServiceGroup serviceGroup) {
         this.name = serviceGroup.getName();
@@ -34,6 +35,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
         this.defaultMaxPlayers = serviceGroup.getDefaultMaxPlayers();
         this.gameServerVersion = serviceGroup.getGameServerVersion();
         this.fallback = serviceGroup.isFallbackGroup();
+        this.maintenance = serviceGroup.isMaintenance();
     }
 
     @Override
@@ -48,6 +50,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
         this.defaultMaxPlayers = byteBuf.readInt();
         this.gameServerVersion = GameServerVersion.values()[byteBuf.readInt()];
         this.fallback = byteBuf.readBoolean();
+        this.maintenance = byteBuf.readBoolean();
     }
 
     @Override
@@ -62,6 +65,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
         byteBuf.writeInt(this.defaultMaxPlayers);
         byteBuf.writeInt(this.gameServerVersion.ordinal());
         byteBuf.writeBoolean(this.fallback);
+        byteBuf.writeBoolean(this.maintenance);
     }
 
 }

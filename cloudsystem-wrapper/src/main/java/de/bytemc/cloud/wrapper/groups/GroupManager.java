@@ -12,8 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public final class GroupManager extends AbstractGroupManager {
 
     public GroupManager() {
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupCacheUpdatePacket.class, (ctx, packet) ->
-            this.setAllCachedServiceGroups(packet.getGroups()));
+        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupCacheUpdatePacket.class, (ctx, packet) -> this.setAllCachedServiceGroups(packet.getGroups()));
     }
 
     @Override

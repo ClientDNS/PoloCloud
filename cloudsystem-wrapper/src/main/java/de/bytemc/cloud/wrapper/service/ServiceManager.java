@@ -44,7 +44,7 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
 
     @Override
     public void sendPacketToService(IService service, IPacket packet) {
-        if(service.equals(((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService())) {
+        if(service.equals(thisService())) {
             NetworkManager.callPacket(null, packet);
             return;
         }
