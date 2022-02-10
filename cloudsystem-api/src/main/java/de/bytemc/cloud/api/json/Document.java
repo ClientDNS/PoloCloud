@@ -30,6 +30,10 @@ public class Document {
         this.jsonObject = jsonObject;
     }
 
+    public Document(final String json) {
+        this.jsonObject = GSON.fromJson(json, JsonObject.class);
+    }
+
     public Document(final Object object) {
         this.setJsonObject(object);
     }
