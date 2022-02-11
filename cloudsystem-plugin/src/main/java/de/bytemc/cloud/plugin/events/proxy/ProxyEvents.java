@@ -1,6 +1,7 @@
 package de.bytemc.cloud.plugin.events.proxy;
 
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.events.events.CloudPlayerUpdateEvent;
 import de.bytemc.cloud.api.fallback.FallbackHandler;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IService;
@@ -61,7 +62,7 @@ public final class ProxyEvents implements Listener {
             .ifPresent(cloudPlayer -> {
                 cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
                     .getServiceByNameOrNull(event.getPlayer().getServer().getInfo().getName())));
-                cloudPlayer.update();
+                cloudPlayer.update(CloudPlayerUpdateEvent.UpdateReason.SERVER_SWITCH);
         });
     }
 
