@@ -3,11 +3,11 @@ package de.bytemc.cloud.services.process;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
+import de.bytemc.cloud.api.groups.utils.ServiceTypes;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
-import de.bytemc.cloud.services.process.args.ProcessJavaArgs;
 import de.bytemc.cloud.services.properties.BungeeProperties;
 import de.bytemc.cloud.services.properties.SpigotProperties;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
@@ -17,6 +17,14 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 public record ProcessServiceStarter(IService service) {
 
@@ -72,15 +80,80 @@ public record ProcessServiceStarter(IService service) {
     @SneakyThrows
     public ICommunicationPromise<IService> start() {
         final var communicationPromise = new CommunicationPromise<IService>();
-        final var command = ProcessJavaArgs.args(this.service);
+        final var command = this.arguments(this.service);
 
         final var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + this.service.getName() + "/"));
-        processBuilder.redirectOutput(new File("tmp/" + service.getName() + "/wrapper.log"));
+        processBuilder.redirectOutput(new File("tmp/" + this.service.getName() + "/wrapper.log"));
 
         ((SimpleService) this.service).setProcess(processBuilder.start());
         communicationPromise.setSuccess(this.service);
         return communicationPromise;
     }
 
+    public String[] arguments(final IService service) {
+        final List<String> arguments = new ArrayList<>(Arrays.asList(
+            "java",
+            "-XX:+UseG1GC",
+            "-XX:+ParallelRefProcEnabled",
+            "-XX:MaxGCPauseMillis=200",
+            "-XX:+UnlockExperimentalVMOptions",
+            "-XX:+DisableExplicitGC",
+            "-XX:+AlwaysPreTouch",
+            "-XX:G1NewSizePercent=30",
+            "-XX:G1MaxNewSizePercent=40",
+            "-XX:G1HeapRegionSize=8M",
+            "-XX:G1ReservePercent=20",
+            "-XX:G1HeapWastePercent=5",
+            "-XX:G1MixedGCCountTarget=4",
+            "-XX:InitiatingHeapOccupancyPercent=15",
+            "-XX:G1MixedGCLiveThresholdPercent=90",
+            "-XX:G1RSetUpdatingPauseTimePercent=5",
+            "-XX:SurvivorRatio=32",
+            "-XX:+PerfDisableSharedMem",
+            "-XX:MaxTenuringThreshold=1",
+            "-Dusing.aikars.flags=https://mcflags.emc.gs",
+            "-Daikars.new.flags=true",
+            "-XX:-UseAdaptiveSizePolicy",
+            "-XX:CompileThreshold=100",
+            "-Dcom.mojang.eula.agree=true",
+            "-Dio.netty.recycler.maxCapacity=0",
+            "-Dio.netty.recycler.maxCapacity.default=0",
+            "-Djline.terminal=jline.UnsupportedTerminal",
+            "-Xms" + service.getServiceGroup().getMemory() + "M",
+            "-Xmx" + service.getServiceGroup().getMemory() + "M"));
+
+        final var wrapperFile = Paths.get("storage", "jars", "wrapper.jar");
+        final var applicationFile = new File("tmp/" + service.getName() + "/"
+            + service.getServiceGroup().getGameServerVersion().getJar());
+
+        arguments.addAll(Arrays.asList(
+            "-cp", wrapperFile.toAbsolutePath().toString(),
+            "-javaagent:" + wrapperFile.toAbsolutePath()));
+
+        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(wrapperFile))) {
+            arguments.add(jarInputStream.getManifest().getMainAttributes().getValue("Main-Class"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        boolean preLoadClasses = false;
+
+        try (final JarFile jarFile = new JarFile(applicationFile)) {
+            arguments.add(jarFile.getManifest().getMainAttributes().getValue("Main-Class"));
+            preLoadClasses = jarFile.getEntry("META-INF/versions.list") != null;
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        arguments.add(applicationFile.toPath().toAbsolutePath().toString());
+
+        arguments.add(Boolean.toString(preLoadClasses));
+
+        if (service.getServiceGroup().getGameServerVersion().getServiceTypes() == ServiceTypes.SERVER) {
+            arguments.add("nogui");
+        }
+
+        return arguments.toArray(new String[]{});
+    }
 
 }
