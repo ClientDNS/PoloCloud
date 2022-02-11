@@ -70,6 +70,11 @@ public interface ICloudPlayerManager {
      */
     void unregisterCloudPlayer(@NotNull UUID uniqueId, @NotNull String username);
 
+    /**
+     * sens a message to a cloud player
+     * @param cloudPlayer the cloud player
+     * @param message the message to send
+     */
     void sendCloudPlayerMessage(@NotNull ICloudPlayer cloudPlayer, @NotNull String message);
 
 }

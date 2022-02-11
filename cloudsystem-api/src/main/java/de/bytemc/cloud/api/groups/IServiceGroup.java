@@ -116,9 +116,16 @@ public interface IServiceGroup {
      */
     void setGameServerVersion(@NotNull GameServerVersion gameServerVersion);
 
-    String getMotd();
+    /**
+     * @return the default motd of a service of the group
+     */
+    @NotNull String getMotd();
 
-    void setMotd(String motd);
+    /**
+     * sets the default motd of a service of the group
+     * @param motd the motd to set as default
+     */
+    void setMotd(@NotNull String motd);
 
     /**
      * edits the properties of the group and update then

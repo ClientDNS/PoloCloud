@@ -95,11 +95,22 @@ public interface IService {
      */
     void edit(@NotNull Consumer<IService> serviceConsumer);
 
-    String getMotd();
+    /**
+     * @return the motd of the service
+     */
+    @NotNull String getMotd();
 
-    void setMotd(String motd);
+    /**
+     * sets the motd of the service
+     * @param motd the motd to set
+     */
+    void setMotd(@NotNull String motd);
 
-    void sendPacket(IPacket packet);
+    /**
+     * sends a packet to a service
+     * @param packet the packet to send
+     */
+    void sendPacket(@NotNull IPacket packet);
 
     /**
      * updates the properties of the service
