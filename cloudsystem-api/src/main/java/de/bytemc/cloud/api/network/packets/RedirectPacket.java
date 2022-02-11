@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -20,8 +23,10 @@ public class RedirectPacket implements IPacket {
     @Override
     public void write(NetworkByteBuf byteBuf) {
         byteBuf.writeString(this.client);
-        byteBuf.writeInt(NetworkManager.getPacketId(this.packet.getClass()));
-        this.packet.write(byteBuf);
+        NetworkManager.getPacketId(this.packet.getClass()).ifPresent(it -> {
+            byteBuf.writeInt(it);
+            this.packet.write(byteBuf);
+        });
     }
 
 
@@ -31,8 +36,13 @@ public class RedirectPacket implements IPacket {
         this.client = byteBuf.readString();
         var packetID = byteBuf.readInt();
 
-        final Class<? extends IPacket> r = NetworkManager.getPacketClass(packetID);
-        this.packet = r.getConstructor().newInstance();
+        NetworkManager.getPacketClass(packetID).ifPresent(it -> initPacket(byteBuf, it));
+    }
+
+    @SneakyThrows
+    public void initPacket(NetworkByteBuf byteBuf, Class<? extends IPacket> it) {
+        this.packet = it.getConstructor().newInstance();
         this.packet.read(byteBuf);
     }
+
 }

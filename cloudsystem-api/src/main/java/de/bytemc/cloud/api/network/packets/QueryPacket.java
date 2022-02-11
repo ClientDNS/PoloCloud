@@ -24,11 +24,16 @@ public class QueryPacket implements IPacket {
     @Override
     public void write(NetworkByteBuf byteBuf) {
         //write packet id to init
-        byteBuf.writeInt(NetworkManager.getPacketId(this.packet.getClass()));
-        packet.write(byteBuf);
 
-        //write state for indexing
-        byteBuf.writeInt(state.ordinal());
+        NetworkManager.getPacketId(this.packet.getClass()).ifPresentOrElse(it -> {
+            byteBuf.writeInt(it);
+            packet.write(byteBuf);
+
+            //write state for indexing
+            byteBuf.writeInt(state.ordinal());
+        }, () -> {
+            throw new NullPointerException("Cannot write QueryPacket: Write ByteBuf(Packet Id not found)");
+        });
     }
 
     @SneakyThrows
@@ -36,10 +41,17 @@ public class QueryPacket implements IPacket {
     public void read(NetworkByteBuf byteBuf) {
         var packetID = byteBuf.readInt();
 
-        final Class<? extends IPacket> r = NetworkManager.getPacketClass(packetID);
-        this.packet = r.getConstructor().newInstance();
+        NetworkManager.getPacketClass(packetID).ifPresentOrElse(it -> initPacket(byteBuf, it), () -> {
+            throw new NullPointerException("Cannot read QueryPacket: Read ByteBuf(Packet not found)");
+        });
+    }
+
+    @SneakyThrows
+    private void initPacket(NetworkByteBuf byteBuf, Class<? extends IPacket> it){
+        this.packet = it.getConstructor().newInstance();
         this.packet.read(byteBuf);
 
         state = QueryState.values()[byteBuf.readInt()];
     }
+
 }
