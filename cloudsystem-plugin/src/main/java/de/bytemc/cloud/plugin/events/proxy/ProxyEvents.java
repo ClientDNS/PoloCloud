@@ -48,11 +48,9 @@ public final class ProxyEvents implements Listener {
                 FallbackHandler.getLobbyFallbackOrNull().ifPresentOrElse(it -> {
                     event.setTarget(ProxyServer.getInstance().getServerInfo(it.getName()));
                     cloudPlayer.setServer(it);
-                    cloudPlayer.setProxyServer(Wrapper.getInstance().thisService());
                     cloudPlayer.update();
-                }, () -> {
-                    event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."));
-                });
+                }, () ->
+                    event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden.")));
             }
         });
     }
@@ -100,4 +98,5 @@ public final class ProxyEvents implements Listener {
             .min(Comparator.comparing(IService::getOnlinePlayers))
             .map(service -> ProxyServer.getInstance().getServerInfo(service.getName()));
     }
+
 }

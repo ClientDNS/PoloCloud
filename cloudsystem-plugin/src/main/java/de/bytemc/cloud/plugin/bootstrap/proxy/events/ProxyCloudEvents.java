@@ -19,18 +19,20 @@ public final class ProxyCloudEvents {
 
     public ProxyCloudEvents() {
 
-        //register default fallback
-        registerFallbackService();
+        // register default fallback
+        this.registerFallbackService();
 
-        //load all current groups
-        for (IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
+        // load all current groups
+        for (final IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
             if (!allCachedService.getServiceGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
 
-        //register events
-        IEventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
+        // register events
+        final IEventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
+
         eventHandler.registerEvent(CloudServiceRegisterEvent.class, event -> {
-            if(!event.getService().getServiceGroup().getGameServerVersion().isProxy()) registerService(event.getService());
+            if (!event.getService().getServiceGroup().getGameServerVersion().isProxy())
+                registerService(event.getService());
         });
 
         eventHandler.registerEvent(CloudServiceRemoveEvent.class, event -> unregisterService(event.getService()));
@@ -50,7 +52,7 @@ public final class ProxyCloudEvents {
         NetworkManager.registerPacketListener(CloudPlayerSendServicePacket.class, (ctx, packet) -> {
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
             assert player != null;
-            if(player.getServer().getInfo().getName().equals(packet.getService())) return;
+            if (player.getServer().getInfo().getName().equals(packet.getService())) return;
             player.connect(ProxyServer.getInstance().getServerInfo(packet.getService()));
         });
     }
@@ -64,11 +66,11 @@ public final class ProxyCloudEvents {
     }
 
     public void registerService(IService service) {
-        registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
+        this.registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 
     private void registerFallbackService() {
-        registerService("fallback", new InetSocketAddress("127.0.0.1", 0));
+        this.registerService("fallback", new InetSocketAddress("127.0.0.1", 0));
     }
 
 }
