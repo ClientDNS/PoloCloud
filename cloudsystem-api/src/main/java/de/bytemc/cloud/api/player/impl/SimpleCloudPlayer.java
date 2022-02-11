@@ -18,8 +18,8 @@ public class SimpleCloudPlayer implements ICloudPlayer {
 
     private final UUID uniqueId;
     private final String username;
+    private final IService proxyServer;
     private IService server;
-    private IService proxyServer;
 
     @Override
     public void update() {

@@ -26,7 +26,7 @@ public class PacketHelper {
     }
 
     public static IService readService(NetworkByteBuf byteBuf) {
-        return new SimpleService(byteBuf.readString(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readString(), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()],  ServiceVisibility.values()[byteBuf.readInt()], byteBuf.readString());
+        return new SimpleService(byteBuf.readString(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readString(), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()], ServiceVisibility.values()[byteBuf.readInt()], byteBuf.readString());
     }
 
     public static void writeCloudPlayer(NetworkByteBuf byteBuf, ICloudPlayer cloudPlayer) {
@@ -36,9 +36,9 @@ public class PacketHelper {
         byteBuf.writeString(cloudPlayer.getServer().getName());
     }
 
-    public static ICloudPlayer readCloudPlayer(NetworkByteBuf byteBuf){
-        SimpleCloudPlayer simpleCloudPlayer = new SimpleCloudPlayer(byteBuf.readUUID(), byteBuf.readString());
-        simpleCloudPlayer.setProxyServer(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString()));
+    public static ICloudPlayer readCloudPlayer(NetworkByteBuf byteBuf) {
+        SimpleCloudPlayer simpleCloudPlayer = new SimpleCloudPlayer(byteBuf.readUUID(), byteBuf.readString(),
+            CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString()));
         simpleCloudPlayer.setServer(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString()));
         return simpleCloudPlayer;
     }

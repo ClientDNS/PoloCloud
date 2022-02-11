@@ -27,13 +27,6 @@ public interface ICloudPlayer {
     IService getProxyServer();
 
     /**
-     * sets the proxy server of the player
-     * @param service the service to set
-     */
-    @Deprecated(forRemoval = true)
-    void setProxyServer(@NotNull IService service);
-
-    /**
      * @return the server who the player is
      */
     IService getServer();
