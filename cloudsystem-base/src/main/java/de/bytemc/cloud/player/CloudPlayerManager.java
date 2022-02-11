@@ -7,7 +7,6 @@ import de.bytemc.cloud.api.network.packets.player.CloudPlayerMessagePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerUpdatePacket;
 import de.bytemc.cloud.api.player.ICloudPlayer;
 import de.bytemc.cloud.api.player.impl.AbstractPlayerManager;
-import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
 import de.bytemc.network.cluster.types.NetworkType;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +21,8 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void registerCloudPlayer(final @NotNull UUID uniqueID, final @NotNull String username) {
-        this.getAllServicePlayers().add(new SimpleCloudPlayer(uniqueID, username));
+    public void registerCloudPlayer(final @NotNull ICloudPlayer cloudPlayer) {
+        this.getAllServicePlayers().add(cloudPlayer);
     }
 
     @Override

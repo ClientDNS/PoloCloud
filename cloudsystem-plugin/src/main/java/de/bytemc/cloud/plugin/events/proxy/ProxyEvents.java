@@ -4,10 +4,12 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.events.CloudPlayerUpdateEvent;
 import de.bytemc.cloud.api.fallback.FallbackHandler;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
+import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.cloud.wrapper.Wrapper;
+import de.bytemc.cloud.wrapper.service.ServiceManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -39,7 +41,10 @@ public final class ProxyEvents implements Listener {
 
     @EventHandler
     public void handle(LoginEvent event) {
-        playerManager.registerCloudPlayer(event.getConnection().getUniqueId(), event.getConnection().getName());
+        final var connection = event.getConnection();
+
+        this.playerManager.registerCloudPlayer(new SimpleCloudPlayer(connection.getUniqueId(), connection.getName(),
+            ((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService()));
     }
 
     @EventHandler
