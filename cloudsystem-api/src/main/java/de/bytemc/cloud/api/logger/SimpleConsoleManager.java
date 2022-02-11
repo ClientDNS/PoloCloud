@@ -30,6 +30,7 @@ public final class SimpleConsoleManager {
         this.consoleReadingThread.setUncaughtExceptionHandler((t, e) -> {
             CloudAPI.getInstance().getLoggerProvider().logMessage("An error...", LogType.ERROR);
             CloudAPI.getInstance().getLoggerProvider().logMessage("§7" + Throwables.getStackTraceAsString(e), LogType.ERROR);
+            e.printStackTrace();
         });
         this.consoleReadingThread.start();
     }
