@@ -25,6 +25,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Objects;
 
 @Getter
 public class Base extends CloudAPI {
@@ -52,6 +54,18 @@ public class Base extends CloudAPI {
 
         this.getLoggerProvider().logMessage("§7Cloudsystem > §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
         this.getLoggerProvider().logMessage(" ", LogType.EMPTY);
+
+        // copy wrapper and plugin jar
+        try {
+            final File storageDirectory = new File("storage/jars");
+
+            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
+                new File(storageDirectory, "wrapper.jar").toPath());
+            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("plugin.jar")),
+                new File(storageDirectory, "plugin.jar").toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.databaseManager = new DatabaseManager();
         this.groupManager = new SimpleGroupManager();
@@ -87,6 +101,17 @@ public class Base extends CloudAPI {
                 if (((SimpleService) service).getProcess() != null)
                     ((SimpleService) service).getProcess().destroyForcibly();
             });
+
+        // delete wrapper and plugin jars
+        try {
+            final File storageDirectory = new File("storage/jars");
+
+            Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
+            Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
             .addCompleteListener(voidICommunicationPromise -> {
                 try {

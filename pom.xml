@@ -11,8 +11,8 @@
     <modules>
         <module>cloudsystem-api</module>
         <module>cloudsystem-plugin</module>
-        <module>cloudsystem-base</module>
         <module>cloudsystem-wrapper</module>
+        <module>cloudsystem-base</module>
     </modules>
 
     <properties>

@@ -56,6 +56,18 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
             </resource>
+            <resource>
+                <directory>${basedir}/../cloudsystem-wrapper/target</directory>
+                <includes>
+                    <include>wrapper.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}/../cloudsystem-plugin/target</directory>
+                <includes>
+                    <include>plugin.jar</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <!-- JAR creation plugin -->
