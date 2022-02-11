@@ -1,5 +1,6 @@
 package de.bytemc.cloud.api.player;
 
+import de.bytemc.cloud.api.events.events.CloudPlayerUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,6 +63,13 @@ public interface ICloudPlayerManager {
      * @param cloudPlayer the unique id of the player
      */
     void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer);
+
+    /**
+     * update a cloud player
+     * @param cloudPlayer the unique id of the player
+     * @param updateReason the reason of the update
+     */
+    void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer, CloudPlayerUpdateEvent.@NotNull UpdateReason updateReason);
 
     /**
      * unregisters a cloud player
