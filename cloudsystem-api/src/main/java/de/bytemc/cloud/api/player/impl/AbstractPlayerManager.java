@@ -30,7 +30,7 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
         networkHandler.registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) ->
             this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {
                 cloudPlayer.setServer(packet.getServer());
-                eventHandler.call(new CloudPlayerUpdateEvent(cloudPlayer));
+                eventHandler.call(new CloudPlayerUpdateEvent(cloudPlayer, packet.getUpdateReason()));
             }));
 
         networkHandler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) ->
