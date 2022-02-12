@@ -113,7 +113,7 @@ public final class Wrapper extends CloudAPI {
             }
         };
 
-        CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
+        this.loggerProvider.logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }
 
     public static Wrapper getInstance() {

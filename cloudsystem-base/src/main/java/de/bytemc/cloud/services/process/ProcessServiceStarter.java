@@ -80,17 +80,17 @@ public record ProcessServiceStarter(IService service) {
     @SneakyThrows
     public ICommunicationPromise<IService> start() {
         final var communicationPromise = new CommunicationPromise<IService>();
-        final var command = this.arguments(this.service);
-
-        final var processBuilder = new ProcessBuilder(command).directory(new File("tmp/" + this.service.getName() + "/"));
-        processBuilder.redirectOutput(new File("tmp/" + this.service.getName() + "/wrapper.log"));
+        final var tmpDirectory = new File("tmp/" + this.service.getName());
+        final var processBuilder = new ProcessBuilder(this.arguments(this.service, tmpDirectory))
+            .directory(tmpDirectory);
+        processBuilder.redirectOutput(new File(tmpDirectory, "/wrapper.log"));
 
         ((SimpleService) this.service).setProcess(processBuilder.start());
         communicationPromise.setSuccess(this.service);
         return communicationPromise;
     }
 
-    public String[] arguments(final IService service) {
+    public List<String> arguments(final IService service, final File directory) {
         final List<String> arguments = new ArrayList<>(Arrays.asList(
             "java",
             "-XX:+UseG1GC",
@@ -123,8 +123,7 @@ public record ProcessServiceStarter(IService service) {
             "-Xmx" + service.getServiceGroup().getMemory() + "M"));
 
         final var wrapperFile = Paths.get("storage", "jars", "wrapper.jar");
-        final var applicationFile = new File("tmp/" + service.getName() + "/"
-            + service.getServiceGroup().getGameServerVersion().getJar());
+        final var applicationFile = new File(directory, service.getServiceGroup().getGameServerVersion().getJar());
 
         arguments.addAll(Arrays.asList(
             "-cp", wrapperFile.toAbsolutePath().toString(),
@@ -153,7 +152,7 @@ public record ProcessServiceStarter(IService service) {
             arguments.add("nogui");
         }
 
-        return arguments.toArray(new String[]{});
+        return arguments;
     }
 
 }
