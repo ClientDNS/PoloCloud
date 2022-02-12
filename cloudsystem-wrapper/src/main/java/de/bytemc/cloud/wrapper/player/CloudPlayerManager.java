@@ -61,6 +61,7 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     public void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer, @NotNull CloudPlayerUpdateEvent.UpdateReason updateReason) {
         Wrapper.getInstance().getClient()
             .sendPacket(new QueryPacket(new CloudPlayerUpdatePacket(cloudPlayer, updateReason), QueryPacket.QueryState.FIRST_RESPONSE));
+        Wrapper.getInstance().getEventHandler().call(new CloudPlayerUpdateEvent(cloudPlayer, updateReason));
     }
 
 
