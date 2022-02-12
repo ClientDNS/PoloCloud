@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.jar.Manifest;
 
 @Getter
 public class Base extends CloudAPI {
@@ -38,6 +39,8 @@ public class Base extends CloudAPI {
     private static Base instance;
     @Getter
     private final DefaultCommandSender commandSender = new DefaultCommandSender();
+
+    private String version;
 
     private final LoggerProvider loggerProvider;
     private final BaseNode node;
@@ -51,15 +54,26 @@ public class Base extends CloudAPI {
 
     private boolean running = true;
 
+
     public Base() {
         super(CloudAPITypes.NODE);
 
         instance = this;
 
+        try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
+            .nextElement().openStream()) {
+            this.version = new Manifest(stream).getMainAttributes().getValue("Version");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         new ExceptionHandler();
 
         this.loggerProvider = new SimpleLoggerProvider();
-        this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
+        this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
+            "§7Developed by: §bHttpMarco §7| " +
+            "Date: §b19.01.2020 §7| " +
+            "§bVersion: " + this.version, LogType.EMPTY);
         this.loggerProvider.logMessage(" ", LogType.EMPTY);
 
         // copy wrapper and plugin jar

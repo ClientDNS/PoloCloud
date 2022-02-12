@@ -79,6 +79,9 @@
                         <manifest>
                             <mainClass>de.bytemc.cloud.bootstrap.BaseBootstrap</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Version>${version}</Version>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
