@@ -1,4 +1,4 @@
-package de.bytemc.cloud.api.logger.complete;
+package de.bytemc.cloud.logger.complete;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;

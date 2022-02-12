@@ -79,6 +79,7 @@ public record ProcessServiceStarter(IService service) {
 
     @SneakyThrows
     public ICommunicationPromise<IService> start() {
+        final var time = System.currentTimeMillis();
         final var communicationPromise = new CommunicationPromise<IService>();
         final var command = this.arguments(this.service);
 
@@ -87,6 +88,7 @@ public record ProcessServiceStarter(IService service) {
 
         ((SimpleService) this.service).setProcess(processBuilder.start());
         communicationPromise.setSuccess(this.service);
+        System.out.println(System.currentTimeMillis() - time);
         return communicationPromise;
     }
 

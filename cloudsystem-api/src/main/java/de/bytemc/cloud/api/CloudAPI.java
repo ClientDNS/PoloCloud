@@ -5,23 +5,22 @@ import de.bytemc.cloud.api.command.SimpleCommandManager;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.events.EventHandler;
 import de.bytemc.cloud.api.events.IEventHandler;
+import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LoggerProvider;
-import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
-import de.bytemc.cloud.api.logger.exception.ExceptionHandler;
 import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.impl.NetworkHandler;
-import de.bytemc.network.master.cache.IConnectedClient;
-import de.bytemc.network.packets.IPacket;
+import de.bytemc.cloud.api.player.ICloudPlayerManager;
+import de.bytemc.cloud.api.services.IServiceManager;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
-public abstract class CloudAPI implements ICloudAPI {
+public abstract class CloudAPI {
 
     @Getter
     private static CloudAPI instance;
 
     private final CloudAPITypes cloudAPITypes;
-    private final LoggerProvider loggerProvider;
     private final CommandManager commandManager;
     private final INetworkHandler networkHandler;
     private final IEventHandler eventHandler;
@@ -29,16 +28,36 @@ public abstract class CloudAPI implements ICloudAPI {
     public CloudAPI(CloudAPITypes cloudAPITypes) {
         instance = this;
 
-        new ExceptionHandler();
-
         this.cloudAPITypes = cloudAPITypes;
-        this.loggerProvider = new SimpleLoggerProvider();
         this.networkHandler = new NetworkHandler();
         this.commandManager = new SimpleCommandManager();
         this.eventHandler = new EventHandler();
     }
 
+    /**
+     * @return the logger provider
+     */
+    public abstract LoggerProvider getLoggerProvider();
+
+    /**
+     * @return the command sender
+     */
     public abstract ICommandSender getCommandSender();
+
+    /**
+     * @return the group manager
+     */
+    public abstract @NotNull IGroupManager getGroupManager();
+
+    /**
+     * @return the service manager
+     */
+    public abstract @NotNull IServiceManager getServiceManager();
+
+    /**
+     * @return the player manager
+     */
+    public abstract @NotNull ICloudPlayerManager getCloudPlayerManager();
 
 }
 

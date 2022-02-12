@@ -1,4 +1,4 @@
-package de.bytemc.cloud.api.logger.exception;
+package de.bytemc.cloud.logger.exception;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,7 @@
-package de.bytemc.cloud.api.logger.builder;
+package de.bytemc.cloud.logger.builder;
 
 import com.google.common.base.Charsets;
-import de.bytemc.cloud.api.logger.complete.ConsoleAutoCompleteTool;
+import de.bytemc.cloud.logger.complete.ConsoleAutoCompleteTool;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;

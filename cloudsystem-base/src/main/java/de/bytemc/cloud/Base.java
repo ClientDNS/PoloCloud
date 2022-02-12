@@ -5,7 +5,8 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.api.services.impl.SimpleService;
@@ -14,6 +15,7 @@ import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.groups.SimpleGroupManager;
+import de.bytemc.cloud.logger.exception.ExceptionHandler;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
 import de.bytemc.cloud.services.ServiceManager;
@@ -37,6 +39,7 @@ public class Base extends CloudAPI {
     @Getter
     private final DefaultCommandSender commandSender = new DefaultCommandSender();
 
+    private final LoggerProvider loggerProvider;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
     private final IGroupManager groupManager;
@@ -53,8 +56,11 @@ public class Base extends CloudAPI {
 
         instance = this;
 
-        this.getLoggerProvider().logMessage("§7Cloudsystem > §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
-        this.getLoggerProvider().logMessage(" ", LogType.EMPTY);
+        new ExceptionHandler();
+
+        this.loggerProvider = new SimpleLoggerProvider();
+        this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
+        this.loggerProvider.logMessage(" ", LogType.EMPTY);
 
         // copy wrapper and plugin jar
         try {
@@ -131,4 +137,10 @@ public class Base extends CloudAPI {
     public boolean isRunning() {
         return this.running;
     }
+
+    @Override
+    public LoggerProvider getLoggerProvider() {
+        return this.loggerProvider;
+    }
+
 }

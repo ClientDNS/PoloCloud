@@ -1,4 +1,4 @@
-package de.bytemc.cloud.api.logger.exception;
+package de.bytemc.cloud.logger.exception;
 
 import com.google.common.base.Throwables;
 import de.bytemc.cloud.api.CloudAPI;

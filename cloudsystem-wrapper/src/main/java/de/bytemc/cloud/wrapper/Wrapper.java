@@ -7,10 +7,12 @@ import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
+import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.wrapper.groups.GroupManager;
+import de.bytemc.cloud.wrapper.logger.WrapperLoggerProvider;
 import de.bytemc.cloud.wrapper.network.WrapperClient;
 import de.bytemc.cloud.wrapper.player.CloudPlayerManager;
 import de.bytemc.cloud.wrapper.service.ServiceManager;
@@ -80,6 +82,7 @@ public final class Wrapper extends CloudAPI {
 
     private static Wrapper instance;
 
+    private final LoggerProvider loggerProvider;
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
@@ -93,6 +96,7 @@ public final class Wrapper extends CloudAPI {
 
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
+        this.loggerProvider = new WrapperLoggerProvider();
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager(property);
         this.cloudPlayerManager = new CloudPlayerManager();
@@ -114,6 +118,11 @@ public final class Wrapper extends CloudAPI {
 
     public static Wrapper getInstance() {
         return instance;
+    }
+
+    @Override
+    public LoggerProvider getLoggerProvider() {
+        return this.loggerProvider;
     }
 
     @Override

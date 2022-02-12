@@ -15,7 +15,9 @@ public interface LoggerProvider {
      * logs a message
      * @param text the text to log
      */
-    void logMessage(final @NotNull String text);
+    default void logMessage(final @NotNull String text) {
+        this.logMessage(text, LogType.INFO);
+    }
 
     /**
      * logs messages
