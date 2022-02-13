@@ -1,6 +1,5 @@
 package de.bytemc.cloud.plugin.bootstrap.proxy;
 
-import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
@@ -36,8 +35,11 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
 
         //update that the service is ready to use
         IService service = Wrapper.getInstance().thisService();
-        service.setServiceVisibility(ServiceVisibility.VISIBLE);
-        service.update();
+
+        if (service.getServiceGroup().isAutoUpdating()) {
+            service.setServiceVisibility(ServiceVisibility.VISIBLE);
+            service.update();
+        }
     }
 
     @Override
