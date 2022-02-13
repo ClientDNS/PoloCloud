@@ -134,6 +134,12 @@ public interface IServiceGroup {
     void edit(@NotNull Consumer<IServiceGroup> serviceGroupConsumer);
 
     /**
+     * get auto update state
+     * @return true if the group can auto-able update
+     */
+    boolean isAutoUpdating();
+
+    /**
      * updates the properties of the group
      */
     void update();

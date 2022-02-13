@@ -14,8 +14,11 @@ public class SpigotBootstrap extends JavaPlugin implements IPlugin {
     public void onEnable() {
         //update that the service is ready to use
         IService service = Wrapper.getInstance().thisService();
-        service.setServiceVisibility(ServiceVisibility.VISIBLE);
-        service.update();
+
+        if(service.getServiceGroup().isAutoUpdating()) {
+            service.setServiceVisibility(ServiceVisibility.VISIBLE);
+            service.update();
+        }
     }
 
     @Override
