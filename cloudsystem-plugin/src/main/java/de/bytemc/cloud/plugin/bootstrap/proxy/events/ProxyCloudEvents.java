@@ -52,7 +52,7 @@ public final class ProxyCloudEvents {
         NetworkManager.registerPacketListener(CloudPlayerSendServicePacket.class, (ctx, packet) -> {
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
             assert player != null;
-            if (player.getServer().getInfo().getName().equals(packet.getService())) return;
+            if (player.getServer() != null && player.getServer().getInfo().getName().equals(packet.getService())) return;
             player.connect(ProxyServer.getInstance().getServerInfo(packet.getService()));
         });
     }
