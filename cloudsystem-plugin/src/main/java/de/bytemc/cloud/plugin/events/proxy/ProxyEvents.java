@@ -71,7 +71,10 @@ public final class ProxyEvents implements Listener {
         final ServerPing response = event.getResponse();
         final ServerPing.Players players = response.getPlayers();
 
-        response.setPlayers(new ServerPing.Players(Wrapper.getInstance().thisService().getMaxPlayers(), playerManager.getCloudPlayerOnlineAmount(), players.getSample()));
+        players.setMax(Wrapper.getInstance().thisService().getMaxPlayers());
+        players.setOnline(this.playerManager.getCloudPlayerOnlineAmount());
+
+        response.setPlayers(players);
         event.setResponse(response);
     }
 
