@@ -2,7 +2,6 @@ package de.bytemc.cloud.plugin.events.proxy;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.events.CloudPlayerUpdateEvent;
-import de.bytemc.cloud.api.fallback.FallbackHandler;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.player.impl.SimpleCloudPlayer;
 import de.bytemc.cloud.api.services.IService;
@@ -13,7 +12,6 @@ import de.bytemc.cloud.wrapper.service.ServiceManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
@@ -32,14 +30,6 @@ public final class ProxyEvents implements Listener {
     }
 
     @EventHandler
-    public void handle(PreLoginEvent event) {
-        if (!FallbackHandler.isFallbackAvailable()) {
-            event.setCancelReason(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."));
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
     public void handle(LoginEvent event) {
         final var connection = event.getConnection();
 
@@ -51,9 +41,9 @@ public final class ProxyEvents implements Listener {
     public void handle(ServerConnectEvent event) {
         this.playerManager.getCloudPlayer(event.getPlayer().getUniqueId()).ifPresent(cloudPlayer -> {
             if (event.getTarget().getName().equalsIgnoreCase("fallback")) {
-                FallbackHandler.getLobbyFallbackOrNull().ifPresentOrElse(it -> {
-                    event.setTarget(ProxyServer.getInstance().getServerInfo(it.getName()));
-                    cloudPlayer.setServer(it);
+                this.getFallback(event.getPlayer()).ifPresentOrElse(service -> {
+                    event.setTarget(ProxyServer.getInstance().getServerInfo(service.getName()));
+                    cloudPlayer.setServer(service);
                     cloudPlayer.update();
                 }, () ->
                     event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden.")));
@@ -68,7 +58,7 @@ public final class ProxyEvents implements Listener {
                 cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
                     .getServiceByNameOrNull(event.getPlayer().getServer().getInfo().getName())));
                 cloudPlayer.update(CloudPlayerUpdateEvent.UpdateReason.SERVER_SWITCH);
-        });
+            });
     }
 
     @EventHandler
@@ -87,22 +77,21 @@ public final class ProxyEvents implements Listener {
 
     @EventHandler
     public void handle(final ServerKickEvent event) {
-        this.getFallback(event.getPlayer()).ifPresent(serverInfo -> {
-            event.setCancelled(true);
-            event.setCancelServer(serverInfo);
-        });
+        this.getFallback(event.getPlayer())
+            .ifPresent(service -> {
+                event.setCancelled(true);
+                event.setCancelServer(ProxyServer.getInstance().getServerInfo(service.getName()));
+            });
     }
 
-    //TODO CHECK FALLBACKHANDLER DUPLICATED?
-    private Optional<ServerInfo> getFallback(final ProxiedPlayer player) {
+    private Optional<IService> getFallback(final ProxiedPlayer player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
             .filter(service -> service.getServiceState() == ServiceState.ONLINE)
             .filter(service -> service.getServiceVisibility() == ServiceVisibility.VISIBLE)
             .filter(service -> !service.getServiceGroup().getGameServerVersion().isProxy())
             .filter(service -> service.getServiceGroup().isFallbackGroup())
             .filter(service -> (player.getServer() == null || !player.getServer().getInfo().getName().equals(service.getName())))
-            .min(Comparator.comparing(IService::getOnlinePlayers))
-            .map(service -> ProxyServer.getInstance().getServerInfo(service.getName()));
+            .min(Comparator.comparing(IService::getOnlinePlayers));
     }
 
 }
