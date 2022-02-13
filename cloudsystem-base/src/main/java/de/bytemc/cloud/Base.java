@@ -73,7 +73,7 @@ public class Base extends CloudAPI {
         this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
             "§7Developed by: §bHttpMarco §7| " +
             "Date: §b19.01.2020 §7| " +
-            "§bVersion: " + this.version, LogType.EMPTY);
+            "§7Version: §b" + this.version, LogType.EMPTY);
         this.loggerProvider.logMessage(" ", LogType.EMPTY);
 
         // copy wrapper and plugin jar
