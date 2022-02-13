@@ -25,6 +25,7 @@ public final class ConfigurationFileEditor {
 
     @SneakyThrows
     public ConfigurationFileEditor(final File file, final ConfigSplitSpacer splitSpacer) {
+        //noinspection UnstableApiUsage
         this.listWithSpaces = Files.readLines(file, StandardCharsets.UTF_8);
         this.lines = this.listWithSpaces.stream().map(this::removeFirstSpaces).collect(Collectors.toList());
 
@@ -60,9 +61,11 @@ public final class ConfigurationFileEditor {
             property[index] = line;
         });
 
+        //noinspection ResultOfMethodCallIgnored
         this.file.delete();
         try {
-            if (!this.file.exists()) file.createNewFile();
+            if (!this.file.exists()) //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
             final FileWriter fileWriter = new FileWriter(this.file);
             for (final String line : property) {
                 int index = this.getIndexFromLine(line);

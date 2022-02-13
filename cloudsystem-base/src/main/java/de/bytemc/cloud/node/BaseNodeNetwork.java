@@ -41,7 +41,7 @@ public final class BaseNodeNetwork {
                     Base.getInstance().getNode().getClient(it.getName())
                         .ifPresent(service -> service.sendPacket(packet.getPacket()));
                 } else {
-                    // TODO CHECK OTHER NODES AND SEND TO REDIRECT
+                    Base.getInstance().getNode().getClient(it.getServiceGroup().getNode()).ifPresent(node -> node.sendPacket(new RedirectPacket(packet.getClient(), packet)));
                 }
             }));
 

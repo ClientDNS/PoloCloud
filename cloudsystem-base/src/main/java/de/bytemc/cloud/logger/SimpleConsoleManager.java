@@ -45,9 +45,4 @@ public final class SimpleConsoleManager {
     public void shutdownReading() {
         this.consoleReadingThread.interrupt();
     }
-
-    public void handleInput(final String input) {
-
-    }
-
 }

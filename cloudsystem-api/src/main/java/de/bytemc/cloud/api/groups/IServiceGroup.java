@@ -79,7 +79,7 @@ public interface IServiceGroup {
     void setMaxOnlineService(int maxOnlineService);
 
     /**
-     * @return the maintenacne state
+     * @return the maintenance state
      */
     boolean isMaintenance();
 

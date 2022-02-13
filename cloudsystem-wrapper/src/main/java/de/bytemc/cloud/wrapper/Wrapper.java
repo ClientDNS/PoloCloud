@@ -2,7 +2,6 @@ package de.bytemc.cloud.wrapper;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
-import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.json.Document;
@@ -101,17 +100,7 @@ public final class Wrapper extends CloudAPI {
         this.serviceManager = new ServiceManager(property);
         this.cloudPlayerManager = new CloudPlayerManager();
         this.client = new WrapperClient(property.getService(), property.getHostname(), property.getPort());
-        this.commandSender = new ICommandSender() {
-            @Override
-            public void sendMessage(@NotNull String text) {
-                System.out.println(text);
-            }
-
-            @Override
-            public @NotNull ExecutorType getCommandType() {
-                return ExecutorType.INGAME;
-            }
-        };
+        this.commandSender = text -> System.out.println(text);
 
         this.loggerProvider.logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }

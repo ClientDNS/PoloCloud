@@ -3,6 +3,7 @@ package de.bytemc.cloud.database;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Getter
 @AllArgsConstructor
 public class DatabaseConfiguration {

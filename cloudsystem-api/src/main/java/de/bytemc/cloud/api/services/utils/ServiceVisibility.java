@@ -4,6 +4,6 @@ public enum ServiceVisibility {
 
     BLANK,
     VISIBLE,
-    INVISIBLE;
+    INVISIBLE
 
 }

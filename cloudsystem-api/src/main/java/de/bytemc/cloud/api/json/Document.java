@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import java.io.*;
 import java.lang.reflect.Type;
 
+@SuppressWarnings("ALL")
 public class Document {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

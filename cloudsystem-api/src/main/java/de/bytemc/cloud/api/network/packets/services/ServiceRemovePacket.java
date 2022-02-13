@@ -2,7 +2,6 @@ package de.bytemc.cloud.api.network.packets.services;
 
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.packets.NetworkByteBuf;
-import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

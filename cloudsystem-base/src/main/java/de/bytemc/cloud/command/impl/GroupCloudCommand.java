@@ -3,7 +3,6 @@ package de.bytemc.cloud.command.impl;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.DefaultGroup;
 import de.bytemc.cloud.api.groups.IServiceGroup;
@@ -16,7 +15,7 @@ import java.util.function.Consumer;
 public final class GroupCloudCommand extends CloudCommand {
 
     public GroupCloudCommand() {
-        super("group", "Manage the cloud groups", ExecutorType.CONSOLE);
+        super("group", "Manage the cloud groups");
     }
 
     @Override

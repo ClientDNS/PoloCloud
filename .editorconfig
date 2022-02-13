@@ -10,9 +10,6 @@ charset = utf-8
 indent_style = space
 indent_size = 4
 
-[*.{kt, kts}]
-ij_kotlin_imports_layout = *
-
 [*.{yml, yaml}]
 indent_style = space
 indent_size = 4

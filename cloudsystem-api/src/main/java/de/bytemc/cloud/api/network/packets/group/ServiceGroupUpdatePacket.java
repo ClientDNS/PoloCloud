@@ -4,7 +4,6 @@ import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.packets.NetworkByteBuf;
-import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

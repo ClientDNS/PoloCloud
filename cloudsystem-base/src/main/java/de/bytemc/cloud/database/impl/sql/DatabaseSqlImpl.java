@@ -34,7 +34,7 @@ public class DatabaseSqlImpl implements IDatabase {
             databaseConfiguration.getUser(), databaseConfiguration.getPassword());
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
-            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT, maintenance INT)");
+            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT, maintenance INT, autoUpdating INT)");
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The connection is now established to the database.");
     }
@@ -50,11 +50,11 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @Override
     public void addGroup(final @NotNull IServiceGroup serviceGroup) {
-        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers, motd, maintenance) VALUES (" +
+        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers, motd, maintenance, autoUpdating) VALUES (" +
             "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0) +
             ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "', " + serviceGroup.getDefaultMaxPlayers() +
-            ",'" + serviceGroup.getMotd() + "', '" + (serviceGroup.isMaintenance() ? 1 : 0) + "');");
+            ",'" + serviceGroup.getMotd() + "', '" + (serviceGroup.isMaintenance() ? 1 : 0) + "', '" + (serviceGroup.isAutoUpdating() ? 1 : 0) + "');");
     }
 
     @Override
@@ -79,6 +79,7 @@ public class DatabaseSqlImpl implements IDatabase {
                     resultSet.getBoolean("staticService"),
                     resultSet.getBoolean("fallbackGroup"),
                     resultSet.getBoolean("maintenance"),
+                    resultSet.getBoolean("autoUpdating"),
                     GameServerVersion.getVersionByTitle(resultSet.getString("version")));
                 groups.add(serviceGroup);
             }
@@ -100,13 +101,12 @@ public class DatabaseSqlImpl implements IDatabase {
         return defaultValue;
     }
 
-    public int executeUpdate(final String query) {
+    public void executeUpdate(final String query) {
         Objects.requireNonNull(this.connection, "Try to update a statement, but the connection is null.");
         try (var preparedStatement = this.connection.prepareStatement(query)) {
-            return preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
         } catch (SQLException exception) {
             exception.printStackTrace();
-            return -1;
         }
     }
 

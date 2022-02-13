@@ -21,9 +21,8 @@ public interface CommandManager {
     /**
      * executes a command
      * @param command the command to execute
-     * @return true if success
      */
-    boolean execute(@NotNull String command);
+    void execute(@NotNull String command);
 
     /**
      * gets all cached commands

@@ -1,5 +1,6 @@
 package de.bytemc.cloud.wrapper;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class PropertyFile {
 
     private final String node;

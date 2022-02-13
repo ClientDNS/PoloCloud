@@ -18,10 +18,7 @@ public class CloudPlayerUpdateEvent extends DefaultPlayerEvent {
     }
 
     public enum UpdateReason {
-
-        UNKNOWN,
-        SERVER_SWITCH;
-
+        UNKNOWN, SERVER_SWITCH
     }
 
 }

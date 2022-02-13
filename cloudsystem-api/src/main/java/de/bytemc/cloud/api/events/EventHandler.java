@@ -31,7 +31,7 @@ public class EventHandler implements IEventHandler {
 
         //service state update event
         NetworkManager.registerPacketListener(ServiceUpdatePacket.class, (ctx, packet) ->
-            this.call(new CloudServiceUpdateEvent(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(packet.getService()))));
+            CloudAPI.getInstance().getServiceManager().getService(packet.getService()).ifPresent(it -> this.call(new CloudServiceUpdateEvent(it))));
 
         // service group update event
         NetworkManager.registerPacketListener(ServiceGroupUpdatePacket.class, (ctx, packet) ->
@@ -45,6 +45,7 @@ public class EventHandler implements IEventHandler {
         this.events.put(clazz, consumers);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends ICloudEvent> void call(@NotNull T t) {
         this.events.getOrDefault(t.getClass(), Lists.newArrayList()).forEach(it -> it.accept(t));
     }

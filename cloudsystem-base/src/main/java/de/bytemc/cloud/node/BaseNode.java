@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 @Getter
 public final class BaseNode extends AbstractNodeClustering {
@@ -54,7 +55,7 @@ public final class BaseNode extends AbstractNodeClustering {
 
         // set online
         final IService service = Base.getInstance().getServiceManager().getServiceByNameOrNull(clusteringConnectedClient.getName());
-        service.setServiceState(ServiceState.ONLINE);
+        Objects.requireNonNull(service).setServiceState(ServiceState.ONLINE);
 
         // update cache
         clusteringConnectedClient.sendPacket(new ServiceGroupCacheUpdatePacket(Base.getInstance().getGroupManager().getAllCachedServiceGroups()));

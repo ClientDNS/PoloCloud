@@ -10,9 +10,4 @@ public interface ICommandSender {
      */
     void sendMessage(@NotNull String text);
 
-    /**
-     * @return the command type
-     */
-    @NotNull ExecutorType getCommandType();
-
 }

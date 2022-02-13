@@ -2,7 +2,6 @@ package de.bytemc.cloud.command.impl;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IService;
@@ -14,7 +13,7 @@ public final class ServiceCloudCommand extends CloudCommand {
     private final CloudAPI cloudAPI;
 
     public ServiceCloudCommand() {
-        super("service", "Manage services", ExecutorType.CONSOLE, "ser");
+        super("service", "Manage services", "ser");
         this.cloudAPI = CloudAPI.getInstance();
     }
 
@@ -41,9 +40,7 @@ public final class ServiceCloudCommand extends CloudCommand {
             }, () -> log.logMessage("This service does not exists.", LogType.WARNING));
             return;
         } else if (args.length == 4) {
-            if (args[0].equalsIgnoreCase("start")) {
-                // TODO
-            }
+            // TODO
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
             this.cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {

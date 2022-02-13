@@ -5,8 +5,6 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupUpdatePacket;
-import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
-import de.bytemc.cloud.api.services.IService;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;

@@ -2,14 +2,13 @@ package de.bytemc.cloud.command.impl;
 
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.command.executor.ExecutorType;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.logger.LoggerProvider;
 
 public final class InfoCloudCommand extends CloudCommand {
 
     public InfoCloudCommand() {
-        super("info", "Prints information about the cloud", ExecutorType.CONSOLE);
+        super("info", "Prints information about the cloud");
     }
 
     @Override

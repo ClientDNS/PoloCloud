@@ -83,7 +83,7 @@ public final class SimpleService implements IService {
     }
 
     @Override
-    public void sendPacket(IPacket packet) {
+    public void sendPacket(@NotNull IPacket packet) {
         CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
     }
 }
