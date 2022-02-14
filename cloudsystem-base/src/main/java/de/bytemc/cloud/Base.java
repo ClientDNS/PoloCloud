@@ -3,6 +3,8 @@ package de.bytemc.cloud;
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.common.manifest.IManifestHelper;
+import de.bytemc.cloud.api.common.manifest.impl.SimpleManifestHelper;
 import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
@@ -17,6 +19,7 @@ import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.exception.DefaultExceptionCodes;
 import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.manifest.keys.RegisteredManifestKeys;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
 import de.bytemc.cloud.services.ServiceManager;
@@ -30,13 +33,13 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
-import java.util.jar.Manifest;
 
 @Getter
 public class Base extends CloudAPI {
 
     @Getter
     private static Base instance;
+    private final IManifestHelper manifestHelper;
     private final LoggerProvider loggerProvider;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
@@ -54,13 +57,10 @@ public class Base extends CloudAPI {
 
         instance = this;
 
-        this.version = ErrorHandler.defaultInstance().runOrDefault(() -> {
-            final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
-                .nextElement().openStream();
-            String version = new Manifest(stream).getMainAttributes().getValue("Version");
-            stream.close();
-            return version;
-        }, "Unknown");
+        this.manifestHelper = new SimpleManifestHelper(this.getClass());
+
+        this.version = this.manifestHelper.getValueOfManifestEntryOrDefault(RegisteredManifestKeys.PROJECT_VERSION, "Unknown");
+
 
 //        new ExceptionHandler();
 
