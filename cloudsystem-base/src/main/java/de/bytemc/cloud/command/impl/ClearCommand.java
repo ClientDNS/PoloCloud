@@ -4,9 +4,9 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 
-public final class ClearCloudCommand extends CloudCommand {
+public final class ClearCommand extends CloudCommand {
 
-    public ClearCloudCommand() {
+    public ClearCommand() {
         super("clear", "Clears the console");
     }
 

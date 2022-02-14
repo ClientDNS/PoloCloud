@@ -8,11 +8,11 @@ import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.services.ServiceManager;
 
-public final class ServiceCloudCommand extends CloudCommand {
+public final class ServiceCommand extends CloudCommand {
 
     private final CloudAPI cloudAPI;
 
-    public ServiceCloudCommand() {
+    public ServiceCommand() {
         super("service", "Manage services", "ser");
         this.cloudAPI = CloudAPI.getInstance();
     }

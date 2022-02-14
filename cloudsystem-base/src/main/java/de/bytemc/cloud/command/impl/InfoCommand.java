@@ -5,9 +5,9 @@ import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.logger.LoggerProvider;
 
-public final class InfoCloudCommand extends CloudCommand {
+public final class InfoCommand extends CloudCommand {
 
-    public InfoCloudCommand() {
+    public InfoCommand() {
         super("info", "Prints information about the cloud");
     }
 

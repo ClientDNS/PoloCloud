@@ -4,9 +4,9 @@ import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 
-public final class ShutdownCloudCommand extends CloudCommand {
+public final class ShutdownCommand extends CloudCommand {
 
-    public ShutdownCloudCommand() {
+    public ShutdownCommand() {
         super("stop", "Stops the cloudsystem", "exit");
     }
 

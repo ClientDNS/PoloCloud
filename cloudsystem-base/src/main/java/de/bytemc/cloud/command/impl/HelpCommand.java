@@ -5,9 +5,9 @@ import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.command.executor.ICommandSender;
 
-public final class HelpCloudCommand extends CloudCommand {
+public final class HelpCommand extends CloudCommand {
 
-    public HelpCloudCommand() {
+    public HelpCommand() {
         super("help", "All commands and help descriptions");
     }
 

@@ -6,6 +6,7 @@ import de.bytemc.cloud.api.CloudAPITypes;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
@@ -95,8 +96,14 @@ public class Base extends CloudAPI {
         this.cloudPlayerManager = new CloudPlayerManager();
         this.node = new BaseNode(NodeConfig.get());
 
-        // registered commands
-        this.getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
+        // register commands
+        this.getCommandManager().registerCommands(
+            new ClearCommand(),
+            new GroupCommand(),
+            new HelpCommand(),
+            new InfoCommand(),
+            new ServiceCommand(),
+            new ShutdownCommand());
 
         this.queueService = new QueueService();
 
