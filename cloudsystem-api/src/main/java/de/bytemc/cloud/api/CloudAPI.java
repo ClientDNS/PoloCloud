@@ -15,6 +15,8 @@ import de.bytemc.cloud.api.services.IServiceManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.SQLException;
+
 @Getter
 public abstract class CloudAPI {
 
@@ -31,13 +33,21 @@ public abstract class CloudAPI {
 
         this.cloudAPITypes = cloudAPITypes;
 
-        ErrorHandler.defaultInstance().registerDefaultThreadExceptionHandler().doAlways((throwable, errorHandler) -> {
-            if (getLoggerProvider() == null) {
-                System.err.println("§7Caught an §cunexpected error §7(§b" + throwable.getMessage() + "§7)");
-                return;
-            }
-            getLoggerProvider().logMessage("§7Caught an §cunexpected error §7(§b" + throwable.getMessage() + "§7)", LogType.ERROR);
-        });
+        ErrorHandler.defaultInstance().registerDefaultThreadExceptionHandler()
+            .onError(SQLException.class, ((throwable, errorHandler) -> {
+                if (getLoggerProvider() == null) {
+                    System.err.println("SQLError occurred, check your database credentials! (" + throwable.getMessage() + ")");
+                    return;
+                }
+                getLoggerProvider().logMessage("§cSQLError occurred§7, check your §bdatabase credentials! §7(§b" + throwable.getMessage() + "§7)", LogType.ERROR);
+            }))
+            .orElse((throwable, errorHandler) -> {
+                if (getLoggerProvider() == null) {
+                    System.err.println("Caught an unexpected error (" + throwable.getMessage() + ")");
+                    return;
+                }
+                getLoggerProvider().logMessage("§7Caught an §cunexpected error §7(§b" + throwable.getMessage() + "§7)", LogType.ERROR);
+            });
 
         this.networkHandler = new NetworkHandler();
         this.commandManager = new SimpleCommandManager();
