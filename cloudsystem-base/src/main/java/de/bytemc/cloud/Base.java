@@ -13,6 +13,7 @@ import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
+import de.bytemc.cloud.exception.DefaultExceptionCodes;
 import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.node.BaseNode;
@@ -61,6 +62,8 @@ public class Base extends CloudAPI {
         }
 
 //        new ExceptionHandler();
+
+        new DefaultExceptionCodes();
 
         this.loggerProvider = new SimpleLoggerProvider();
         this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
