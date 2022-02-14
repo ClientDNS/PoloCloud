@@ -4,7 +4,9 @@ import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.command.SimpleCommandManager;
 import de.bytemc.cloud.api.events.EventHandler;
 import de.bytemc.cloud.api.events.IEventHandler;
+import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
+import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.impl.NetworkHandler;
@@ -28,6 +30,15 @@ public abstract class CloudAPI {
         instance = this;
 
         this.cloudAPITypes = cloudAPITypes;
+
+        ErrorHandler.defaultInstance().registerDefaultThreadExceptionHandler().doAlways((throwable, errorHandler) -> {
+            if (getLoggerProvider() == null) {
+                System.err.println("§7Caught an §cunexpected error §7(§b" + throwable.getMessage() + "§7)");
+                return;
+            }
+            getLoggerProvider().logMessage("§7Caught an §cunexpected error §7(§b" + throwable.getMessage() + "§7)", LogType.ERROR);
+        });
+
         this.networkHandler = new NetworkHandler();
         this.commandManager = new SimpleCommandManager();
         this.eventHandler = new EventHandler();

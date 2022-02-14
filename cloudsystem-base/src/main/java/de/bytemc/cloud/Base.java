@@ -6,16 +6,15 @@ import de.bytemc.cloud.api.CloudAPITypes;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
-import de.bytemc.cloud.command.impl.*;
-import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.api.services.impl.SimpleService;
+import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.groups.SimpleGroupManager;
-import de.bytemc.cloud.logger.exception.ExceptionHandler;
+import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
 import de.bytemc.cloud.services.ServiceManager;
@@ -37,19 +36,15 @@ public class Base extends CloudAPI {
 
     @Getter
     private static Base instance;
-
-    private String version;
-
     private final LoggerProvider loggerProvider;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
-
     private final GroupTemplateService groupTemplateService;
     private final QueueService queueService;
-
+    private String version;
     private boolean running = true;
 
 
@@ -65,7 +60,7 @@ public class Base extends CloudAPI {
             e.printStackTrace();
         }
 
-        new ExceptionHandler();
+//        new ExceptionHandler();
 
         this.loggerProvider = new SimpleLoggerProvider();
         this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
