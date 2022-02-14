@@ -1,4 +1,4 @@
-package de.bytemc.cloud.plugin.events.proxy;
+package de.bytemc.cloud.plugin.bootstrap.proxy.events;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.events.CloudPlayerUpdateEvent;

@@ -6,7 +6,7 @@ import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.cloud.plugin.IPlugin;
 import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyCloudEvents;
 import de.bytemc.cloud.plugin.bootstrap.proxy.reconnect.ReconnectHandlerImpl;
-import de.bytemc.cloud.plugin.events.proxy.ProxyEvents;
+import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyEvents;
 import de.bytemc.cloud.wrapper.Wrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ListenerInfo;
