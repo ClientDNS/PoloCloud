@@ -41,11 +41,8 @@ public final class ProxyEvents implements Listener {
     public void handle(ServerConnectEvent event) {
         if (event.getReason() != ServerConnectEvent.Reason.JOIN_PROXY) return;
         this.playerManager.getCloudPlayer(event.getPlayer().getUniqueId()).ifPresent(cloudPlayer ->
-            this.getFallback(event.getPlayer()).ifPresentOrElse(service -> {
-                event.setTarget(ProxyServer.getInstance().getServerInfo(service.getName()));
-                cloudPlayer.setServer(service);
-                cloudPlayer.update();
-            }, () ->
+            this.getFallback(event.getPlayer()).ifPresentOrElse(service ->
+                event.setTarget(ProxyServer.getInstance().getServerInfo(service.getName())), () ->
                 event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."))));
     }
 
