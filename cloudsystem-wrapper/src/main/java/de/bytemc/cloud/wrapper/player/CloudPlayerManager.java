@@ -42,9 +42,9 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void unregisterCloudPlayer(@NotNull UUID uuid, @NotNull String username) {
+    public void unregisterCloudPlayer(@NotNull UUID uuid) {
         Wrapper.getInstance().getEventHandler().call(new CloudPlayerDisconnectEvent(this.cachedCloudPlayers.remove(uuid)));
-        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerDisconnectPacket(uuid, username), QueryPacket.QueryState.FIRST_RESPONSE));
+        Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerDisconnectPacket(uuid), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 
     @Override

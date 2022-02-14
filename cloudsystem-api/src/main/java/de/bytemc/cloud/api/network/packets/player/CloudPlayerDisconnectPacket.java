@@ -14,18 +14,15 @@ import java.util.UUID;
 public class CloudPlayerDisconnectPacket implements IPacket {
 
     private UUID uuid;
-    private String name;
 
     @Override
     public void write(NetworkByteBuf byteBuf) {
         byteBuf.writeUUID(this.uuid);
-        byteBuf.writeString(this.name);
     }
 
     @Override
     public void read(NetworkByteBuf byteBuf) {
         this.uuid = byteBuf.readUUID();
-        this.name = byteBuf.readString();
     }
 
 }

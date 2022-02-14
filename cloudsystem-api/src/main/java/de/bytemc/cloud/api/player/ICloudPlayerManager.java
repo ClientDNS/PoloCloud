@@ -73,9 +73,8 @@ public interface ICloudPlayerManager {
     /**
      * unregisters a cloud player
      * @param uniqueId the unique id of the player
-     * @param username the username of the player
      */
-    void unregisterCloudPlayer(@NotNull UUID uniqueId, @NotNull String username);
+    void unregisterCloudPlayer(@NotNull UUID uniqueId);
 
     /**
      * sens a message to a cloud player

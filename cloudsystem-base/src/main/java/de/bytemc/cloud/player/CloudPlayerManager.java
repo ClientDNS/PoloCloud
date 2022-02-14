@@ -26,7 +26,7 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void unregisterCloudPlayer(final @NotNull UUID uuid, final @NotNull String name) {
+    public void unregisterCloudPlayer(final @NotNull UUID uuid) {
         this.cachedCloudPlayers.remove(uuid);
     }
 

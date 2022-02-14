@@ -58,7 +58,7 @@ public final class ProxyEvents implements Listener {
 
     @EventHandler
     public void handle(PlayerDisconnectEvent event) {
-        playerManager.unregisterCloudPlayer(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+        this.playerManager.unregisterCloudPlayer(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
