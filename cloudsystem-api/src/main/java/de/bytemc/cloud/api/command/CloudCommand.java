@@ -1,6 +1,6 @@
 package de.bytemc.cloud.api.command;
 
-import de.bytemc.cloud.api.command.executor.ICommandSender;
+import de.bytemc.cloud.api.CloudAPI;
 import lombok.Getter;
 
 @Getter
@@ -15,6 +15,6 @@ public abstract class CloudCommand {
         this.alias = alias;
     }
 
-    public abstract void execute(ICommandSender sender, String[] args);
+    public abstract void execute(CloudAPI cloudAPI, String[] args);
 
 }

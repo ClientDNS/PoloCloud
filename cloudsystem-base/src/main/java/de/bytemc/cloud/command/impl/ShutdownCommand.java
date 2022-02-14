@@ -1,8 +1,8 @@
 package de.bytemc.cloud.command.impl;
 
 import de.bytemc.cloud.Base;
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.command.executor.ICommandSender;
 
 public final class ShutdownCommand extends CloudCommand {
 
@@ -11,7 +11,7 @@ public final class ShutdownCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(ICommandSender sender, String[] args) {
+    public void execute(CloudAPI cloudAPI, String[] args) {
         Base.getInstance().onShutdown();
     }
 

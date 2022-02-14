@@ -2,7 +2,6 @@ package de.bytemc.cloud.command.impl;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.command.executor.ICommandSender;
 
 public final class ClearCommand extends CloudCommand {
 
@@ -11,8 +10,8 @@ public final class ClearCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(ICommandSender sender, String[] args) {
-        CloudAPI.getInstance().getLoggerProvider().clearConsole();
+    public void execute(CloudAPI cloudAPI, String[] args) {
+        cloudAPI.getLoggerProvider().clearConsole();
     }
 
 }

@@ -2,7 +2,6 @@ package de.bytemc.cloud.api;
 
 import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.command.SimpleCommandManager;
-import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.events.EventHandler;
 import de.bytemc.cloud.api.events.IEventHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
@@ -38,11 +37,6 @@ public abstract class CloudAPI {
      * @return the logger provider
      */
     public abstract LoggerProvider getLoggerProvider();
-
-    /**
-     * @return the command sender
-     */
-    public abstract ICommandSender getCommandSender();
 
     /**
      * @return the group manager

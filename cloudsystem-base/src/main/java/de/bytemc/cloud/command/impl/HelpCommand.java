@@ -3,7 +3,6 @@ package de.bytemc.cloud.command.impl;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.CommandManager;
-import de.bytemc.cloud.api.command.executor.ICommandSender;
 
 public final class HelpCommand extends CloudCommand {
 
@@ -12,12 +11,11 @@ public final class HelpCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(ICommandSender sender, String[] args) {
+    public void execute(CloudAPI cloudAPI, String[] args) {
+        CommandManager manager = cloudAPI.getCommandManager();
 
-        CommandManager manager = CloudAPI.getInstance().getCommandManager();
-
-        CloudAPI.getInstance().getLoggerProvider().logMessage("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
-        manager.getCachedCloudCommands().forEach(it -> CloudAPI.getInstance().getLoggerProvider().logMessage("§b" + it.getCommandName() + getAlias(it) + " - " + it.getDescription()));
+        cloudAPI.getLoggerProvider().logMessage("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
+        manager.getCachedCloudCommands().forEach(it -> cloudAPI.getLoggerProvider().logMessage("§b" + it.getCommandName() + getAlias(it) + " - " + it.getDescription()));
     }
 
     private String getAlias(CloudCommand command) {

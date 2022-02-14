@@ -1,6 +1,5 @@
 package de.bytemc.cloud.wrapper.logger;
 
-import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerAnsiFactory;
 import de.bytemc.cloud.api.logger.LoggerProvider;
@@ -15,7 +14,7 @@ public class WrapperLoggerProvider implements LoggerProvider {
 
     @Override
     public void logMessage(@NotNull String text, @NotNull LogType logType) {
-        CloudAPI.getInstance().getCommandSender().sendMessage(text);
+        System.out.println(text);
     }
 
     @Override

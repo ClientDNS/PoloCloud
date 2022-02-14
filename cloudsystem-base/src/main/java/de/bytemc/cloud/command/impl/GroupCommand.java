@@ -3,7 +3,6 @@ package de.bytemc.cloud.command.impl;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.DefaultGroup;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.logger.LogType;
@@ -19,10 +18,10 @@ public final class GroupCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(ICommandSender sender, String[] args) {
+    public void execute(CloudAPI cloudAPI, String[] args) {
 
-        var groupManager = CloudAPI.getInstance().getGroupManager();
-        var log = CloudAPI.getInstance().getLoggerProvider();
+        var groupManager = cloudAPI.getGroupManager();
+        var log = cloudAPI.getLoggerProvider();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
@@ -71,8 +70,8 @@ public final class GroupCommand extends CloudCommand {
             }
             groupManager.removeServiceGroup(serviceGroup);
 
-            CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(serviceGroup)
-                .forEach(it -> ((ServiceManager) CloudAPI.getInstance().getServiceManager()).shutdownService(it));
+            cloudAPI.getServiceManager().getAllServicesByGroup(serviceGroup)
+                .forEach(it -> ((ServiceManager) cloudAPI.getServiceManager()).shutdownService(it));
 
             log.logMessage("The group '§b" + name + "§7' is now deleted.");
             return;

@@ -11,7 +11,6 @@ import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.api.services.impl.SimpleService;
-import de.bytemc.cloud.command.DefaultCommandSender;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
@@ -38,8 +37,6 @@ public class Base extends CloudAPI {
 
     @Getter
     private static Base instance;
-    @Getter
-    private final DefaultCommandSender commandSender = new DefaultCommandSender();
 
     private String version;
 

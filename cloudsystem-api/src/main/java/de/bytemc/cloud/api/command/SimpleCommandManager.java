@@ -27,7 +27,7 @@ public class SimpleCommandManager implements CommandManager {
                .orElse(null);
             if (cloudCommand == null) return;
             args.remove(0);
-            cloudCommand.execute(CloudAPI.getInstance().getCommandSender(), args.toArray(new String[]{}));
+            cloudCommand.execute(CloudAPI.getInstance(), args.toArray(new String[]{}));
         }
     }
 
