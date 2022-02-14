@@ -3,6 +3,7 @@ package de.bytemc.cloud;
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
@@ -26,7 +27,6 @@ import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
@@ -45,7 +45,7 @@ public class Base extends CloudAPI {
     private final ICloudPlayerManager cloudPlayerManager;
     private final GroupTemplateService groupTemplateService;
     private final QueueService queueService;
-    private String version;
+    private final String version;
     private boolean running = true;
 
 
@@ -54,12 +54,13 @@ public class Base extends CloudAPI {
 
         instance = this;
 
-        try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
-            .nextElement().openStream()) {
-            this.version = new Manifest(stream).getMainAttributes().getValue("Version");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.version = ErrorHandler.defaultInstance().runOrDefault(() -> {
+            final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
+                .nextElement().openStream();
+            String version = new Manifest(stream).getMainAttributes().getValue("Version");
+            stream.close();
+            return version;
+        }, "Unknown");
 
 //        new ExceptionHandler();
 
@@ -73,16 +74,15 @@ public class Base extends CloudAPI {
         this.loggerProvider.logMessage(" ", LogType.EMPTY);
 
         // copy wrapper and plugin jar
-        try {
+        ErrorHandler.defaultInstance().runOnly(() -> {
             final File storageDirectory = new File("storage/jars");
 
             Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
                 new File(storageDirectory, "wrapper.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("plugin.jar")),
                 new File(storageDirectory, "plugin.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            return null;
+        });
 
         this.databaseManager = new DatabaseManager();
         this.groupManager = new SimpleGroupManager();
@@ -126,23 +126,19 @@ public class Base extends CloudAPI {
             });
 
         // delete wrapper and plugin jars
-        try {
+        ErrorHandler.defaultInstance().runOnly(() -> {
             final File storageDirectory = new File("storage/jars");
 
             Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
             Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            return null;
+        });
 
         ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
-            .addCompleteListener(voidICommunicationPromise -> {
-                try {
-                    FileUtils.deleteDirectory(new File("tmp"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            })
+            .addCompleteListener(voidICommunicationPromise -> ErrorHandler.defaultInstance().runOnly(() -> {
+                FileUtils.deleteDirectory(new File("tmp"));
+                return null;
+            }))
             .addResultListener(unused -> {
                 this.getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
                 ((SimpleLoggerProvider) this.getLoggerProvider()).getConsoleManager().shutdownReading();

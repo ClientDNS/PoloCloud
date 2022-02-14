@@ -5,10 +5,7 @@ import de.bytemc.cloud.api.exception.matcher.MatcherFactory;
 import de.bytemc.cloud.api.exception.matcher.impl.ErrorMatcher;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -341,13 +338,30 @@ public class ErrorHandler {
     }
 
     /**
+     * Runs one {@link Callable}, when this fails, it tries
+     * the next, until one success, this value will be returned
+     * <p>
+     * Via {@link #runUntilSuccess(Object, List)}
+     *
+     * @param defaultValue the defaultValue, which will be
+     *                     returned if all actions throw an
+     *                     exception
+     * @param tries        the actions, that will be tired to call
+     * @param <T>          the Class of the Callable
+     * @return the Object, which was returned of the Callable
+     */
+    public <T> T runUntilSuccess(T defaultValue, @NotNull Callable<T>... tries) {
+        return runUntilSuccess(defaultValue, Arrays.stream(tries).toList());
+    }
+
+    /**
      * Runs a {@link Callable} can be Method or something else.
      * This method is useful, if the other method could throw an Exception
      * Doesn't return anything
      *
      * @param callable the Callable which will be called
      */
-    public void runOnly(Callable callable) {
+    public void runOnly(Callable<Void> callable) {
         try {
             callable.call();
         } catch (Exception exception) {

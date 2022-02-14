@@ -8,4 +8,5 @@ public record ErrorMatcher(Class<? extends Exception> errorClass) implements Mat
     public boolean matches(Throwable throwable) {
         return errorClass.isInstance(throwable);
     }
+
 }
