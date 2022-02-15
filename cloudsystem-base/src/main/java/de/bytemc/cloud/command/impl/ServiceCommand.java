@@ -20,7 +20,7 @@ public final class ServiceCommand extends CloudCommand {
             for (final IService service : cloudAPI.getServiceManager().getAllCachedServices()) {
                 log.logMessage("Name of service '§b" + service.getName()
                     + "§7' (§7State of service '§b" + service.getServiceState().getName()
-                    + "§7' | Node: '" + service.getServiceGroup().getNode() + "')");
+                    + "§7' | Node: '" + service.getGroup().getNode() + "')");
             }
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("stop")) {
@@ -41,8 +41,8 @@ public final class ServiceCommand extends CloudCommand {
             cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
                 log.logMessage("Service information:");
                 log.logMessage("Name: §b" + service.getName());
-                log.logMessage("ID: §b" + service.getServiceID());
-                log.logMessage("Group: §b" + service.getServiceGroup().getName());
+                log.logMessage("ID: §b" + service.getServiceId());
+                log.logMessage("Group: §b" + service.getGroup().getName());
                 log.logMessage("Host: §b" + service.getHostName());
                 log.logMessage("Port: §b" + service.getPort());
             }, () -> log.logMessage("The service does not exists.", LogType.WARNING));

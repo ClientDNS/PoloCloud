@@ -22,11 +22,11 @@ public final class GroupTemplateService {
     }
 
     public void copyTemplates(IService service) throws IOException {
-        var serviceFolder = new File("tmp/" + service.getName() + "/");
+        final var serviceFolder = new File("tmp/" + service.getName() + "/");
         FileUtils.copyDirectory(new File(EVERY_FOLDER), serviceFolder);
-        FileUtils.copyDirectory(new File(service.getServiceGroup().getGameServerVersion().isProxy() ? EVERY_PROXY_FOLDER : EVERY_SERVICE_FOLDER), serviceFolder);
+        FileUtils.copyDirectory(new File(service.getGroup().getGameServerVersion().isProxy() ? EVERY_PROXY_FOLDER : EVERY_SERVICE_FOLDER), serviceFolder);
 
-        var templateDirection = new File("templates/" + service.getServiceGroup().getTemplate());
+        final var templateDirection = new File("templates/" + service.getGroup().getTemplate());
         if (templateDirection.exists()) {
             FileUtils.copyDirectory(templateDirection, serviceFolder);
         }

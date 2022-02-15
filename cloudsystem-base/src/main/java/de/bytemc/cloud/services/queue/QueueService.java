@@ -26,7 +26,7 @@ public final class QueueService {
         if (this.minBootableServiceExists()) return;
 
         final List<IService> services = CloudAPI.getInstance().getServiceManager().getAllServicesByState(ServiceState.PREPARED)
-            .stream().filter(it -> it.getServiceGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())).toList();
+            .stream().filter(service -> service.getGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())).toList();
         if (services.isEmpty()) return;
         ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(services.get(0));
     }
@@ -56,7 +56,7 @@ public final class QueueService {
 
     public int getAmountOfGroupServices(final IServiceGroup serviceGroup) {
         return (int) CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
-            .filter(it -> it.getServiceGroup().equals(serviceGroup)).count();
+            .filter(service -> service.getGroup().equals(serviceGroup)).count();
     }
 
     private int getPossibleServiceIDByGroup(final IServiceGroup serviceGroup) {
@@ -66,7 +66,7 @@ public final class QueueService {
     }
 
     private boolean isServiceIDAlreadyExists(final IServiceGroup serviceGroup, int id) {
-        return CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(serviceGroup).stream().anyMatch(it -> id == it.getServiceID());
+        return CloudAPI.getInstance().getServiceManager().getAllServicesByGroup(serviceGroup).stream().anyMatch(it -> id == it.getServiceId());
     }
 
 }

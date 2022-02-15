@@ -39,8 +39,8 @@ import java.util.jar.JarInputStream;
 @Setter
 public class LocalService implements IService {
 
-    private final IServiceGroup serviceGroup;
-    private final int serviceID;
+    private final IServiceGroup group;
+    private final int serviceId;
     private final int port;
     private final String hostName;
 
@@ -55,13 +55,13 @@ public class LocalService implements IService {
     private Process process;
 
     public LocalService(final IServiceGroup group, final int id, final int port, final String hostname) {
-        this.serviceGroup = group;
-        this.serviceID = id;
+        this.group = group;
+        this.serviceId = id;
         this.port = port;
         this.hostName = hostname;
-        assert serviceGroup != null;
-        this.motd = this.serviceGroup.getMotd();
-        this.maxPlayers = this.serviceGroup.getDefaultMaxPlayers();
+        assert this.group != null;
+        this.motd = this.group.getMotd();
+        this.maxPlayers = this.group.getDefaultMaxPlayers();
 
         this.workingDirectory = new File("tmp/" + this.getName());
     }
@@ -73,7 +73,7 @@ public class LocalService implements IService {
         // add statistic to service
         SimpleStatisticManager.registerStartingProcess(this);
 
-        this.getServiceGroup().getGameServerVersion().download();
+        this.group.getGameServerVersion().download();
 
         // create tmp file
         FileUtils.forceMkdir(this.workingDirectory);
@@ -83,7 +83,7 @@ public class LocalService implements IService {
 
         final var storageFolder = new File("storage/jars");
 
-        final var jar = this.serviceGroup.getGameServerVersion().getJar();
+        final var jar = this.group.getGameServerVersion().getJar();
         FileUtils.copyFile(new File(storageFolder, jar), new File(this.workingDirectory, jar));
 
         // copy plugin
@@ -92,13 +92,13 @@ public class LocalService implements IService {
         // write property for identify service
         new Document()
             .set("service", this.getName())
-            .set("node", this.serviceGroup.getNode())
+            .set("node", this.group.getNode())
             .set("hostname", Base.getInstance().getNode().getHostName())
             .set("port", Base.getInstance().getNode().getPort())
             .write(new File(this.workingDirectory, "property.json"));
 
         // check properties and modify
-        if (this.serviceGroup.getGameServerVersion().isProxy()) {
+        if (this.group.getGameServerVersion().isProxy()) {
             final var file = new File(this.workingDirectory, "config.yml");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
@@ -115,7 +115,7 @@ public class LocalService implements IService {
         }
 
         final var communicationPromise = new CommunicationPromise<IService>();
-        final var processBuilder = new ProcessBuilder(this.arguments(this, this.workingDirectory))
+        final var processBuilder = new ProcessBuilder(this.arguments())
             .directory(this.workingDirectory);
         processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
 
@@ -126,7 +126,7 @@ public class LocalService implements IService {
 
     @Override
     public @NotNull String getName() {
-        return this.serviceGroup.getName() + "-" + this.serviceID;
+        return this.group.getName() + "-" + this.serviceId;
     }
 
     @Override
@@ -160,7 +160,7 @@ public class LocalService implements IService {
     @Override
     public void stop() {
         if (this.process != null) {
-            this.executeCommand(this.serviceGroup.getGameServerVersion().isProxy() ? "end" : "stop");
+            this.executeCommand(this.group.getGameServerVersion().isProxy() ? "end" : "stop");
             try {
                 if (this.process.waitFor(5, TimeUnit.SECONDS)) this.process = null;
                 return;
@@ -180,7 +180,7 @@ public class LocalService implements IService {
         }
     }
 
-    private List<String> arguments(final IService service, final File directory) {
+    private List<String> arguments() {
         final List<String> arguments = new ArrayList<>(Arrays.asList(
             "java",
             "-XX:+UseG1GC",
@@ -210,11 +210,11 @@ public class LocalService implements IService {
             "-Dio.netty.recycler.maxCapacity.default=0",
             "-Djline.terminal=jline.UnsupportedTerminal",
             "-DIReallyKnowWhatIAmDoingISwear=true",
-            "-Xms" + service.getServiceGroup().getMemory() + "M",
-            "-Xmx" + service.getServiceGroup().getMemory() + "M"));
+            "-Xms" + this.group.getMemory() + "M",
+            "-Xmx" + this.group.getMemory() + "M"));
 
         final var wrapperFile = Paths.get("storage", "jars", "wrapper.jar");
-        final var applicationFile = new File(directory, service.getServiceGroup().getGameServerVersion().getJar());
+        final var applicationFile = new File(this.workingDirectory, this.group.getGameServerVersion().getJar());
 
         arguments.addAll(Arrays.asList(
             "-cp", wrapperFile.toAbsolutePath().toString(),
@@ -239,7 +239,7 @@ public class LocalService implements IService {
 
         arguments.add(Boolean.toString(preLoadClasses));
 
-        if (service.getServiceGroup().getGameServerVersion().getServiceTypes() == ServiceTypes.SERVER) {
+        if (this.group.getGameServerVersion().getServiceTypes() == ServiceTypes.SERVER) {
             arguments.add("nogui");
         }
 

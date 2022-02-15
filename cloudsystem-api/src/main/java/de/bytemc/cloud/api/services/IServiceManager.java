@@ -24,7 +24,7 @@ public interface IServiceManager {
      * @return the services of a group
      */
     default List<IService> getAllServicesByGroup(@NotNull IServiceGroup serviceGroup) {
-        return this.getAllCachedServices().stream().filter(it -> it.getServiceGroup().equals(serviceGroup)).collect(Collectors.toList());
+        return this.getAllCachedServices().stream().filter(service -> service.getGroup().equals(serviceGroup)).collect(Collectors.toList());
     }
 
     /**

@@ -37,11 +37,12 @@ public final class BaseNodeNetwork {
 
         networkHandler.registerPacketListener(RedirectPacket.class, (ctx, packet) ->
             CloudAPI.getInstance().getServiceManager().getService(packet.getClient()).ifPresent(it -> {
-                if (it.getServiceGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) {
+                if (it.getGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) {
                     Base.getInstance().getNode().getClient(it.getName())
                         .ifPresent(service -> service.sendPacket(packet.getPacket()));
                 } else {
-                    Base.getInstance().getNode().getClient(it.getServiceGroup().getNode()).ifPresent(node -> node.sendPacket(new RedirectPacket(packet.getClient(), packet)));
+                    Base.getInstance().getNode().getClient(it.getGroup().getNode())
+                        .ifPresent(node -> node.sendPacket(new RedirectPacket(packet.getClient(), packet)));
                 }
             }));
 

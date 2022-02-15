@@ -15,8 +15,8 @@ import de.bytemc.network.packets.NetworkByteBuf;
 public class PacketHelper {
 
     public static void writeService(IService service, NetworkByteBuf byteBuf) {
-        byteBuf.writeString(service.getServiceGroup().getName());
-        byteBuf.writeInt(service.getServiceID());
+        byteBuf.writeString(service.getGroup().getName());
+        byteBuf.writeInt(service.getServiceId());
         byteBuf.writeInt(service.getPort());
         byteBuf.writeString(service.getHostName());
         byteBuf.writeInt(service.getMaxPlayers());
