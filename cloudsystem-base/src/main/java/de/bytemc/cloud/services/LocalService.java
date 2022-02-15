@@ -52,8 +52,8 @@ public class LocalService implements IService {
 
     private Process process;
 
-    public LocalService(final String group, final int id, final int port, final String hostname) {
-        this.serviceGroup = CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
+    public LocalService(final IServiceGroup group, final int id, final int port, final String hostname) {
+        this.serviceGroup = group;
         this.serviceID = id;
         this.port = port;
         this.hostName = hostname;

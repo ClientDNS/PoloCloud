@@ -37,7 +37,7 @@ public final class QueueService {
             .filter(serviceGroup -> serviceGroup.getNode().equalsIgnoreCase(base.getNode().getNodeName()))
             .filter(serviceGroup -> this.getAmountOfGroupServices(serviceGroup) < serviceGroup.getMinOnlineService())
             .forEach(serviceGroup -> {
-                final var service = new LocalService(serviceGroup.getName(), this.getPossibleServiceIDByGroup(serviceGroup),
+                final var service = new LocalService(serviceGroup, this.getPossibleServiceIDByGroup(serviceGroup),
                     PortHandler.getNextPort(serviceGroup), base.getNode().getHostName());
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 base.getNode().sendPacketToAll(new ServiceAddPacket(service));
