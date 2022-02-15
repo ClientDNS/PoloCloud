@@ -35,9 +35,11 @@ public abstract class CloudAPI {
             .orElse((throwable, errorHandler) -> {
                 if (getLoggerProvider() == null) {
                     System.err.println("Caught an unexpected error (" + throwable.getMessage() + ")");
+                    throwable.printStackTrace();
                     return;
                 }
                 getLoggerProvider().logMessage("§7Caught an §cunexpected error §7(§b" + throwable.getMessage() + "§7)", LogType.ERROR);
+                throwable.printStackTrace();
             });
 
         this.networkHandler = new NetworkHandler();
