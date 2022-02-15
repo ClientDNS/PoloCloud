@@ -3,19 +3,23 @@ package de.bytemc.cloud;
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.common.manifest.IManifestHelper;
+import de.bytemc.cloud.api.common.manifest.impl.SimpleManifestHelper;
+import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
-import de.bytemc.cloud.command.impl.*;
-import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.api.services.impl.SimpleService;
+import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
+import de.bytemc.cloud.exception.DefaultExceptionCodes;
 import de.bytemc.cloud.groups.SimpleGroupManager;
-import de.bytemc.cloud.logger.exception.ExceptionHandler;
+import de.bytemc.cloud.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.manifest.keys.RegisteredManifestKeys;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
 import de.bytemc.cloud.services.ServiceManager;
@@ -26,30 +30,25 @@ import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
-import java.util.jar.Manifest;
 
 @Getter
 public class Base extends CloudAPI {
 
     @Getter
     private static Base instance;
-
-    private String version;
-
+    private final IManifestHelper manifestHelper;
     private final LoggerProvider loggerProvider;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
-
     private final GroupTemplateService groupTemplateService;
     private final QueueService queueService;
-
+    private final String version;
     private boolean running = true;
 
 
@@ -58,14 +57,14 @@ public class Base extends CloudAPI {
 
         instance = this;
 
-        try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
-            .nextElement().openStream()) {
-            this.version = new Manifest(stream).getMainAttributes().getValue("Version");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.manifestHelper = new SimpleManifestHelper(this.getClass());
 
-        new ExceptionHandler();
+        this.version = this.manifestHelper.getValueOfManifestEntryOrDefault(RegisteredManifestKeys.PROJECT_VERSION, "Unknown");
+
+
+//        new ExceptionHandler();
+
+        new DefaultExceptionCodes();
 
         this.loggerProvider = new SimpleLoggerProvider();
         this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
@@ -75,16 +74,15 @@ public class Base extends CloudAPI {
         this.loggerProvider.logMessage(" ", LogType.EMPTY);
 
         // copy wrapper and plugin jar
-        try {
+        ErrorHandler.defaultInstance().runOnly(() -> {
             final File storageDirectory = new File("storage/jars");
 
             Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
                 new File(storageDirectory, "wrapper.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("plugin.jar")),
                 new File(storageDirectory, "plugin.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            return null;
+        });
 
         this.databaseManager = new DatabaseManager();
         this.groupManager = new SimpleGroupManager();
@@ -128,23 +126,19 @@ public class Base extends CloudAPI {
             });
 
         // delete wrapper and plugin jars
-        try {
+        ErrorHandler.defaultInstance().runOnly(() -> {
             final File storageDirectory = new File("storage/jars");
 
             Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
             Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            return null;
+        });
 
         ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
-            .addCompleteListener(voidICommunicationPromise -> {
-                try {
-                    FileUtils.deleteDirectory(new File("tmp"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            })
+            .addCompleteListener(voidICommunicationPromise -> ErrorHandler.defaultInstance().runOnly(() -> {
+                FileUtils.deleteDirectory(new File("tmp"));
+                return null;
+            }))
             .addResultListener(unused -> {
                 this.getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
                 ((SimpleLoggerProvider) this.getLoggerProvider()).getConsoleManager().shutdownReading();
