@@ -13,6 +13,7 @@
         <module>cloudsystem-plugin</module>
         <module>cloudsystem-wrapper</module>
         <module>cloudsystem-base</module>
+        <module>cloudsystem-clustering</module>
     </modules>
 
     <properties>

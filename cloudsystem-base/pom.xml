@@ -42,8 +42,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>de.bytemc.network</groupId>
-            <artifactId>network</artifactId>
+            <groupId>de.bytemc</groupId>
+            <artifactId>cloudsystem-clustering</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
