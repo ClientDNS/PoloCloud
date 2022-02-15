@@ -84,4 +84,10 @@ public final class SimpleService implements IService {
     public void sendPacket(@NotNull IPacket packet) {
         CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
     }
+
+    @Override
+    public void executeCommand(@NotNull String command) {
+        // TODO send packet to node that executes the command
+    }
+
 }

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -135,6 +136,19 @@ public class LocalService implements IService {
     @Override
     public void sendPacket(@NotNull IPacket packet) {
         CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
+    }
+
+    @Override
+    public void executeCommand(@NotNull String command) {
+        if (this.process != null) {
+            final var outputStream = this.process.getOutputStream();
+            try {
+                outputStream.write((command + "\n").getBytes(StandardCharsets.UTF_8));
+                outputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private List<String> arguments(final IService service, final File directory) {

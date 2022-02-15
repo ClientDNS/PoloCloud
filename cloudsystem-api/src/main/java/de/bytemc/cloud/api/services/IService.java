@@ -113,6 +113,11 @@ public interface IService {
     void sendPacket(@NotNull IPacket packet);
 
     /**
+     * executes a command on the service
+     */
+    void executeCommand(@NotNull String command);
+
+    /**
      * updates the properties of the service
      */
     void update();
