@@ -4,7 +4,6 @@ import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.packets.QueryPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRequestShutdownPacket;
-import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
@@ -37,8 +36,9 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
         Base.getInstance().getNode().getAllCachedConnectedClients().stream().filter(it -> it.getName().equals(service.getName())).findAny().ifPresent(it -> it.sendPacket(packet));
     }
 
+    @Deprecated
     public void shutdownService(final IService service) {
-        service.sendPacket(new ServiceShutdownPacket(service.getName()));
+        service.stop();
     }
 
 
