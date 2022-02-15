@@ -64,8 +64,6 @@ public class Base extends CloudAPI {
             e.printStackTrace();
         }
 
-//        new ExceptionHandler();
-
         new DefaultExceptionCodes();
 
         this.loggerProvider = new SimpleLoggerProvider();
