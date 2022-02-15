@@ -3,7 +3,6 @@ package de.bytemc.cloud.plugin.bootstrap.proxy;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
-import de.bytemc.cloud.plugin.IPlugin;
 import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyCloudEvents;
 import de.bytemc.cloud.plugin.bootstrap.proxy.reconnect.ReconnectHandlerImpl;
 import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyEvents;
@@ -14,7 +13,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.concurrent.TimeUnit;
 
-public class ProxyBootstrap extends Plugin implements IPlugin {
+public class ProxyBootstrap extends Plugin {
 
     @Override
     public void onLoad() {
@@ -49,11 +48,5 @@ public class ProxyBootstrap extends Plugin implements IPlugin {
             service.setServiceVisibility(ServiceVisibility.INVISIBLE);
         });
     }
-
-    @Override
-    public void shutdown() {
-        this.getProxy().getScheduler().schedule(this, this.getProxy()::stop, 0, TimeUnit.MILLISECONDS);
-    }
-
 
 }
