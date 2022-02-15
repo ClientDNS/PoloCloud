@@ -5,7 +5,6 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.impl.ServiceGroup;
 import de.bytemc.cloud.api.versions.GameServerVersion;
-import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.DatabaseConfiguration;
 import de.bytemc.cloud.database.IDatabase;
 import de.bytemc.cloud.database.impl.DatabaseFunction;
@@ -51,7 +50,7 @@ public class DatabaseSqlImpl implements IDatabase {
     public void addGroup(final @NotNull IServiceGroup serviceGroup) {
         executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers, motd, maintenance, autoUpdating) VALUES (" +
             "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
-            serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStaticService() ? 1 : 0) +
+            serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStatic() ? 1 : 0) +
             ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "', " + serviceGroup.getDefaultMaxPlayers() +
             ",'" + serviceGroup.getMotd() + "', '" + (serviceGroup.isMaintenance() ? 1 : 0) + "', '" + (serviceGroup.isAutoUpdating() ? 1 : 0) + "');");
     }

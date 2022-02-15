@@ -92,7 +92,7 @@ public final class GroupCommand extends CloudCommand {
             log.logMessage("Memory: §b" + serviceGroup.getMemory() + "mb");
             log.logMessage("Min online services: §b" + serviceGroup.getMinOnlineService());
             log.logMessage("Max online services: §b" + serviceGroup.getMaxOnlineService());
-            log.logMessage("Static service: §b" + serviceGroup.isStaticService());
+            log.logMessage("Static: §b" + serviceGroup.isStatic());
             log.logMessage("Version: §b" + serviceGroup.getGameServerVersion().getTitle());
             log.logMessage("Maintenance: §b" + serviceGroup.isMaintenance());
             return;

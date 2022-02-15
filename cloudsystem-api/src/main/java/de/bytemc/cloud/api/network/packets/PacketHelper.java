@@ -53,7 +53,7 @@ public class PacketHelper {
         byteBuf.writeInt(group.getMinOnlineService());
         byteBuf.writeInt(group.getMaxOnlineService());
 
-        byteBuf.writeBoolean(group.isStaticService());
+        byteBuf.writeBoolean(group.isStatic());
         byteBuf.writeBoolean(group.isFallbackGroup());
         byteBuf.writeBoolean(group.isMaintenance());
         byteBuf.writeBoolean(group.isAutoUpdating());

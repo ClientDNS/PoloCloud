@@ -92,7 +92,7 @@ public interface IServiceGroup {
     /**
      * @return if the group is static or not
      */
-    boolean isStaticService();
+    boolean isStatic();
 
     /**
      * @return if the group is a fallback group
