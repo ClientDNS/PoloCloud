@@ -198,6 +198,7 @@ public class LocalService implements IService {
             "-Dio.netty.recycler.maxCapacity=0",
             "-Dio.netty.recycler.maxCapacity.default=0",
             "-Djline.terminal=jline.UnsupportedTerminal",
+            "-DIReallyKnowWhatIAmDoingISwear=true",
             "-Xms" + service.getServiceGroup().getMemory() + "M",
             "-Xmx" + service.getServiceGroup().getMemory() + "M"));
 
