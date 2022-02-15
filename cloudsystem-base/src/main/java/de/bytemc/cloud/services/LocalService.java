@@ -63,7 +63,7 @@ public class LocalService implements IService {
         this.motd = this.group.getMotd();
         this.maxPlayers = this.group.getDefaultMaxPlayers();
 
-        this.workingDirectory = new File("tmp/" + this.getName());
+        this.workingDirectory = new File((!this.group.isStatic() ? "tmp" : "static") +"/" + this.getName());
     }
 
     @SneakyThrows
