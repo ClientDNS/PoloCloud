@@ -78,11 +78,13 @@ public class LocalService implements IService {
         // load all current group templates
         Base.getInstance().getGroupTemplateService().copyTemplates(this);
 
-        final String jar = this.serviceGroup.getGameServerVersion().getJar();
-        FileUtils.copyFile(new File("storage/jars/" + jar), new File(tmpFolder, jar));
+        final var storageFolder = new File("storage/jars");
+
+        final var jar = this.serviceGroup.getGameServerVersion().getJar();
+        FileUtils.copyFile(new File(storageFolder, jar), new File(tmpFolder, jar));
 
         // copy plugin
-        FileUtils.copyFile(new File("storage/jars/plugin.jar"), new File(tmpFolder, "plugins/plugin.jar"));
+        FileUtils.copyFile(new File(storageFolder, "/plugin.jar"), new File(tmpFolder, "plugins/plugin.jar"));
 
         // write property for identify service
         new Document()
@@ -130,7 +132,7 @@ public class LocalService implements IService {
         this.update();
     }
 
-    public void update(){
+    public void update() {
         CloudAPI.getInstance().getServiceManager().updateService(this);
     }
 
