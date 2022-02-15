@@ -47,12 +47,22 @@ public final class ServiceCommand extends CloudCommand {
                 log.logMessage("Port: §b" + service.getPort());
             }, () -> log.logMessage("The service does not exists.", LogType.WARNING));
             return;
+        } else if (args.length > 3 && args[0].equalsIgnoreCase("command")) {
+            cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
+                final var stringBuilder = new StringBuilder();
+                for (int i = 2; i < args.length; i++) stringBuilder.append(args[0]).append(" ");
+                final var command = stringBuilder.toString();
+                service.executeCommand(command);
+                log.logMessage("Executed command '" + command + "' on service " + service.getName());
+            }, () -> log.logMessage("The service does not exists.", LogType.WARNING));
+            return;
         }
 
         log.logMessage("§7Use following command: §bservice list §7- List all available services.");
         log.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that not exists.");
         log.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
         log.logMessage("§7Use following command: §bservice info (name) §7- Prints information about the specific service.");
+        log.logMessage("§7Use following command: §bservice command (name) (command) §7- Executes a command on a server.");
     }
 
 }
