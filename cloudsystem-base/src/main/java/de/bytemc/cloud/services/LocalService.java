@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -148,6 +149,21 @@ public class LocalService implements IService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void stop() {
+        if (this.process != null) {
+            this.executeCommand(this.serviceGroup.getGameServerVersion().isProxy() ? "end" : "stop");
+            try {
+                if (this.process.waitFor(5, TimeUnit.SECONDS)) this.process = null;
+                return;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            this.process.destroy();
+            this.process = null;
         }
     }
 

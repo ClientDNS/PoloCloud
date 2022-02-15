@@ -118,6 +118,11 @@ public interface IService {
     void executeCommand(@NotNull String command);
 
     /**
+     * stops the service
+     */
+    void stop();
+
+    /**
      * updates the properties of the service
      */
     void update();

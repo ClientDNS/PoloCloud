@@ -18,6 +18,7 @@ import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
+import de.bytemc.cloud.services.LocalService;
 import de.bytemc.cloud.services.ServiceManager;
 import de.bytemc.cloud.services.queue.QueueService;
 import de.bytemc.cloud.templates.GroupTemplateService;
@@ -121,8 +122,7 @@ public class Base extends CloudAPI {
         this.getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
         this.getServiceManager().getAllCachedServices()
             .forEach(service -> {
-                /*if (((SimpleService) service).getProcess() != null)
-                    ((SimpleService) service).getProcess().destroyForcibly();*/
+                if (service instanceof LocalService localService) localService.stop();
             });
 
         // delete wrapper and plugin jars

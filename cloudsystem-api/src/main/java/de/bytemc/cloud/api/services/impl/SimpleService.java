@@ -90,4 +90,9 @@ public final class SimpleService implements IService {
         // TODO send packet to node that executes the command
     }
 
+    @Override
+    public void stop() {
+        // TODO send packet to node that to stop the service
+    }
+
 }
