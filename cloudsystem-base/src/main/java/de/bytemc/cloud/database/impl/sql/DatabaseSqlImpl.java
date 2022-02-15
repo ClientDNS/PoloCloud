@@ -27,7 +27,7 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @SneakyThrows
     @Override
-    public void connect(final DatabaseConfiguration databaseConfiguration) {
+    public void connect(final @NotNull DatabaseConfiguration databaseConfiguration) {
         this.connection = DriverManager.getConnection("jdbc:mysql://" + databaseConfiguration.getHost() + ":" + databaseConfiguration.getPort()
             + "/" + databaseConfiguration.getDatabase() + "?useUnicode=true&autoReconnect=true",
             databaseConfiguration.getUser(), databaseConfiguration.getPassword());
