@@ -5,7 +5,6 @@ import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
-import de.bytemc.cloud.services.ServiceManager;
 
 public final class ServiceCommand extends CloudCommand {
 
@@ -31,7 +30,7 @@ public final class ServiceCommand extends CloudCommand {
                     return;
                 }
 
-                ((ServiceManager) cloudAPI.getServiceManager()).shutdownService(service);
+                service.stop();
                 log.logMessage("The service '§b" + service.getName() + "§7' is now stopped.");
             }, () -> log.logMessage("This service does not exists.", LogType.WARNING));
             return;
