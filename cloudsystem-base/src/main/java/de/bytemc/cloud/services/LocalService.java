@@ -108,10 +108,9 @@ public class LocalService implements IService {
         }
 
         final var communicationPromise = new CommunicationPromise<IService>();
-        final var tmpDirectory = new File("tmp/" + this.getName());
-        final var processBuilder = new ProcessBuilder(this.arguments(this, tmpDirectory))
-            .directory(tmpDirectory);
-        processBuilder.redirectOutput(new File(tmpDirectory, "/wrapper.log"));
+        final var processBuilder = new ProcessBuilder(this.arguments(this, tmpFolder))
+            .directory(tmpFolder);
+        processBuilder.redirectOutput(new File(tmpFolder, "/wrapper.log"));
 
         this.process = processBuilder.start();
         communicationPromise.setSuccess(this);
