@@ -51,7 +51,6 @@ public class Base extends CloudAPI {
     private final QueueService queueService;
     private boolean running = true;
 
-
     public Base() {
         super(CloudAPITypes.NODE);
 
@@ -107,11 +106,11 @@ public class Base extends CloudAPI {
         Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
 
         // print finish successfully message
-        this.getLoggerProvider().logMessage("               ", LogType.EMPTY);
-        this.getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
-        this.getLoggerProvider().logMessage("               ", LogType.EMPTY);
+        this.loggerProvider.logMessage("               ", LogType.EMPTY);
+        this.loggerProvider.logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
+        this.loggerProvider.logMessage("               ", LogType.EMPTY);
 
-        ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
+        ((SimpleLoggerProvider) this.loggerProvider).getConsoleManager().start();
 
         this.queueService.checkForQueue();
     }
@@ -119,15 +118,15 @@ public class Base extends CloudAPI {
     public void onShutdown() {
         if (!this.running) return;
         this.running = false;
-        this.getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
-        this.getServiceManager().getAllCachedServices()
+        this.loggerProvider.logMessage("Trying to terminate cloudsystem.");
+        this.serviceManager.getAllCachedServices()
             .forEach(service -> {
                 if (service instanceof LocalService localService) localService.stop();
             });
 
         // delete wrapper and plugin jars
         ErrorHandler.defaultInstance().runOnly(() -> {
-            final File storageDirectory = new File("storage/jars");
+            final var storageDirectory = new File("storage/jars");
 
             Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
             Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
@@ -140,8 +139,8 @@ public class Base extends CloudAPI {
                 return null;
             }))
             .addResultListener(unused -> {
-                this.getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLoggerProvider) this.getLoggerProvider()).getConsoleManager().shutdownReading();
+                this.loggerProvider.logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+                ((SimpleLoggerProvider) this.loggerProvider).getConsoleManager().shutdownReading();
                 System.exit(0);
             });
     }

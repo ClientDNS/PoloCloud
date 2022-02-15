@@ -19,7 +19,8 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
     public ServiceManager() {
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceRequestShutdownPacket.class,
             (channelHandlerContext, serviceRequestShutdownPacket) ->
-                shutdownService(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(serviceRequestShutdownPacket.getService()))));
+                Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
+                    .getServiceByNameOrNull(serviceRequestShutdownPacket.getService())).stop());
     }
 
     public void start(final IService service) {
@@ -35,12 +36,6 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
     public void sendPacketToService(final IService service, final IPacket packet) {
         Base.getInstance().getNode().getAllCachedConnectedClients().stream().filter(it -> it.getName().equals(service.getName())).findAny().ifPresent(it -> it.sendPacket(packet));
     }
-
-    @Deprecated
-    public void shutdownService(final IService service) {
-        service.stop();
-    }
-
 
     @Override
     public void updateService(@NotNull IService service) {

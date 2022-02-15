@@ -345,7 +345,8 @@ public class ErrorHandler {
      * @param <T>          the Class of the Callable
      * @return the Object, which was returned of the Callable
      */
-    public <T> T runUntilSuccess(T defaultValue, @NotNull Callable<T>... tries) {
+    @SafeVarargs
+    public final <T> T runUntilSuccess(T defaultValue, @NotNull Callable<T>... tries) {
         return runUntilSuccess(defaultValue, Arrays.stream(tries).toList());
     }
 

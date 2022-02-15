@@ -20,8 +20,6 @@ import java.util.Objects;
 @Getter
 public enum GameServerVersion {
 
-    BUNGEE("https://ci.md-5.net/job/BungeeCord/lastBuild/artifact/bootstrap/target/BungeeCord.jar",
-        "BungeeCord", "latest", ServiceTypes.PROXY),
     WATERFALL("waterfall", "latest", ServiceTypes.PROXY),
     PAPER_1_18_1("paper", "1.18.1", ServiceTypes.SERVER),
     PAPER_1_17_1("paper", "1.17.1", ServiceTypes.SERVER),
@@ -39,13 +37,6 @@ public enum GameServerVersion {
     private final String title;
     private final String version;
     private final ServiceTypes serviceTypes;
-
-    GameServerVersion(final String url, final String title, final String version, final ServiceTypes serviceTypes) {
-        this.url = url;
-        this.title = title;
-        this.version = version;
-        this.serviceTypes = serviceTypes;
-    }
 
     GameServerVersion(final String title, final String version, final ServiceTypes serviceTypes) {
         final int build = this.getBuildNumber(title, version);

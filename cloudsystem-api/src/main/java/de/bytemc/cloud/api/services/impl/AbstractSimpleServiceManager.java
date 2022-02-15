@@ -31,10 +31,6 @@ public abstract class AbstractSimpleServiceManager implements IServiceManager {
         });
     }
 
-    public void registerService(IService service) {
-        allCachedServices.add(service);
-    }
-
     @Override
     public @NotNull Optional<IService> getService(final @NotNull String name) {
         return this.getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findAny();
