@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface IDatabase {
 
-    void connect();
+    void connect(@NotNull DatabaseConfiguration databaseConfiguration);
 
     @NotNull ICommunicationPromise<Void> disconnect();
 
     List<IServiceGroup> getAllServiceGroups();
 
-    void addGroup(final @NotNull IServiceGroup serviceGroup);
+    void addGroup(@NotNull IServiceGroup serviceGroup);
 
-    void removeGroup(final @NotNull IServiceGroup serviceGroup);
+    void removeGroup(@NotNull IServiceGroup serviceGroup);
 
 
 }

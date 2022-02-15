@@ -84,12 +84,14 @@ public class Base extends CloudAPI {
             return null;
         });
 
-        this.databaseManager = new DatabaseManager();
+        final var nodeConfig = NodeConfig.read();
+
+        this.databaseManager = new DatabaseManager(nodeConfig.getDatabaseConfiguration());
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
         this.groupTemplateService = new GroupTemplateService();
         this.cloudPlayerManager = new CloudPlayerManager();
-        this.node = new BaseNode(NodeConfig.get());
+        this.node = new BaseNode(nodeConfig);
 
         // register commands
         this.getCommandManager().registerCommands(
