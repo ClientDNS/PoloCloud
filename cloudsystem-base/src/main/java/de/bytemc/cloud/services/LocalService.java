@@ -50,6 +50,8 @@ public class LocalService implements IService {
     private ServiceState serviceState = ServiceState.PREPARED;
     private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
 
+    private final File workingDirectory;
+
     private Process process;
 
     public LocalService(final IServiceGroup group, final int id, final int port, final String hostname) {
@@ -60,6 +62,8 @@ public class LocalService implements IService {
         assert serviceGroup != null;
         this.motd = this.serviceGroup.getMotd();
         this.maxPlayers = this.serviceGroup.getDefaultMaxPlayers();
+
+        this.workingDirectory = new File("tmp/" + this.getName());
     }
 
     @SneakyThrows
@@ -72,8 +76,7 @@ public class LocalService implements IService {
         this.getServiceGroup().getGameServerVersion().download();
 
         // create tmp file
-        final File tmpFolder = new File("tmp/" + this.getName());
-        FileUtils.forceMkdir(tmpFolder);
+        FileUtils.forceMkdir(this.workingDirectory);
 
         // load all current group templates
         Base.getInstance().getGroupTemplateService().copyTemplates(this);
@@ -81,10 +84,10 @@ public class LocalService implements IService {
         final var storageFolder = new File("storage/jars");
 
         final var jar = this.serviceGroup.getGameServerVersion().getJar();
-        FileUtils.copyFile(new File(storageFolder, jar), new File(tmpFolder, jar));
+        FileUtils.copyFile(new File(storageFolder, jar), new File(this.workingDirectory, jar));
 
         // copy plugin
-        FileUtils.copyFile(new File(storageFolder, "/plugin.jar"), new File(tmpFolder, "plugins/plugin.jar"));
+        FileUtils.copyFile(new File(storageFolder, "/plugin.jar"), new File(this.workingDirectory, "plugins/plugin.jar"));
 
         // write property for identify service
         new Document()
@@ -92,29 +95,29 @@ public class LocalService implements IService {
             .set("node", this.serviceGroup.getNode())
             .set("hostname", Base.getInstance().getNode().getHostName())
             .set("port", Base.getInstance().getNode().getPort())
-            .write(new File(tmpFolder, "property.json"));
+            .write(new File(this.workingDirectory, "property.json"));
 
         // check properties and modify
         if (this.serviceGroup.getGameServerVersion().isProxy()) {
-            final var file = new File(tmpFolder, "config.yml");
+            final var file = new File(this.workingDirectory, "config.yml");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
                 editor.setValue("host", "0.0.0.0:" + this.port);
                 editor.saveFile();
-            } else new BungeeProperties(tmpFolder, this.port);
+            } else new BungeeProperties(this.workingDirectory, this.port);
         } else {
-            final var file = new File(tmpFolder, "server.properties");
+            final var file = new File(this.workingDirectory, "server.properties");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
                 editor.setValue("server-port", String.valueOf(this.port));
                 editor.saveFile();
-            } else new SpigotProperties(tmpFolder, this.port);
+            } else new SpigotProperties(this.workingDirectory, this.port);
         }
 
         final var communicationPromise = new CommunicationPromise<IService>();
-        final var processBuilder = new ProcessBuilder(this.arguments(this, tmpFolder))
-            .directory(tmpFolder);
-        processBuilder.redirectOutput(new File(tmpFolder, "/wrapper.log"));
+        final var processBuilder = new ProcessBuilder(this.arguments(this, this.workingDirectory))
+            .directory(this.workingDirectory);
+        processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
 
         this.process = processBuilder.start();
         communicationPromise.setSuccess(this);
@@ -166,6 +169,14 @@ public class LocalService implements IService {
             }
             this.process.destroy();
             this.process = null;
+        }
+    }
+
+    public void delete() {
+        try {
+            FileUtils.deleteDirectory(this.workingDirectory);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
