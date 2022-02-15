@@ -75,7 +75,8 @@ public class Base extends CloudAPI {
 
         // copy wrapper and plugin jar
         ErrorHandler.defaultInstance().runOnly(() -> {
-            final File storageDirectory = new File("storage/jars");
+            final var storageDirectory = new File("storage/jars");
+            storageDirectory.mkdirs();
 
             Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
                 new File(storageDirectory, "wrapper.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
