@@ -14,7 +14,7 @@ public class ErrorHandler {
 
     private static ErrorHandler defaultInstance = null;
 
-    private final Map<ErrorCodeIdentifier, MatcherFactory> errorCodeMap;
+    private final Map<ErrorCodeIdentifier<?>, MatcherFactory> errorCodeMap;
 
     private final List<ActionEntry> actions;
     private final List<ErrorAction> otherwiseActions;
@@ -37,8 +37,8 @@ public class ErrorHandler {
     }
 
     /**
-     * Method for creating a de.ipommes.exceptionhandler.ErrorHandler, which depends on
-     * a previous de.ipommes.exceptionhandler.ErrorHandler
+     * Method for creating a ErrorHandler, which depends on
+     * a previous ErrorHandler
      *
      * @param dependErrorHandler depending Error Handler
      */
@@ -48,7 +48,7 @@ public class ErrorHandler {
     }
 
     /**
-     * Creates an entire new de.ipommes.exceptionhandler.ErrorHandler, without the default de.ipommes.exceptionhandler.ErrorHandler
+     * Creates an entire new ErrorHandler, without the default ErrorHandler
      *
      * @return a new Instance of the {@link ErrorHandler}
      */
@@ -57,7 +57,7 @@ public class ErrorHandler {
     }
 
     /**
-     * Creates a new de.ipommes.exceptionhandler.ErrorHandler instance depending on the {@link #defaultInstance()}
+     * Creates a new ErrorHandler instance depending on the {@link #defaultInstance()}
      * <p>
      * via {@link #ErrorHandler(ErrorHandler)}
      *
@@ -68,7 +68,7 @@ public class ErrorHandler {
     }
 
     /**
-     * Get the main instance of the de.ipommes.exceptionhandler.ErrorHandler
+     * Get the main instance of the ErrorHandler
      * When not initialized, creating new Instance
      *
      * @return a new Instance of the {@link ErrorHandler}
@@ -89,7 +89,7 @@ public class ErrorHandler {
      */
     public ErrorHandler onError(Matcher matcher, @NotNull ErrorAction action) {
         if (matcher == null) {
-            throw new IllegalArgumentException("Tried to register a 'onError' in ExceptionHandler, but the de.ipommes.exceptionhandler.matcher.Matcher is null");
+            throw new IllegalArgumentException("Tried to register a 'onError' in ExceptionHandler, but the Matcher is null");
         }
         this.actions.add(new ActionEntry(matcher, action));
         return this;
@@ -295,7 +295,7 @@ public class ErrorHandler {
      * @param defaultValue    the defaultValue, which will be returned if the
      *                        callable throws an Exception
      * @param reportException decides, if the Exception will be handled with
-     *                        the own de.ipommes.exceptionhandler.ErrorHandler
+     *                        the own ErrorHandler
      * @return the Object, which was returned of the Callable
      */
     public <T> T runOrDefault(Callable<T> callable, T defaultValue, boolean reportException) {
@@ -381,7 +381,7 @@ public class ErrorHandler {
      * @param errorCode      the specific ErrorCode (should be used in the {@link #onError(Object, ErrorAction)}
      * @param matcherFactory the matcher code
      * @param actions        the actions, which will be automatically added to this ErrorCode (via {@link #onError(Object, ErrorAction)}
-     * @param <T>            the Object for the ErrorCode and the de.ipommes.exceptionhandler.matcher.MatcherFactory
+     * @param <T>            the Object for the ErrorCode and the MatcherFactory
      * @return the Instance of the current {@link ErrorHandler}
      */
     public <T> ErrorHandler bindCode(T errorCode, MatcherFactory<? super T> matcherFactory, ErrorAction... actions) {
@@ -400,7 +400,7 @@ public class ErrorHandler {
      * @param errorCodeClass the specific Class which will be registered as an ErrorCode
      * @param matcherFactory the matcher code
      * @param actions        the actions, which will be automatically added to this ErrorCode (via {@link #onError(Object, ErrorAction)}
-     * @param <T>            the Object for the ErrorCode and the de.ipommes.exceptionhandler.matcher.MatcherFactory
+     * @param <T>            the Object for the ErrorCode and the MatcherFactory
      * @return the Instance of the current {@link ErrorHandler}
      */
     public <T> ErrorHandler bindClass(Class<T> errorCodeClass, MatcherFactory<? super T> matcherFactory, ErrorAction... actions) {
@@ -426,7 +426,7 @@ public class ErrorHandler {
     }
 
     /**
-     * Gets a de.ipommes.exceptionhandler.matcher.Matcher by its ErrorCode (checks the ErrorCode, or the ErrorCode-Class)
+     * Gets a Matcher by its ErrorCode (checks the ErrorCode, or the ErrorCode-Class)
      *
      * @param errorCode the ErrorCode for searching the matcher
      * @param <T>       the Object of the ErrorCode
