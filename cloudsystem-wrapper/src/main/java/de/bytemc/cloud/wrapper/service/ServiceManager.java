@@ -21,7 +21,6 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
     public ServiceManager(final PropertyFile property) {
         this.property = property;
         INetworkHandler networkHandler = CloudAPI.getInstance().getNetworkHandler();
-        networkHandler.registerPacketListener(ServiceShutdownPacket.class, (ctx, packet) -> System.exit(0) /*TODO better*/);
         networkHandler.registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> this.setAllCachedServices(packet.getAllCachedServices()));
         networkHandler.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) -> this.getAllCachedServices().remove(getServiceByNameOrNull(packet.getService())));
         networkHandler.registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> this.getAllCachedServices().add(packet.getService()));
