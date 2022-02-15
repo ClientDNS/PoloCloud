@@ -85,7 +85,6 @@ public enum GameServerVersion {
         file.getParentFile().mkdirs();
         try {
             var url = this.getUrl();
-            CloudAPI.getInstance().getLoggerProvider().logMessage(url); // debug
             FileUtils.copyURLToFile(new URL(url), file);
 
             if (this.title.equals("paper")) {
