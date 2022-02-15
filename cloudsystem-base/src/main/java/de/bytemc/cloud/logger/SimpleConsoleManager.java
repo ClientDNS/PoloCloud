@@ -1,9 +1,11 @@
-package de.bytemc.cloud.api.logger;
+package de.bytemc.cloud.logger;
 
 import com.google.common.base.Throwables;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.logger.builder.DefaultLineReader;
-import de.bytemc.cloud.api.logger.runnable.ConsoleReadingThread;
+import de.bytemc.cloud.api.logger.LogType;
+import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.logger.builder.DefaultLineReader;
+import de.bytemc.cloud.logger.runnable.ConsoleReadingThread;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
@@ -43,9 +45,4 @@ public final class SimpleConsoleManager {
     public void shutdownReading() {
         this.consoleReadingThread.interrupt();
     }
-
-    public void handleInput(final String input) {
-
-    }
-
 }

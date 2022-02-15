@@ -1,7 +1,7 @@
-package de.bytemc.cloud.api.logger.runnable;
+package de.bytemc.cloud.logger.runnable;
 
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import org.jline.reader.LineReader;
 import org.jline.reader.UserInterruptException;
 

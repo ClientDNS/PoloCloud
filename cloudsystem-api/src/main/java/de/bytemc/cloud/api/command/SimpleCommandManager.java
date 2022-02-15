@@ -5,9 +5,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,19 +18,17 @@ public class SimpleCommandManager implements CommandManager {
         this.cachedCloudCommands = Lists.newArrayList();
     }
 
-    public boolean execute(final @NotNull String command){
+    public void execute(final @NotNull String command){
         List<String> args = Lists.newArrayList(command.split(" "));
         if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
            CloudCommand cloudCommand = cachedCloudCommands.stream()
                .filter(it -> it.getCommandName().equalsIgnoreCase(args.get(0)) || Arrays.stream(it.getAlias()).anyMatch(s -> s.equalsIgnoreCase(args.get(0))))
                .findFirst()
                .orElse(null);
-            if (cloudCommand == null) return false;
+            if (cloudCommand == null) return;
             args.remove(0);
-            cloudCommand.execute(CloudAPI.getInstance().getCommandSender(), args.toArray(new String[]{}));
-            return true;
+            cloudCommand.execute(CloudAPI.getInstance(), args.toArray(new String[]{}));
         }
-        return false;
     }
 
 
@@ -42,20 +38,13 @@ public class SimpleCommandManager implements CommandManager {
     }
 
     @Override
-    public void unregisterCommand(final @NotNull CloudCommand command) {
-        this.cachedCloudCommands.remove(command);
+    public void registerCommands(@NotNull CloudCommand... commands) {
+        for (final CloudCommand command : commands) this.registerCommand(command);
     }
 
-    public void registerCommandByPackage(@NotNull String packageInput){
-        Reflections reflections = new Reflections(packageInput);
-
-        reflections.getSubTypesOf(CloudCommand.class).forEach(it -> {
-            try {
-                registerCommand(it.getDeclaredConstructor().newInstance());
-            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
+    @Override
+    public void unregisterCommand(final @NotNull CloudCommand command) {
+        this.cachedCloudCommands.remove(command);
     }
 
 }

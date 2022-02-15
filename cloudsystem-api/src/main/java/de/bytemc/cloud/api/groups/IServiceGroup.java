@@ -79,7 +79,7 @@ public interface IServiceGroup {
     void setMaxOnlineService(int maxOnlineService);
 
     /**
-     * @return the maintenacne state
+     * @return the maintenance state
      */
     boolean isMaintenance();
 
@@ -116,15 +116,28 @@ public interface IServiceGroup {
      */
     void setGameServerVersion(@NotNull GameServerVersion gameServerVersion);
 
-    String getMotd();
+    /**
+     * @return the default motd of a service of the group
+     */
+    @NotNull String getMotd();
 
-    void setMotd(String motd);
+    /**
+     * sets the default motd of a service of the group
+     * @param motd the motd to set as default
+     */
+    void setMotd(@NotNull String motd);
 
     /**
      * edits the properties of the group and update then
      * @param serviceGroupConsumer the consumer to change the properties
      */
     void edit(@NotNull Consumer<IServiceGroup> serviceGroupConsumer);
+
+    /**
+     * get auto update state
+     * @return true if the group can auto-able update
+     */
+    boolean isAutoUpdating();
 
     /**
      * updates the properties of the group

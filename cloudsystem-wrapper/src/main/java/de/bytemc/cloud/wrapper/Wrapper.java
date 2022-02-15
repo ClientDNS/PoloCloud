@@ -2,15 +2,15 @@ package de.bytemc.cloud.wrapper;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
-import de.bytemc.cloud.api.command.executor.ExecutorType;
-import de.bytemc.cloud.api.command.executor.ICommandSender;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
+import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.wrapper.groups.GroupManager;
+import de.bytemc.cloud.wrapper.logger.WrapperLoggerProvider;
 import de.bytemc.cloud.wrapper.network.WrapperClient;
 import de.bytemc.cloud.wrapper.player.CloudPlayerManager;
 import de.bytemc.cloud.wrapper.service.ServiceManager;
@@ -80,11 +80,11 @@ public final class Wrapper extends CloudAPI {
 
     private static Wrapper instance;
 
+    private final LoggerProvider loggerProvider;
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
     private final WrapperClient client;
-    private final ICommandSender commandSender;
 
     public Wrapper() {
         super(CloudAPITypes.SERVICE);
@@ -93,23 +93,13 @@ public final class Wrapper extends CloudAPI {
 
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
+        this.loggerProvider = new WrapperLoggerProvider();
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager(property);
         this.cloudPlayerManager = new CloudPlayerManager();
         this.client = new WrapperClient(property.getService(), property.getHostname(), property.getPort());
-        this.commandSender = new ICommandSender() {
-            @Override
-            public void sendMessage(@NotNull String text) {
-                System.out.println(text);
-            }
 
-            @Override
-            public @NotNull ExecutorType getCommandType() {
-                return ExecutorType.INGAME;
-            }
-        };
-
-        CloudAPI.getInstance().getLoggerProvider().logMessage("Successfully started plugin client.", LogType.SUCCESS);
+        this.loggerProvider.logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }
 
     public static Wrapper getInstance() {
@@ -117,8 +107,8 @@ public final class Wrapper extends CloudAPI {
     }
 
     @Override
-    public ICommandSender getCommandSender() {
-        return this.commandSender;
+    public LoggerProvider getLoggerProvider() {
+        return this.loggerProvider;
     }
 
     @Override

@@ -74,6 +74,7 @@ public enum GameServerVersion {
             (!Objects.equals(it.getVersion(), "latest") ? "-" + it.getVersion() : "")).equalsIgnoreCase(value)).findAny().orElse(null);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void download() {
         final var file = new File("storage/jars", this.getJar());
 

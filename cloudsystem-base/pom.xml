@@ -5,7 +5,7 @@
     <parent>
         <artifactId>cloudsystem</artifactId>
         <groupId>de.bytemc</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -56,6 +56,18 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
             </resource>
+            <resource>
+                <directory>${basedir}/../cloudsystem-wrapper/target</directory>
+                <includes>
+                    <include>wrapper.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}/../cloudsystem-plugin/target</directory>
+                <includes>
+                    <include>plugin.jar</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <!-- JAR creation plugin -->
@@ -67,6 +79,9 @@
                         <manifest>
                             <mainClass>de.bytemc.cloud.bootstrap.BaseBootstrap</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Version>${version}</Version>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

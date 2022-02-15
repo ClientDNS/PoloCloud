@@ -18,7 +18,7 @@ public class QueryPacket implements IPacket {
 
     public enum QueryState {
         FIRST_RESPONSE,
-        SECOND_RESPONSE;
+        SECOND_RESPONSE
     }
 
     @Override

@@ -1,6 +1,7 @@
 package de.bytemc.cloud.api.player;
 
 import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.api.events.events.CloudPlayerUpdateEvent;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerKickPacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerSendServicePacket;
 import de.bytemc.cloud.api.services.IService;
@@ -24,12 +25,6 @@ public interface ICloudPlayer {
      * @return the proxy server who the player is
      */
     IService getProxyServer();
-
-    /**
-     * sets the proxy server of the player
-     * @param service the service to set
-     */
-    void setProxyServer(@NotNull IService service);
 
     /**
      * @return the server who the player is
@@ -80,5 +75,11 @@ public interface ICloudPlayer {
      * updates the properties of the player
      */
     void update();
+
+    /**
+     * updates the properties of the player
+     * @param updateReason the reason of the update
+     */
+    void update(@NotNull CloudPlayerUpdateEvent.UpdateReason updateReason);
 
 }

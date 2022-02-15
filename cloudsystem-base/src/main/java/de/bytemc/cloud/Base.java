@@ -3,17 +3,20 @@ package de.bytemc.cloud;
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.api.services.impl.SimpleService;
-import de.bytemc.cloud.command.DefaultCommandSender;
+import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
+import de.bytemc.cloud.exception.DefaultExceptionCodes;
 import de.bytemc.cloud.groups.SimpleGroupManager;
+import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
 import de.bytemc.cloud.services.ServiceManager;
@@ -25,33 +28,61 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.Objects;
+import java.util.jar.Manifest;
 
 @Getter
 public class Base extends CloudAPI {
 
     @Getter
     private static Base instance;
-    @Getter
-    private final DefaultCommandSender commandSender = new DefaultCommandSender();
 
+    private String version;
+
+    private final LoggerProvider loggerProvider;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
-
     private final GroupTemplateService groupTemplateService;
     private final QueueService queueService;
-
     private boolean running = true;
+
 
     public Base() {
         super(CloudAPITypes.NODE);
 
         instance = this;
 
-        this.getLoggerProvider().logMessage("§7Cloudsystem > §b@ByteMC §7| §7Developed by: §bHttpMarco §7| Date: §b19.01.2020", LogType.EMPTY);
-        this.getLoggerProvider().logMessage(" ", LogType.EMPTY);
+        try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
+            .nextElement().openStream()) {
+            this.version = new Manifest(stream).getMainAttributes().getValue("Version");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        new DefaultExceptionCodes();
+
+        this.loggerProvider = new SimpleLoggerProvider();
+        this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
+            "§7Developed by: §bHttpMarco §7| " +
+            "Date: §b19.01.2020 §7| " +
+            "§7Version: §b" + this.version, LogType.EMPTY);
+        this.loggerProvider.logMessage(" ", LogType.EMPTY);
+
+        // copy wrapper and plugin jar
+        ErrorHandler.defaultInstance().runOnly(() -> {
+            final File storageDirectory = new File("storage/jars");
+
+            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
+                new File(storageDirectory, "wrapper.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("plugin.jar")),
+                new File(storageDirectory, "plugin.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            return null;
+        });
 
         this.databaseManager = new DatabaseManager();
         this.groupManager = new SimpleGroupManager();
@@ -60,8 +91,14 @@ public class Base extends CloudAPI {
         this.cloudPlayerManager = new CloudPlayerManager();
         this.node = new BaseNode(NodeConfig.get());
 
-        // registered commands
-        this.getCommandManager().registerCommandByPackage("de.bytemc.cloud.command.impl");
+        // register commands
+        this.getCommandManager().registerCommands(
+            new ClearCommand(),
+            new GroupCommand(),
+            new HelpCommand(),
+            new InfoCommand(),
+            new ServiceCommand(),
+            new ShutdownCommand());
 
         this.queueService = new QueueService();
 
@@ -87,14 +124,21 @@ public class Base extends CloudAPI {
                 if (((SimpleService) service).getProcess() != null)
                     ((SimpleService) service).getProcess().destroyForcibly();
             });
+
+        // delete wrapper and plugin jars
+        ErrorHandler.defaultInstance().runOnly(() -> {
+            final File storageDirectory = new File("storage/jars");
+
+            Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
+            Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
+            return null;
+        });
+
         ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
-            .addCompleteListener(voidICommunicationPromise -> {
-                try {
-                    FileUtils.deleteDirectory(new File("tmp"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            })
+            .addCompleteListener(voidICommunicationPromise -> ErrorHandler.defaultInstance().runOnly(() -> {
+                FileUtils.deleteDirectory(new File("tmp"));
+                return null;
+            }))
             .addResultListener(unused -> {
                 this.getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
                 ((SimpleLoggerProvider) this.getLoggerProvider()).getConsoleManager().shutdownReading();
@@ -105,4 +149,10 @@ public class Base extends CloudAPI {
     public boolean isRunning() {
         return this.running;
     }
+
+    @Override
+    public LoggerProvider getLoggerProvider() {
+        return this.loggerProvider;
+    }
+
 }

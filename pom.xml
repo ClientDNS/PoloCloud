@@ -7,18 +7,18 @@
     <groupId>de.bytemc</groupId>
     <artifactId>cloudsystem</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <modules>
         <module>cloudsystem-api</module>
         <module>cloudsystem-plugin</module>
-        <module>cloudsystem-base</module>
         <module>cloudsystem-wrapper</module>
+        <module>cloudsystem-base</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
-        <java.version>16</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

@@ -32,15 +32,14 @@ public final class QueueService {
     }
 
     public void addServiceToQueueWhereProvided() {
+        Base base = Base.getInstance();
         CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream()
-            .filter(serviceGroup -> serviceGroup.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName()))
+            .filter(serviceGroup -> serviceGroup.getNode().equalsIgnoreCase(base.getNode().getNodeName()))
             .filter(serviceGroup -> this.getAmountOfGroupServices(serviceGroup) < serviceGroup.getMinOnlineService())
             .forEach(serviceGroup -> {
-                //TODO CHANGE NODE HOSTNAME
-                final IService service = new SimpleService(serviceGroup.getName(), this.getPossibleServiceIDByGroup(serviceGroup),
-                    PortHandler.getNextPort(serviceGroup), "127.0.0.1");
+                final var service = new SimpleService(serviceGroup.getName(), this.getPossibleServiceIDByGroup(serviceGroup), PortHandler.getNextPort(serviceGroup), base.getNode().getHostName());
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
-                Base.getInstance().getNode().sendPacketToAll(new ServiceAddPacket(service));
+                base.getNode().sendPacketToAll(new ServiceAddPacket(service));
                 CloudAPI.getInstance().getLoggerProvider()
                     .logMessage("The group '§b" + serviceGroup.getName() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
             });

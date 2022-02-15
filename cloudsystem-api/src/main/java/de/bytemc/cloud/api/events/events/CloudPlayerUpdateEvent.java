@@ -6,8 +6,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class CloudPlayerUpdateEvent extends DefaultPlayerEvent {
 
-    public CloudPlayerUpdateEvent(final @NotNull ICloudPlayer cloudPlayer) {
+    private final UpdateReason updateReason;
+
+    public CloudPlayerUpdateEvent(final @NotNull ICloudPlayer cloudPlayer, final @NotNull UpdateReason updateReason) {
         super(cloudPlayer);
+        this.updateReason = updateReason;
+    }
+
+    public UpdateReason getUpdateReason() {
+        return this.updateReason;
+    }
+
+    public enum UpdateReason {
+        UNKNOWN, SERVER_SWITCH
     }
 
 }

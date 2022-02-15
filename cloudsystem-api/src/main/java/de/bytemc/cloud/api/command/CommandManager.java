@@ -13,6 +13,12 @@ public interface CommandManager {
     void registerCommand(@NotNull CloudCommand command);
 
     /**
+     * registers commands
+     * @param commands to register
+     */
+    void registerCommands(@NotNull CloudCommand... commands);
+
+    /**
      * unregisters a command
      * @param command to unregister
      */
@@ -21,20 +27,13 @@ public interface CommandManager {
     /**
      * executes a command
      * @param command the command to execute
-     * @return true if success
      */
-    boolean execute(@NotNull String command);
+    void execute(@NotNull String command);
 
     /**
      * gets all cached commands
      * @return the cached commands
      */
     @NotNull List<CloudCommand> getCachedCloudCommands();
-
-    /**
-     * registers all commands in a package
-     * @param input the package to register all commands
-     */
-    void registerCommandByPackage(@NotNull String input);
 
 }

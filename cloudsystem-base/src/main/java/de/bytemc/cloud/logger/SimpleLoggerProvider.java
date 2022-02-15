@@ -1,7 +1,8 @@
-package de.bytemc.cloud.api.logger;
+package de.bytemc.cloud.logger;
 
-import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.logger.LogType;
+import de.bytemc.cloud.api.logger.LoggerAnsiFactory;
+import de.bytemc.cloud.api.logger.LoggerProvider;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jline.reader.LineReader;
@@ -17,9 +18,8 @@ public final class SimpleLoggerProvider extends Logger implements LoggerProvider
 
     private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
 
-    //only for console
     @Getter
-    private SimpleConsoleManager consoleManager;
+    private final SimpleConsoleManager consoleManager;
 
     public SimpleLoggerProvider() {
         super("PoloCloud-Logger", null);
@@ -29,17 +29,15 @@ public final class SimpleLoggerProvider extends Logger implements LoggerProvider
 
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\\$tT] [%4$-7s] %5\\$s %n");
 
-        if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
-            this.consoleManager = new SimpleConsoleManager(this);
-        }
+        this.consoleManager = new SimpleConsoleManager(this);
     }
 
     @Override
     public String getLog(@NotNull String text, @NotNull LogType logType) {
         String message = "§r" + text + "§r";
         if (logType != LogType.EMPTY) {
-            message = " " + dataFormat.format(Calendar.getInstance().getTime()) + " §7" + (isWindows() ? "|" : "┃") + " §r" +
-                logType.getTextField() + " " + (isWindows() ? ">" : "»") + " §r" + message + "§r";
+            message = " " + this.dataFormat.format(Calendar.getInstance().getTime()) + " §7" + (this.isWindows() ? "|" : "┃") + " §r" +
+                logType.getTextField() + " " + (this.isWindows() ? ">" : "»") + " §r" + message + "§r";
         }
         return LoggerAnsiFactory.toColorCode(message);
     }
@@ -47,21 +45,14 @@ public final class SimpleLoggerProvider extends Logger implements LoggerProvider
     @Override
     public void logMessage(@NotNull String text, @NotNull LogType logType) {
         final String coloredMessage = this.getLog(text, logType);
-        if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
-            final LineReader lineReader = this.consoleManager.getLineReader();
-            lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-            lineReader.getTerminal().writer().println(coloredMessage);
-            lineReader.getTerminal().flush();
-            if (lineReader.isReading()) {
-                lineReader.callWidget(LineReader.REDRAW_LINE);
-                lineReader.callWidget(LineReader.REDISPLAY);
-            }
-        } else CloudAPI.getInstance().getCommandSender().sendMessage(text);
-    }
-
-    @Override
-    public void logMessage(@NotNull String text) {
-        this.logMessage(text, LogType.INFO);
+        final LineReader lineReader = this.consoleManager.getLineReader();
+        lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
+        lineReader.getTerminal().writer().println(coloredMessage);
+        lineReader.getTerminal().flush();
+        if (lineReader.isReading()) {
+            lineReader.callWidget(LineReader.REDRAW_LINE);
+            lineReader.callWidget(LineReader.REDISPLAY);
+        }
     }
 
     @Override
