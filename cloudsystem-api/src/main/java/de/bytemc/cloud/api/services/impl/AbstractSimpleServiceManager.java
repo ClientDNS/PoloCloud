@@ -1,6 +1,5 @@
 package de.bytemc.cloud.api.services.impl;
 
-import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
 import de.bytemc.cloud.api.services.IService;
@@ -12,12 +11,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter
 @Setter
 public abstract class AbstractSimpleServiceManager implements IServiceManager {
 
-    private List<IService> allCachedServices = Lists.newArrayList();
+    private List<IService> allCachedServices = new CopyOnWriteArrayList<>();
 
     public AbstractSimpleServiceManager() {
         CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceUpdatePacket.class, (ctx, packet) -> {
