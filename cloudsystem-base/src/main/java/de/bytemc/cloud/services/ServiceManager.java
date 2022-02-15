@@ -8,7 +8,6 @@ import de.bytemc.cloud.api.network.packets.services.ServiceShutdownPacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceUpdatePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.impl.AbstractSimpleServiceManager;
-import de.bytemc.cloud.services.process.ProcessServiceStarter;
 import de.bytemc.network.cluster.types.NetworkType;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.ICommunicationPromise;
@@ -31,7 +30,7 @@ public final class ServiceManager extends AbstractSimpleServiceManager {
     }
 
     public ICommunicationPromise<IService> startService(final @NotNull IService service) {
-        return new ProcessServiceStarter(service).start();
+        return ((LocalService) service).start();
     }
 
     public void sendPacketToService(final IService service, final IPacket packet) {

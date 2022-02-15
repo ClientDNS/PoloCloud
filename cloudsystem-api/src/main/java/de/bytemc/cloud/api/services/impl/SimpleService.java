@@ -24,8 +24,6 @@ public final class SimpleService implements IService {
     private int maxPlayers;
     private String motd;
 
-    private Process process;
-
     private ServiceState serviceState = ServiceState.PREPARED;
     private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
 

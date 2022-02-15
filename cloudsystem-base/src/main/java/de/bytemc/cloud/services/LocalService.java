@@ -1,20 +1,26 @@
-package de.bytemc.cloud.services.process;
+package de.bytemc.cloud.services;
 
 import de.bytemc.cloud.Base;
+import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
+import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.groups.utils.ServiceTypes;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.services.IService;
-import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.cloud.services.properties.BungeeProperties;
 import de.bytemc.cloud.services.properties.SpigotProperties;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
+import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.CommunicationPromise;
 import de.bytemc.network.promise.ICommunicationPromise;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,29 +29,54 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
-public record ProcessServiceStarter(IService service) {
+@Getter
+@Setter
+public class LocalService implements IService {
+
+    private IServiceGroup serviceGroup;
+    private int serviceID;
+
+    private int port;
+    private String hostName;
+    private int maxPlayers;
+    private String motd;
+
+    private ServiceState serviceState = ServiceState.PREPARED;
+    private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
+
+    private Process process;
+
+    public LocalService(final String group, final int id, final int port, final String hostname) {
+        this.serviceGroup = CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
+        this.serviceID = id;
+        this.port = port;
+        this.hostName = hostname;
+        assert serviceGroup != null;
+        this.motd = this.serviceGroup.getMotd();
+        this.maxPlayers = this.serviceGroup.getDefaultMaxPlayers();
+    }
 
     @SneakyThrows
-    public ProcessServiceStarter(final IService service) {
-        this.service = service;
-        this.service.setServiceState(ServiceState.STARTING);
+    public ICommunicationPromise<IService> start() {
+        this.setServiceState(ServiceState.STARTING);
 
         // add statistic to service
-        SimpleStatisticManager.registerStartingProcess(this.service);
+        SimpleStatisticManager.registerStartingProcess(this);
 
-        this.service.getServiceGroup().getGameServerVersion().download();
+        this.getServiceGroup().getGameServerVersion().download();
 
         // create tmp file
-        final File tmpFolder = new File("tmp/" + service.getName());
+        final File tmpFolder = new File("tmp/" + this.getName());
         FileUtils.forceMkdir(tmpFolder);
 
         // load all current group templates
-        Base.getInstance().getGroupTemplateService().copyTemplates(service);
+        Base.getInstance().getGroupTemplateService().copyTemplates(this);
 
-        final String jar = service.getServiceGroup().getGameServerVersion().getJar();
+        final String jar = this.serviceGroup.getGameServerVersion().getJar();
         FileUtils.copyFile(new File("storage/jars/" + jar), new File(tmpFolder, jar));
 
         // copy plugin
@@ -53,44 +84,61 @@ public record ProcessServiceStarter(IService service) {
 
         // write property for identify service
         new Document()
-            .set("service", service.getName())
-            .set("node", service.getServiceGroup().getNode())
+            .set("service", this.getName())
+            .set("node", this.serviceGroup.getNode())
             .set("hostname", Base.getInstance().getNode().getHostName())
             .set("port", Base.getInstance().getNode().getPort())
             .write(new File(tmpFolder, "property.json"));
 
         // check properties and modify
-        if (service.getServiceGroup().getGameServerVersion().isProxy()) {
+        if (this.serviceGroup.getGameServerVersion().isProxy()) {
             final var file = new File(tmpFolder, "config.yml");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
-                editor.setValue("host", "0.0.0.0:" + service.getPort());
+                editor.setValue("host", "0.0.0.0:" + this.port);
                 editor.saveFile();
-            } else new BungeeProperties(tmpFolder, service.getPort());
+            } else new BungeeProperties(tmpFolder, this.port);
         } else {
             final var file = new File(tmpFolder, "server.properties");
             if (file.exists()) {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
-                editor.setValue("server-port", String.valueOf(service.getPort()));
+                editor.setValue("server-port", String.valueOf(this.port));
                 editor.saveFile();
-            } else new SpigotProperties(tmpFolder, service.getPort());
+            } else new SpigotProperties(tmpFolder, this.port);
         }
-    }
 
-    @SneakyThrows
-    public ICommunicationPromise<IService> start() {
         final var communicationPromise = new CommunicationPromise<IService>();
-        final var tmpDirectory = new File("tmp/" + this.service.getName());
-        final var processBuilder = new ProcessBuilder(this.arguments(this.service, tmpDirectory))
+        final var tmpDirectory = new File("tmp/" + this.getName());
+        final var processBuilder = new ProcessBuilder(this.arguments(this, tmpDirectory))
             .directory(tmpDirectory);
         processBuilder.redirectOutput(new File(tmpDirectory, "/wrapper.log"));
 
-        ((SimpleService) this.service).setProcess(processBuilder.start());
-        communicationPromise.setSuccess(this.service);
+        this.process = processBuilder.start();
+        communicationPromise.setSuccess(this);
         return communicationPromise;
     }
 
-    public List<String> arguments(final IService service, final File directory) {
+    @Override
+    public @NotNull String getName() {
+        return this.serviceGroup.getName() + "-" + this.serviceID;
+    }
+
+    @Override
+    public void edit(final @NotNull Consumer<IService> serviceConsumer) {
+        serviceConsumer.accept(this);
+        this.update();
+    }
+
+    public void update(){
+        CloudAPI.getInstance().getServiceManager().updateService(this);
+    }
+
+    @Override
+    public void sendPacket(@NotNull IPacket packet) {
+        CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
+    }
+
+    private List<String> arguments(final IService service, final File directory) {
         final List<String> arguments = new ArrayList<>(Arrays.asList(
             "java",
             "-XX:+UseG1GC",

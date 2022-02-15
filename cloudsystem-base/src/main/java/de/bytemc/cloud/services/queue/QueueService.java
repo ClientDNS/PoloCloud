@@ -5,8 +5,8 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.network.packets.services.ServiceAddPacket;
 import de.bytemc.cloud.api.services.IService;
-import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+import de.bytemc.cloud.services.LocalService;
 import de.bytemc.cloud.services.ServiceManager;
 import de.bytemc.cloud.services.ports.PortHandler;
 
@@ -37,7 +37,8 @@ public final class QueueService {
             .filter(serviceGroup -> serviceGroup.getNode().equalsIgnoreCase(base.getNode().getNodeName()))
             .filter(serviceGroup -> this.getAmountOfGroupServices(serviceGroup) < serviceGroup.getMinOnlineService())
             .forEach(serviceGroup -> {
-                final var service = new SimpleService(serviceGroup.getName(), this.getPossibleServiceIDByGroup(serviceGroup), PortHandler.getNextPort(serviceGroup), base.getNode().getHostName());
+                final var service = new LocalService(serviceGroup.getName(), this.getPossibleServiceIDByGroup(serviceGroup),
+                    PortHandler.getNextPort(serviceGroup), base.getNode().getHostName());
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 base.getNode().sendPacketToAll(new ServiceAddPacket(service));
                 CloudAPI.getInstance().getLoggerProvider()

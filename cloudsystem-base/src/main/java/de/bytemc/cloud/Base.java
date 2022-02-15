@@ -9,7 +9,6 @@ import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
-import de.bytemc.cloud.api.services.impl.SimpleService;
 import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
@@ -122,8 +121,8 @@ public class Base extends CloudAPI {
         this.getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
         this.getServiceManager().getAllCachedServices()
             .forEach(service -> {
-                if (((SimpleService) service).getProcess() != null)
-                    ((SimpleService) service).getProcess().destroyForcibly();
+                /*if (((SimpleService) service).getProcess() != null)
+                    ((SimpleService) service).getProcess().destroyForcibly();*/
             });
 
         // delete wrapper and plugin jars
