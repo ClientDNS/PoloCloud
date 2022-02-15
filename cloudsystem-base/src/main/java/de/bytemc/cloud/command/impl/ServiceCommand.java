@@ -47,10 +47,10 @@ public final class ServiceCommand extends CloudCommand {
                 log.logMessage("Port: §b" + service.getPort());
             }, () -> log.logMessage("The service does not exists.", LogType.WARNING));
             return;
-        } else if (args.length > 3 && args[0].equalsIgnoreCase("command")) {
+        } else if (args.length > 1 && args[0].equalsIgnoreCase("command")) {
             cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
                 final var stringBuilder = new StringBuilder();
-                for (int i = 2; i < args.length; i++) stringBuilder.append(args[0]).append(" ");
+                for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
                 final var command = stringBuilder.toString();
                 service.executeCommand(command);
                 log.logMessage("Executed command '" + command + "' on service " + service.getName());
