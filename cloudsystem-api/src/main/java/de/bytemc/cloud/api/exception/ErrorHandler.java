@@ -30,13 +30,9 @@ public class ErrorHandler {
      */
     private ErrorHandler() {
         this.actions = new ArrayList<>();
-
         this.otherwiseActions = new ArrayList<>();
-
         this.alwaysActions = new ArrayList<>();
-
         this.errorCodeMap = new ConcurrentHashMap<>();
-
         this.localContext = ThreadLocal.withInitial(ExceptionContext::new);
     }
 
@@ -225,8 +221,7 @@ public class ErrorHandler {
             throw new IllegalArgumentException("Tried to 'handle' in ExceptionHandler, but the Error (Throwable) is null");
 
         localContext = context;
-
-        ExceptionContext ctx = localContext.get();
+        var ctx = localContext.get();
 
         for (ActionEntry actionEntry : actions) {
             if (ctx.skipFollowing) break;
@@ -438,15 +433,11 @@ public class ErrorHandler {
      * @return the found {@link MatcherFactory}
      */
     protected <T> MatcherFactory<? super T> getMatcherFactoryFromErrorCode(T errorCode) {
-        MatcherFactory<T> matcherFactory;
-        matcherFactory = errorCodeMap.get(new ErrorCodeIdentifier<>(errorCode));
-
+        MatcherFactory<T> matcherFactory = errorCodeMap.get(new ErrorCodeIdentifier<>(errorCode));
         if (matcherFactory != null) {
             return matcherFactory;
         }
-
         matcherFactory = errorCodeMap.get(new ErrorCodeIdentifier(errorCode.getClass()));
-
         return matcherFactory != null ? matcherFactory : (parentErrorHandler != null ? parentErrorHandler.getMatcherFactoryFromErrorCode(errorCode) : null);
     }
 
@@ -507,7 +498,7 @@ public class ErrorHandler {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            ErrorCodeIdentifier<?> that = (ErrorCodeIdentifier<?>) o;
+            var that = (ErrorCodeIdentifier<?>) o;
             return Objects.equals(errorCode, that.errorCode) && Objects.equals(errorCodeClass, that.errorCodeClass);
         }
 
