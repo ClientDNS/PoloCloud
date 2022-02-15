@@ -39,11 +39,11 @@ import java.util.jar.JarInputStream;
 @Setter
 public class LocalService implements IService {
 
-    private IServiceGroup serviceGroup;
-    private int serviceID;
+    private final IServiceGroup serviceGroup;
+    private final int serviceID;
+    private final int port;
+    private final String hostName;
 
-    private int port;
-    private String hostName;
     private int maxPlayers;
     private String motd;
 
