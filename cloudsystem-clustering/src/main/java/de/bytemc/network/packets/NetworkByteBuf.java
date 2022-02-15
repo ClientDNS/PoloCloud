@@ -1,12 +1,10 @@
 package de.bytemc.network.packets;
 
 import io.netty.buffer.ByteBuf;
-import lombok.Getter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-@Getter
 public record NetworkByteBuf(ByteBuf byteBuf) {
 
     public void writeString(String string) {
