@@ -4,12 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>cloudsystem</artifactId>
-        <groupId>de.bytemc</groupId>
+        <groupId>de.polocloud</groupId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>1.0.0</version>
     <artifactId>cloudsystem-wrapper</artifactId>
 
     <build>
@@ -21,10 +20,10 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.bytemc.cloud.wrapper.Wrapper</mainClass>
+                            <mainClass>de.polocloud.wrapper.Wrapper</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Premain-Class>de.bytemc.cloud.wrapper.Wrapper</Premain-Class>
+                            <Premain-Class>de.polocloud.wrapper.Wrapper</Premain-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -52,7 +51,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.bytemc</groupId>
+            <groupId>de.polocloud</groupId>
             <artifactId>cloudsystem-api</artifactId>
         </dependency>
         <dependency>

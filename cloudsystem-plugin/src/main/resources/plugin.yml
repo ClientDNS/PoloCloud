@@ -1,5 +1,5 @@
-name: CloudPlugin
-api-version: 1.17
-version: 1.0
+name: PoloCloud
+api-version: 1.13
+version: 2.0.0
 author: HttpMarco
-main: de.bytemc.cloud.plugin.bootstrap.spigot.SpigotBootstrap
+main: de.polocloud.plugin.bootstrap.bukkit.BukkitBootstrap

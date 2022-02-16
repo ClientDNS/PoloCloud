@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.bytemc</groupId>
+    <groupId>de.polocloud</groupId>
     <artifactId>cloudsystem</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0-SNAPSHOT</version>
     <modules>
+        <module>cloudsystem-network</module>
         <module>cloudsystem-api</module>
-        <module>cloudsystem-plugin</module>
         <module>cloudsystem-wrapper</module>
+        <module>cloudsystem-plugin</module>
         <module>cloudsystem-base</module>
-        <module>cloudsystem-clustering</module>
     </modules>
 
     <properties>
@@ -42,9 +42,9 @@
                 <version>3.21.0</version>
             </dependency>
             <dependency>
-                <groupId>de.bytemc</groupId>
+                <groupId>de.polocloud</groupId>
                 <artifactId>cloudsystem-api</artifactId>
-                <version>1.0.2</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -58,9 +58,8 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>de.bytemc</groupId>
-                <artifactId>cloudsystem-clustering</artifactId>
-                <version>1.0.0</version>
+                <groupId>de.polocloud</groupId>
+                <artifactId>cloudsystem-network</artifactId>
             </dependency>
             <dependency>
                 <groupId>net.md-5</groupId>

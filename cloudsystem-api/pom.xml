@@ -4,19 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>cloudsystem</artifactId>
-        <groupId>de.bytemc</groupId>
+        <groupId>de.polocloud</groupId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>1.0.2</version>
     <artifactId>cloudsystem-api</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>de.bytemc</groupId>
-            <artifactId>cloudsystem-clustering</artifactId>
-            <version>1.0.0</version>
+            <groupId>de.polocloud</groupId>
+            <artifactId>cloudsystem-network</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
