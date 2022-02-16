@@ -61,7 +61,8 @@ public final class GroupCommand extends CloudCommand {
                 log.logMessage("The group '§b" + name + "§7' is now registered and online.");
                 Base.getInstance().getQueueService().checkForQueue();
                 return;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
             log.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
@@ -109,14 +110,14 @@ public final class GroupCommand extends CloudCommand {
             final var key = args[2].toLowerCase();
             switch (key) {
                 case "memory":
-                 this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMemory);
+                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMemory);
                     log.logMessage("§7Successfully set memory to " + args[3] + "mb");
                 case "minservicecount":
                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMinOnlineService);
                     log.logMessage("§7Successfully set min service count to " + args[3]);
                     return;
                 case "maxservicecount":
-                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxOnlineService);
+                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxOnlineService);
                     log.logMessage("§7Successfully set max service count to " + args[3]);
                     return;
                 case "defaultmaxplayers":
@@ -153,7 +154,9 @@ public final class GroupCommand extends CloudCommand {
         if (arguments.length == 1) {
             return Arrays.asList("list", "create", "remove", "info", "edit");
         } else if (arguments.length == 2) {
-            return Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(IServiceGroup::getName).toList();
+            if (!arguments[0].equalsIgnoreCase("list")) {
+                return Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(IServiceGroup::getName).toList();
+            }
         } else if (arguments.length == 3) {
             if (arguments[0].equalsIgnoreCase("edit")) {
                 return Arrays.asList("memory", "minservicecount", "maxservicecount",
