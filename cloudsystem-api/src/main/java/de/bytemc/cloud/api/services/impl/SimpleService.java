@@ -16,8 +16,9 @@ import java.util.function.Consumer;
 @Setter
 public final class SimpleService implements IService {
 
-    private IServiceGroup group;
-    private int serviceId;
+    private final IServiceGroup group;
+    private final int serviceId;
+    private final String node;
 
     private int port;
     private String hostName;
@@ -27,9 +28,10 @@ public final class SimpleService implements IService {
     private ServiceState serviceState = ServiceState.PREPARED;
     private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
 
-    public SimpleService(String group, int id, int port, String hostname) {
+    public SimpleService(String group, int id, final String node, int port, String hostname) {
         this.group = CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
         this.serviceId = id;
+        this.node = node;
         this.port = port;
         this.hostName = hostname;
         assert this.group != null;
@@ -37,8 +39,8 @@ public final class SimpleService implements IService {
         this.maxPlayers = this.group.getDefaultMaxPlayers();
     }
 
-    public SimpleService(String group, int id, int port, String hostName, int maxPlayers, ServiceState serviceState, ServiceVisibility serviceVisibility, String motd) {
-        this(group, id, port, hostName);
+    public SimpleService(String group, int id, final String node, int port, String hostName, int maxPlayers, ServiceState serviceState, ServiceVisibility serviceVisibility, String motd) {
+        this(group, id, node, port, hostName);
         this.maxPlayers = maxPlayers;
         this.serviceState = serviceState;
         this.serviceVisibility = serviceVisibility;

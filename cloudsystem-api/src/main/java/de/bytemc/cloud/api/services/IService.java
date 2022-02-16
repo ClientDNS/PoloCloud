@@ -32,6 +32,11 @@ public interface IService {
     @NotNull String getHostName();
 
     /**
+     * @return the node on which the service is started
+     */
+    @NotNull String getNode();
+
+    /**
      * @return the group of the service
      */
     @NotNull IServiceGroup getGroup();

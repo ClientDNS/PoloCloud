@@ -22,7 +22,7 @@ public final class PortHandler {
 
     private static boolean isPortUsed(int port) {
         for (final IService service : Base.getInstance().getServiceManager().getAllCachedServices()) {
-            if (service.getGroup().getNode().equals(Base.getInstance().getNode().getNodeName())) {
+            if (service.getNode().equals(Base.getInstance().getNode().getNodeName())) {
                 if (service.getPort() == port) return true;
             }
         }

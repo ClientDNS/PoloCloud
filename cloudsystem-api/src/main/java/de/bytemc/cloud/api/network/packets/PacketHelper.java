@@ -17,6 +17,7 @@ public class PacketHelper {
     public static void writeService(IService service, NetworkByteBuf byteBuf) {
         byteBuf.writeString(service.getGroup().getName());
         byteBuf.writeInt(service.getServiceId());
+        byteBuf.writeString(service.getNode());
         byteBuf.writeInt(service.getPort());
         byteBuf.writeString(service.getHostName());
         byteBuf.writeInt(service.getMaxPlayers());
@@ -26,7 +27,9 @@ public class PacketHelper {
     }
 
     public static IService readService(NetworkByteBuf byteBuf) {
-        return new SimpleService(byteBuf.readString(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readString(), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()], ServiceVisibility.values()[byteBuf.readInt()], byteBuf.readString());
+        return new SimpleService(byteBuf.readString(), byteBuf.readInt(), byteBuf.readString(),
+            byteBuf.readInt(), byteBuf.readString(), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()],
+            ServiceVisibility.values()[byteBuf.readInt()], byteBuf.readString());
     }
 
     public static void writeCloudPlayer(NetworkByteBuf byteBuf, ICloudPlayer cloudPlayer) {

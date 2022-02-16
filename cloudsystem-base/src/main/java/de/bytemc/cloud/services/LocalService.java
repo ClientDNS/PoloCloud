@@ -41,6 +41,7 @@ public class LocalService implements IService {
 
     private final IServiceGroup group;
     private final int serviceId;
+    private final String node;
     private final int port;
     private final String hostName;
 
@@ -57,6 +58,7 @@ public class LocalService implements IService {
     public LocalService(final IServiceGroup group, final int id, final int port, final String hostname) {
         this.group = group;
         this.serviceId = id;
+        this.node = Base.getInstance().getNode().getNodeName();
         this.port = port;
         this.hostName = hostname;
         assert this.group != null;
@@ -92,7 +94,7 @@ public class LocalService implements IService {
         // write property for identify service
         new Document()
             .set("service", this.getName())
-            .set("node", this.group.getNode())
+            .set("node", this.node)
             .set("hostname", Base.getInstance().getNode().getHostName())
             .set("port", Base.getInstance().getNode().getPort())
             .write(new File(this.workingDirectory, "property.json"));
