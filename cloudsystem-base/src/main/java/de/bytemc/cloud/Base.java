@@ -73,8 +73,7 @@ public class Base extends CloudAPI {
 
         this.logger = new SimpleLogger();
 
-        this.loadConfig(new File("node.json"));
-
+        this.loadConfig(new File("config.json"));
 
         new DefaultExceptionCodes();
 
