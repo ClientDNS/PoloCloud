@@ -6,6 +6,7 @@ import de.bytemc.cloud.api.CloudAPIType;
 import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
+import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.Logger;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
@@ -13,6 +14,7 @@ import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.SimpleCommandManager;
 import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
+import de.bytemc.cloud.database.DatabaseConfiguration;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.exception.DefaultExceptionCodes;
@@ -43,6 +45,8 @@ public class Base extends CloudAPI {
 
     private String version;
 
+    private NodeConfig config;
+
     private final Logger logger;
     private final CommandManager commandManager;
     private final BaseNode node;
@@ -66,6 +70,8 @@ public class Base extends CloudAPI {
             e.printStackTrace();
         }
 
+        this.loadConfig();
+
         new DefaultExceptionCodes();
 
         this.logger = new SimpleLogger();
@@ -88,14 +94,12 @@ public class Base extends CloudAPI {
             return null;
         });
 
-        final var nodeConfig = NodeConfig.read();
-
-        this.databaseManager = new DatabaseManager(nodeConfig.getDatabaseConfiguration());
+        this.databaseManager = new DatabaseManager(this.config.getDatabaseConfiguration());
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
         this.groupTemplateService = new GroupTemplateService();
         this.cloudPlayerManager = new CloudPlayerManager();
-        this.node = new BaseNode(nodeConfig);
+        this.node = new BaseNode(this.config);
 
         // register commands
         this.commandManager.registerCommands(
@@ -119,6 +123,17 @@ public class Base extends CloudAPI {
         ((SimpleLogger) this.logger).getConsoleManager().start();
 
         this.queueService.checkForQueue();
+    }
+
+    private void loadConfig() {
+        final var file = new File("node.json");
+        if (file.exists()) {
+            this.config = new Document(file).get(NodeConfig.class);
+        } else {
+            this.config = new NodeConfig("node-1", "127.0.0.1", 8876,
+                new DatabaseConfiguration("127.0.0.1", 3306, "cloud", "cloud", "password123"));
+            new Document(this.config).write(file);
+        }
     }
 
     public void onShutdown() {
