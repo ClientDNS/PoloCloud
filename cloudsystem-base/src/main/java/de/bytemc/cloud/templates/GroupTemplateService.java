@@ -11,20 +11,21 @@ import java.io.IOException;
 
 public final class GroupTemplateService {
 
-    private static final String EVERY_FOLDER = "templates/EVERY/";
-    private static final String EVERY_SERVICE_FOLDER = "templates/EVERY_SERVICE/";
-    private static final String EVERY_PROXY_FOLDER = "templates/EVERY_PROXY/";
+    private final String everyFolder = "templates/EVERY/";
+    private final String everyServiceFolder = "templates/EVERY_SERVICE/";
+    private final String everyProxyFolder = "templates/EVERY_PROXY/";
 
     public GroupTemplateService() {
-        this.initFolder(EVERY_FOLDER);
-        this.initFolder(EVERY_SERVICE_FOLDER);
-        this.initFolder(EVERY_PROXY_FOLDER);
+        this.initFolder(this.everyFolder);
+        this.initFolder(this.everyServiceFolder);
+        this.initFolder(this.everyProxyFolder);
     }
 
     public void copyTemplates(IService service) throws IOException {
         final var serviceFolder = new File("tmp/" + service.getName() + "/");
-        FileUtils.copyDirectory(new File(EVERY_FOLDER), serviceFolder);
-        FileUtils.copyDirectory(new File(service.getGroup().getGameServerVersion().isProxy() ? EVERY_PROXY_FOLDER : EVERY_SERVICE_FOLDER), serviceFolder);
+        FileUtils.copyDirectory(new File(this.everyFolder), serviceFolder);
+        FileUtils.copyDirectory(new File(service.getGroup().getGameServerVersion().isProxy()
+            ? this.everyProxyFolder : this.everyServiceFolder), serviceFolder);
 
         final var templateDirection = new File("templates/" + service.getGroup().getTemplate());
         if (templateDirection.exists()) {
