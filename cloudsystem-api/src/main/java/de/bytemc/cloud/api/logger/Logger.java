@@ -6,6 +6,13 @@ public interface Logger {
 
     /**
      * logs a message
+     */
+    default void log(@NotNull String text) {
+        this.logMessage(text);
+    }
+
+    /**
+     * logs a message
      * @param text the text to log
      * @param logType the type to log
      */
