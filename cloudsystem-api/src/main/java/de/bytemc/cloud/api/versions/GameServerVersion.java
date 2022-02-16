@@ -104,11 +104,6 @@ public enum GameServerVersion {
         return new File("storage/jars", this.getJar()).exists();
     }
 
-    @SneakyThrows
-    public void copy(final @NotNull IService service) {
-        FileUtils.copyFile(new File("storage/jars", this.getJar()), new File("live/" + service.getName() + "/" + this.getJar()));
-    }
-
     private int getBuildNumber(final @NotNull String title, final @NotNull String version) {
         String paperVersion = version;
         if (paperVersion.equals("latest")) {
