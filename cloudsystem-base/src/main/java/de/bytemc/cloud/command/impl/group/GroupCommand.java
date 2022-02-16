@@ -1,4 +1,4 @@
-package de.bytemc.cloud.command.impl;
+package de.bytemc.cloud.command.impl.group;
 
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
@@ -15,14 +15,19 @@ import java.util.function.Consumer;
 
 public final class GroupCommand extends CloudCommand {
 
+
+
     public GroupCommand() {
         super("group", "Manage the cloud groups");
     }
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
+
+
         final var groupManager = cloudAPI.getGroupManager();
         final var logger = cloudAPI.getLogger();
+
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
@@ -61,8 +66,7 @@ public final class GroupCommand extends CloudCommand {
                 logger.logMessage("The group '§b" + name + "§7' is now registered and online.");
                 Base.getInstance().getQueueService().checkForQueue();
                 return;
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
             logger.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {

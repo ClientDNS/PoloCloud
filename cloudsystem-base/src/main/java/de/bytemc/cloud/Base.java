@@ -13,6 +13,7 @@ import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.SimpleCommandManager;
 import de.bytemc.cloud.command.impl.*;
+import de.bytemc.cloud.command.impl.group.GroupCommand;
 import de.bytemc.cloud.config.CloudConfiguration;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
