@@ -5,9 +5,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.groups.utils.ServiceType;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.services.IService;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +14,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 public enum GameServerVersion {
@@ -30,7 +29,7 @@ public enum GameServerVersion {
     PAPER_1_12_2("paper", "1.12.2", ServiceType.SERVER),
     PAPER_1_11_2("paper", "1.11.2", ServiceType.SERVER),
     PAPER_1_10_2("paper", "1.10.2", ServiceType.SERVER),
-    PAPER_1_9_4("paper", "1.17.1", ServiceType.SERVER),
+    PAPER_1_9_4("paper", "1.9.4", ServiceType.SERVER),
     PAPER_1_8_8("paper", "1.8.8", ServiceType.SERVER);
 
     private final String url;
@@ -52,6 +51,10 @@ public enum GameServerVersion {
         this.serviceTypes = serviceTypes;
     }
 
+    public String getName() {
+        return this.title + (!this.version.equals("latest") ? "-" + this.version : "");
+    }
+
     public boolean isProxy() {
         return this.serviceTypes == ServiceType.PROXY;
     }
@@ -60,9 +63,8 @@ public enum GameServerVersion {
         return this.title + (!Objects.equals(this.version, "latest") ? "-" + this.version : "") + ".jar";
     }
 
-    public static GameServerVersion getVersionByTitle(final String value) {
-        return Arrays.stream(values()).filter(it -> (it.getTitle() +
-            (!Objects.equals(it.getVersion(), "latest") ? "-" + it.getVersion() : "")).equalsIgnoreCase(value)).findAny().orElse(null);
+    public static GameServerVersion getVersionByName(final String value) {
+        return Arrays.stream(values()).filter(version -> version.getName().equalsIgnoreCase(value)).findAny().orElse(null);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

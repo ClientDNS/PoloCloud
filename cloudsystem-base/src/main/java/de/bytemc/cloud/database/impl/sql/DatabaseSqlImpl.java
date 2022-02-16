@@ -78,7 +78,7 @@ public class DatabaseSqlImpl implements IDatabase {
                     resultSet.getBoolean("fallbackGroup"),
                     resultSet.getBoolean("maintenance"),
                     resultSet.getBoolean("autoUpdating"),
-                    GameServerVersion.getVersionByTitle(resultSet.getString("version")));
+                    GameServerVersion.getVersionByName(resultSet.getString("version")));
                 groups.add(serviceGroup);
             }
             return groups;

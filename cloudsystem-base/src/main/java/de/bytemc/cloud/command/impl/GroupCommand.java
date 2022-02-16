@@ -19,9 +19,8 @@ public final class GroupCommand extends CloudCommand {
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
-
-        var groupManager = cloudAPI.getGroupManager();
-        var log = cloudAPI.getLoggerProvider();
+        final var groupManager = cloudAPI.getGroupManager();
+        final var log = cloudAPI.getLoggerProvider();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
@@ -29,24 +28,30 @@ public final class GroupCommand extends CloudCommand {
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
             return;
-        }
-        if (args.length == 5 && args[0].equalsIgnoreCase("create")) {
-
-            var name = args[1];
+        } else if (args.length == 5 && args[0].equalsIgnoreCase("create")) {
+            final var name = args[1];
 
             if (groupManager.isServiceGroupExists(name)) {
                 log.logMessage("This group is already exists", LogType.WARNING);
                 return;
             }
 
-            //create name memory
+            // create name memory
             try {
-                var memory = Integer.parseInt(args[2]);
-                var isStatic = Boolean.parseBoolean(args[3]);
+                final var memory = Integer.parseInt(args[2]);
+                final var isStatic = Boolean.parseBoolean(args[3]);
+                final var gameServerVersion = GameServerVersion.getVersionByName(args[4]);
 
-                var gameServerVersion = GameServerVersion.getVersionByTitle(args[4]);
+                if (gameServerVersion == null) {
+                    log.logMessage("This version is not available.", LogType.WARNING);
+                    log.logMessage("Use one of the following versions:");
+                    for (final var version : GameServerVersion.values()) {
+                        log.logMessage("- " + version.getName());
+                    }
+                    return;
+                }
 
-                var serviceGroup = new DefaultGroup(name, memory, isStatic, gameServerVersion);
+                final var serviceGroup = new DefaultGroup(name, memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
                 serviceGroup.getGameServerVersion().download();
 
@@ -54,13 +59,10 @@ public final class GroupCommand extends CloudCommand {
                 log.logMessage("The group '§b" + name + "§7' is now registered and online.");
                 Base.getInstance().getQueueService().checkForQueue();
                 return;
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
             log.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
-        }
-
-        if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
             final var name = args[1];
             final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
@@ -74,9 +76,7 @@ public final class GroupCommand extends CloudCommand {
 
             log.logMessage("The group '§b" + name + "§7' is now deleted.");
             return;
-        }
-
-        if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
             final var name = args[1];
             final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
@@ -96,18 +96,15 @@ public final class GroupCommand extends CloudCommand {
             log.logMessage("Version: §b" + serviceGroup.getGameServerVersion().getTitle());
             log.logMessage("Maintenance: §b" + serviceGroup.isMaintenance());
             return;
-        }
-
-        if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {
-            final var name = args[1];
-            final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
+        } else if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {
+            final var serviceGroup = groupManager.getServiceGroupByNameOrNull(args[1]);
 
             if (serviceGroup == null) {
                 log.logMessage("This group does not exists", LogType.WARNING);
                 return;
             }
 
-            final String key = args[2].toLowerCase();
+            final var key = args[2].toLowerCase();
             switch (key) {
                 case "memory":
                  this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMemory);
@@ -158,4 +155,5 @@ public final class GroupCommand extends CloudCommand {
                 .logMessage("§7Use following command: §bgroup edit " + group.getName() + " " + key + " §7(§bint§7)");
         }
     }
+
 }
