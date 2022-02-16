@@ -10,6 +10,7 @@ import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
+import de.bytemc.cloud.api.versions.GameServerVersion;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.CommunicationPromise;
@@ -95,16 +96,27 @@ public class LocalService implements IService {
             .write(new File(this.workingDirectory, "property.json"));
 
         // check properties and modify
-        if (this.group.getGameServerVersion().isProxy()) {
+        if (this.group.getGameServerVersion() == GameServerVersion.WATERFALL) {
             final var file = new File(this.workingDirectory, "config.yml");
             if (!file.exists()) {
-                try (final var inputStream = this.getClass().getResourceAsStream("defaultFiles/config.yml")) {
+                try (final var inputStream = this.getClass().getClassLoader().getResourceAsStream("defaultFiles/config.yml")) {
                     assert inputStream != null;
                     FileUtils.copyToFile(inputStream, file);
                 }
             }
             final var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
             editor.setValue("host", "0.0.0.0:" + this.port);
+            editor.saveFile();
+        } else if (this.group.getGameServerVersion() == GameServerVersion.VELOCITY) {
+            final var file = new File(this.workingDirectory, "velocity.toml");
+            if (!file.exists()) {
+                try (final var inputStream = this.getClass().getClassLoader().getResourceAsStream("defaultFiles/velocity.toml")) {
+                    assert inputStream != null;
+                    FileUtils.copyToFile(inputStream, file);
+                }
+            }
+            final var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.TOML);
+            editor.setValue("bind", "\"0.0.0.0:" + this.port + "\"");
             editor.saveFile();
         } else {
             final var properties = new Properties();
@@ -115,7 +127,7 @@ public class LocalService implements IService {
                 }
             } else {
                 try (final var inputStreamReader = new InputStreamReader(
-                    Objects.requireNonNull(this.getClass().getResourceAsStream("defaultFiles/server.properties")))) {
+                    Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("defaultFiles/server.properties")))) {
                     properties.load(inputStreamReader);
                 }
             }

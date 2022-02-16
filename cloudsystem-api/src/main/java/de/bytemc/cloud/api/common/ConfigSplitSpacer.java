@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum ConfigSplitSpacer {
 
     YAML(": "),
-    PROPERTIES("=");
+    TOML(" = ");
+
     private final String split;
 
 }

@@ -19,6 +19,7 @@ import java.util.Objects;
 public enum GameServerVersion {
 
     WATERFALL("waterfall", "latest", ServiceType.PROXY),
+    VELOCITY("velocity", "latest", ServiceType.PROXY),
     PAPER_1_18_1("paper", "1.18.1", ServiceType.SERVER),
     PAPER_1_17_1("paper", "1.17.1", ServiceType.SERVER),
     PAPER_1_16_5("paper", "1.16.5", ServiceType.SERVER),

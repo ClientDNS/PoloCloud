@@ -12,6 +12,13 @@
     <version>1.0.0</version>
     <artifactId>cloudsystem-plugin</artifactId>
 
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -22,6 +29,11 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>de.bytemc</groupId>
