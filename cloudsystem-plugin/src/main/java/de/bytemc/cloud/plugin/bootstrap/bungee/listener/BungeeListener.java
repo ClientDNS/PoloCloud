@@ -36,11 +36,16 @@ public final class BungeeListener implements Listener {
 
     @EventHandler
     public void handle(final ServerConnectEvent event) {
-        if (event.getReason() != ServerConnectEvent.Reason.JOIN_PROXY) return;
-        this.playerManager.getCloudPlayer(event.getPlayer().getUniqueId()).ifPresent(cloudPlayer ->
-            this.bootstrap.getFallback(event.getPlayer()).map(service -> ProxyServer.getInstance().getServerInfo(service.getName()))
-                .ifPresentOrElse(event::setTarget, () ->
-                    event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."))));
+        if (event.getReason() == ServerConnectEvent.Reason.JOIN_PROXY
+            || event.getReason() == ServerConnectEvent.Reason.LOBBY_FALLBACK) {
+            System.out.println("server connect event");
+            System.out.println(event.getReason());
+            System.out.println(event.getRequest());
+            this.playerManager.getCloudPlayer(event.getPlayer().getUniqueId()).ifPresent(cloudPlayer ->
+                this.bootstrap.getFallback(event.getPlayer()).map(service -> ProxyServer.getInstance().getServerInfo(service.getName()))
+                    .ifPresentOrElse(event::setTarget, () ->
+                        event.getPlayer().disconnect(new TextComponent("§cEs konnte kein passender Fallback gefunden werden."))));
+        }
     }
 
     @EventHandler
