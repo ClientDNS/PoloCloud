@@ -185,7 +185,7 @@ public class LocalService implements IService {
 
     private List<String> arguments() {
         final List<String> arguments = new ArrayList<>(Arrays.asList(
-            "java",
+            Base.getInstance().getConfig().getJavaCommand(),
             "-XX:+UseG1GC",
             "-XX:+ParallelRefProcEnabled",
             "-XX:MaxGCPauseMillis=200",

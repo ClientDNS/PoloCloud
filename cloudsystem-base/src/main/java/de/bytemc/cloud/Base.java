@@ -131,7 +131,8 @@ public class Base extends CloudAPI {
             this.config = new Document(file).get(NodeConfig.class);
         } else {
             this.config = new NodeConfig("node-1", "127.0.0.1", 8876,
-                new DatabaseConfiguration("127.0.0.1", 3306, "cloud", "cloud", "password123"));
+                new DatabaseConfiguration("127.0.0.1", 3306, "cloud", "cloud", "password123"),
+                "java");
             new Document(this.config).write(file);
         }
     }

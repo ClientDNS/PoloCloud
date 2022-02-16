@@ -8,9 +8,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class NodeConfig {
 
-    private String nodeName;
-    private String hostname;
-    private int port;
+    private final String nodeName;
+    private final String hostname;
+    private final int port;
     private final DatabaseConfiguration databaseConfiguration;
+    private final String javaCommand;
 
 }
