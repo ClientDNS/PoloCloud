@@ -2,6 +2,7 @@ package de.bytemc.cloud.logger;
 
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerAnsiFactory;
+import de.bytemc.cloud.api.logger.LoggerOutputStream;
 import de.bytemc.cloud.api.logger.LoggerProvider;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,7 @@ import org.jline.reader.LineReader;
 import org.jline.utils.InfoCmp;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -21,6 +23,9 @@ public final class SimpleLoggerProvider implements LoggerProvider {
 
     public SimpleLoggerProvider() {
         this.consoleManager = new SimpleConsoleManager(this);
+
+        System.setOut(new PrintStream(new LoggerOutputStream(this, LogType.INFO)));
+        System.setErr(new PrintStream(new LoggerOutputStream(this, LogType.ERROR)));
     }
 
     @Override
