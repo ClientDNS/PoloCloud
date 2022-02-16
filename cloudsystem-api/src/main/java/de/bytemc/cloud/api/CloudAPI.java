@@ -30,12 +30,12 @@ public abstract class CloudAPI {
 
         ErrorHandler.defaultInstance().registerDefaultThreadExceptionHandler()
             .orElse((throwable, errorHandler) -> {
-                if (getLoggerProvider() == null) {
+                if (this.getLogger() == null) {
                     System.err.println("Caught an unexpected error (" + throwable.getClass().getSimpleName() + ") | (" + throwable.getMessage() + ")");
                     throwable.printStackTrace();
                     return;
                 }
-                getLoggerProvider().logMessage("§7Caught an §cunexpected error §7(§c" + throwable.getClass().getSimpleName() + "§7) | (§b" + throwable.getMessage() + "§7)", LogType.ERROR);
+                this.getLogger().logMessage("§7Caught an §cunexpected error §7(§c" + throwable.getClass().getSimpleName() + "§7) | (§b" + throwable.getMessage() + "§7)", LogType.ERROR);
                 throwable.printStackTrace();
             });
 
@@ -46,7 +46,7 @@ public abstract class CloudAPI {
     /**
      * @return the logger provider
      */
-    public abstract Logger getLoggerProvider();
+    public abstract Logger getLogger();
 
     /**
      * @return the group manager

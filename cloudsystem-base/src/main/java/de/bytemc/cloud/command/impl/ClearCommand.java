@@ -11,7 +11,7 @@ public final class ClearCommand extends CloudCommand {
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
-        cloudAPI.getLoggerProvider().clearConsole();
+        cloudAPI.getLogger().clearConsole();
     }
 
 }

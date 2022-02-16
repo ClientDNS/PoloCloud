@@ -17,14 +17,14 @@ import org.jline.terminal.TerminalBuilder;
 @Getter
 public final class SimpleConsoleManager {
 
-    private final Logger loggerProvider;
+    private final Logger logger;
     private Thread consoleReadingThread;
     private final LineReader lineReader;
     private final boolean windowsSystem;
 
     @SneakyThrows
-    public SimpleConsoleManager(final Logger loggerProvider) {
-        this.windowsSystem = ((SimpleLogger) loggerProvider).isWindows();
+    public SimpleConsoleManager(final Logger logger) {
+        this.windowsSystem = ((SimpleLogger) logger).isWindows();
         this.lineReader = LineReaderBuilder.builder()
             .terminal(TerminalBuilder.builder().system(true).streams(System.in, System.out).encoding(Charsets.UTF_8).dumb(true).build())
             .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
@@ -32,17 +32,17 @@ public final class SimpleConsoleManager {
             .option(LineReader.Option.INSERT_TAB, false)
             .completer(new ConsoleAutoCompleteTool())
             .build();
-        this.loggerProvider = loggerProvider;
+        this.logger = logger;
 
-        this.loggerProvider.clearConsole();
+        this.logger.clearConsole();
     }
 
     public void start() {
-        this.consoleReadingThread = new ConsoleReadingThread((SimpleLogger) loggerProvider, this.lineReader,
-            s -> Base.getInstance().getCommandManager().execute(s), windowsSystem);
+        this.consoleReadingThread = new ConsoleReadingThread(this.logger, this.lineReader,
+            s -> Base.getInstance().getCommandManager().execute(s), this.windowsSystem);
         this.consoleReadingThread.setUncaughtExceptionHandler((t, e) -> {
-            CloudAPI.getInstance().getLoggerProvider().logMessage("An error...", LogType.ERROR);
-            CloudAPI.getInstance().getLoggerProvider().logMessage("§7" + Throwables.getStackTraceAsString(e), LogType.ERROR);
+            CloudAPI.getInstance().getLogger().logMessage("An error...", LogType.ERROR);
+            CloudAPI.getInstance().getLogger().logMessage("§7" + Throwables.getStackTraceAsString(e), LogType.ERROR);
             e.printStackTrace();
         });
         this.consoleReadingThread.start();
@@ -56,4 +56,5 @@ public final class SimpleConsoleManager {
     public void shutdownReading() {
         this.consoleReadingThread.interrupt();
     }
+
 }

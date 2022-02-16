@@ -44,7 +44,7 @@ public final class ServiceManager implements IServiceManager {
 
     public void start(final IService service) {
         this.startService(service).addResultListener(it ->
-            Base.getInstance().getLoggerProvider()
+            Base.getInstance().getLogger()
                 .logMessage("The service '§b" + service.getName() + "§7' selected and will now started."))
             .addFailureListener(Throwable::printStackTrace);
     }

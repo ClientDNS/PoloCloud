@@ -72,7 +72,7 @@ public enum GameServerVersion {
 
         if (file.exists()) return;
 
-        CloudAPI.getInstance().getLoggerProvider().logMessage("§7Downloading §bVersion§7... (§3" + this.getTitle() + "§7)");
+        CloudAPI.getInstance().getLogger().logMessage("§7Downloading §bVersion§7... (§3" + this.getTitle() + "§7)");
 
         file.getParentFile().mkdirs();
         try {
@@ -93,12 +93,12 @@ public enum GameServerVersion {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            CloudAPI.getInstance().getLoggerProvider().logMessage("§cFailed to download version§7... (§3" + this.getTitle() + "§7)", LogType.ERROR);
+            CloudAPI.getInstance().getLogger().logMessage("§cFailed to download version§7... (§3" + this.getTitle() + "§7)", LogType.ERROR);
             return;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        CloudAPI.getInstance().getLoggerProvider().logMessage("Downloading of (§3" + this.getTitle() + "§7)§a successfully §7completed.");
+        CloudAPI.getInstance().getLogger().logMessage("Downloading of (§3" + this.getTitle() + "§7)§a successfully §7completed.");
     }
 
     private boolean isDownloaded() {

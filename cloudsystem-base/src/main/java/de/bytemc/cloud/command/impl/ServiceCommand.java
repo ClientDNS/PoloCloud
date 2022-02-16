@@ -18,11 +18,11 @@ public final class ServiceCommand extends CloudCommand {
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
-        final var log = cloudAPI.getLoggerProvider();
+        final var logger = cloudAPI.getLogger();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             for (final IService service : cloudAPI.getServiceManager().getAllCachedServices()) {
-                log.logMessage("Name of service '§b" + service.getName()
+                logger.logMessage("Name of service '§b" + service.getName()
                     + "§7' (§7State of service '§b" + service.getServiceState().getName()
                     + "§7' | Node: '" + service.getGroup().getNode() + "')");
             }
@@ -30,26 +30,26 @@ public final class ServiceCommand extends CloudCommand {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("stop")) {
             cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
                 if (service.getServiceState() == ServiceState.PREPARED || service.getServiceState() == ServiceState.STOPPING) {
-                    log.logMessage("This service ist not started or already in stopping state.", LogType.WARNING);
+                    logger.logMessage("This service ist not started or already in stopping state.", LogType.WARNING);
                     return;
                 }
 
                 service.stop();
-                log.logMessage("The service '§b" + service.getName() + "§7' is now stopped.");
-            }, () -> log.logMessage("This service does not exists.", LogType.WARNING));
+                logger.logMessage("The service '§b" + service.getName() + "§7' is now stopped.");
+            }, () -> logger.logMessage("This service does not exists.", LogType.WARNING));
             return;
         } else if (args.length == 4) {
             // TODO
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
             cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
-                log.logMessage("Service information:");
-                log.logMessage("Name: §b" + service.getName());
-                log.logMessage("ID: §b" + service.getServiceId());
-                log.logMessage("Group: §b" + service.getGroup().getName());
-                log.logMessage("Host: §b" + service.getHostName());
-                log.logMessage("Port: §b" + service.getPort());
-            }, () -> log.logMessage("The service does not exists.", LogType.WARNING));
+                logger.logMessage("Service information:");
+                logger.logMessage("Name: §b" + service.getName());
+                logger.logMessage("ID: §b" + service.getServiceId());
+                logger.logMessage("Group: §b" + service.getGroup().getName());
+                logger.logMessage("Host: §b" + service.getHostName());
+                logger.logMessage("Port: §b" + service.getPort());
+            }, () -> logger.logMessage("The service does not exists.", LogType.WARNING));
             return;
         } else if (args.length > 1 && args[0].equalsIgnoreCase("command")) {
             cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
@@ -57,16 +57,16 @@ public final class ServiceCommand extends CloudCommand {
                 for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
                 final var command = stringBuilder.toString();
                 service.executeCommand(command);
-                log.logMessage("Executed command '" + command + "' on service " + service.getName());
-            }, () -> log.logMessage("The service does not exists.", LogType.WARNING));
+                logger.logMessage("Executed command '" + command + "' on service " + service.getName());
+            }, () -> logger.logMessage("The service does not exists.", LogType.WARNING));
             return;
         }
 
-        log.logMessage("§7Use following command: §bservice list §7- List all available services.");
-        log.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that not exists.");
-        log.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
-        log.logMessage("§7Use following command: §bservice info (name) §7- Prints information about the specific service.");
-        log.logMessage("§7Use following command: §bservice command (name) (command) §7- Executes a command on a server.");
+        logger.logMessage("§7Use following command: §bservice list §7- List all available services.");
+        logger.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that not exists.");
+        logger.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
+        logger.logMessage("§7Use following command: §bservice info (name) §7- Prints information about the specific service.");
+        logger.logMessage("§7Use following command: §bservice command (name) (command) §7- Executes a command on a server.");
     }
 
     @Override

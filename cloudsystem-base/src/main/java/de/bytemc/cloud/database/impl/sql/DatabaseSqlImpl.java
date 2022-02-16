@@ -34,7 +34,7 @@ public class DatabaseSqlImpl implements IDatabase {
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
             " memory INT, minOnlineService INT, maxOnlineService INT, static INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT, maintenance INT, autoUpdating INT)");
 
-        CloudAPI.getInstance().getLoggerProvider().logMessage("The connection is now established to the database.");
+        CloudAPI.getInstance().getLogger().logMessage("The connection is now established to the database.");
     }
 
     @SneakyThrows

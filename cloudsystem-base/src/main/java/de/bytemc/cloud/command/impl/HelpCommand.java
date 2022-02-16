@@ -14,8 +14,8 @@ public final class HelpCommand extends CloudCommand {
     public void execute(CloudAPI cloudAPI, String[] args) {
         final var manager = Base.getInstance().getCommandManager();
 
-        cloudAPI.getLoggerProvider().logMessage("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
-        manager.getCachedCloudCommands().values().forEach(it -> cloudAPI.getLoggerProvider()
+        cloudAPI.getLogger().logMessage("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
+        manager.getCachedCloudCommands().values().forEach(it -> cloudAPI.getLogger()
             .logMessage("§b" + it.getName() + getAliases(it) + " - " + it.getDescription()));
     }
 

@@ -8,11 +8,11 @@ import java.nio.charset.StandardCharsets;
 
 public final class LoggerOutputStream extends ByteArrayOutputStream {
 
-    private final Logger loggerProvider;
+    private final Logger logger;
     private final LogType logType;
 
-    public LoggerOutputStream(final Logger loggerProvider, final LogType logType) {
-        this.loggerProvider = loggerProvider;
+    public LoggerOutputStream(final Logger logger, final LogType logType) {
+        this.logger = logger;
         this.logType = logType;
     }
 
@@ -21,7 +21,7 @@ public final class LoggerOutputStream extends ByteArrayOutputStream {
         final var input = this.toString(StandardCharsets.UTF_8);
         this.reset();
         if (input != null && !input.isEmpty()) {
-            this.loggerProvider.logMessage(input, this.logType);
+            this.logger.logMessage(input, this.logType);
         }
     }
 

@@ -43,7 +43,7 @@ public class Base extends CloudAPI {
 
     private String version;
 
-    private final Logger loggerProvider;
+    private final Logger logger;
     private final CommandManager commandManager;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
@@ -68,12 +68,12 @@ public class Base extends CloudAPI {
 
         new DefaultExceptionCodes();
 
-        this.loggerProvider = new SimpleLogger();
-        this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
+        this.logger = new SimpleLogger();
+        this.logger.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
             "§7Developed by: §bHttpMarco §7| " +
             "Date: §b19.01.2020 §7| " +
             "§7Version: §b" + this.version, LogType.EMPTY);
-        this.loggerProvider.logMessage(" ", LogType.EMPTY);
+        this.logger.logMessage(" ", LogType.EMPTY);
         this.commandManager = new SimpleCommandManager();
 
         // copy wrapper and plugin jar
@@ -112,11 +112,11 @@ public class Base extends CloudAPI {
         Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
 
         // print finish successfully message
-        this.loggerProvider.logMessage("               ", LogType.EMPTY);
-        this.loggerProvider.logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
-        this.loggerProvider.logMessage("               ", LogType.EMPTY);
+        this.logger.logMessage("               ", LogType.EMPTY);
+        this.logger.logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
+        this.logger.logMessage("               ", LogType.EMPTY);
 
-        ((SimpleLogger) this.loggerProvider).getConsoleManager().start();
+        ((SimpleLogger) this.logger).getConsoleManager().start();
 
         this.queueService.checkForQueue();
     }
@@ -124,7 +124,7 @@ public class Base extends CloudAPI {
     public void onShutdown() {
         if (!this.running) return;
         this.running = false;
-        this.loggerProvider.logMessage("Trying to terminate cloudsystem.");
+        this.logger.logMessage("Trying to terminate cloudsystem.");
         this.serviceManager.getAllCachedServices()
             .forEach(service -> {
                 if (service instanceof LocalService localService) localService.stop();
@@ -145,8 +145,8 @@ public class Base extends CloudAPI {
                 return null;
             }))
             .addResultListener(unused -> {
-                this.loggerProvider.logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLogger) this.loggerProvider).getConsoleManager().shutdownReading();
+                this.logger.logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+                ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
                 System.exit(0);
             });
     }
@@ -156,8 +156,8 @@ public class Base extends CloudAPI {
     }
 
     @Override
-    public Logger getLoggerProvider() {
-        return this.loggerProvider;
+    public Logger getLogger() {
+        return this.logger;
     }
 
     public CommandManager getCommandManager() {

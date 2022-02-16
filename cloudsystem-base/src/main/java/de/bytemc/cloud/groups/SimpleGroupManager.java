@@ -37,7 +37,7 @@ public final class SimpleGroupManager extends AbstractGroupManager {
         CloudAPI.getInstance().getEventHandler().registerEvent(CloudServiceGroupUpdateEvent.class, event ->
             Base.getInstance().getQueueService().checkForQueue());
 
-        CloudAPI.getInstance().getLoggerProvider().logMessage("§7Loading following groups: §b"
+        CloudAPI.getInstance().getLogger().logMessage("§7Loading following groups: §b"
             + this.getAllCachedServiceGroups().stream().map(IServiceGroup::getName).collect(Collectors.joining("§7, §b")));
     }
 

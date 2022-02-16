@@ -11,18 +11,18 @@ public final class WrapperClient extends NodeClient {
         super(clientName, NetworkType.SERVICE);
 
         this.connectEstablishment(hostname, port).addResultListener(it ->
-            CloudAPI.getInstance().getLoggerProvider().logMessage("The service start successfully network service."))
+            CloudAPI.getInstance().getLogger().log("The service start successfully network service."))
             .addFailureListener(Throwable::printStackTrace);
     }
 
     @Override
     public void onActivated(ChannelHandlerContext channelHandlerContext) {
-        CloudAPI.getInstance().getLoggerProvider().logMessage("This service successfully connected to the cluster.");
+        CloudAPI.getInstance().getLogger().log("This service successfully connected to the cluster.");
     }
 
     @Override
     public void onClose(ChannelHandlerContext channelHandlerContext) {
-        CloudAPI.getInstance().getLoggerProvider().logMessage("This service disconnected from the cluster");
+        CloudAPI.getInstance().getLogger().log("This service disconnected from the cluster");
     }
 
 }

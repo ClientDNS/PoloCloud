@@ -41,7 +41,7 @@ public final class QueueService {
                     PortHandler.getNextPort(serviceGroup), base.getNode().getHostName());
                 CloudAPI.getInstance().getServiceManager().getAllCachedServices().add(service);
                 base.getNode().sendPacketToAll(new ServiceAddPacket(service));
-                CloudAPI.getInstance().getLoggerProvider()
+                CloudAPI.getInstance().getLogger()
                     .logMessage("The group '§b" + serviceGroup.getName() + "§7' start new instance of '§b" + service.getName() + "§7' (" + service.getServiceState().getName() + "§7)");
             });
     }

@@ -38,7 +38,7 @@ public abstract class AbstractPlayerManager implements ICloudPlayerManager {
                 final ICloudPlayer cloudPlayer = new SimpleCloudPlayer(packet.getUuid(), packet.getUsername(), service);
                 this.cachedCloudPlayers.put(packet.getUuid(), cloudPlayer);
                 eventHandler.call(new CloudPlayerLoginEvent(cloudPlayer));
-            }, () -> CloudAPI.getInstance().getLoggerProvider()
+            }, () -> CloudAPI.getInstance().getLogger()
                 .logMessage("Proxy " + packet.getProxyServer() + " not found for player " + packet.getUsername() + ":" + packet.getUuid(), LogType.ERROR)));
 
         networkHandler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) ->

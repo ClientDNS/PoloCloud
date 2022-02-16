@@ -10,7 +10,7 @@ import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.wrapper.groups.GroupManager;
-import de.bytemc.cloud.wrapper.logger.WrapperLoggerProvider;
+import de.bytemc.cloud.wrapper.logger.WrapperLogger;
 import de.bytemc.cloud.wrapper.network.WrapperClient;
 import de.bytemc.cloud.wrapper.player.CloudPlayerManager;
 import de.bytemc.cloud.wrapper.service.ServiceManager;
@@ -80,7 +80,7 @@ public final class Wrapper extends CloudAPI {
 
     private static Wrapper instance;
 
-    private final Logger loggerProvider;
+    private final Logger logger;
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
@@ -93,13 +93,13 @@ public final class Wrapper extends CloudAPI {
 
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
-        this.loggerProvider = new WrapperLoggerProvider();
+        this.logger = new WrapperLogger();
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager(property);
         this.cloudPlayerManager = new CloudPlayerManager();
         this.client = new WrapperClient(property.getService(), property.getHostname(), property.getPort());
 
-        this.loggerProvider.logMessage("Successfully started plugin client.", LogType.SUCCESS);
+        this.logger.logMessage("Successfully started plugin client.", LogType.SUCCESS);
     }
 
     public static Wrapper getInstance() {
@@ -107,8 +107,8 @@ public final class Wrapper extends CloudAPI {
     }
 
     @Override
-    public Logger getLoggerProvider() {
-        return this.loggerProvider;
+    public Logger getLogger() {
+        return this.logger;
     }
 
     @Override

@@ -13,12 +13,12 @@ public final class InfoCommand extends CloudCommand {
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
-        final Logger loggerProvider = cloudAPI.getLoggerProvider();
+        final Logger logger = cloudAPI.getLogger();
 
-        loggerProvider.logMessage("§7Version: §b" + Base.getInstance().getVersion());
-        loggerProvider.logMessage("§7Node: §b" + Base.getInstance().getNode().getNodeName());
-        loggerProvider.logMessage("§7Threads: §b" + Thread.getAllStackTraces().keySet().size());
-        loggerProvider.logMessage("§7RAM: §b" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "mb");
+        logger.log("§7Version: §b" + Base.getInstance().getVersion());
+        logger.log("§7Node: §b" + Base.getInstance().getNode().getNodeName());
+        logger.log("§7Threads: §b" + Thread.getAllStackTraces().keySet().size());
+        logger.log("§7RAM: §b" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "mb");
     }
 
 }

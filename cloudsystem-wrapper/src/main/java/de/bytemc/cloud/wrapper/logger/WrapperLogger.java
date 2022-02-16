@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class WrapperLoggerProvider implements Logger {
+public class WrapperLogger implements Logger {
 
     private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
 

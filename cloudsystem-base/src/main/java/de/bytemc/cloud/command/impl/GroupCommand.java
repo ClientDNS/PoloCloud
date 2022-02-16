@@ -22,11 +22,11 @@ public final class GroupCommand extends CloudCommand {
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
         final var groupManager = cloudAPI.getGroupManager();
-        final var log = cloudAPI.getLoggerProvider();
+        final var logger = cloudAPI.getLogger();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
-                log.logMessage("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
+                logger.logMessage("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
             return;
@@ -34,7 +34,7 @@ public final class GroupCommand extends CloudCommand {
             final var name = args[1];
 
             if (groupManager.isServiceGroupExists(name)) {
-                log.logMessage("This group is already exists", LogType.WARNING);
+                logger.logMessage("This group is already exists", LogType.WARNING);
                 return;
             }
 
@@ -45,10 +45,10 @@ public final class GroupCommand extends CloudCommand {
                 final var gameServerVersion = GameServerVersion.getVersionByName(args[4]);
 
                 if (gameServerVersion == null) {
-                    log.logMessage("This version is not available.", LogType.WARNING);
-                    log.logMessage("Use one of the following versions:");
+                    logger.logMessage("This version is not available.", LogType.WARNING);
+                    logger.logMessage("Use one of the following versions:");
                     for (final var version : GameServerVersion.values()) {
-                        log.logMessage("- " + version.getName());
+                        logger.logMessage("- " + version.getName());
                     }
                     return;
                 }
@@ -58,52 +58,52 @@ public final class GroupCommand extends CloudCommand {
                 serviceGroup.getGameServerVersion().download();
 
                 Base.getInstance().getGroupTemplateService().createTemplateFolder(serviceGroup);
-                log.logMessage("The group '§b" + name + "§7' is now registered and online.");
+                logger.logMessage("The group '§b" + name + "§7' is now registered and online.");
                 Base.getInstance().getQueueService().checkForQueue();
                 return;
             } catch (NumberFormatException ignored) {
             }
-            log.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
+            logger.logMessage("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
             final var name = args[1];
             final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
             if (serviceGroup == null) {
-                log.logMessage("This group does not exists", LogType.WARNING);
+                logger.logMessage("This group does not exists", LogType.WARNING);
                 return;
             }
             groupManager.removeServiceGroup(serviceGroup);
 
             cloudAPI.getServiceManager().getAllServicesByGroup(serviceGroup).forEach(IService::stop);
 
-            log.logMessage("The group '§b" + name + "§7' is now deleted.");
+            logger.logMessage("The group '§b" + name + "§7' is now deleted.");
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
             final var name = args[1];
             final var serviceGroup = groupManager.getServiceGroupByNameOrNull(name);
 
             if (serviceGroup == null) {
-                log.logMessage("This group does not exists", LogType.WARNING);
+                logger.logMessage("This group does not exists", LogType.WARNING);
                 return;
             }
 
-            log.logMessage("Group information's: ");
-            log.logMessage("Groupname: §b" + serviceGroup.getName());
-            log.logMessage("Template: §b" + serviceGroup.getTemplate());
-            log.logMessage("Node: §b" + serviceGroup.getNode());
-            log.logMessage("Memory: §b" + serviceGroup.getMemory() + "mb");
-            log.logMessage("Min online services: §b" + serviceGroup.getMinOnlineService());
-            log.logMessage("Max online services: §b" + serviceGroup.getMaxOnlineService());
-            log.logMessage("Static: §b" + serviceGroup.isStatic());
-            log.logMessage("Version: §b" + serviceGroup.getGameServerVersion().getTitle());
-            log.logMessage("Maintenance: §b" + serviceGroup.isMaintenance());
+            logger.logMessage("Group information's: ");
+            logger.logMessage("Groupname: §b" + serviceGroup.getName());
+            logger.logMessage("Template: §b" + serviceGroup.getTemplate());
+            logger.logMessage("Node: §b" + serviceGroup.getNode());
+            logger.logMessage("Memory: §b" + serviceGroup.getMemory() + "mb");
+            logger.logMessage("Min online services: §b" + serviceGroup.getMinOnlineService());
+            logger.logMessage("Max online services: §b" + serviceGroup.getMaxOnlineService());
+            logger.logMessage("Static: §b" + serviceGroup.isStatic());
+            logger.logMessage("Version: §b" + serviceGroup.getGameServerVersion().getTitle());
+            logger.logMessage("Maintenance: §b" + serviceGroup.isMaintenance());
             return;
         } else if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {
             final var serviceGroup = groupManager.getServiceGroupByNameOrNull(args[1]);
 
             if (serviceGroup == null) {
-                log.logMessage("This group does not exists", LogType.WARNING);
+                logger.logMessage("This group does not exists", LogType.WARNING);
                 return;
             }
 
@@ -111,42 +111,42 @@ public final class GroupCommand extends CloudCommand {
             switch (key) {
                 case "memory":
                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMemory);
-                    log.logMessage("§7Successfully set memory to " + args[3] + "mb");
+                    logger.logMessage("§7Successfully set memory to " + args[3] + "mb");
                 case "minservicecount":
                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMinOnlineService);
-                    log.logMessage("§7Successfully set min service count to " + args[3]);
+                    logger.logMessage("§7Successfully set min service count to " + args[3]);
                     return;
                 case "maxservicecount":
                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxOnlineService);
-                    log.logMessage("§7Successfully set max service count to " + args[3]);
+                    logger.logMessage("§7Successfully set max service count to " + args[3]);
                     return;
                 case "defaultmaxplayers":
                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setDefaultMaxPlayers);
-                    log.logMessage("§7Successfully set default max players to " + args[3]);
+                    logger.logMessage("§7Successfully set default max players to " + args[3]);
                     return;
                 case "fallback":
                     serviceGroup.setFallbackGroup(Boolean.parseBoolean(args[3]));
                     serviceGroup.update();
-                    log.logMessage("§7Successfully set fallback to " + args[3]);
+                    logger.logMessage("§7Successfully set fallback to " + args[3]);
                     return;
                 case "maintenance":
                     serviceGroup.setMaintenance(Boolean.parseBoolean(args[3]));
                     serviceGroup.update();
-                    log.logMessage("§7Successfully set maintenance to " + args[3]);
+                    logger.logMessage("§7Successfully set maintenance to " + args[3]);
                     return;
                 case "version":
                     serviceGroup.setGameServerVersion(GameServerVersion.valueOf(args[3]));
                     serviceGroup.update();
-                    log.logMessage("§7Successfully set version to " + args[3]);
+                    logger.logMessage("§7Successfully set version to " + args[3]);
                     return;
             }
         }
 
-        log.logMessage("§7Use following command: §bgroup list - List all groups");
-        log.logMessage("§7Use following command: §bgroup create §7(§bname§7) (§bmemory§7) (§bstatic§7) (§bversion§7)");
-        log.logMessage("§7Use following command: §bgroup remove §7(§bname§7)");
-        log.logMessage("§7Use following command: §bgroup info §7(§bname§7)");
-        log.logMessage("§7Use following command: §bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
+        logger.logMessage("§7Use following command: §bgroup list - List all groups");
+        logger.logMessage("§7Use following command: §bgroup create §7(§bname§7) (§bmemory§7) (§bstatic§7) (§bversion§7)");
+        logger.logMessage("§7Use following command: §bgroup remove §7(§bname§7)");
+        logger.logMessage("§7Use following command: §bgroup info §7(§bname§7)");
+        logger.logMessage("§7Use following command: §bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
     }
 
     @Override
@@ -179,7 +179,7 @@ public final class GroupCommand extends CloudCommand {
             consumer.accept(Integer.parseInt(value));
             group.update();
         } catch (NumberFormatException e) {
-            CloudAPI.getInstance().getLoggerProvider()
+            CloudAPI.getInstance().getLogger()
                 .logMessage("§7Use following command: §bgroup edit " + group.getName() + " " + key + " §7(§bint§7)");
         }
     }
