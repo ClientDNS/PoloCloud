@@ -51,7 +51,7 @@ public class DatabaseSqlImpl implements IDatabase {
         executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, static, fallbackGroup, version, maxPlayers, motd, maintenance, autoUpdating) VALUES (" +
             "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStatic() ? 1 : 0) +
-            ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "', " + serviceGroup.getDefaultMaxPlayers() +
+            ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getName() + "', " + serviceGroup.getDefaultMaxPlayers() +
             ",'" + serviceGroup.getMotd() + "', '" + (serviceGroup.isMaintenance() ? 1 : 0) + "', '" + (serviceGroup.isAutoUpdating() ? 1 : 0) + "');");
     }
 
