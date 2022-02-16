@@ -1,4 +1,4 @@
-package de.polocloud.wrapper.groups;
+package de.polocloud.wrapper.group;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.IServiceGroup;

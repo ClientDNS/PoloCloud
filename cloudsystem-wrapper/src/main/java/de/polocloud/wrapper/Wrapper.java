@@ -9,7 +9,7 @@ import de.polocloud.api.logger.Logger;
 import de.polocloud.api.player.IPlayerManager;
 import de.polocloud.api.service.IService;
 import de.polocloud.api.service.IServiceManager;
-import de.polocloud.wrapper.groups.GroupManager;
+import de.polocloud.wrapper.group.GroupManager;
 import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.player.CloudPlayerManager;
