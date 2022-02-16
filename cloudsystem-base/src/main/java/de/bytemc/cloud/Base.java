@@ -13,8 +13,7 @@ import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.SimpleCommandManager;
 import de.bytemc.cloud.command.impl.*;
-import de.bytemc.cloud.config.NodeConfig;
-import de.bytemc.cloud.database.DatabaseConfiguration;
+import de.bytemc.cloud.config.CloudConfiguration;
 import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.exception.DefaultExceptionCodes;
@@ -29,6 +28,7 @@ import de.bytemc.cloud.templates.GroupTemplateService;
 import de.bytemc.network.promise.ICommunicationPromise;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class Base extends CloudAPI {
 
     private String version;
 
-    private NodeConfig config;
+    private CloudConfiguration config;
 
     private final Logger logger;
     private final CommandManager commandManager;
@@ -72,7 +72,7 @@ public class Base extends CloudAPI {
 
         this.logger = new SimpleLogger();
 
-        this.loadConfig();
+        this.loadConfig(new File("node.json"));
 
 
         new DefaultExceptionCodes();
@@ -89,10 +89,11 @@ public class Base extends CloudAPI {
             final var storageDirectory = new File("storage/jars");
             storageDirectory.mkdirs();
 
-            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
-                new File(storageDirectory, "wrapper.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("plugin.jar")),
-                new File(storageDirectory, "plugin.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            var loader = this.getClass().getClassLoader();
+            var copyOption = StandardCopyOption.REPLACE_EXISTING;
+
+            Files.copy(Objects.requireNonNull(loader.getResourceAsStream("wrapper.jar")), new File(storageDirectory, "wrapper.jar").toPath(), copyOption);
+            Files.copy(Objects.requireNonNull(loader.getResourceAsStream("plugin.jar")), new File(storageDirectory, "plugin.jar").toPath(), copyOption);
             return null;
         });
 
@@ -127,16 +128,12 @@ public class Base extends CloudAPI {
         this.queueService.checkForQueue();
     }
 
-    private void loadConfig() {
-        final var file = new File("node.json");
+    private void loadConfig(@NotNull File file) {
         if (file.exists()) {
-            this.config = new Document(file).get(NodeConfig.class);
-        } else {
-            this.config = new NodeConfig("node-1", "127.0.0.1", 8876,
-                new DatabaseConfiguration("127.0.0.1", 3306, "cloud", "cloud", "password123"),
-                "java");
-            new Document(this.config).write(file);
+            this.config = new Document(file).get(CloudConfiguration.class);
+            return;
         }
+        new Document(this.config = new CloudConfiguration()).write(file);
     }
 
     public void onShutdown() {

@@ -9,7 +9,7 @@ import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
-import de.bytemc.cloud.config.NodeConfig;
+import de.bytemc.cloud.config.CloudConfiguration;
 import de.bytemc.cloud.services.LocalService;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
 import de.bytemc.network.cluster.impl.AbstractNodeClustering;
@@ -24,11 +24,11 @@ public final class BaseNode extends AbstractNodeClustering {
     private final String hostName;
     private final int port;
 
-    public BaseNode(final NodeConfig nodeConfig) {
-        super(nodeConfig.getNodeName());
+    public BaseNode(final CloudConfiguration cloudConfiguration) {
+        super(cloudConfiguration.getNodeName());
 
-        this.hostName = nodeConfig.getHostname();
-        this.port = nodeConfig.getPort();
+        this.hostName = cloudConfiguration.getHostname();
+        this.port = cloudConfiguration.getPort();
 
         new BaseNodeNetwork();
 
