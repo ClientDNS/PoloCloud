@@ -1,15 +1,17 @@
 package de.bytemc.cloud.plugin.bootstrap.bungee.reconnect;
 
+import de.bytemc.cloud.plugin.bootstrap.bungee.BungeeBootstrap;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public final class ReconnectHandlerImpl implements ReconnectHandler {
+public record ReconnectHandlerImpl(BungeeBootstrap bootstrap) implements ReconnectHandler {
 
     @Override
     public ServerInfo getServer(ProxiedPlayer player) {
-        return ProxyServer.getInstance().getServerInfo("fallback");
+        return this.bootstrap.getFallback(player).map(service -> ProxyServer.getInstance().getServerInfo(service.getName()))
+            .orElse(null);
     }
 
     @Override

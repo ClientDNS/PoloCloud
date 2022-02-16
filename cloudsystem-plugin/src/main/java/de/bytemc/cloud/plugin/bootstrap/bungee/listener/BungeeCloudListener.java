@@ -19,9 +19,6 @@ public final class BungeeCloudListener {
 
     public BungeeCloudListener() {
 
-        // register default fallback
-        this.registerFallbackService();
-
         // load all current groups
         for (final IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
             if (!allCachedService.getGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
@@ -67,10 +64,6 @@ public final class BungeeCloudListener {
 
     public void registerService(IService service) {
         this.registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
-    }
-
-    private void registerFallbackService() {
-        this.registerService("fallback", new InetSocketAddress("127.0.0.1", 0));
     }
 
 }
