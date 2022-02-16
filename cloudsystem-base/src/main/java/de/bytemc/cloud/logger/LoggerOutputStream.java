@@ -1,4 +1,7 @@
-package de.bytemc.cloud.api.logger;
+package de.bytemc.cloud.logger;
+
+import de.bytemc.cloud.api.logger.LogType;
+import de.bytemc.cloud.api.logger.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;

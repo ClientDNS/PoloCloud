@@ -2,7 +2,6 @@ package de.bytemc.cloud.logger;
 
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerAnsiFactory;
-import de.bytemc.cloud.api.logger.LoggerOutputStream;
 import de.bytemc.cloud.api.logger.Logger;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
