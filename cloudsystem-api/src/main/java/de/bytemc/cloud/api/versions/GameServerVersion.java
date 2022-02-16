@@ -2,7 +2,7 @@ package de.bytemc.cloud.api.versions;
 
 import com.google.gson.reflect.TypeToken;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.groups.utils.ServiceTypes;
+import de.bytemc.cloud.api.groups.utils.ServiceType;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IService;
@@ -20,25 +20,25 @@ import java.util.Objects;
 @Getter
 public enum GameServerVersion {
 
-    WATERFALL("waterfall", "latest", ServiceTypes.PROXY),
-    PAPER_1_18_1("paper", "1.18.1", ServiceTypes.SERVER),
-    PAPER_1_17_1("paper", "1.17.1", ServiceTypes.SERVER),
-    PAPER_1_16_5("paper", "1.16.5", ServiceTypes.SERVER),
-    PAPER_1_15_2("paper", "1.15.2", ServiceTypes.SERVER),
-    PAPER_1_14_4("paper", "1.14.4", ServiceTypes.SERVER),
-    PAPER_1_13_2("paper", "1.13.2", ServiceTypes.SERVER),
-    PAPER_1_12_2("paper", "1.12.2", ServiceTypes.SERVER),
-    PAPER_1_11_2("paper", "1.11.2", ServiceTypes.SERVER),
-    PAPER_1_10_2("paper", "1.10.2", ServiceTypes.SERVER),
-    PAPER_1_9_4("paper", "1.17.1", ServiceTypes.SERVER),
-    PAPER_1_8_8("paper", "1.8.8", ServiceTypes.SERVER);
+    WATERFALL("waterfall", "latest", ServiceType.PROXY),
+    PAPER_1_18_1("paper", "1.18.1", ServiceType.SERVER),
+    PAPER_1_17_1("paper", "1.17.1", ServiceType.SERVER),
+    PAPER_1_16_5("paper", "1.16.5", ServiceType.SERVER),
+    PAPER_1_15_2("paper", "1.15.2", ServiceType.SERVER),
+    PAPER_1_14_4("paper", "1.14.4", ServiceType.SERVER),
+    PAPER_1_13_2("paper", "1.13.2", ServiceType.SERVER),
+    PAPER_1_12_2("paper", "1.12.2", ServiceType.SERVER),
+    PAPER_1_11_2("paper", "1.11.2", ServiceType.SERVER),
+    PAPER_1_10_2("paper", "1.10.2", ServiceType.SERVER),
+    PAPER_1_9_4("paper", "1.17.1", ServiceType.SERVER),
+    PAPER_1_8_8("paper", "1.8.8", ServiceType.SERVER);
 
     private final String url;
     private final String title;
     private final String version;
-    private final ServiceTypes serviceTypes;
+    private final ServiceType serviceTypes;
 
-    GameServerVersion(final String title, final String version, final ServiceTypes serviceTypes) {
+    GameServerVersion(final String title, final String version, final ServiceType serviceTypes) {
         final int build = this.getBuildNumber(title, version);
         String paperVersion = version;
         if (paperVersion.equals("latest")) {
@@ -53,7 +53,7 @@ public enum GameServerVersion {
     }
 
     public boolean isProxy() {
-        return this.serviceTypes == ServiceTypes.PROXY;
+        return this.serviceTypes == ServiceType.PROXY;
     }
 
     public String getJar() {

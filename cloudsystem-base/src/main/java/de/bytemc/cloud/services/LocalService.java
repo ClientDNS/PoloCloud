@@ -5,7 +5,7 @@ import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.common.ConfigSplitSpacer;
 import de.bytemc.cloud.api.common.ConfigurationFileEditor;
 import de.bytemc.cloud.api.groups.IServiceGroup;
-import de.bytemc.cloud.api.groups.utils.ServiceTypes;
+import de.bytemc.cloud.api.groups.utils.ServiceType;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
@@ -241,7 +241,7 @@ public class LocalService implements IService {
 
         arguments.add(Boolean.toString(preLoadClasses));
 
-        if (this.group.getGameServerVersion().getServiceTypes() == ServiceTypes.SERVER) {
+        if (this.group.getGameServerVersion().getServiceTypes() == ServiceType.SERVER) {
             arguments.add("nogui");
         }
 
