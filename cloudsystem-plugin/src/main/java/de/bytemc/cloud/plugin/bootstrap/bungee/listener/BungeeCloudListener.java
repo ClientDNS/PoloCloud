@@ -1,4 +1,4 @@
-package de.bytemc.cloud.plugin.bootstrap.proxy.events;
+package de.bytemc.cloud.plugin.bootstrap.bungee.listener;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.IEventHandler;
@@ -15,9 +15,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.net.InetSocketAddress;
 
-public final class ProxyCloudEvents {
+public final class BungeeCloudListener {
 
-    public ProxyCloudEvents() {
+    public BungeeCloudListener() {
 
         // register default fallback
         this.registerFallbackService();

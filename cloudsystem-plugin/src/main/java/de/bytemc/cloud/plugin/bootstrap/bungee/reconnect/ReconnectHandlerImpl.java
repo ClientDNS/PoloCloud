@@ -1,4 +1,4 @@
-package de.bytemc.cloud.plugin.bootstrap.proxy.reconnect;
+package de.bytemc.cloud.plugin.bootstrap.bungee.reconnect;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ReconnectHandler;

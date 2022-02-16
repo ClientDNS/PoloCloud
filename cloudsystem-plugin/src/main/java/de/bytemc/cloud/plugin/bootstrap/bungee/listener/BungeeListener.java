@@ -1,4 +1,4 @@
-package de.bytemc.cloud.plugin.bootstrap.proxy.events;
+package de.bytemc.cloud.plugin.bootstrap.bungee.listener;
 
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.events.events.CloudPlayerUpdateEvent;
@@ -21,11 +21,11 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class ProxyEvents implements Listener {
+public final class BungeeListener implements Listener {
 
     private final ICloudPlayerManager playerManager;
 
-    public ProxyEvents() {
+    public BungeeListener() {
         this.playerManager = CloudAPI.getInstance().getCloudPlayerManager();
     }
 

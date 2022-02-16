@@ -1,17 +1,17 @@
-package de.bytemc.cloud.plugin.bootstrap.proxy;
+package de.bytemc.cloud.plugin.bootstrap.bungee;
 
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
-import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyCloudEvents;
-import de.bytemc.cloud.plugin.bootstrap.proxy.events.ProxyEvents;
-import de.bytemc.cloud.plugin.bootstrap.proxy.reconnect.ReconnectHandlerImpl;
+import de.bytemc.cloud.plugin.bootstrap.bungee.listener.BungeeCloudListener;
+import de.bytemc.cloud.plugin.bootstrap.bungee.listener.BungeeListener;
+import de.bytemc.cloud.plugin.bootstrap.bungee.reconnect.ReconnectHandlerImpl;
 import de.bytemc.cloud.wrapper.Wrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
-public class ProxyBootstrap extends Plugin {
+public class BungeeBootstrap extends Plugin {
 
     @Override
     public void onLoad() {
@@ -27,8 +27,8 @@ public class ProxyBootstrap extends Plugin {
             listener.getServerPriority().clear();
         }
 
-        new ProxyCloudEvents();
-        this.getProxy().getPluginManager().registerListener(this, new ProxyEvents());
+        new BungeeCloudListener();
+        this.getProxy().getPluginManager().registerListener(this, new BungeeListener());
 
         //update that the service is ready to use
         IService service = Wrapper.getInstance().thisService();

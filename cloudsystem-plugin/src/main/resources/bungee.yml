@@ -1,4 +1,4 @@
 name: CloudPlugin
 version: '1.0'
 author: HttpMarco
-main: de.bytemc.cloud.plugin.bootstrap.proxy.ProxyBootstrap
+main: de.bytemc.cloud.plugin.bootstrap.bungee.BungeeBootstrap
