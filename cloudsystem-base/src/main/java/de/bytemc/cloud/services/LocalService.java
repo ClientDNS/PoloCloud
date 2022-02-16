@@ -10,8 +10,6 @@ import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
-import de.bytemc.cloud.services.properties.BungeeProperties;
-import de.bytemc.cloud.services.properties.MinecraftProperties;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.CommunicationPromise;
@@ -22,17 +20,11 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
@@ -68,7 +60,7 @@ public class LocalService implements IService {
         this.motd = this.group.getMotd();
         this.maxPlayers = this.group.getDefaultMaxPlayers();
 
-        this.workingDirectory = new File((!this.group.isStatic() ? "tmp" : "static") +"/" + this.getName());
+        this.workingDirectory = new File((!this.group.isStatic() ? "tmp" : "static") + "/" + this.getName());
     }
 
     @SneakyThrows
@@ -105,11 +97,15 @@ public class LocalService implements IService {
         // check properties and modify
         if (this.group.getGameServerVersion().isProxy()) {
             final var file = new File(this.workingDirectory, "config.yml");
-            if (file.exists()) {
-                var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
-                editor.setValue("host", "0.0.0.0:" + this.port);
-                editor.saveFile();
-            } else new BungeeProperties(this.workingDirectory, this.port);
+            if (!file.exists()) {
+                try (final var inputStream = this.getClass().getResourceAsStream("defaultFiles/config.yml")) {
+                    assert inputStream != null;
+                    FileUtils.copyToFile(inputStream, file);
+                }
+            }
+            final var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
+            editor.setValue("host", "0.0.0.0:" + this.port);
+            editor.saveFile();
         } else {
             final var properties = new Properties();
             final var file = new File(this.workingDirectory, "server.properties");
@@ -117,12 +113,17 @@ public class LocalService implements IService {
                 try (final var fileReader = new FileReader(file)) {
                     properties.load(fileReader);
                 }
-                properties.setProperty("server-name", this.getName());
-                properties.setProperty("server-port", String.valueOf(this.port));
-                try (final var fileWriter = new FileWriter(file)) {
-                    properties.store(fileWriter, null);
+            } else {
+                try (final var inputStreamReader = new InputStreamReader(
+                    Objects.requireNonNull(this.getClass().getResourceAsStream("defaultFiles/server.properties")))) {
+                    properties.load(inputStreamReader);
                 }
-            } else new MinecraftProperties(this.workingDirectory, this.port);
+            }
+            properties.setProperty("server-name", this.getName());
+            properties.setProperty("server-port", String.valueOf(this.port));
+            try (final var fileWriter = new FileWriter(file)) {
+                properties.store(fileWriter, null);
+            }
 
             properties.clear();
 
