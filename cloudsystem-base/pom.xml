@@ -81,7 +81,7 @@
                             <mainClass>de.bytemc.cloud.bootstrap.BaseBootstrap</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Version>${version}</Version>
+                            <Version>${project.version}</Version>
                         </manifestEntries>
                     </archive>
                 </configuration>

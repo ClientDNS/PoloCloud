@@ -6,8 +6,8 @@ import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.groups.DefaultGroup;
 import de.bytemc.cloud.api.groups.IServiceGroup;
 import de.bytemc.cloud.api.logger.LogType;
+import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.versions.GameServerVersion;
-import de.bytemc.cloud.services.ServiceManager;
 
 import java.util.function.Consumer;
 
@@ -42,11 +42,11 @@ public final class GroupCommand extends CloudCommand {
             //create name memory
             try {
                 var memory = Integer.parseInt(args[2]);
-                var staticService = Boolean.parseBoolean(args[3]);
+                var isStatic = Boolean.parseBoolean(args[3]);
 
                 var gameServerVersion = GameServerVersion.getVersionByTitle(args[4]);
 
-                var serviceGroup = new DefaultGroup(name, memory, staticService, gameServerVersion);
+                var serviceGroup = new DefaultGroup(name, memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
                 serviceGroup.getGameServerVersion().download();
 
@@ -70,8 +70,7 @@ public final class GroupCommand extends CloudCommand {
             }
             groupManager.removeServiceGroup(serviceGroup);
 
-            cloudAPI.getServiceManager().getAllServicesByGroup(serviceGroup)
-                .forEach(it -> ((ServiceManager) cloudAPI.getServiceManager()).shutdownService(it));
+            cloudAPI.getServiceManager().getAllServicesByGroup(serviceGroup).forEach(IService::stop);
 
             log.logMessage("The group '§b" + name + "§7' is now deleted.");
             return;
@@ -93,7 +92,7 @@ public final class GroupCommand extends CloudCommand {
             log.logMessage("Memory: §b" + serviceGroup.getMemory() + "mb");
             log.logMessage("Min online services: §b" + serviceGroup.getMinOnlineService());
             log.logMessage("Max online services: §b" + serviceGroup.getMaxOnlineService());
-            log.logMessage("Static service: §b" + serviceGroup.isStaticService());
+            log.logMessage("Static: §b" + serviceGroup.isStatic());
             log.logMessage("Version: §b" + serviceGroup.getGameServerVersion().getTitle());
             log.logMessage("Maintenance: §b" + serviceGroup.isMaintenance());
             return;

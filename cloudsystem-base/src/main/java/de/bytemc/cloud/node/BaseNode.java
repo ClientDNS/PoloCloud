@@ -2,6 +2,7 @@ package de.bytemc.cloud.node;
 
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.events.events.CloudServiceRemoveEvent;
+import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.network.packets.group.ServiceGroupCacheUpdatePacket;
 import de.bytemc.cloud.api.network.packets.player.CloudPlayerCachePacket;
 import de.bytemc.cloud.api.network.packets.services.ServiceCacheUpdatePacket;
@@ -9,14 +10,12 @@ import de.bytemc.cloud.api.network.packets.services.ServiceRemovePacket;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.config.NodeConfig;
+import de.bytemc.cloud.services.LocalService;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
 import de.bytemc.network.cluster.impl.AbstractNodeClustering;
 import de.bytemc.network.cluster.impl.ClusteringConnectedClient;
 import lombok.Getter;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 @Getter
@@ -69,21 +68,18 @@ public final class BaseNode extends AbstractNodeClustering {
     }
 
     @Override
-    public void onServiceDisconnected(final ClusteringConnectedClient clusteringConnectedClient) {
-        final var service = clusteringConnectedClient.getName();
+    public void onServiceDisconnected(final ClusteringConnectedClient client) {
         final var base = Base.getInstance();
-        final var file = new File("tmp/" + service);
-        if (file.exists()) {
-            try {
-                FileUtils.deleteDirectory(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        base.getEventHandler().call(new CloudServiceRemoveEvent(service));
-        base.getNode().sendPacketToAll(new ServiceRemovePacket(service));
-        base.getServiceManager().getAllCachedServices().remove(base.getServiceManager().getServiceByNameOrNull(service));
-        base.getLoggerProvider().logMessage("The service '§b" + clusteringConnectedClient.getName() + "§7' disconnect.");
-        base.getQueueService().checkForQueue();
+
+        base.getServiceManager().getService(client.getName())
+            .ifPresentOrElse(service -> {
+                ((LocalService) service).delete();
+                base.getEventHandler().call(new CloudServiceRemoveEvent(service.getName()));
+                base.getNode().sendPacketToAll(new ServiceRemovePacket(service.getName()));
+                base.getServiceManager().getAllCachedServices().remove(service);
+                base.getLoggerProvider().logMessage("The service '§b" + service.getName() + "§7' disconnect.");
+                base.getQueueService().checkForQueue();
+        }, () ->
+                base.getLoggerProvider().logMessage("Service " + client.getName() + " disconnected but not exists!", LogType.WARNING));
     }
 }

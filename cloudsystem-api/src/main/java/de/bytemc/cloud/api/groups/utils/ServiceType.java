@@ -1,6 +1,6 @@
 package de.bytemc.cloud.api.groups.utils;
 
-public enum ServiceTypes {
+public enum ServiceType {
 
     PROXY,
     SERVER

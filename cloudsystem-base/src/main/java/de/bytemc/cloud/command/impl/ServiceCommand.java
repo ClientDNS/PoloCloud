@@ -5,7 +5,6 @@ import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
-import de.bytemc.cloud.services.ServiceManager;
 
 public final class ServiceCommand extends CloudCommand {
 
@@ -21,7 +20,7 @@ public final class ServiceCommand extends CloudCommand {
             for (final IService service : cloudAPI.getServiceManager().getAllCachedServices()) {
                 log.logMessage("Name of service '§b" + service.getName()
                     + "§7' (§7State of service '§b" + service.getServiceState().getName()
-                    + "§7' | Node: '" + service.getServiceGroup().getNode() + "')");
+                    + "§7' | Node: '" + service.getGroup().getNode() + "')");
             }
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("stop")) {
@@ -31,7 +30,7 @@ public final class ServiceCommand extends CloudCommand {
                     return;
                 }
 
-                ((ServiceManager) cloudAPI.getServiceManager()).shutdownService(service);
+                service.stop();
                 log.logMessage("The service '§b" + service.getName() + "§7' is now stopped.");
             }, () -> log.logMessage("This service does not exists.", LogType.WARNING));
             return;
@@ -42,18 +41,28 @@ public final class ServiceCommand extends CloudCommand {
             cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
                 log.logMessage("Service information:");
                 log.logMessage("Name: §b" + service.getName());
-                log.logMessage("ID: §b" + service.getServiceID());
-                log.logMessage("Group: §b" + service.getServiceGroup().getName());
+                log.logMessage("ID: §b" + service.getServiceId());
+                log.logMessage("Group: §b" + service.getGroup().getName());
                 log.logMessage("Host: §b" + service.getHostName());
                 log.logMessage("Port: §b" + service.getPort());
+            }, () -> log.logMessage("The service does not exists.", LogType.WARNING));
+            return;
+        } else if (args.length > 1 && args[0].equalsIgnoreCase("command")) {
+            cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
+                final var stringBuilder = new StringBuilder();
+                for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
+                final var command = stringBuilder.toString();
+                service.executeCommand(command);
+                log.logMessage("Executed command '" + command + "' on service " + service.getName());
             }, () -> log.logMessage("The service does not exists.", LogType.WARNING));
             return;
         }
 
         log.logMessage("§7Use following command: §bservice list §7- List all available services.");
-        log.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that exists.");
+        log.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that not exists.");
         log.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
         log.logMessage("§7Use following command: §bservice info (name) §7- Prints information about the specific service.");
+        log.logMessage("§7Use following command: §bservice command (name) (command) §7- Executes a command on a server.");
     }
 
 }

@@ -1,8 +1,8 @@
 package de.bytemc.cloud.command.impl;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.command.CommandManager;
 
 public final class HelpCommand extends CloudCommand {
 
@@ -12,7 +12,7 @@ public final class HelpCommand extends CloudCommand {
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
-        CommandManager manager = cloudAPI.getCommandManager();
+        final var manager = Base.getInstance().getCommandManager();
 
         cloudAPI.getLoggerProvider().logMessage("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
         manager.getCachedCloudCommands().forEach(it -> cloudAPI.getLoggerProvider().logMessage("§b" + it.getCommandName() + getAlias(it) + " - " + it.getDescription()));

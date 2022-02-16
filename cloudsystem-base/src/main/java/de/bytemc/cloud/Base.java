@@ -2,14 +2,15 @@ package de.bytemc.cloud;
 
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.CloudAPIType;
+import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
-import de.bytemc.cloud.api.services.impl.SimpleService;
+import de.bytemc.cloud.command.SimpleCommandManager;
 import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
@@ -19,6 +20,7 @@ import de.bytemc.cloud.groups.SimpleGroupManager;
 import de.bytemc.cloud.logger.SimpleLoggerProvider;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
+import de.bytemc.cloud.services.LocalService;
 import de.bytemc.cloud.services.ServiceManager;
 import de.bytemc.cloud.services.queue.QueueService;
 import de.bytemc.cloud.templates.GroupTemplateService;
@@ -42,6 +44,7 @@ public class Base extends CloudAPI {
     private String version;
 
     private final LoggerProvider loggerProvider;
+    private final CommandManager commandManager;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
     private final IGroupManager groupManager;
@@ -51,9 +54,8 @@ public class Base extends CloudAPI {
     private final QueueService queueService;
     private boolean running = true;
 
-
     public Base() {
-        super(CloudAPITypes.NODE);
+        super(CloudAPIType.NODE);
 
         instance = this;
 
@@ -72,10 +74,12 @@ public class Base extends CloudAPI {
             "Date: §b19.01.2020 §7| " +
             "§7Version: §b" + this.version, LogType.EMPTY);
         this.loggerProvider.logMessage(" ", LogType.EMPTY);
+        this.commandManager = new SimpleCommandManager();
 
         // copy wrapper and plugin jar
         ErrorHandler.defaultInstance().runOnly(() -> {
-            final File storageDirectory = new File("storage/jars");
+            final var storageDirectory = new File("storage/jars");
+            storageDirectory.mkdirs();
 
             Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
                 new File(storageDirectory, "wrapper.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -84,15 +88,17 @@ public class Base extends CloudAPI {
             return null;
         });
 
-        this.databaseManager = new DatabaseManager();
+        final var nodeConfig = NodeConfig.read();
+
+        this.databaseManager = new DatabaseManager(nodeConfig.getDatabaseConfiguration());
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
         this.groupTemplateService = new GroupTemplateService();
         this.cloudPlayerManager = new CloudPlayerManager();
-        this.node = new BaseNode(NodeConfig.get());
+        this.node = new BaseNode(nodeConfig);
 
         // register commands
-        this.getCommandManager().registerCommands(
+        this.commandManager.registerCommands(
             new ClearCommand(),
             new GroupCommand(),
             new HelpCommand(),
@@ -106,11 +112,11 @@ public class Base extends CloudAPI {
         Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
 
         // print finish successfully message
-        this.getLoggerProvider().logMessage("               ", LogType.EMPTY);
-        this.getLoggerProvider().logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
-        this.getLoggerProvider().logMessage("               ", LogType.EMPTY);
+        this.loggerProvider.logMessage("               ", LogType.EMPTY);
+        this.loggerProvider.logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
+        this.loggerProvider.logMessage("               ", LogType.EMPTY);
 
-        ((SimpleLoggerProvider) CloudAPI.getInstance().getLoggerProvider()).getConsoleManager().start();
+        ((SimpleLoggerProvider) this.loggerProvider).getConsoleManager().start();
 
         this.queueService.checkForQueue();
     }
@@ -118,16 +124,15 @@ public class Base extends CloudAPI {
     public void onShutdown() {
         if (!this.running) return;
         this.running = false;
-        this.getLoggerProvider().logMessage("Trying to terminate cloudsystem.");
-        this.getServiceManager().getAllCachedServices()
+        this.loggerProvider.logMessage("Trying to terminate cloudsystem.");
+        this.serviceManager.getAllCachedServices()
             .forEach(service -> {
-                if (((SimpleService) service).getProcess() != null)
-                    ((SimpleService) service).getProcess().destroyForcibly();
+                if (service instanceof LocalService localService) localService.stop();
             });
 
         // delete wrapper and plugin jars
         ErrorHandler.defaultInstance().runOnly(() -> {
-            final File storageDirectory = new File("storage/jars");
+            final var storageDirectory = new File("storage/jars");
 
             Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
             Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
@@ -140,8 +145,8 @@ public class Base extends CloudAPI {
                 return null;
             }))
             .addResultListener(unused -> {
-                this.getLoggerProvider().logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLoggerProvider) this.getLoggerProvider()).getConsoleManager().shutdownReading();
+                this.loggerProvider.logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+                ((SimpleLoggerProvider) this.loggerProvider).getConsoleManager().shutdownReading();
                 System.exit(0);
             });
     }
@@ -153,6 +158,10 @@ public class Base extends CloudAPI {
     @Override
     public LoggerProvider getLoggerProvider() {
         return this.loggerProvider;
+    }
+
+    public CommandManager getCommandManager() {
+        return this.commandManager;
     }
 
 }

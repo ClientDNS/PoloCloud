@@ -19,7 +19,7 @@ public interface IService {
     /**
      * @return the service id
      */
-    int getServiceID();
+    int getServiceId();
 
     /**
      * @return the port of the service
@@ -32,9 +32,22 @@ public interface IService {
     @NotNull String getHostName();
 
     /**
+     * @return the node on which the service is started
+     */
+    @NotNull String getNode();
+
+    /**
      * @return the group of the service
      */
-    @NotNull IServiceGroup getServiceGroup();
+    @NotNull IServiceGroup getGroup();
+
+    /**
+     * @return the group of the service
+     */
+    @Deprecated(forRemoval = true)
+    default @NotNull IServiceGroup getServiceGroup() {
+        return this.getGroup();
+    }
 
     /**
      * sets the service state
@@ -77,7 +90,7 @@ public interface IService {
         return (int) CloudAPI.getInstance().getCloudPlayerManager().getAllCachedCloudPlayers()
             .stream()
             .filter(it -> {
-                IService service = getServiceGroup().getGameServerVersion().isProxy() ? it.getProxyServer() : it.getServer();
+                IService service = this.getGroup().getGameServerVersion().isProxy() ? it.getProxyServer() : it.getServer();
                 return service != null && service.equals(this);
             }).count();
     }
@@ -111,6 +124,16 @@ public interface IService {
      * @param packet the packet to send
      */
     void sendPacket(@NotNull IPacket packet);
+
+    /**
+     * executes a command on the service
+     */
+    void executeCommand(@NotNull String command);
+
+    /**
+     * stops the service
+     */
+    void stop();
 
     /**
      * updates the properties of the service

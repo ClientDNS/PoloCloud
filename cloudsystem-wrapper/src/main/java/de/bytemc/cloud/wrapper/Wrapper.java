@@ -1,7 +1,7 @@
 package de.bytemc.cloud.wrapper;
 
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.CloudAPIType;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
@@ -87,7 +87,7 @@ public final class Wrapper extends CloudAPI {
     private final WrapperClient client;
 
     public Wrapper() {
-        super(CloudAPITypes.SERVICE);
+        super(CloudAPIType.SERVICE);
 
         instance = this;
 

@@ -24,14 +24,14 @@ public final class ProxyCloudEvents {
 
         // load all current groups
         for (final IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
-            if (!allCachedService.getServiceGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
+            if (!allCachedService.getGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
 
         // register events
         final IEventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
 
         eventHandler.registerEvent(CloudServiceRegisterEvent.class, event -> {
-            if (!event.getService().getServiceGroup().getGameServerVersion().isProxy())
+            if (!event.getService().getGroup().getGameServerVersion().isProxy())
                 registerService(event.getService());
         });
 

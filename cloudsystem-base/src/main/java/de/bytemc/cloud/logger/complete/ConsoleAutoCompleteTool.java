@@ -1,6 +1,6 @@
 package de.bytemc.cloud.logger.complete;
 
-import de.bytemc.cloud.api.CloudAPI;
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.command.CloudCommand;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
@@ -16,7 +16,7 @@ public final class ConsoleAutoCompleteTool implements Completer {
     private List<String> getInputConsoleSuggestions(final String input) {
         if (input.isEmpty() || input.indexOf(' ') == -1) {
             final List<String> registeredCommands = new ArrayList<>();
-            for (CloudCommand cachedCloudCommand : CloudAPI.getInstance().getCommandManager().getCachedCloudCommands()) {
+            for (CloudCommand cachedCloudCommand : Base.getInstance().getCommandManager().getCachedCloudCommands()) {
                 registeredCommands.add(cachedCloudCommand.getCommandName());
                 registeredCommands.addAll(List.of(cachedCloudCommand.getAlias()));
             }

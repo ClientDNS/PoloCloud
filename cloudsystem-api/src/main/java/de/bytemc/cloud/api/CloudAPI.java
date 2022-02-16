@@ -1,7 +1,5 @@
 package de.bytemc.cloud.api;
 
-import de.bytemc.cloud.api.command.CommandManager;
-import de.bytemc.cloud.api.command.SimpleCommandManager;
 import de.bytemc.cloud.api.events.EventHandler;
 import de.bytemc.cloud.api.events.IEventHandler;
 import de.bytemc.cloud.api.exception.ErrorHandler;
@@ -21,12 +19,11 @@ public abstract class CloudAPI {
     @Getter
     private static CloudAPI instance;
 
-    private final CloudAPITypes cloudAPITypes;
-    private final CommandManager commandManager;
+    private final CloudAPIType cloudAPITypes;
     private final INetworkHandler networkHandler;
     private final IEventHandler eventHandler;
 
-    public CloudAPI(CloudAPITypes cloudAPITypes) {
+    public CloudAPI(CloudAPIType cloudAPITypes) {
         instance = this;
 
         this.cloudAPITypes = cloudAPITypes;
@@ -34,14 +31,15 @@ public abstract class CloudAPI {
         ErrorHandler.defaultInstance().registerDefaultThreadExceptionHandler()
             .orElse((throwable, errorHandler) -> {
                 if (getLoggerProvider() == null) {
-                    System.err.println("Caught an unexpected error (" + throwable.getMessage() + ")");
+                    System.err.println("Caught an unexpected error (" + throwable.getClass().getSimpleName() + ") | (" + throwable.getMessage() + ")");
+                    throwable.printStackTrace();
                     return;
                 }
-                getLoggerProvider().logMessage("§7Caught an §cunexpected error §7(§b" + throwable.getMessage() + "§7)", LogType.ERROR);
+                getLoggerProvider().logMessage("§7Caught an §cunexpected error §7(§c" + throwable.getClass().getSimpleName() + "§7) | (§b" + throwable.getMessage() + "§7)", LogType.ERROR);
+                throwable.printStackTrace();
             });
 
         this.networkHandler = new NetworkHandler();
-        this.commandManager = new SimpleCommandManager();
         this.eventHandler = new EventHandler();
     }
 

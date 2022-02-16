@@ -20,7 +20,6 @@ public final class NetworkHandler implements INetworkHandler {
 
     public NetworkHandler() {
         //Service packets
-        NetworkManager.registerPacket(ServiceShutdownPacket.class, 2);
         NetworkManager.registerPacket(ServiceAddPacket.class, 3);
         NetworkManager.registerPacket(ServiceRemovePacket.class, 4);
         NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 5);
