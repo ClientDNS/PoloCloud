@@ -27,7 +27,7 @@ public final class BaseNode extends AbstractNodeClustering {
     public BaseNode(final CloudConfiguration cloudConfiguration) {
         super(cloudConfiguration.getNodeConfiguration().getNodeName());
 
-        this.hostName = cloudConfiguration.getNodeConfiguration().getNodeName();
+        this.hostName = cloudConfiguration.getNodeConfiguration().getHostname();
         this.port = cloudConfiguration.getNodeConfiguration().getPort();
 
         new BaseNodeNetwork();
