@@ -11,10 +11,8 @@ import org.jline.utils.InfoCmp;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public final class SimpleLoggerProvider extends Logger implements LoggerProvider {
+public final class SimpleLoggerProvider implements LoggerProvider {
 
     private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -22,13 +20,6 @@ public final class SimpleLoggerProvider extends Logger implements LoggerProvider
     private final SimpleConsoleManager consoleManager;
 
     public SimpleLoggerProvider() {
-        super("PoloCloud-Logger", null);
-
-        this.setLevel(Level.ALL);
-        this.setUseParentHandlers(false);
-
-        System.setProperty("java.util.logging.SimpleFormatter.format", "[%1\\$tT] [%4$-7s] %5\\$s %n");
-
         this.consoleManager = new SimpleConsoleManager(this);
     }
 
