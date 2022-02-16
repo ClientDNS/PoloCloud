@@ -1,10 +1,14 @@
 package de.bytemc.cloud.command.impl;
 
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
+
+import java.util.Arrays;
+import java.util.List;
 
 public final class ServiceCommand extends CloudCommand {
 
@@ -65,4 +69,15 @@ public final class ServiceCommand extends CloudCommand {
         log.logMessage("§7Use following command: §bservice command (name) (command) §7- Executes a command on a server.");
     }
 
+    @Override
+    public List<String> tabComplete(String[] arguments) {
+        if (arguments.length == 1) {
+            return Arrays.asList("list", "start", "stop", "info", "command");
+        } else if (arguments.length == 2) {
+            if (!arguments[0].equalsIgnoreCase("list")) {
+                return Base.getInstance().getServiceManager().getAllCachedServices().stream().map(IService::getName).toList();
+            }
+        }
+        return super.tabComplete(arguments);
+    }
 }
