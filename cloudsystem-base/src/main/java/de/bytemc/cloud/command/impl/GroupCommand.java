@@ -9,6 +9,8 @@ import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.versions.GameServerVersion;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public final class GroupCommand extends CloudCommand {
@@ -144,6 +146,29 @@ public final class GroupCommand extends CloudCommand {
         log.logMessage("§7Use following command: §bgroup remove §7(§bname§7)");
         log.logMessage("§7Use following command: §bgroup info §7(§bname§7)");
         log.logMessage("§7Use following command: §bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
+    }
+
+    @Override
+    public List<String> tabComplete(String[] arguments) {
+        if (arguments.length == 1) {
+            return Arrays.asList("list", "create", "remove", "info", "edit");
+        } else if (arguments.length == 2) {
+            return Base.getInstance().getServiceManager().getAllCachedServices().stream().map(IService::getName).toList();
+        } else if (arguments.length == 3) {
+            if (arguments[0].equalsIgnoreCase("edit")) {
+                return Arrays.asList("memory", "minservicecount", "maxservicecount",
+                    "defaultmaxplayers", "fallback", "maintenance", "version");
+            }
+        } else if (arguments.length == 4) {
+            if (arguments[0].equalsIgnoreCase("create")) {
+                return Arrays.asList("true", "false");
+            }
+        } else if (arguments.length == 5) {
+            if (arguments[0].equalsIgnoreCase("create")) {
+                return Arrays.stream(GameServerVersion.values()).map(GameServerVersion::getName).toList();
+            }
+        }
+        return super.tabComplete(arguments);
     }
 
     private void getAndSetInt(final String key, final String value, final IServiceGroup group, final Consumer<Integer> consumer) {
