@@ -1,6 +1,7 @@
 package de.bytemc.cloud.logger;
 
 import com.google.common.base.Throwables;
+import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
@@ -28,7 +29,7 @@ public final class SimpleConsoleManager {
 
     public void start() {
         this.consoleReadingThread = new ConsoleReadingThread((SimpleLoggerProvider) loggerProvider, this.lineReader,
-            s -> CloudAPI.getInstance().getCommandManager().execute(s), windowsSystem);
+            s -> Base.getInstance().getCommandManager().execute(s), windowsSystem);
         this.consoleReadingThread.setUncaughtExceptionHandler((t, e) -> {
             CloudAPI.getInstance().getLoggerProvider().logMessage("An error...", LogType.ERROR);
             CloudAPI.getInstance().getLoggerProvider().logMessage("§7" + Throwables.getStackTraceAsString(e), LogType.ERROR);

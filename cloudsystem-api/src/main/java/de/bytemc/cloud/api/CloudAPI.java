@@ -1,7 +1,5 @@
 package de.bytemc.cloud.api;
 
-import de.bytemc.cloud.api.command.CommandManager;
-import de.bytemc.cloud.api.command.SimpleCommandManager;
 import de.bytemc.cloud.api.events.EventHandler;
 import de.bytemc.cloud.api.events.IEventHandler;
 import de.bytemc.cloud.api.exception.ErrorHandler;
@@ -22,7 +20,6 @@ public abstract class CloudAPI {
     private static CloudAPI instance;
 
     private final CloudAPITypes cloudAPITypes;
-    private final CommandManager commandManager;
     private final INetworkHandler networkHandler;
     private final IEventHandler eventHandler;
 
@@ -43,7 +40,6 @@ public abstract class CloudAPI {
             });
 
         this.networkHandler = new NetworkHandler();
-        this.commandManager = new SimpleCommandManager();
         this.eventHandler = new EventHandler();
     }
 

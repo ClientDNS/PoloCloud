@@ -3,12 +3,14 @@ package de.bytemc.cloud;
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerProvider;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
+import de.bytemc.cloud.command.SimpleCommandManager;
 import de.bytemc.cloud.command.impl.*;
 import de.bytemc.cloud.config.NodeConfig;
 import de.bytemc.cloud.database.IDatabaseManager;
@@ -42,6 +44,7 @@ public class Base extends CloudAPI {
     private String version;
 
     private final LoggerProvider loggerProvider;
+    private final CommandManager commandManager;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
     private final IGroupManager groupManager;
@@ -71,6 +74,7 @@ public class Base extends CloudAPI {
             "Date: §b19.01.2020 §7| " +
             "§7Version: §b" + this.version, LogType.EMPTY);
         this.loggerProvider.logMessage(" ", LogType.EMPTY);
+        this.commandManager = new SimpleCommandManager();
 
         // copy wrapper and plugin jar
         ErrorHandler.defaultInstance().runOnly(() -> {
@@ -94,7 +98,7 @@ public class Base extends CloudAPI {
         this.node = new BaseNode(nodeConfig);
 
         // register commands
-        this.getCommandManager().registerCommands(
+        this.commandManager.registerCommands(
             new ClearCommand(),
             new GroupCommand(),
             new HelpCommand(),
@@ -154,6 +158,10 @@ public class Base extends CloudAPI {
     @Override
     public LoggerProvider getLoggerProvider() {
         return this.loggerProvider;
+    }
+
+    public CommandManager getCommandManager() {
+        return this.commandManager;
     }
 
 }

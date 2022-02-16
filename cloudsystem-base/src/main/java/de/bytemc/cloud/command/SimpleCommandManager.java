@@ -1,8 +1,10 @@
-package de.bytemc.cloud.api.command;
+package de.bytemc.cloud.command;
 
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.command.CloudCommand;
+import de.bytemc.cloud.api.command.CommandManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
