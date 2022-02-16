@@ -32,7 +32,7 @@ public class DatabaseSqlImpl implements IDatabase {
             databaseConfiguration.getUser(), databaseConfiguration.getPassword());
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
-            " memory INT, minOnlineService INT, maxOnlineService INT, staticService INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT, maintenance INT, autoUpdating INT)");
+            " memory INT, minOnlineService INT, maxOnlineService INT, static INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT, maintenance INT, autoUpdating INT)");
 
         CloudAPI.getInstance().getLoggerProvider().logMessage("The connection is now established to the database.");
     }
@@ -48,7 +48,7 @@ public class DatabaseSqlImpl implements IDatabase {
 
     @Override
     public void addGroup(final @NotNull IServiceGroup serviceGroup) {
-        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, staticService, fallbackGroup, version, maxPlayers, motd, maintenance, autoUpdating) VALUES (" +
+        executeUpdate("INSERT INTO cloudsystem_groups(name, template, node, memory, minOnlineService, maxOnlineService, static, fallbackGroup, version, maxPlayers, motd, maintenance, autoUpdating) VALUES (" +
             "'" + serviceGroup.getName() + "', '" + serviceGroup.getTemplate() + "', '" + serviceGroup.getNode() + "', " + serviceGroup.getMemory() + ", " +
             serviceGroup.getMinOnlineService() + ", " + serviceGroup.getMaxOnlineService() + ", " + (serviceGroup.isStatic() ? 1 : 0) +
             ", " + (serviceGroup.isFallbackGroup() ? 1 : 0) + ", '" + serviceGroup.getGameServerVersion().getTitle() + "', " + serviceGroup.getDefaultMaxPlayers() +
@@ -74,7 +74,7 @@ public class DatabaseSqlImpl implements IDatabase {
                     resultSet.getInt("maxPlayers"),
                     resultSet.getInt("minOnlineService"),
                     resultSet.getInt("maxOnlineService"),
-                    resultSet.getBoolean("staticService"),
+                    resultSet.getBoolean("static"),
                     resultSet.getBoolean("fallbackGroup"),
                     resultSet.getBoolean("maintenance"),
                     resultSet.getBoolean("autoUpdating"),

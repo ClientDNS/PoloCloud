@@ -42,11 +42,11 @@ public final class GroupCommand extends CloudCommand {
             //create name memory
             try {
                 var memory = Integer.parseInt(args[2]);
-                var staticService = Boolean.parseBoolean(args[3]);
+                var isStatic = Boolean.parseBoolean(args[3]);
 
                 var gameServerVersion = GameServerVersion.getVersionByTitle(args[4]);
 
-                var serviceGroup = new DefaultGroup(name, memory, staticService, gameServerVersion);
+                var serviceGroup = new DefaultGroup(name, memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
                 serviceGroup.getGameServerVersion().download();
 
