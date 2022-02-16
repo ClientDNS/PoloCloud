@@ -28,7 +28,7 @@ public abstract class Server extends AbstractChannelInboundHandler implements IS
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    private EventExecutorGroup eventExecutorGroup;
+    private EventExecutorGroup eventExecutorGroup; // TODO unused
 
     private ChannelFuture channelFuture;
 
