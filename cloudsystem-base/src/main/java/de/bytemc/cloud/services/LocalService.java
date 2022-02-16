@@ -110,14 +110,16 @@ public class LocalService implements IService {
                 editor.saveFile();
             } else new BungeeProperties(this.workingDirectory, this.port);
         } else {
+            final var properties = new Properties();
             final var file = new File(this.workingDirectory, "server.properties");
             if (file.exists()) {
-                var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
-                editor.setValue("server-port", String.valueOf(this.port));
-                editor.saveFile();
+                properties.setProperty("server-port", String.valueOf(this.port));
+                try (final var fileWriter = new FileWriter(file)) {
+                    properties.store(fileWriter, null);
+                }
             } else new MinecraftProperties(this.workingDirectory, this.port);
 
-            final var properties = new Properties();
+            properties.clear();
 
             properties.setProperty("eula", "true");
             try (final var fileWriter = new FileWriter(new File(this.workingDirectory, "eula.txt"))) {
