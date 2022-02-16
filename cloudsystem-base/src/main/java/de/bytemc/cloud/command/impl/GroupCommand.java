@@ -153,7 +153,7 @@ public final class GroupCommand extends CloudCommand {
         if (arguments.length == 1) {
             return Arrays.asList("list", "create", "remove", "info", "edit");
         } else if (arguments.length == 2) {
-            return Base.getInstance().getServiceManager().getAllCachedServices().stream().map(IService::getName).toList();
+            return Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(IServiceGroup::getName).toList();
         } else if (arguments.length == 3) {
             if (arguments[0].equalsIgnoreCase("edit")) {
                 return Arrays.asList("memory", "minservicecount", "maxservicecount",
