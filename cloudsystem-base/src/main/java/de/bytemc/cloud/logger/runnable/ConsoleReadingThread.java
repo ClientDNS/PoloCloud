@@ -1,7 +1,7 @@
 package de.bytemc.cloud.logger.runnable;
 
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.logger.SimpleLogger;
 import org.jline.reader.LineReader;
 import org.jline.reader.UserInterruptException;
 
@@ -14,7 +14,7 @@ public final class ConsoleReadingThread extends Thread {
     private final LineReader lineReader;
     private final Consumer<String> line;
 
-    public ConsoleReadingThread(SimpleLoggerProvider loggerProvider, LineReader lineReader, Consumer<String> handle, Boolean windows) {
+    public ConsoleReadingThread(SimpleLogger loggerProvider, LineReader lineReader, Consumer<String> handle, Boolean windows) {
         this.lineReader = lineReader;
         this.line = handle;
 

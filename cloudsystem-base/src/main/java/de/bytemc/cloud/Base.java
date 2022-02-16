@@ -7,7 +7,7 @@ import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.api.logger.Logger;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IServiceManager;
 import de.bytemc.cloud.command.SimpleCommandManager;
@@ -17,7 +17,7 @@ import de.bytemc.cloud.database.IDatabaseManager;
 import de.bytemc.cloud.database.impl.DatabaseManager;
 import de.bytemc.cloud.exception.DefaultExceptionCodes;
 import de.bytemc.cloud.groups.SimpleGroupManager;
-import de.bytemc.cloud.logger.SimpleLoggerProvider;
+import de.bytemc.cloud.logger.SimpleLogger;
 import de.bytemc.cloud.node.BaseNode;
 import de.bytemc.cloud.player.CloudPlayerManager;
 import de.bytemc.cloud.services.LocalService;
@@ -43,7 +43,7 @@ public class Base extends CloudAPI {
 
     private String version;
 
-    private final LoggerProvider loggerProvider;
+    private final Logger loggerProvider;
     private final CommandManager commandManager;
     private final BaseNode node;
     private final IDatabaseManager databaseManager;
@@ -68,7 +68,7 @@ public class Base extends CloudAPI {
 
         new DefaultExceptionCodes();
 
-        this.loggerProvider = new SimpleLoggerProvider();
+        this.loggerProvider = new SimpleLogger();
         this.loggerProvider.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
             "§7Developed by: §bHttpMarco §7| " +
             "Date: §b19.01.2020 §7| " +
@@ -116,7 +116,7 @@ public class Base extends CloudAPI {
         this.loggerProvider.logMessage("§7The cloud was successfully started.", LogType.SUCCESS);
         this.loggerProvider.logMessage("               ", LogType.EMPTY);
 
-        ((SimpleLoggerProvider) this.loggerProvider).getConsoleManager().start();
+        ((SimpleLogger) this.loggerProvider).getConsoleManager().start();
 
         this.queueService.checkForQueue();
     }
@@ -146,7 +146,7 @@ public class Base extends CloudAPI {
             }))
             .addResultListener(unused -> {
                 this.loggerProvider.logMessage("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLoggerProvider) this.loggerProvider).getConsoleManager().shutdownReading();
+                ((SimpleLogger) this.loggerProvider).getConsoleManager().shutdownReading();
                 System.exit(0);
             });
     }
@@ -156,7 +156,7 @@ public class Base extends CloudAPI {
     }
 
     @Override
-    public LoggerProvider getLoggerProvider() {
+    public Logger getLoggerProvider() {
         return this.loggerProvider;
     }
 

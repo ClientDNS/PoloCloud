@@ -5,7 +5,7 @@ import de.bytemc.cloud.api.CloudAPIType;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.json.Document;
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.api.logger.Logger;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
 import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.IServiceManager;
@@ -80,7 +80,7 @@ public final class Wrapper extends CloudAPI {
 
     private static Wrapper instance;
 
-    private final LoggerProvider loggerProvider;
+    private final Logger loggerProvider;
     private final IGroupManager groupManager;
     private final IServiceManager serviceManager;
     private final ICloudPlayerManager cloudPlayerManager;
@@ -107,7 +107,7 @@ public final class Wrapper extends CloudAPI {
     }
 
     @Override
-    public LoggerProvider getLoggerProvider() {
+    public Logger getLoggerProvider() {
         return this.loggerProvider;
     }
 

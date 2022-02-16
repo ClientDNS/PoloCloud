@@ -5,10 +5,10 @@ import java.nio.charset.StandardCharsets;
 
 public final class LoggerOutputStream extends ByteArrayOutputStream {
 
-    private final LoggerProvider loggerProvider;
+    private final Logger loggerProvider;
     private final LogType logType;
 
-    public LoggerOutputStream(final LoggerProvider loggerProvider, final LogType logType) {
+    public LoggerOutputStream(final Logger loggerProvider, final LogType logType) {
         this.loggerProvider = loggerProvider;
         this.logType = logType;
     }

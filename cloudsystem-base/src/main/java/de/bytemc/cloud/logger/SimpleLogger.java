@@ -3,7 +3,7 @@ package de.bytemc.cloud.logger;
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerAnsiFactory;
 import de.bytemc.cloud.api.logger.LoggerOutputStream;
-import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.api.logger.Logger;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jline.reader.LineReader;
@@ -14,14 +14,14 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public final class SimpleLoggerProvider implements LoggerProvider {
+public final class SimpleLogger implements Logger {
 
     private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Getter
     private final SimpleConsoleManager consoleManager;
 
-    public SimpleLoggerProvider() {
+    public SimpleLogger() {
         this.consoleManager = new SimpleConsoleManager(this);
 
         System.setOut(new PrintStream(new LoggerOutputStream(this, LogType.INFO)));

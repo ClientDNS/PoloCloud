@@ -3,7 +3,7 @@ package de.bytemc.cloud.command.impl;
 import de.bytemc.cloud.Base;
 import de.bytemc.cloud.api.CloudAPI;
 import de.bytemc.cloud.api.command.CloudCommand;
-import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.api.logger.Logger;
 
 public final class InfoCommand extends CloudCommand {
 
@@ -13,7 +13,7 @@ public final class InfoCommand extends CloudCommand {
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
-        final LoggerProvider loggerProvider = cloudAPI.getLoggerProvider();
+        final Logger loggerProvider = cloudAPI.getLoggerProvider();
 
         loggerProvider.logMessage("§7Version: §b" + Base.getInstance().getVersion());
         loggerProvider.logMessage("§7Node: §b" + Base.getInstance().getNode().getNodeName());

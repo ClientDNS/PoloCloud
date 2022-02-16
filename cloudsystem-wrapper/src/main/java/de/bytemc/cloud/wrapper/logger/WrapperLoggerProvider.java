@@ -2,13 +2,13 @@ package de.bytemc.cloud.wrapper.logger;
 
 import de.bytemc.cloud.api.logger.LogType;
 import de.bytemc.cloud.api.logger.LoggerAnsiFactory;
-import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.api.logger.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class WrapperLoggerProvider implements LoggerProvider {
+public class WrapperLoggerProvider implements Logger {
 
     private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
 

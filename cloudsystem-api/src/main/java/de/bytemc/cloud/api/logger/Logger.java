@@ -2,7 +2,7 @@ package de.bytemc.cloud.api.logger;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface LoggerProvider {
+public interface Logger {
 
     /**
      * logs a message

@@ -5,7 +5,7 @@ import de.bytemc.cloud.api.events.IEventHandler;
 import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
 import de.bytemc.cloud.api.logger.LogType;
-import de.bytemc.cloud.api.logger.LoggerProvider;
+import de.bytemc.cloud.api.logger.Logger;
 import de.bytemc.cloud.api.network.INetworkHandler;
 import de.bytemc.cloud.api.network.impl.NetworkHandler;
 import de.bytemc.cloud.api.player.ICloudPlayerManager;
@@ -46,7 +46,7 @@ public abstract class CloudAPI {
     /**
      * @return the logger provider
      */
-    public abstract LoggerProvider getLoggerProvider();
+    public abstract Logger getLoggerProvider();
 
     /**
      * @return the group manager
