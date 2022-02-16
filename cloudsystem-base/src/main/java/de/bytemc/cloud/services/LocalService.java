@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -30,6 +31,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
@@ -114,6 +116,13 @@ public class LocalService implements IService {
                 editor.setValue("server-port", String.valueOf(this.port));
                 editor.saveFile();
             } else new MinecraftProperties(this.workingDirectory, this.port);
+
+            final var properties = new Properties();
+
+            properties.setProperty("eula", "true");
+            try (final var fileWriter = new FileWriter(new File(this.workingDirectory, "eula.txt"))) {
+                properties.store(fileWriter, null);
+            }
         }
 
         final var communicationPromise = new CommunicationPromise<IService>();
@@ -208,7 +217,6 @@ public class LocalService implements IService {
             "-Daikars.new.flags=true",
             "-XX:-UseAdaptiveSizePolicy",
             "-XX:CompileThreshold=100",
-            "-Dcom.mojang.eula.agree=true",
             "-Dio.netty.recycler.maxCapacity=0",
             "-Dio.netty.recycler.maxCapacity.default=0",
             "-Djline.terminal=jline.UnsupportedTerminal",

@@ -70,11 +70,13 @@ public class Base extends CloudAPI {
             e.printStackTrace();
         }
 
+        this.logger = new SimpleLogger();
+
         this.loadConfig();
+
 
         new DefaultExceptionCodes();
 
-        this.logger = new SimpleLogger();
         this.logger.logMessage("§7Cloudsystem > §b@ByteMC §7| " +
             "§7Developed by: §bHttpMarco §7| " +
             "Date: §b19.01.2020 §7| " +
