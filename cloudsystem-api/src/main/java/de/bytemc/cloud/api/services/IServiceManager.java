@@ -41,7 +41,9 @@ public interface IServiceManager {
      * @param name the name of the service
      * @return the service or null when the service does not exist
      */
-    @NotNull Optional<IService> getService(@NotNull String name);
+    default @NotNull Optional<IService> getService(@NotNull String name) {
+        return this.getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findFirst();
+    }
 
     /**
      * gets a service
