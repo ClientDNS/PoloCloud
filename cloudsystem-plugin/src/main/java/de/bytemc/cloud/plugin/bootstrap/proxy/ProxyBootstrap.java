@@ -33,7 +33,7 @@ public class ProxyBootstrap extends Plugin {
         //update that the service is ready to use
         IService service = Wrapper.getInstance().thisService();
 
-        if (service.getServiceGroup().isAutoUpdating()) {
+        if (service.getGroup().isAutoUpdating()) {
             service.setServiceVisibility(ServiceVisibility.VISIBLE);
             service.update();
         }

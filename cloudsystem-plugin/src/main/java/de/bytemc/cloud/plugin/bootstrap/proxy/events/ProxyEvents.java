@@ -86,8 +86,8 @@ public final class ProxyEvents implements Listener {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
             .filter(service -> service.getServiceState() == ServiceState.ONLINE)
             .filter(service -> service.getServiceVisibility() == ServiceVisibility.VISIBLE)
-            .filter(service -> !service.getServiceGroup().getGameServerVersion().isProxy())
-            .filter(service -> service.getServiceGroup().isFallbackGroup())
+            .filter(service -> !service.getGroup().getGameServerVersion().isProxy())
+            .filter(service -> service.getGroup().isFallbackGroup())
             .filter(service -> (player.getServer() == null || !player.getServer().getInfo().getName().equals(service.getName())))
             .min(Comparator.comparing(IService::getOnlinePlayers));
     }
