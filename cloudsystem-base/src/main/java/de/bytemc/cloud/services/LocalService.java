@@ -113,6 +113,7 @@ public class LocalService implements IService {
             final var properties = new Properties();
             final var file = new File(this.workingDirectory, "server.properties");
             if (file.exists()) {
+                properties.setProperty("server-name", this.getName());
                 properties.setProperty("server-port", String.valueOf(this.port));
                 try (final var fileWriter = new FileWriter(file)) {
                     properties.store(fileWriter, null);
