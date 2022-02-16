@@ -11,7 +11,7 @@ import de.bytemc.cloud.api.services.IService;
 import de.bytemc.cloud.api.services.utils.ServiceState;
 import de.bytemc.cloud.api.services.utils.ServiceVisibility;
 import de.bytemc.cloud.services.properties.BungeeProperties;
-import de.bytemc.cloud.services.properties.SpigotProperties;
+import de.bytemc.cloud.services.properties.MinecraftProperties;
 import de.bytemc.cloud.services.statistics.SimpleStatisticManager;
 import de.bytemc.network.packets.IPacket;
 import de.bytemc.network.promise.CommunicationPromise;
@@ -113,7 +113,7 @@ public class LocalService implements IService {
                 var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.PROPERTIES);
                 editor.setValue("server-port", String.valueOf(this.port));
                 editor.saveFile();
-            } else new SpigotProperties(this.workingDirectory, this.port);
+            } else new MinecraftProperties(this.workingDirectory, this.port);
         }
 
         final var communicationPromise = new CommunicationPromise<IService>();
