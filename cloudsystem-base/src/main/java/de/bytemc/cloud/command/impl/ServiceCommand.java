@@ -20,60 +20,60 @@ public final class ServiceCommand extends CloudCommand {
     public void execute(CloudAPI cloudAPI, String[] args) {
         final var logger = cloudAPI.getLogger();
 
-        if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            for (final IService service : cloudAPI.getServiceManager().getAllCachedServices()) {
-                logger.logMessage("Name of service '§b" + service.getName()
-                    + "§7' (§7State of service '§b" + service.getServiceState().getName()
-                    + "§7' | Node: '" + service.getGroup().getNode() + "')");
-            }
-            return;
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("stop")) {
-            cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
-                if (service.getServiceState() == ServiceState.PREPARED || service.getServiceState() == ServiceState.STOPPING) {
-                    logger.logMessage("This service ist not started or already in stopping state.", LogType.WARNING);
-                    return;
-                }
+        //service (service) (action)
 
-                service.stop();
-                logger.logMessage("The service '§b" + service.getName() + "§7' is now stopped.");
-            }, () -> logger.logMessage("This service does not exists.", LogType.WARNING));
-            return;
-        } else if (args.length == 4) {
-            // TODO
-            return;
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
-            cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
-                logger.logMessage("Service information:");
-                logger.logMessage("Name: §b" + service.getName());
-                logger.logMessage("ID: §b" + service.getServiceId());
-                logger.logMessage("Group: §b" + service.getGroup().getName());
-                logger.logMessage("Host: §b" + service.getHostName());
-                logger.logMessage("Port: §b" + service.getPort());
-            }, () -> logger.logMessage("The service does not exists.", LogType.WARNING));
-            return;
-        } else if (args.length > 1 && args[0].equalsIgnoreCase("command")) {
-            cloudAPI.getServiceManager().getService(args[1]).ifPresentOrElse(service -> {
-                final var stringBuilder = new StringBuilder();
-                for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
-                final var command = stringBuilder.toString();
-                service.executeCommand(command);
-                logger.logMessage("Executed command '" + command + "' on service " + service.getName());
-            }, () -> logger.logMessage("The service does not exists.", LogType.WARNING));
+        if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
+            cloudAPI.getServiceManager().getAllCachedServices().stream().forEach(it -> {
+                logger.logMessage("Name of service '§b" + it.getName() + "§7' (§7State of service '§b" + it.getServiceState().getName() + "§7' | Node: '" + it.getGroup().getNode() + "')");
+            });
             return;
         }
 
-        logger.logMessage("§7Use following command: §bservice list §7- List all available services.");
-        logger.logMessage("§7Use following command: §bservice start (name) §7- Starting a specific service that not exists.");
-        logger.logMessage("§7Use following command: §bservice stop (name) §7- Stopping a specific service that exists.");
-        logger.logMessage("§7Use following command: §bservice info (name) §7- Prints information about the specific service.");
-        logger.logMessage("§7Use following command: §bservice command (name) (command) §7- Executes a command on a server.");
+        if (args.length >= 1) {
+            cloudAPI.getServiceManager().getService(args[0]).ifPresentOrElse(service -> {
+
+                if (args.length == 2 && args[1].equalsIgnoreCase("stop")) {
+                    if (service.getServiceState() == ServiceState.PREPARED || service.getServiceState() == ServiceState.STOPPING) {
+                        logger.logMessage("This service ist not started or already in stopping state.", LogType.WARNING);
+                        return;
+                    }
+                    service.stop();
+                    logger.logMessage("The service '§b" + service.getName() + "§7' is now stopped.");
+                    return;
+                }
+
+                if (args.length == 2 && args[1].equalsIgnoreCase("info")) {
+                    logger.logMessages("Service information:", "Name: §b" + service.getName(), "ID: §b" + service.getServiceId(),
+                        "Group: §b" + service.getGroup().getName(), "Host: §b" + service.getHostName(), "Port: §b" + service.getPort());
+                    return;
+                }
+
+                if (args.length > 1 && args[1].equalsIgnoreCase("command")) {
+                    final var stringBuilder = new StringBuilder();
+                    for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
+                    final var command = stringBuilder.toString();
+                    service.executeCommand(command);
+                    logger.logMessage("Executed command '" + command + "' on service " + service.getName());
+                }
+
+            }, () -> logger.logMessage("This service does not exists.", LogType.WARNING));
+            return;
+        }
+
+        var help = "§7Use following command: §b";
+        logger.logMessages(
+            help + "service list §7- List all available services.",
+            help + "service start (name) §7- Starting a specific service that not exists.",
+            help + "service stop (name) §7- Stopping a specific service that exists.",
+            help + "service info (name) §7- Prints information about the specific service.",
+            help + "service command (name) (command) §7- Executes a command on a server.");
     }
 
     @Override
     public List<String> tabComplete(String[] arguments) {
-        if (arguments.length == 1) {
+        if (arguments.length == 2) {
             return Arrays.asList("list", "start", "stop", "info", "command");
-        } else if (arguments.length == 2) {
+        } else if (arguments.length == 0) {
             if (!arguments[0].equalsIgnoreCase("list")) {
                 return Base.getInstance().getServiceManager().getAllCachedServices().stream().map(IService::getName).toList();
             }

@@ -42,7 +42,7 @@ public interface IServiceManager {
      * @return the service or null when the service does not exist
      */
     default @NotNull Optional<IService> getService(@NotNull String name) {
-        return this.getAllCachedServices().stream().filter(it -> it.getName().equals(name)).findFirst();
+        return this.getAllCachedServices().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findFirst();
     }
 
     /**
