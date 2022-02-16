@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -113,6 +114,9 @@ public class LocalService implements IService {
             final var properties = new Properties();
             final var file = new File(this.workingDirectory, "server.properties");
             if (file.exists()) {
+                try (final var fileReader = new FileReader(file)) {
+                    properties.load(fileReader);
+                }
                 properties.setProperty("server-name", this.getName());
                 properties.setProperty("server-port", String.valueOf(this.port));
                 try (final var fileWriter = new FileWriter(file)) {
