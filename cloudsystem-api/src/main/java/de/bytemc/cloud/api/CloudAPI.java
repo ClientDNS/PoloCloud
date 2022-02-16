@@ -19,11 +19,11 @@ public abstract class CloudAPI {
     @Getter
     private static CloudAPI instance;
 
-    private final CloudAPITypes cloudAPITypes;
+    private final CloudAPIType cloudAPITypes;
     private final INetworkHandler networkHandler;
     private final IEventHandler eventHandler;
 
-    public CloudAPI(CloudAPITypes cloudAPITypes) {
+    public CloudAPI(CloudAPIType cloudAPITypes) {
         instance = this;
 
         this.cloudAPITypes = cloudAPITypes;

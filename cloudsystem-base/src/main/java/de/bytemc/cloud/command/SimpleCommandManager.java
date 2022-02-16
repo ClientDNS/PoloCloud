@@ -2,7 +2,7 @@ package de.bytemc.cloud.command;
 
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.CloudAPIType;
 import de.bytemc.cloud.api.command.CloudCommand;
 import de.bytemc.cloud.api.command.CommandManager;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class SimpleCommandManager implements CommandManager {
 
     public void execute(final @NotNull String command){
         List<String> args = Lists.newArrayList(command.split(" "));
-        if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPITypes.NODE)) {
+        if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPIType.NODE)) {
            CloudCommand cloudCommand = cachedCloudCommands.stream()
                .filter(it -> it.getCommandName().equalsIgnoreCase(args.get(0)) || Arrays.stream(it.getAlias()).anyMatch(s -> s.equalsIgnoreCase(args.get(0))))
                .findFirst()

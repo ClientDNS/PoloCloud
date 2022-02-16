@@ -1,6 +1,6 @@
 package de.bytemc.cloud.api;
 
-public enum CloudAPITypes {
+public enum CloudAPIType {
 
     NODE,
     SERVICE

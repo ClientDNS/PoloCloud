@@ -2,7 +2,7 @@ package de.bytemc.cloud;
 
 import com.google.common.collect.Lists;
 import de.bytemc.cloud.api.CloudAPI;
-import de.bytemc.cloud.api.CloudAPITypes;
+import de.bytemc.cloud.api.CloudAPIType;
 import de.bytemc.cloud.api.command.CommandManager;
 import de.bytemc.cloud.api.exception.ErrorHandler;
 import de.bytemc.cloud.api.groups.IGroupManager;
@@ -55,7 +55,7 @@ public class Base extends CloudAPI {
     private boolean running = true;
 
     public Base() {
-        super(CloudAPITypes.NODE);
+        super(CloudAPIType.NODE);
 
         instance = this;
 
