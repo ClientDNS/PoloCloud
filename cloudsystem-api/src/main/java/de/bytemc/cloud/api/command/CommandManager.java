@@ -3,6 +3,7 @@ package de.bytemc.cloud.api.command;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CommandManager {
 
@@ -34,6 +35,6 @@ public interface CommandManager {
      * gets all cached commands
      * @return the cached commands
      */
-    @NotNull List<CloudCommand> getCachedCloudCommands();
+    @NotNull Map<String, CloudCommand> getCachedCloudCommands();
 
 }

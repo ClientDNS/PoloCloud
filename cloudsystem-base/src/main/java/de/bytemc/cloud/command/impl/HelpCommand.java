@@ -15,11 +15,12 @@ public final class HelpCommand extends CloudCommand {
         final var manager = Base.getInstance().getCommandManager();
 
         cloudAPI.getLoggerProvider().logMessage("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
-        manager.getCachedCloudCommands().forEach(it -> cloudAPI.getLoggerProvider().logMessage("§b" + it.getCommandName() + getAlias(it) + " - " + it.getDescription()));
+        manager.getCachedCloudCommands().values().forEach(it -> cloudAPI.getLoggerProvider()
+            .logMessage("§b" + it.getName() + getAliases(it) + " - " + it.getDescription()));
     }
 
-    private String getAlias(CloudCommand command) {
-        return command.getAlias().length == 0 ? "" : "§7(§b" + String.join(", ", command.getAlias()) + "§7)";
+    private String getAliases(CloudCommand command) {
+        return command.getAliases().length == 0 ? "" : "§7(§b" + String.join(", ", command.getAliases()) + "§7)";
     }
 
 }

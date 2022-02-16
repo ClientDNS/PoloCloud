@@ -8,35 +8,33 @@ import de.bytemc.cloud.api.command.CommandManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class SimpleCommandManager implements CommandManager {
 
-    public final List<CloudCommand> cachedCloudCommands;
+    public final Map<String, CloudCommand> cachedCloudCommands;
 
     public SimpleCommandManager() {
-        this.cachedCloudCommands = Lists.newArrayList();
+        this.cachedCloudCommands = new HashMap<>();
     }
 
     public void execute(final @NotNull String command){
-        List<String> args = Lists.newArrayList(command.split(" "));
+        final List<String> args = Lists.newArrayList(command.split(" "));
         if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPIType.NODE)) {
-           CloudCommand cloudCommand = cachedCloudCommands.stream()
-               .filter(it -> it.getCommandName().equalsIgnoreCase(args.get(0)) || Arrays.stream(it.getAlias()).anyMatch(s -> s.equalsIgnoreCase(args.get(0))))
-               .findFirst()
-               .orElse(null);
+           final var cloudCommand = this.cachedCloudCommands.get(args.get(0));
             if (cloudCommand == null) return;
             args.remove(0);
             cloudCommand.execute(CloudAPI.getInstance(), args.toArray(new String[]{}));
         }
     }
 
-
     @Override
     public void registerCommand(final @NotNull CloudCommand command) {
-        this.cachedCloudCommands.add(command);
+        this.cachedCloudCommands.put(command.getName(), command);
+        for (final var alias : command.getAliases()) this.cachedCloudCommands.put(alias, command);
     }
 
     @Override
@@ -46,7 +44,9 @@ public class SimpleCommandManager implements CommandManager {
 
     @Override
     public void unregisterCommand(final @NotNull CloudCommand command) {
-        this.cachedCloudCommands.remove(command);
+        this.cachedCloudCommands.forEach((s, cloudCommand) -> {
+            if (cloudCommand == command) this.cachedCloudCommands.remove(s);
+        });
     }
 
 }
