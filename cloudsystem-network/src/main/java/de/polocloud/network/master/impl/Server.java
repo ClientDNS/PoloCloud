@@ -15,8 +15,6 @@ import de.polocloud.network.promise.ICommunicationPromise;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import io.netty.util.concurrent.EventExecutorGroup;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -28,8 +26,6 @@ public abstract class Server extends AbstractChannelInboundHandler implements IS
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    private EventExecutorGroup eventExecutorGroup; // TODO unused
-
     private ChannelFuture channelFuture;
 
     @Getter
@@ -39,16 +35,16 @@ public abstract class Server extends AbstractChannelInboundHandler implements IS
     public ICommunicationPromise<Void> connectEstablish(final String hostname, final int port) {
         var connectPromise = new CommunicationPromise<Void>();
 
-        this.bossGroup = Pipeline.newEventLoopGroup();
+        this.bossGroup = Pipeline.newEventLoopGroup(1);
         this.workerGroup = Pipeline.newEventLoopGroup();
-
-        this.eventExecutorGroup = new DefaultEventExecutorGroup(20); // UNUSED?
 
         try {
             this.channelFuture = new ServerBootstrap()
                 .group(this.bossGroup, this.workerGroup)
                 .channel(Pipeline.getServerChannel())
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.AUTO_READ, true)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) {
@@ -86,8 +82,6 @@ public abstract class Server extends AbstractChannelInboundHandler implements IS
             .addListener(it -> shutdownBossPromise.setSuccess(null));
         this.workerGroup.shutdownGracefully(0, 1, TimeUnit.MINUTES)
             .addListener(it -> shutdownWorkerPromise.setSuccess(null));
-        this.eventExecutorGroup.shutdownGracefully(0, 1, TimeUnit.MINUTES)
-            .addListener(it -> executePromise.setSuccess(null));
 
         return promise;
     }
@@ -95,7 +89,6 @@ public abstract class Server extends AbstractChannelInboundHandler implements IS
     public IConnectedClient getConnectedClientByChannel(final Channel channel) {
         return this.allCachedConnectedClients.stream().filter(it -> it.getChannel() == channel).findAny().orElse(null);
     }
-
 
     @Override
     public SimpleChannelInboundHandler<IPacket> getSimpleChannelInboundHandler() {

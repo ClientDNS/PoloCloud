@@ -17,7 +17,7 @@ public class ServiceAddPacket implements IPacket {
 
     @Override
     public void write(NetworkByteBuf byteBuf) {
-        PacketHelper.writeService(this.service, byteBuf);
+        PacketHelper.writeService(byteBuf, this.service);
     }
 
     @Override

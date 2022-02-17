@@ -1,11 +1,9 @@
 package de.polocloud.base.node;
 
+import de.polocloud.api.network.packet.init.CacheInitPacket;
 import de.polocloud.base.Base;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.logger.LogType;
-import de.polocloud.api.network.packet.group.ServiceGroupCacheUpdatePacket;
-import de.polocloud.api.network.packet.player.CloudPlayerCachePacket;
-import de.polocloud.api.network.packet.service.ServiceCacheUpdatePacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import de.polocloud.api.service.IService;
 import de.polocloud.api.service.utils.ServiceState;
@@ -57,9 +55,10 @@ public final class BaseNode extends AbstractNodeClustering {
         Objects.requireNonNull(service).setServiceState(ServiceState.ONLINE);
 
         // update cache
-        clusteringConnectedClient.sendPacket(new ServiceGroupCacheUpdatePacket(Base.getInstance().getGroupManager().getAllCachedServiceGroups()));
-        clusteringConnectedClient.sendPacket(new ServiceCacheUpdatePacket(Base.getInstance().getServiceManager().getAllCachedServices()));
-        clusteringConnectedClient.sendPacket(new CloudPlayerCachePacket(Base.getInstance().getPlayerManager().getPlayers()));
+        clusteringConnectedClient.sendPacket(new CacheInitPacket(
+            Base.getInstance().getGroupManager().getAllCachedServiceGroups(),
+            Base.getInstance().getServiceManager().getAllCachedServices(),
+            Base.getInstance().getPlayerManager().getPlayers()));
 
         service.update();
 

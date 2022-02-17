@@ -14,7 +14,7 @@ import de.polocloud.network.packet.NetworkByteBuf;
 
 public class PacketHelper {
 
-    public static void writeService(IService service, NetworkByteBuf byteBuf) {
+    public static void writeService(NetworkByteBuf byteBuf, IService service) {
         byteBuf.writeString(service.getGroup().getName());
         byteBuf.writeInt(service.getServiceId());
         byteBuf.writeString(service.getNode());

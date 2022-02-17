@@ -20,8 +20,7 @@ public final class BaseNodeNetwork {
         final IServiceManager serviceManager = CloudAPI.getInstance().getServiceManager();
 
         networkHandler.registerPacketListener(QueryPacket.class, (ctx, packet) -> {
-
-            IConnectedClient connectedClient = Base.getInstance().getNode().getConnectedClientByChannel(ctx.channel());
+            final var connectedClient = Base.getInstance().getNode().getConnectedClientByChannel(ctx.channel());
 
             //send to all services as not query packet
             Base.getInstance().getNode().getAllServices().stream()
@@ -29,7 +28,8 @@ public final class BaseNodeNetwork {
 
             if (packet.getState() == QueryPacket.QueryState.FIRST_RESPONSE) {
                 //send to all another nodes
-                Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet.getPacket(), QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
+                Base.getInstance().getNode()
+                    .sendPacketToType(new QueryPacket(packet.getPacket(), QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
             }
             //call local packet is communing
             NetworkManager.callPacket(ctx, packet.getPacket());

@@ -1,31 +1,23 @@
 package de.polocloud.wrapper.player;
 
-import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerDisconnectEvent;
 import de.polocloud.api.event.player.CloudPlayerLoginEvent;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.network.packet.QueryPacket;
-import de.polocloud.api.network.packet.player.*;
+import de.polocloud.api.network.packet.player.CloudPlayerDisconnectPacket;
+import de.polocloud.api.network.packet.player.CloudPlayerLoginPacket;
+import de.polocloud.api.network.packet.player.CloudPlayerMessagePacket;
+import de.polocloud.api.network.packet.player.CloudPlayerUpdatePacket;
 import de.polocloud.api.player.ICloudPlayer;
 import de.polocloud.api.player.impl.AbstractPlayerManager;
 import de.polocloud.wrapper.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public final class CloudPlayerManager extends AbstractPlayerManager {
-
-    public CloudPlayerManager() {
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerCachePacket.class, (ctx, packet) -> {
-            final Map<UUID, ICloudPlayer> cloudPlayerMap = new ConcurrentHashMap<>();
-            packet.getCloudPlayers().forEach(cloudPlayer -> cloudPlayerMap.put(cloudPlayer.getUniqueId(), cloudPlayer));
-            this.setPlayers(cloudPlayerMap);
-        });
-    }
 
     @Override
     public @NotNull List<ICloudPlayer> getAllServicePlayers() {

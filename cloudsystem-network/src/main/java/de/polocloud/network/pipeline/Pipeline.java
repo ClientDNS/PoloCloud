@@ -13,8 +13,8 @@ import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.util.concurrent.ThreadFactory;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 public class Pipeline {
 
@@ -22,8 +22,8 @@ public class Pipeline {
         return Epoll.isAvailable() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
     }
 
-    public static EventLoopGroup newEventLoopGroup(final int threads, final ThreadFactory factory) {
-        return Epoll.isAvailable() ? new EpollEventLoopGroup(threads, factory) : new NioEventLoopGroup(threads, factory);
+    public static EventLoopGroup newEventLoopGroup(final int threads) {
+        return Epoll.isAvailable() ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
     }
 
     public static Class<? extends Channel> getChannel() {
@@ -35,8 +35,12 @@ public class Pipeline {
     }
 
     public static void prepare(final ChannelPipeline pipeline, final SimpleChannelInboundHandler<IPacket> handling) {
-        pipeline.addLast(new NettyPacketLengthDeserializer()).addLast(new PacketDecoder())
-            .addLast(new NettyPacketLengthSerializer()).addLast(new PacketEncoder()).addLast(handling);
+        pipeline
+            .addLast(new NettyPacketLengthDeserializer())
+            .addLast(new PacketDecoder())
+            .addLast(new NettyPacketLengthSerializer())
+            .addLast(new PacketEncoder())
+            .addLast(handling);
     }
 
 }

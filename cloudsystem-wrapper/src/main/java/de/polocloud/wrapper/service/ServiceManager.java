@@ -5,7 +5,6 @@ import de.polocloud.api.network.INetworkHandler;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.RedirectPacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
-import de.polocloud.api.network.packet.service.ServiceCacheUpdatePacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
 import de.polocloud.api.service.IService;
@@ -39,8 +38,6 @@ public final class ServiceManager implements IServiceManager {
                 service.setMotd(packet.getMotd());
             }));
 
-        networkHandler.registerPacketListener(ServiceCacheUpdatePacket.class, (ctx, packet) -> this.allCachedServices = packet.getAllCachedServices());
-
         networkHandler.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) -> this.allCachedServices.remove(getServiceByNameOrNull(packet.getService())));
         networkHandler.registerPacketListener(ServiceAddPacket.class, (ctx, packet) -> this.allCachedServices.add(packet.getService()));
     }
@@ -49,6 +46,11 @@ public final class ServiceManager implements IServiceManager {
     @Override
     public List<IService> getAllCachedServices() {
         return this.allCachedServices;
+    }
+
+    @Override
+    public void setAllCachedServices(@NotNull List<IService> allCachedServices) {
+        this.allCachedServices = allCachedServices;
     }
 
     @Override

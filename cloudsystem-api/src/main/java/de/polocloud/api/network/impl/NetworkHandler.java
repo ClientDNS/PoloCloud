@@ -1,12 +1,12 @@
 package de.polocloud.api.network.impl;
 
+import de.polocloud.api.network.packet.init.CacheInitPacket;
 import de.polocloud.api.network.packet.player.*;
 import de.polocloud.api.network.packet.service.*;
 import de.polocloud.api.network.INetworkHandler;
 import de.polocloud.api.network.packet.CustomPacket;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.RedirectPacket;
-import de.polocloud.api.network.packet.group.ServiceGroupCacheUpdatePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupExecutePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.network.NetworkManager;
@@ -22,29 +22,29 @@ public final class NetworkHandler implements INetworkHandler {
         // Service packets
         NetworkManager.registerPacket(ServiceAddPacket.class, 3);
         NetworkManager.registerPacket(ServiceRemovePacket.class, 4);
-        NetworkManager.registerPacket(ServiceCacheUpdatePacket.class, 5);
-        NetworkManager.registerPacket(ServiceUpdatePacket.class, 6);
-        NetworkManager.registerPacket(ServiceRequestShutdownPacket.class, 7);
+        NetworkManager.registerPacket(ServiceUpdatePacket.class, 5);
+        NetworkManager.registerPacket(ServiceRequestShutdownPacket.class, 6);
 
         // service group packets
-        NetworkManager.registerPacket(ServiceGroupExecutePacket.class, 8);
-        NetworkManager.registerPacket(ServiceGroupCacheUpdatePacket.class, 9);
-        NetworkManager.registerPacket(ServiceGroupUpdatePacket.class, 10);
+        NetworkManager.registerPacket(ServiceGroupExecutePacket.class, 7);
+        NetworkManager.registerPacket(ServiceGroupUpdatePacket.class, 8);
 
         // cloud player packets
-        NetworkManager.registerPacket(CloudPlayerLoginPacket.class, 11);
-        NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 12);
-        NetworkManager.registerPacket(CloudPlayerUpdatePacket.class, 13);
-        NetworkManager.registerPacket(CloudPlayerCachePacket.class, 14);
-        NetworkManager.registerPacket(CloudPlayerKickPacket.class, 15);
-        NetworkManager.registerPacket(CloudPlayerSendServicePacket.class, 16);
-        NetworkManager.registerPacket(CloudPlayerMessagePacket.class, 17);
+        NetworkManager.registerPacket(CloudPlayerLoginPacket.class, 9);
+        NetworkManager.registerPacket(CloudPlayerDisconnectPacket.class, 10);
+        NetworkManager.registerPacket(CloudPlayerUpdatePacket.class, 11);
+        NetworkManager.registerPacket(CloudPlayerKickPacket.class, 12);
+        NetworkManager.registerPacket(CloudPlayerSendServicePacket.class, 13);
+        NetworkManager.registerPacket(CloudPlayerMessagePacket.class, 14);
 
         // util packets
-        NetworkManager.registerPacket(QueryPacket.class, 18);
-        NetworkManager.registerPacket(RedirectPacket.class, 19);
+        NetworkManager.registerPacket(QueryPacket.class, 15);
+        NetworkManager.registerPacket(RedirectPacket.class, 16);
 
-        NetworkManager.registerPacket(CustomPacket.class, 20);
+        NetworkManager.registerPacket(CustomPacket.class, 17);
+
+        // cache init packet
+        NetworkManager.registerPacket(CacheInitPacket.class, 18);
     }
 
     public <R extends IPacket> void registerPacketListener(@NotNull Class<R> clazz, @NotNull IPacketListener<R> packetListener){

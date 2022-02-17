@@ -49,6 +49,8 @@ public abstract class Client extends AbstractChannelInboundHandler implements IC
                 }
             })
             .option(ChannelOption.SO_KEEPALIVE, true)
+            .option(ChannelOption.TCP_NODELAY, true)
+            .option(ChannelOption.AUTO_READ, true)
             .connect(hostname, port)
             .addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE)
             .addListener(ChannelFutureListener.CLOSE_ON_FAILURE)
@@ -58,7 +60,7 @@ public abstract class Client extends AbstractChannelInboundHandler implements IC
                     channelPromise.setFailure(future.cause());
                     workerGroup.shutdownGracefully();
                 }
-            }).channel();
+            }).syncUninterruptibly().channel();
         channelPromise.addResultListener(unused -> establishPromise.setSuccess(this.channel)).addFailureListener(establishPromise::setFailure);
         return establishPromise;
     }

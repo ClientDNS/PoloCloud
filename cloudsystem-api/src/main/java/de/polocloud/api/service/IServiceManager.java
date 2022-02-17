@@ -19,6 +19,11 @@ public interface IServiceManager {
     @NotNull List<IService> getAllCachedServices();
 
     /**
+     * @param services the services to set
+     */
+    void setAllCachedServices(@NotNull List<IService> services);
+
+    /**
      * gets all services by a group
      * @param serviceGroup the group of the services
      * @return the services of a group

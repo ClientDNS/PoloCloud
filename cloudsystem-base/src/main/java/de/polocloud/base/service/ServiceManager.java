@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class ServiceManager implements IServiceManager {
 
-    private final List<IService> allCachedServices;
+    private List<IService> allCachedServices;
 
     public ServiceManager() {
         this.allCachedServices = new CopyOnWriteArrayList<>();
@@ -40,6 +40,11 @@ public final class ServiceManager implements IServiceManager {
     @Override
     public List<IService> getAllCachedServices() {
         return this.allCachedServices;
+    }
+
+    @Override
+    public void setAllCachedServices(@NotNull List<IService> services) {
+        this.allCachedServices = services;
     }
 
     public void start(final IService service) {
