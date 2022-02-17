@@ -43,10 +43,10 @@ public final class ServiceCommand extends CloudCommand {
                 } else {
                     logger.log("Service information:",
                         "Name: §b" + service.getName(),
-                        "Id: §b" + service.getServiceId(),
-                        "Group: §b" + service.getGroup().getName(),
-                        "Host: §b" + service.getHostName(),
-                        "Port: §b" + service.getPort());
+                        "Visibility: §b" + service.getServiceVisibility() + " &7/ State: §b" + service.getServiceState(),
+                        "Players: §b" + service.getOnlineCount() + " &7/ Port: §b" + service.getMaxPlayers(),
+                        "Host: §b" + service.getHostName() + " &7/ Port: §b" + service.getPort(),
+                        "Motd: §b" + service.getMotd());
                 }
 
             }, () -> logger.log("This service does not exists.", LogType.WARNING));
