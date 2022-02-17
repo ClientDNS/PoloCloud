@@ -8,7 +8,7 @@ import de.polocloud.api.groups.impl.AbstractGroupManager;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.group.ServiceGroupExecutePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
-import de.polocloud.base.database.IDatabase;
+import de.polocloud.database.ICloudDatabaseProvider;
 import de.polocloud.network.cluster.type.NetworkType;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 
 public final class SimpleGroupManager extends AbstractGroupManager {
 
-    private final IDatabase database;
+    private final ICloudDatabaseProvider database;
 
     public SimpleGroupManager() {
-        this.database = Base.getInstance().getDatabaseManager().getDatabase();
+        this.database = Base.getInstance().getDatabaseManager().getProvider();
 
         // loading all database groups
         this.getAllCachedServiceGroups().addAll(this.database.getAllServiceGroups());
