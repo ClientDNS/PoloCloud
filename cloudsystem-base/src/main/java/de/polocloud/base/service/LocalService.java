@@ -68,10 +68,10 @@ public class LocalService implements IService {
     public ICommunicationPromise<IService> start() {
         this.setServiceState(ServiceState.STARTING);
 
+        this.group.getGameServerVersion().download(this.group.getTemplate());
+
         // add statistic to service
         SimpleStatisticManager.registerStartingProcess(this);
-
-        this.group.getGameServerVersion().download(this.group.getTemplate());
 
         // create tmp file
         FileUtils.forceMkdir(this.workingDirectory);
