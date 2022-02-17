@@ -71,7 +71,7 @@ public class LocalService implements IService {
         // add statistic to service
         SimpleStatisticManager.registerStartingProcess(this);
 
-        this.group.getGameServerVersion().download();
+        this.group.getGameServerVersion().download(this.group.getTemplate());
 
         // create tmp file
         FileUtils.forceMkdir(this.workingDirectory);

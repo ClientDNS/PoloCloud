@@ -26,7 +26,6 @@ public final class GroupCommand extends CloudCommand {
         final var groupManager = cloudAPI.getGroupManager();
         final var logger = cloudAPI.getLogger();
 
-
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
                 logger.log("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
@@ -58,7 +57,7 @@ public final class GroupCommand extends CloudCommand {
 
                 final var serviceGroup = new DefaultGroup(name, memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
-                serviceGroup.getGameServerVersion().download();
+                serviceGroup.getGameServerVersion().download(serviceGroup.getTemplate());
 
                 Base.getInstance().getGroupTemplateService().createTemplateFolder(serviceGroup);
                 logger.log("The group '§b" + name + "§7' is now registered and online.");

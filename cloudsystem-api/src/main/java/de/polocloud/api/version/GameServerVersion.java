@@ -68,8 +68,9 @@ public enum GameServerVersion {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void download() {
-        final var file = new File("storage/jars", this.getJar());
+    public void download(final String template) {
+        final var directory = new File("storage/jars");
+        final var file = new File(directory, this.getJar());
 
         if (file.exists()) return;
 
@@ -81,16 +82,30 @@ public enum GameServerVersion {
             FileUtils.copyURLToFile(new URL(url), file);
 
             if (this.title.equals("paper")) {
-                final Process process = new ProcessBuilder("java", "-DPaperclip.patchonly=true -jar", this.getJar())
+                final var process = new ProcessBuilder("java", "-DPaperclip.patchonly=true", "-jar", this.getJar())
                     .directory(file.getParentFile()).start();
-                final InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
-                final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                final var inputStreamReader = new InputStreamReader(process.getInputStream());
+                final var bufferedReader = new BufferedReader(inputStreamReader);
                 process.waitFor();
                 process.destroyForcibly();
                 bufferedReader.close();
                 inputStreamReader.close();
-                FileUtils.copyFile(new File("storage/jars/cache/patched_" + this.version + ".jar"), file);
-                FileUtils.deleteDirectory(new File("storage/jars/cache"));
+                final var cacheDirectory = new File(directory, "cache");
+                final var patchedJar = new File(cacheDirectory, "/patched_" + this.version + ".jar");
+                if (patchedJar.exists()) {
+                    FileUtils.copyFile(patchedJar, file);
+                } else {
+                    final var templateDirectory = new File("templates/" + template);
+                    final var versionsDirectory = new File(directory, "versions");
+                    final var librariesDirectory = new File(directory, "libraries");
+                    FileUtils.copyDirectory(versionsDirectory, templateDirectory);
+                    FileUtils.copyDirectory(librariesDirectory, templateDirectory);
+                    FileUtils.copyDirectory(cacheDirectory, templateDirectory);
+                    FileUtils.deleteDirectory(versionsDirectory);
+                    FileUtils.deleteDirectory(librariesDirectory);
+                    FileUtils.deleteDirectory(cacheDirectory);
+                }
+                FileUtils.deleteDirectory(new File(directory, "cache"));
             }
         } catch (IOException e) {
             e.printStackTrace();
