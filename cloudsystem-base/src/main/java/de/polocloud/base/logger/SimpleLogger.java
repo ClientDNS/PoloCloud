@@ -23,8 +23,8 @@ public final class SimpleLogger implements Logger {
     public SimpleLogger() {
         this.consoleManager = new SimpleConsoleManager(this);
 
-        System.setOut(new PrintStream(new LoggerOutputStream(this, LogType.INFO)));
-        System.setErr(new PrintStream(new LoggerOutputStream(this, LogType.ERROR)));
+        System.setOut(new PrintStream(new LoggerOutputStream(this, LogType.INFO), true));
+        System.setErr(new PrintStream(new LoggerOutputStream(this, LogType.ERROR), true));
     }
 
     @Override
