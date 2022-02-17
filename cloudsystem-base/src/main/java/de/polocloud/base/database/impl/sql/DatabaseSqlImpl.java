@@ -1,6 +1,8 @@
 package de.polocloud.base.database.impl.sql;
 
 import com.google.common.collect.Lists;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.groups.impl.ServiceGroup;
@@ -22,18 +24,22 @@ import java.util.Objects;
 
 public class DatabaseSqlImpl implements IDatabase {
 
-    private Connection connection;
+    private HikariDataSource source;
 
     @SneakyThrows
     @Override
-    public void connect(final @NotNull DatabaseConfiguration databaseConfiguration) {
-        this.connection = DriverManager.getConnection("jdbc:mysql://" + databaseConfiguration.getHost() + ":" + databaseConfiguration.getPort()
-            + "/" + databaseConfiguration.getDatabase() + "?useUnicode=true&autoReconnect=true",
-            databaseConfiguration.getUser(), databaseConfiguration.getPassword());
+    public void connect(final @NotNull DatabaseConfiguration config) {
+
+        var hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl("jdbc:mysql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase() + "?useSSL=false&useUnicode=true&autoReconnect=tru");
+        hikariConfig.setUsername(config.getUser());
+        hikariConfig.setPassword(config.getPassword());
+        hikariConfig.setMaximumPoolSize(5);
+
+        this.source = new HikariDataSource(hikariConfig);
 
         executeUpdate("CREATE TABLE IF NOT EXISTS cloudsystem_groups(name VARCHAR(100), template VARCHAR(100), node VARCHAR(100)," +
             " memory INT, minOnlineService INT, maxOnlineService INT, static INT, fallbackGroup INT, version VARCHAR(100), maxPlayers INT, motd TEXT, maintenance INT, autoUpdating INT)");
-
         CloudAPI.getInstance().getLogger().log("The connection is now established to the database.");
     }
 
@@ -41,7 +47,7 @@ public class DatabaseSqlImpl implements IDatabase {
     @Override
     public @NotNull ICommunicationPromise<Void> disconnect() {
         final ICommunicationPromise<Void> shutdownPromise = new CommunicationPromise<>();
-        if (this.connection != null) this.connection.close();
+        this.source.close();
         shutdownPromise.setSuccess(null);
         return shutdownPromise;
     }
@@ -85,9 +91,10 @@ public class DatabaseSqlImpl implements IDatabase {
         }, Lists.newArrayList());
     }
 
+    @SneakyThrows
     public <T> T executeQuery(String query, DatabaseFunction<ResultSet, T> function, T defaultValue) {
-        Objects.requireNonNull(this.connection, "Try to execute a statement, but the connection is null.");
-        try (var preparedStatement = this.connection.prepareStatement(query)) {
+        Objects.requireNonNull(this.source.getConnection(), "Try to execute a statement, but the connection is null.");
+        try (var preparedStatement = this.source.getConnection().prepareStatement(query)) {
             try (var resultSet = preparedStatement.executeQuery()) {
                 return function.apply(resultSet);
             } catch (Exception throwable) {
@@ -99,9 +106,10 @@ public class DatabaseSqlImpl implements IDatabase {
         return defaultValue;
     }
 
+    @SneakyThrows
     public void executeUpdate(final String query) {
-        Objects.requireNonNull(this.connection, "Try to update a statement, but the connection is null.");
-        try (var preparedStatement = this.connection.prepareStatement(query)) {
+        Objects.requireNonNull(this.source.getConnection(), "Try to update a statement, but the connection is null.");
+        try (var preparedStatement = this.source.getConnection().prepareStatement(query)) {
             preparedStatement.executeUpdate();
         } catch (SQLException exception) {
             exception.printStackTrace();
