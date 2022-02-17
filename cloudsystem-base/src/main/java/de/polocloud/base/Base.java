@@ -23,6 +23,7 @@ import de.polocloud.base.service.LocalService;
 import de.polocloud.base.service.ServiceManager;
 import de.polocloud.base.service.queue.QueueService;
 import de.polocloud.base.templates.GroupTemplateService;
+import de.polocloud.database.IDatabaseManager;
 import de.polocloud.network.promise.ICommunicationPromise;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -99,7 +100,7 @@ public final class Base extends CloudAPI {
             return null;
         });
 
-        this.databaseManager = new DatabaseManager(this.config.getDatabaseConfiguration());
+        this.databaseManager = IDatabaseManager.newInstance(this.config.getDatabaseConfiguration());
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new ServiceManager();
         this.groupTemplateService = new GroupTemplateService();
@@ -156,8 +157,9 @@ public final class Base extends CloudAPI {
             return null;
         });
 
-        ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
+        ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection()))
             .addResultListener(unused -> {
+                this.databaseManager.close();
                 this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
                 ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
                 System.exit(0);

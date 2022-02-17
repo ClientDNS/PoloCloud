@@ -18,7 +18,7 @@ import java.util.List;
 public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
 
     private static final String DEFAULT_JDBC = "jdbc:mysql://";
-    private static final String DEFAULT_PROPERTIES = "&serverTimezone=UTC&autoReconnect=true&useUnicode=true";
+    private static final String DEFAULT_PROPERTIES = "&serverTimezone=UTC&autoReconnect=true";
 
     private static final String TABLE = "cloudsystem_groups";
 
@@ -29,9 +29,8 @@ public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
     public void connect() {
         this.connection = DriverManager.getConnection(getConnectionUrl());
 
-        if (connection != null && !doesCloudTableExist()) {
             createTable();
-        }
+
 
         CloudAPI.getInstance().getLogger().log("The connection is now established to the database.");
     }
@@ -46,7 +45,7 @@ public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
     }
 
     private String getConnectionUrl() {
-        return DEFAULT_JDBC + config.getHostname() + ":" + config.getPort() + "/" + config.getDatabase() + "?user" + config.getUsername() + "&password=" + config.getPassword() + DEFAULT_PROPERTIES;
+        return DEFAULT_JDBC + config.getHostname() + ":" + config.getPort() + "/" + config.getDatabase() + "?user=" + config.getUsername() + "&password=" + config.getPassword() + DEFAULT_PROPERTIES;
     }
 
     @Override
@@ -58,12 +57,21 @@ public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
     @Override
     public List<IServiceGroup> getAllServiceGroups() {
         List<IServiceGroup> groups = Lists.newArrayList();
-        var result = executeQuery("SELECT * FROM " + TABLE);
-        while (result.next()) {
-            groups.add(new ServiceGroup(
-                result.getString("name"), result.getString("template"), result.getString("node"), result.getString("motd"), result.getInt("memory"), result.getInt("maxPlayers"), result.getInt("minOnlineService"), result.getInt("maxOnlineService"), result.getBoolean("static"), result.getBoolean("fallbackGroup"), result.getBoolean("maintenance"), result.getBoolean("autoUpdating"), GameServerVersion.getVersionByName(result.getString("version"))));
+        try (var preparedStatement = connection.prepareStatement("SELECT * FROM " + TABLE); var result = preparedStatement.executeQuery()) {
+            while (result.next()) {
+                groups.add(new ServiceGroup(
+                    result.getString("name"), result.getString("template"), result.getString("node"), result.getString("motd"), result.getInt("memory"), result.getInt("maxPlayers"), result.getInt("minOnlineService"), result.getInt("maxOnlineService"), result.getBoolean("static"), result.getBoolean("fallbackGroup"), result.getBoolean("maintenance"), result.getBoolean("autoUpdating"), GameServerVersion.getVersionByName(result.getString("version"))));
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
         return groups;
+    }
+
+    @SneakyThrows
+    @Override
+    public void disconnect() {
+        this.connection.close();
     }
 
     @Override
@@ -81,14 +89,5 @@ public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-    }
-
-    private ResultSet executeQuery(final @NotNull String query) {
-        try (var preparedStatement = connection.prepareStatement(query); var resultSet = preparedStatement.executeQuery()) {
-            return resultSet;
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-        return null;
     }
 }

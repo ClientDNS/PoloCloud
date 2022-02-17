@@ -13,4 +13,6 @@ public interface ICloudDatabaseProvider {
 
     List<IServiceGroup> getAllServiceGroups();
 
+    void disconnect();
+
 }
