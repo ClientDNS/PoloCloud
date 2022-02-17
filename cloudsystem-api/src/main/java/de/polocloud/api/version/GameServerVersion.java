@@ -98,9 +98,9 @@ public enum GameServerVersion {
                     final var templateDirectory = new File("templates/" + template);
                     final var versionsDirectory = new File(directory, "versions");
                     final var librariesDirectory = new File(directory, "libraries");
-                    FileUtils.copyDirectory(versionsDirectory, templateDirectory);
-                    FileUtils.copyDirectory(librariesDirectory, templateDirectory);
-                    FileUtils.copyDirectory(cacheDirectory, templateDirectory);
+                    FileUtils.copyDirectory(versionsDirectory, new File(templateDirectory, "versions"));
+                    FileUtils.copyDirectory(librariesDirectory, new File(templateDirectory, "libraries"));
+                    FileUtils.copyDirectory(cacheDirectory, new File(templateDirectory, "cache"));
                     FileUtils.deleteDirectory(versionsDirectory);
                     FileUtils.deleteDirectory(librariesDirectory);
                     FileUtils.deleteDirectory(cacheDirectory);
