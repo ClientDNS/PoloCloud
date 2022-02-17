@@ -3,7 +3,6 @@ package de.polocloud.base;
 import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
-import de.polocloud.base.exception.ErrorHandler;
 import de.polocloud.api.groups.IGroupManager;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.LogType;
@@ -17,6 +16,7 @@ import de.polocloud.base.config.CloudConfiguration;
 import de.polocloud.base.database.IDatabaseManager;
 import de.polocloud.base.database.impl.DatabaseManager;
 import de.polocloud.base.exception.DefaultExceptionCodes;
+import de.polocloud.base.exception.ErrorHandler;
 import de.polocloud.base.group.SimpleGroupManager;
 import de.polocloud.base.logger.SimpleLogger;
 import de.polocloud.base.node.BaseNode;
@@ -27,7 +27,6 @@ import de.polocloud.base.service.queue.QueueService;
 import de.polocloud.base.templates.GroupTemplateService;
 import de.polocloud.network.promise.ICommunicationPromise;
 import lombok.Getter;
-import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -160,10 +159,6 @@ public final class Base extends CloudAPI {
         });
 
         ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection(), this.databaseManager.shutdown()))
-            .addCompleteListener(voidICommunicationPromise -> ErrorHandler.defaultInstance().runOnly(() -> {
-                FileUtils.deleteDirectory(new File("tmp"));
-                return null;
-            }))
             .addResultListener(unused -> {
                 this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
                 ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();

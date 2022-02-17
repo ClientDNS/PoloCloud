@@ -205,10 +205,12 @@ public class LocalService implements IService {
 
     public void delete() {
         if (this.group.isStatic()) return;
-        try {
-            FileUtils.deleteDirectory(this.workingDirectory);
-        } catch (IOException e) {
-            e.printStackTrace();
+        synchronized (this) {
+            try {
+                FileUtils.deleteDirectory(this.workingDirectory);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
