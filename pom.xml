@@ -14,6 +14,7 @@
         <module>cloudsystem-wrapper</module>
         <module>cloudsystem-plugin</module>
         <module>cloudsystem-base</module>
+        <module>cloudsystem-database</module>
     </modules>
 
     <properties>

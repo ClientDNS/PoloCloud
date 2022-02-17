@@ -1,7 +1,6 @@
 package de.polocloud.base.config;
 
 import com.google.common.collect.Lists;
-import de.polocloud.base.database.DatabaseConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

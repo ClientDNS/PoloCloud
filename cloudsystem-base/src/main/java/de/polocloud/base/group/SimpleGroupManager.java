@@ -8,7 +8,6 @@ import de.polocloud.api.groups.impl.AbstractGroupManager;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.group.ServiceGroupExecutePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
-import de.polocloud.base.database.IDatabase;
 import de.polocloud.network.cluster.type.NetworkType;
 import org.jetbrains.annotations.NotNull;
 
