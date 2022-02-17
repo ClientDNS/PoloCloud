@@ -1,29 +1,40 @@
 package de.polocloud.network.packet.auth;
 
-import de.polocloud.network.cluster.type.NetworkType;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import de.polocloud.network.NetworkType;
+import de.polocloud.network.packet.NetworkBuf;
+import de.polocloud.network.packet.Packet;
+import org.jetbrains.annotations.NotNull;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class NodeHandshakeAuthenticationPacket implements IPacket {
+public final class NodeHandshakeAuthenticationPacket implements Packet {
 
-    private String clientName;
+    private String name;
     private NetworkType type;
 
-    @Override
-    public void read(NetworkByteBuf byteBuf) {
-        type = byteBuf.readEnum();
-        clientName = byteBuf.readString();
+    public NodeHandshakeAuthenticationPacket() {}
+
+    public NodeHandshakeAuthenticationPacket(final String name, final NetworkType type) {
+        this.name = name;
+        this.type = type;
     }
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
+    public void read(@NotNull NetworkBuf byteBuf) {
+        this.type = byteBuf.readEnum();
+        this.name = byteBuf.readString();
+    }
+
+    @Override
+    public void write(@NotNull NetworkBuf byteBuf) {
         byteBuf.writeEnum(this.type);
-        byteBuf.writeString(this.clientName);
+        byteBuf.writeString(this.name);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public NetworkType getType() {
+        return this.type;
     }
 
 }

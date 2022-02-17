@@ -26,7 +26,7 @@ public final class QueueService {
         if (this.minBootableServiceExists()) return;
 
         final List<IService> services = CloudAPI.getInstance().getServiceManager().getAllServicesByState(ServiceState.PREPARED)
-            .stream().filter(service -> service.getGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())).toList();
+            .stream().filter(service -> service.getGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getName())).toList();
         if (services.isEmpty()) return;
         ((ServiceManager) CloudAPI.getInstance().getServiceManager()).start(services.get(0));
     }
@@ -34,7 +34,7 @@ public final class QueueService {
     public void addServiceToQueueWhereProvided() {
         Base base = Base.getInstance();
         CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream()
-            .filter(serviceGroup -> serviceGroup.getNode().equalsIgnoreCase(base.getNode().getNodeName()))
+            .filter(serviceGroup -> serviceGroup.getNode().equalsIgnoreCase(base.getNode().getName()))
             .filter(serviceGroup -> this.getAmountOfGroupServices(serviceGroup) < serviceGroup.getMinOnlineService())
             .forEach(serviceGroup -> {
                 final var service = new LocalService(serviceGroup, this.getPossibleServiceIDByGroup(serviceGroup),

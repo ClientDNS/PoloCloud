@@ -2,14 +2,15 @@ package de.polocloud.api.network.packet.group;
 
 import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.version.GameServerVersion;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.NetworkBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @NoArgsConstructor
-public final class ServiceGroupUpdatePacket implements IPacket {
+public final class ServiceGroupUpdatePacket implements Packet {
 
     private String name;
     private String node;
@@ -38,7 +39,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
     }
 
     @Override
-    public void read(final NetworkByteBuf byteBuf) {
+    public void read(final @NotNull NetworkBuf byteBuf) {
         this.name = byteBuf.readString();
         this.node = byteBuf.readString();
         this.template = byteBuf.readString();
@@ -53,7 +54,7 @@ public final class ServiceGroupUpdatePacket implements IPacket {
     }
 
     @Override
-    public void write(final NetworkByteBuf byteBuf) {
+    public void write(final @NotNull NetworkBuf byteBuf) {
         byteBuf.writeString(this.name);
         byteBuf.writeString(this.node);
         byteBuf.writeString(this.template);

@@ -1,42 +1,39 @@
 package de.polocloud.api.network.packet;
 
-import de.polocloud.network.NetworkManager;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.api.CloudAPI;
+import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.NetworkBuf;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class RedirectPacket implements IPacket {
+public class RedirectPacket implements Packet {
 
     private String client;
-    private IPacket packet;
+    private Packet packet;
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
+    public void write(@NotNull NetworkBuf byteBuf) {
         byteBuf.writeString(this.client);
-        NetworkManager.getPacketId(this.packet.getClass()).ifPresent(it -> {
-            byteBuf.writeInt(it);
-            this.packet.write(byteBuf);
-        });
+        byteBuf.writeInt(CloudAPI.getInstance().getPacketHandler().getPacketId(this.packet.getClass()));
+        this.packet.write(byteBuf);
     }
 
 
     @SneakyThrows
     @Override
-    public void read(NetworkByteBuf byteBuf) {
+    public void read(@NotNull NetworkBuf byteBuf) {
         this.client = byteBuf.readString();
-        var packetID = byteBuf.readInt();
-
-        NetworkManager.getPacketClass(packetID).ifPresent(it -> initPacket(byteBuf, it));
+        this.initPacket(byteBuf, CloudAPI.getInstance().getPacketHandler().getPacketClass(byteBuf.readInt()));
     }
 
     @SneakyThrows
-    public void initPacket(NetworkByteBuf byteBuf, Class<? extends IPacket> it) {
+    public void initPacket(NetworkBuf byteBuf, Class<? extends Packet> it) {
         this.packet = it.getConstructor().newInstance();
         this.packet.read(byteBuf);
     }

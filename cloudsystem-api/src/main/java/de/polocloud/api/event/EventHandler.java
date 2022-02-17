@@ -3,6 +3,7 @@ package de.polocloud.api.event;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
+import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
@@ -10,8 +11,6 @@ import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.group.CloudServiceGroupUpdateEvent;
 import de.polocloud.api.event.service.CloudServiceRegisterEvent;
 import de.polocloud.api.event.service.CloudServiceUpdateEvent;
-import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
-import de.polocloud.network.NetworkManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,20 +23,22 @@ public final class EventHandler implements IEventHandler {
     private final Map<Class<? extends ICloudEvent>, List<Consumer>> events = Maps.newConcurrentMap();
 
     public EventHandler() {
-        //service register event
-        NetworkManager.registerPacketListener(ServiceAddPacket.class, (ctx, packet) ->
+        final var packetHandler = CloudAPI.getInstance().getPacketHandler();
+
+        // service register event
+        packetHandler.registerPacketListener(ServiceAddPacket.class, packet ->
             this.call(new CloudServiceRegisterEvent(packet.getService())));
 
-        //service remove event
-        NetworkManager.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) ->
+        // service remove event
+        packetHandler.registerPacketListener(ServiceRemovePacket.class, packet ->
             this.call(new CloudServiceRemoveEvent(packet.getService())));
 
-        //service state update event
-        NetworkManager.registerPacketListener(ServiceUpdatePacket.class, (ctx, packet) ->
+        // service state update event
+        packetHandler.registerPacketListener(ServiceUpdatePacket.class, packet ->
             CloudAPI.getInstance().getServiceManager().getService(packet.getService()).ifPresent(it -> this.call(new CloudServiceUpdateEvent(it))));
 
         // service group update event
-        NetworkManager.registerPacketListener(ServiceGroupUpdatePacket.class, (ctx, packet) ->
+        packetHandler.registerPacketListener(ServiceGroupUpdatePacket.class, packet ->
             this.call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(
                 CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName())))));
     }

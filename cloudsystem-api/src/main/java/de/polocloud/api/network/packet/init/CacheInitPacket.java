@@ -8,10 +8,11 @@ import de.polocloud.api.network.packet.PacketHelper;
 import de.polocloud.api.player.ICloudPlayer;
 import de.polocloud.api.player.impl.AbstractPlayerManager;
 import de.polocloud.api.service.IService;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.NetworkBuf;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -20,14 +21,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class CacheInitPacket implements IPacket {
+public class CacheInitPacket implements Packet {
 
     private List<IServiceGroup> groups;
     private List<IService> services;
     private List<ICloudPlayer> players;
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
+    public void write(@NotNull NetworkBuf byteBuf) {
         byteBuf.writeInt(this.groups.size());
         this.groups.forEach(group -> PacketHelper.writeServiceGroup(byteBuf, group));
         byteBuf.writeInt(this.services.size());
@@ -37,7 +38,7 @@ public class CacheInitPacket implements IPacket {
     }
 
     @Override
-    public void read(NetworkByteBuf byteBuf) {
+    public void read(@NotNull NetworkBuf byteBuf) {
         this.groups = Lists.newArrayList();
         final var groupSize = byteBuf.readInt();
         for (int i = 0; i < groupSize; i++) {

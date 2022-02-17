@@ -5,11 +5,9 @@ import de.polocloud.api.CloudAPIType;
 import de.polocloud.api.groups.IGroupManager;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.Logger;
-import de.polocloud.api.network.packet.init.CacheInitPacket;
 import de.polocloud.api.player.IPlayerManager;
 import de.polocloud.api.service.IService;
 import de.polocloud.api.service.IServiceManager;
-import de.polocloud.network.NetworkManager;
 import de.polocloud.wrapper.group.GroupManager;
 import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
@@ -73,7 +71,7 @@ public final class Wrapper extends CloudAPI {
                 }
             }, "Minecraft-Thread");
             thread.setContextClassLoader(classLoader);
-            NetworkManager.registerPacketListener(CacheInitPacket.class, (channelHandlerContext, cacheInitPacket) -> thread.start());
+            thread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,7 +95,7 @@ public final class Wrapper extends CloudAPI {
         this.groupManager = new GroupManager();
         this.serviceManager = new ServiceManager(property);
         this.playerManager = new CloudPlayerManager();
-        this.client = new WrapperClient(property.getService(), property.getHostname(), property.getPort());
+        this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
     }
 
     public static Wrapper getInstance() {

@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public record NetworkByteBuf(ByteBuf byteBuf) {
+public record NetworkBuf(ByteBuf byteBuf) {
 
     public void writeString(String string) {
         final var bytes = string.getBytes(StandardCharsets.UTF_8);

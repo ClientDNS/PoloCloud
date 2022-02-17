@@ -3,13 +3,14 @@ package de.polocloud.api.network.packet.service;
 import de.polocloud.api.service.IService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.NetworkBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @NoArgsConstructor @Getter
-public class ServiceUpdatePacket implements IPacket {
+public class ServiceUpdatePacket implements Packet {
 
     private String service;
     private ServiceVisibility serviceVisibility;
@@ -27,7 +28,7 @@ public class ServiceUpdatePacket implements IPacket {
     }
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
+    public void write(@NotNull NetworkBuf byteBuf) {
         byteBuf. writeString(service);
         byteBuf.writeInt(serviceVisibility.ordinal());
         byteBuf.writeInt(state.ordinal());
@@ -36,7 +37,7 @@ public class ServiceUpdatePacket implements IPacket {
     }
 
     @Override
-    public void read(NetworkByteBuf byteBuf) {
+    public void read(@NotNull NetworkBuf byteBuf) {
         this.service =   byteBuf.readString();
         this.serviceVisibility = ServiceVisibility.values()[byteBuf.readInt()];
         this.state = ServiceState.values()[byteBuf.readInt()];

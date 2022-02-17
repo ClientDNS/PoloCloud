@@ -4,8 +4,8 @@ import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.player.ICloudPlayer;
 import de.polocloud.api.service.IService;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.NetworkBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
-public class CloudPlayerUpdatePacket implements IPacket {
+public class CloudPlayerUpdatePacket implements Packet {
 
     private UUID uuid;
     private IService server;
@@ -27,14 +27,14 @@ public class CloudPlayerUpdatePacket implements IPacket {
     }
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
+    public void write(@NotNull NetworkBuf byteBuf) {
         byteBuf.writeUUID(this.uuid);
         byteBuf.writeString(this.server.getName());
         byteBuf.writeEnum(this.updateReason);
     }
 
     @Override
-    public void read(NetworkByteBuf byteBuf) {
+    public void read(@NotNull NetworkBuf byteBuf) {
         this.uuid = byteBuf.readUUID();
         this.server = CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString());
         this.updateReason = byteBuf.readEnum();

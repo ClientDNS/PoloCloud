@@ -7,12 +7,12 @@ import de.polocloud.api.event.player.CloudPlayerLoginEvent;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.logger.LogType;
-import de.polocloud.api.network.INetworkHandler;
 import de.polocloud.api.network.packet.player.CloudPlayerDisconnectPacket;
+import de.polocloud.api.network.packet.player.CloudPlayerUpdatePacket;
 import de.polocloud.api.player.ICloudPlayer;
 import de.polocloud.api.network.packet.player.CloudPlayerLoginPacket;
-import de.polocloud.api.network.packet.player.CloudPlayerUpdatePacket;
 import de.polocloud.api.player.IPlayerManager;
+import de.polocloud.network.packet.PacketHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -24,16 +24,16 @@ public abstract class AbstractPlayerManager implements IPlayerManager {
 
     public AbstractPlayerManager() {
 
-        final INetworkHandler networkHandler = CloudAPI.getInstance().getNetworkHandler();
+        final PacketHandler packetHandler = CloudAPI.getInstance().getPacketHandler();
         final IEventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
 
-        networkHandler.registerPacketListener(CloudPlayerUpdatePacket.class, (ctx, packet) ->
+        packetHandler.registerPacketListener(CloudPlayerUpdatePacket.class, packet ->
             this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {
                 cloudPlayer.setServer(packet.getServer());
                 eventHandler.call(new CloudPlayerUpdateEvent(cloudPlayer, packet.getUpdateReason()));
             }));
 
-        networkHandler.registerPacketListener(CloudPlayerLoginPacket.class, (ctx, packet) ->
+        packetHandler.registerPacketListener(CloudPlayerLoginPacket.class, packet ->
             CloudAPI.getInstance().getServiceManager().getService(packet.getProxyServer()).ifPresentOrElse(service -> {
                 final ICloudPlayer cloudPlayer = new SimpleCloudPlayer(packet.getUuid(), packet.getUsername(), service);
                 this.players.put(packet.getUuid(), cloudPlayer);
@@ -42,8 +42,8 @@ public abstract class AbstractPlayerManager implements IPlayerManager {
                 .log("Proxy " + packet.getProxyServer() + " not found for player "
                     + packet.getUsername() + ":" + packet.getUuid(), LogType.ERROR)));
 
-        networkHandler.registerPacketListener(CloudPlayerDisconnectPacket.class, (ctx, packet) ->
-            this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {
+        packetHandler.registerPacketListener(CloudPlayerDisconnectPacket.class, packet ->
+            this.getCloudPlayer(packet.getUniqueId()).ifPresent(cloudPlayer -> {
                 this.players.remove(cloudPlayer.getUniqueId());
                 eventHandler.call(new CloudPlayerDisconnectEvent(cloudPlayer));
             }));

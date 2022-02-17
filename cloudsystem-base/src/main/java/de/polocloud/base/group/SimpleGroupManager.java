@@ -1,15 +1,15 @@
 package de.polocloud.base.group;
 
+import de.polocloud.api.network.packet.QueryPacket;
+import de.polocloud.api.network.packet.group.ServiceGroupExecutePacket;
+import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.group.CloudServiceGroupUpdateEvent;
 import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.groups.impl.AbstractGroupManager;
-import de.polocloud.api.network.packet.QueryPacket;
-import de.polocloud.api.network.packet.group.ServiceGroupExecutePacket;
-import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.database.ICloudDatabaseProvider;
-import de.polocloud.network.cluster.type.NetworkType;
+import de.polocloud.network.NetworkType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;
@@ -24,8 +24,8 @@ public final class SimpleGroupManager extends AbstractGroupManager {
         // loading all database groups
         this.getAllCachedServiceGroups().addAll(this.database.getAllServiceGroups());
 
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(ServiceGroupExecutePacket.class, (ctx, packet) -> {
-            if (packet.getExecutorType().equals(ServiceGroupExecutePacket.executor.CREATE)) {
+        CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupExecutePacket.class, (channelHandlerContext, packet) -> {
+            if (packet.getExecutorType().equals(ServiceGroupExecutePacket.Executor.CREATE)) {
                 getAllCachedServiceGroups().add(packet.getGroup());
                 Base.getInstance().getGroupTemplateService().createTemplateFolder(packet.getGroup());
                 Base.getInstance().getQueueService().checkForQueue();
@@ -44,7 +44,7 @@ public final class SimpleGroupManager extends AbstractGroupManager {
     @Override
     public void addServiceGroup(final @NotNull IServiceGroup serviceGroup) {
         this.database.addGroup(serviceGroup);
-        Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.CREATE));
+        Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.Executor.CREATE));
         super.addServiceGroup(serviceGroup);
     }
 
@@ -52,7 +52,7 @@ public final class SimpleGroupManager extends AbstractGroupManager {
     @Override
     public void removeServiceGroup(final @NotNull IServiceGroup serviceGroup) {
         this.database.removeGroup(serviceGroup);
-        Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.executor.REMOVE));
+        Base.getInstance().getNode().sendPacketToAll(new ServiceGroupExecutePacket(serviceGroup, ServiceGroupExecutePacket.Executor.REMOVE));
         super.removeServiceGroup(serviceGroup);
     }
 
@@ -62,7 +62,7 @@ public final class SimpleGroupManager extends AbstractGroupManager {
         // update all other nodes and this service groups
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
         // update own service group caches
-        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.SERVICE);
+        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.WRAPPER);
 
         Base.getInstance().getQueueService().checkForQueue();
     }

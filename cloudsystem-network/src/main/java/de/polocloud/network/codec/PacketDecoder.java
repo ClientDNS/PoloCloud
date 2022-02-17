@@ -1,36 +1,35 @@
 package de.polocloud.network.codec;
 
-import de.polocloud.network.NetworkManager;
-import de.polocloud.network.codec.exception.PacketReadException;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.network.packet.NetworkBuf;
+import de.polocloud.network.packet.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import lombok.SneakyThrows;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class PacketDecoder extends ByteToMessageDecoder {
+public final class PacketDecoder extends ByteToMessageDecoder {
+
+    private final PacketHandler packetHandler;
+
+    public PacketDecoder(final PacketHandler packetHandler) {
+        this.packetHandler = packetHandler;
+    }
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
-        int index = byteBuf.readInt();
-        NetworkManager.getPacketClass(index).ifPresentOrElse(clazz -> list.add(initializePacket(clazz, byteBuf, index)), () -> {
-            throw new NullPointerException("Couldn't find id of packet " + index);
-        });
-    }
-
-    @SneakyThrows
-    private IPacket initializePacket(final Class<? extends IPacket> clazz, ByteBuf byteBuf, int index) {
-        IPacket packet = clazz.getDeclaredConstructor().newInstance();
-        try {
-            packet.read(new NetworkByteBuf(byteBuf));
-        }catch (Exception exception) {
-            throw new PacketReadException(clazz, index);
+        final var index = byteBuf.readInt();
+        final var clazz = this.packetHandler.getPacketClass(index);
+        if (clazz != null) {
+            try {
+                final var packet = clazz.getDeclaredConstructor().newInstance();
+                packet.read(new NetworkBuf(byteBuf));
+                list.add(packet);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
-        return packet;
     }
 
 }
-

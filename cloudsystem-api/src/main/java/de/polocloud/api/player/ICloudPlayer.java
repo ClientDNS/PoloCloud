@@ -2,8 +2,8 @@ package de.polocloud.api.player;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
-import de.polocloud.api.network.packet.player.CloudPlayerSendServicePacket;
 import de.polocloud.api.network.packet.player.CloudPlayerKickPacket;
+import de.polocloud.api.network.packet.player.CloudPlayerSendServicePacket;
 import de.polocloud.api.service.IService;
 import org.jetbrains.annotations.NotNull;
 

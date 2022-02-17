@@ -1,19 +1,20 @@
 package de.polocloud.api.network.packet;
 
-import de.polocloud.network.NetworkManager;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.api.CloudAPI;
+import de.polocloud.network.packet.NetworkBuf;
+import de.polocloud.network.packet.Packet;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QueryPacket implements IPacket {
+public class QueryPacket implements Packet {
 
-    private IPacket packet;
+    private Packet packet;
     private QueryState state;
 
     public enum QueryState {
@@ -22,36 +23,29 @@ public class QueryPacket implements IPacket {
     }
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
-        //write packet id to init
+    public void write(@NotNull NetworkBuf byteBuf) {
+        // write packet id to init
+        byteBuf.writeInt(CloudAPI.getInstance().getPacketHandler().getPacketId(this.packet.getClass()));
+        this.packet.write(byteBuf);
 
-        NetworkManager.getPacketId(this.packet.getClass()).ifPresentOrElse(it -> {
-            byteBuf.writeInt(it);
-            packet.write(byteBuf);
-
-            //write state for indexing
-            byteBuf.writeInt(state.ordinal());
-        }, () -> {
-            throw new NullPointerException("Cannot write QueryPacket: Write ByteBuf(Packet Id not found)");
-        });
+        // write state for indexing
+        byteBuf.writeInt(this.state.ordinal());
     }
 
     @SneakyThrows
     @Override
-    public void read(NetworkByteBuf byteBuf) {
-        var packetID = byteBuf.readInt();
+    public void read(@NotNull NetworkBuf byteBuf) {
+        final var packetId = byteBuf.readInt();
 
-        NetworkManager.getPacketClass(packetID).ifPresentOrElse(it -> initPacket(byteBuf, it), () -> {
-            throw new NullPointerException("Cannot read QueryPacket: Read ByteBuf(Packet not found)");
-        });
+        this.initPacket(byteBuf, CloudAPI.getInstance().getPacketHandler().getPacketClass(packetId));
     }
 
     @SneakyThrows
-    private void initPacket(NetworkByteBuf byteBuf, Class<? extends IPacket> it){
+    private void initPacket(NetworkBuf byteBuf, Class<? extends Packet> it){
         this.packet = it.getConstructor().newInstance();
         this.packet.read(byteBuf);
 
-        state = QueryState.values()[byteBuf.readInt()];
+        this.state = QueryState.values()[byteBuf.readInt()];
     }
 
 }
