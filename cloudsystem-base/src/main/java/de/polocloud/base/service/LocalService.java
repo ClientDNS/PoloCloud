@@ -2,7 +2,6 @@ package de.polocloud.base.service;
 
 import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
-import de.polocloud.base.config.editor.ConfigSplitSpacer;
 import de.polocloud.base.config.editor.ConfigurationFileEditor;
 import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.groups.utils.ServiceType;
@@ -104,9 +103,13 @@ public class LocalService implements IService {
                     FileUtils.copyToFile(inputStream, file);
                 }
             }
-            final var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
-            editor.setValue("host", "0.0.0.0:" + this.port);
-            editor.saveFile();
+            new ConfigurationFileEditor(file, s -> {
+                if (s.startsWith("  host: ")) {
+                    return "  host: 0.0.0.0:" + this.port;
+                } else {
+                    return s;
+                }
+            });
         } else if (this.group.getGameServerVersion() == GameServerVersion.VELOCITY) {
             final var file = new File(this.workingDirectory, "velocity.toml");
             if (!file.exists()) {
@@ -115,9 +118,13 @@ public class LocalService implements IService {
                     FileUtils.copyToFile(inputStream, file);
                 }
             }
-            final var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.TOML);
-            editor.setValue("bind", "\"0.0.0.0:" + this.port + "\"");
-            editor.saveFile();
+            new ConfigurationFileEditor(file, s -> {
+                if (s.startsWith("bind = ")) {
+                    return "bind = \"0.0.0.0:" + this.port + "\"";
+                } else {
+                    return s;
+                }
+            });
         } else {
             final var properties = new Properties();
             final var file = new File(this.workingDirectory, "server.properties");
