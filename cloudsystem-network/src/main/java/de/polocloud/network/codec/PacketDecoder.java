@@ -26,7 +26,6 @@ public final class PacketDecoder extends ByteToMessageDecoder {
                 final var packet = clazz.getDeclaredConstructor().newInstance();
                 packet.read(new NetworkBuf(byteBuf));
                 list.add(packet);
-                System.out.println("decode " + packet);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
