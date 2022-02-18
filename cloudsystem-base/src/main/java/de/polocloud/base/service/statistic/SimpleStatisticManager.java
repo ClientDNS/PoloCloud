@@ -1,13 +1,13 @@
 package de.polocloud.base.service.statistic;
 
-import com.google.common.collect.Maps;
 import de.polocloud.api.service.CloudService;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class SimpleStatisticManager {
 
-    private static final Map<CloudService, Long> SERVICE_START_UP = Maps.newConcurrentMap();
+    private static final Map<CloudService, Long> SERVICE_START_UP = new ConcurrentHashMap<>();
 
     public static void registerStartingProcess(CloudService service){
         SERVICE_START_UP.put(service, System.currentTimeMillis());

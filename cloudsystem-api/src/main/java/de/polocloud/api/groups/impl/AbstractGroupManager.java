@@ -1,6 +1,5 @@
 package de.polocloud.api.groups.impl;
 
-import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.groups.ServiceGroup;
@@ -9,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,7 +16,7 @@ import java.util.Objects;
 @Setter
 public abstract class AbstractGroupManager implements GroupManager {
 
-    private List<ServiceGroup> allCachedServiceGroups = Lists.newArrayList();
+    private List<ServiceGroup> allCachedServiceGroups = new ArrayList<>();
 
     public AbstractGroupManager() {
         CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) -> {

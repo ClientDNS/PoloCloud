@@ -1,7 +1,5 @@
 package de.polocloud.base.logger;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.logger.LogType;
@@ -13,6 +11,8 @@ import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.TerminalBuilder;
+
+import java.nio.charset.StandardCharsets;
 
 @Getter
 public final class SimpleConsoleManager {
@@ -26,7 +26,7 @@ public final class SimpleConsoleManager {
     public SimpleConsoleManager(final Logger logger) {
         this.windowsSystem = ((SimpleLogger) logger).isWindows();
         this.lineReader = LineReaderBuilder.builder()
-            .terminal(TerminalBuilder.builder().system(true).streams(System.in, System.out).encoding(Charsets.UTF_8).dumb(true).build())
+            .terminal(TerminalBuilder.builder().system(true).streams(System.in, System.out).encoding(StandardCharsets.UTF_8).dumb(true).build())
             .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
             .option(LineReader.Option.AUTO_REMOVE_SLASH, false)
             .option(LineReader.Option.INSERT_TAB, false)
@@ -42,7 +42,6 @@ public final class SimpleConsoleManager {
             s -> Base.getInstance().getCommandManager().execute(s), this.windowsSystem);
         this.consoleReadingThread.setUncaughtExceptionHandler((t, e) -> {
             CloudAPI.getInstance().getLogger().log("An error...", LogType.ERROR);
-            CloudAPI.getInstance().getLogger().log("§7" + Throwables.getStackTraceAsString(e), LogType.ERROR);
             e.printStackTrace();
         });
         this.consoleReadingThread.start();
