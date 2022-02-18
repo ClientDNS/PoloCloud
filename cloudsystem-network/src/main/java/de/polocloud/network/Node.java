@@ -59,12 +59,4 @@ public abstract class Node {
         return (Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class);
     }
 
-    public void onActivated(final ChannelHandlerContext channelHandlerContext) {}
-
-    public void onClose(final ChannelHandlerContext channelHandlerContext) {}
-
-    public void sendPacket(final @NotNull Packet packet) {
-
-    }
-
 }

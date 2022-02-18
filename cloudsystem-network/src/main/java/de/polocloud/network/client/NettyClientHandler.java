@@ -20,12 +20,23 @@ public final class NettyClientHandler extends SimpleChannelInboundHandler<Packet
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        this.nettyClient.onActivated(ctx);
         ctx.writeAndFlush(new NodeHandshakeAuthenticationPacket(this.nettyClient.getName(), this.nettyClient.getNetworkType()));
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        this.nettyClient.onClose(ctx);
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) {
+        this.nettyClient.onClose(ctx);
     }
 
 }

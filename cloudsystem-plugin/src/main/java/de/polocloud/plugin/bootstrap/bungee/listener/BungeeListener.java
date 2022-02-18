@@ -6,7 +6,7 @@ import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.bungee.BungeeBootstrap;
 import de.polocloud.wrapper.Wrapper;
-import de.polocloud.wrapper.service.ServiceManager;
+import de.polocloud.wrapper.service.WrapperServiceManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -31,7 +31,7 @@ public final class BungeeListener implements Listener {
         final var connection = event.getConnection();
 
         this.playerManager.registerCloudPlayer(new SimpleCloudPlayer(connection.getUniqueId(), connection.getName(),
-            ((ServiceManager) CloudAPI.getInstance().getServiceManager()).thisService()));
+            ((WrapperServiceManager) CloudAPI.getInstance().getServiceManager()).thisService()));
     }
 
     @EventHandler

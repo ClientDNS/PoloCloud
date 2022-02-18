@@ -12,6 +12,7 @@ import de.polocloud.api.service.ServiceManager;
 import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.player.CloudPlayerManager;
+import de.polocloud.wrapper.service.WrapperServiceManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -103,7 +104,7 @@ public final class Wrapper extends CloudAPI {
 
         this.logger = new WrapperLogger();
         this.groupManager = new de.polocloud.wrapper.group.GroupManager();
-        this.serviceManager = new de.polocloud.wrapper.service.ServiceManager(property);
+        this.serviceManager = new WrapperServiceManager(property);
         this.playerManager = new CloudPlayerManager();
         this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
     }
@@ -133,7 +134,7 @@ public final class Wrapper extends CloudAPI {
     }
 
     public CloudService thisService() {
-        return ((de.polocloud.wrapper.service.ServiceManager) serviceManager).thisService();
+        return ((WrapperServiceManager) this.serviceManager).thisService();
     }
 
     public WrapperClient getClient() {

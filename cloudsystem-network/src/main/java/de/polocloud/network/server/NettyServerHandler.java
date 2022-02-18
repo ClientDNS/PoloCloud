@@ -26,6 +26,11 @@ public final class NettyServerHandler extends SimpleChannelInboundHandler<Packet
     }
 
     @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        if (!cause.getMessage().equals("Connection reset")) cause.printStackTrace();
+    }
+
+    @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         this.nettyServer.closeClient(ctx);
     }

@@ -3,6 +3,7 @@ package de.polocloud.plugin.bootstrap.velocity;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -12,6 +13,7 @@ import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityCloudListener;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityListener;
+import de.polocloud.wrapper.Wrapper;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -31,6 +33,22 @@ public final class VelocityBootstrap {
         new VelocityCloudListener(this.proxyServer);
 
         this.proxyServer.getEventManager().register(this, new VelocityListener(this, this.proxyServer));
+
+        // update that the service is ready to use
+        final CloudService service = Wrapper.getInstance().thisService();
+
+        if (service.getGroup().isAutoUpdating()) {
+            service.setServiceVisibility(ServiceVisibility.VISIBLE);
+            service.update();
+        }
+    }
+
+    @Subscribe
+    public void handle(final ProxyShutdownEvent event) {
+        Wrapper.getInstance().thisService().edit(service -> {
+            service.setServiceState(ServiceState.STOPPING);
+            service.setServiceVisibility(ServiceVisibility.INVISIBLE);
+        });
     }
 
     public Optional<CloudService> getFallback(final Player player) {

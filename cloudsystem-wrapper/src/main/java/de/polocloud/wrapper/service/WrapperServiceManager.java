@@ -6,6 +6,7 @@ import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
 import de.polocloud.api.service.CloudService;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.network.packet.Packet;
 import de.polocloud.network.packet.PacketHandler;
 import de.polocloud.wrapper.PropertyFile;
@@ -15,12 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class ServiceManager implements de.polocloud.api.service.ServiceManager {
+public final class WrapperServiceManager implements ServiceManager {
 
     private List<CloudService> allCachedServices;
     private final PropertyFile property;
 
-    public ServiceManager(final PropertyFile property) {
+    public WrapperServiceManager(final PropertyFile property) {
         this.allCachedServices = new CopyOnWriteArrayList<>();
         this.property = property;
 
