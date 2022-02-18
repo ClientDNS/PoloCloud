@@ -4,9 +4,9 @@ import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.base.command.CloudCommand;
 import de.polocloud.api.groups.DefaultGroup;
-import de.polocloud.api.groups.IServiceGroup;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.logger.LogType;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.version.GameServerVersion;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public final class GroupCommand extends CloudCommand {
         final var logger = cloudAPI.getLogger();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
+            for (final ServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
                 logger.log("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
@@ -76,7 +76,7 @@ public final class GroupCommand extends CloudCommand {
             }
             groupManager.removeServiceGroup(serviceGroup);
 
-            cloudAPI.getServiceManager().getAllServicesByGroup(serviceGroup).forEach(IService::stop);
+            cloudAPI.getServiceManager().getAllServicesByGroup(serviceGroup).forEach(CloudService::stop);
 
             logger.log("The group '§b" + name + "§7' is now deleted.");
             return;
@@ -90,10 +90,10 @@ public final class GroupCommand extends CloudCommand {
             }
 
             logger.log("Group information's: ");
-            logger.log("Groupname: §b" + serviceGroup.getName());
+            logger.log("Group: §b" + serviceGroup.getName());
             logger.log("Template: §b" + serviceGroup.getTemplate());
             logger.log("Node: §b" + serviceGroup.getNode());
-            logger.log("Memory: §b" + serviceGroup.getMemory() + "mb");
+            logger.log("Max Memory: §b" + serviceGroup.getMaxMemory() + "mb");
             logger.log("Min online services: §b" + serviceGroup.getMinOnlineService());
             logger.log("Max online services: §b" + serviceGroup.getMaxOnlineService());
             logger.log("Static: §b" + serviceGroup.isStatic());
@@ -111,7 +111,7 @@ public final class GroupCommand extends CloudCommand {
             final var key = args[2].toLowerCase();
             switch (key) {
                 case "memory":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMemory);
+                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxMemory);
                     logger.log("§7Successfully set memory to " + args[3] + "mb");
                 case "minservicecount":
                     this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMinOnlineService);
@@ -156,7 +156,7 @@ public final class GroupCommand extends CloudCommand {
             return Arrays.asList("list", "create", "remove", "info", "edit");
         } else if (arguments.length == 2) {
             if (!arguments[0].equalsIgnoreCase("list")) {
-                return Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(IServiceGroup::getName).toList();
+                return Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(ServiceGroup::getName).toList();
             }
         } else if (arguments.length == 3) {
             if (arguments[0].equalsIgnoreCase("edit")) {
@@ -175,7 +175,7 @@ public final class GroupCommand extends CloudCommand {
         return super.tabComplete(arguments);
     }
 
-    private void getAndSetInt(final String key, final String value, final IServiceGroup group, final Consumer<Integer> consumer) {
+    private void getAndSetInt(final String key, final String value, final ServiceGroup group, final Consumer<Integer> consumer) {
         try {
             consumer.accept(Integer.parseInt(value));
             group.update();

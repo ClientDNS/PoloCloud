@@ -1,11 +1,13 @@
 package de.polocloud.api.groups;
 
+import de.polocloud.api.groups.impl.SimpleServiceGroup;
 import de.polocloud.api.version.GameServerVersion;
+import de.polocloud.network.packet.NetworkBuf;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public interface IServiceGroup {
+public interface ServiceGroup {
 
     /**
      * @return the name of the group
@@ -37,13 +39,13 @@ public interface IServiceGroup {
     /**
      * @return the max memory of a service of the group
      */
-    int getMemory();
+    int getMaxMemory();
 
     /**
      * sets the max memory of a service of the group
      * @param memory the memory to set
      */
-    void setMemory(int memory);
+    void setMaxMemory(int memory);
 
     /**
      * @return the max players of a service of the group
@@ -131,7 +133,7 @@ public interface IServiceGroup {
      * edits the properties of the group and update then
      * @param serviceGroupConsumer the consumer to change the properties
      */
-    void edit(@NotNull Consumer<IServiceGroup> serviceGroupConsumer);
+    void edit(@NotNull Consumer<ServiceGroup> serviceGroupConsumer);
 
     /**
      * get auto update state
@@ -143,5 +145,44 @@ public interface IServiceGroup {
      * updates the properties of the group
      */
     void update();
+
+    /**
+     * writes the group to a network buf
+     */
+    default void write(@NotNull NetworkBuf networkBuf) {
+        networkBuf.writeString(this.getName());
+        networkBuf.writeString(this.getTemplate());
+        networkBuf.writeString(this.getNode());
+        networkBuf.writeString(this.getMotd());
+        networkBuf.writeInt(this.getMaxMemory());
+        networkBuf.writeInt(this.getDefaultMaxPlayers());
+        networkBuf.writeInt(this.getMinOnlineService());
+        networkBuf.writeInt(this.getMaxOnlineService());
+        networkBuf.writeBoolean(this.isStatic());
+        networkBuf.writeBoolean(this.isFallbackGroup());
+        networkBuf.writeBoolean(this.isMaintenance());
+        networkBuf.writeBoolean(this.isAutoUpdating());
+        networkBuf.writeInt(this.getGameServerVersion().ordinal());
+    }
+
+    /**
+     * reads a group from a network buf
+     */
+    static ServiceGroup read(@NotNull NetworkBuf networkBuf) {
+        return new SimpleServiceGroup(
+            networkBuf.readString(),
+            networkBuf.readString(),
+            networkBuf.readString(),
+            networkBuf.readString(),
+            networkBuf.readInt(),
+            networkBuf.readInt(),
+            networkBuf.readInt(),
+            networkBuf.readInt(),
+            networkBuf.readBoolean(),
+            networkBuf.readBoolean(),
+            networkBuf.readBoolean(),
+            networkBuf.readBoolean(),
+            GameServerVersion.values()[networkBuf.readInt()]);
+    }
 
 }

@@ -1,6 +1,6 @@
 package de.polocloud.api.network.packet.service;
 
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.network.packet.Packet;
@@ -19,7 +19,7 @@ public class ServiceUpdatePacket implements Packet {
     private int maxPlayers;
     private String motd;
 
-    public ServiceUpdatePacket(IService service) {
+    public ServiceUpdatePacket(CloudService service) {
         this.service = service.getName();
         this.serviceVisibility = service.getServiceVisibility();
         this.state = service.getServiceState();

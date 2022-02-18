@@ -5,8 +5,7 @@ import de.polocloud.api.network.packet.RedirectPacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
-import de.polocloud.api.service.IService;
-import de.polocloud.api.service.IServiceManager;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.network.packet.Packet;
 import de.polocloud.network.packet.PacketHandler;
 import de.polocloud.wrapper.PropertyFile;
@@ -16,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class ServiceManager implements IServiceManager {
+public final class ServiceManager implements de.polocloud.api.service.ServiceManager {
 
-    private List<IService> allCachedServices;
+    private List<CloudService> allCachedServices;
     private final PropertyFile property;
 
     public ServiceManager(final PropertyFile property) {
@@ -41,31 +40,31 @@ public final class ServiceManager implements IServiceManager {
 
     @NotNull
     @Override
-    public List<IService> getAllCachedServices() {
+    public List<CloudService> getAllCachedServices() {
         return this.allCachedServices;
     }
 
     @Override
-    public void setAllCachedServices(@NotNull List<IService> allCachedServices) {
+    public void setAllCachedServices(@NotNull List<CloudService> allCachedServices) {
         this.allCachedServices = allCachedServices;
     }
 
     @Override
-    public void startService(@NotNull IService service) {
+    public void startService(@NotNull CloudService service) {
         //TODO SEND PACKET
     }
 
-    public IService thisService() {
+    public CloudService thisService() {
         return this.allCachedServices.stream().filter(it -> it.getName().equalsIgnoreCase(this.property.getService())).findAny().orElse(null);
     }
 
     @Override
-    public void updateService(@NotNull IService service) {
+    public void updateService(@NotNull CloudService service) {
         Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new ServiceUpdatePacket(service), QueryPacket.QueryState.FIRST_RESPONSE));
     }
 
     @Override
-    public void sendPacketToService(IService service, Packet packet) {
+    public void sendPacketToService(CloudService service, Packet packet) {
         if (service.equals(thisService())) {
             Wrapper.getInstance().getPacketHandler().call(null, packet);
             return;

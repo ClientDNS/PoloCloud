@@ -7,7 +7,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityCloudListener;
@@ -33,7 +33,7 @@ public final class VelocityBootstrap {
         this.proxyServer.getEventManager().register(this, new VelocityListener(this, this.proxyServer));
     }
 
-    public Optional<IService> getFallback(final Player player) {
+    public Optional<CloudService> getFallback(final Player player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
             .filter(service -> service.getServiceState() == ServiceState.ONLINE)
             .filter(service -> service.getServiceVisibility() == ServiceVisibility.VISIBLE)
@@ -41,7 +41,7 @@ public final class VelocityBootstrap {
             .filter(service -> service.getGroup().isFallbackGroup())
             .filter(service -> (player.getCurrentServer().isEmpty()
                 || !player.getCurrentServer().get().getServerInfo().getName().equals(service.getName())))
-            .min(Comparator.comparing(IService::getOnlineCount));
+            .min(Comparator.comparing(CloudService::getOnlineCount));
     }
 
 }

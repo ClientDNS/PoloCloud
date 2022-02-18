@@ -4,12 +4,14 @@ import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.network.packet.player.CloudPlayerKickPacket;
 import de.polocloud.api.network.packet.player.CloudPlayerSendServicePacket;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.player.impl.SimpleCloudPlayer;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.network.packet.NetworkBuf;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public interface ICloudPlayer {
+public interface CloudPlayer {
 
     /**
      * @return the username of the player
@@ -24,24 +26,24 @@ public interface ICloudPlayer {
     /**
      * @return the proxy server who the player is
      */
-    IService getProxyServer();
+    CloudService getProxyServer();
 
     /**
      * @return the server who the player is
      */
-    IService getServer();
+    CloudService getServer();
 
     /**
      * sets the server of the player
      * @param service the service to set
      */
-    void setServer(@NotNull IService service);
+    void setServer(@NotNull CloudService service);
 
     /**
      * connects the player to a service
      * @param service the service to connect
      */
-    default void connect(@NotNull IService service) {
+    default void connect(@NotNull CloudService service) {
         assert getProxyServer() != null;
         this.getProxyServer().sendPacket(new CloudPlayerSendServicePacket(getUniqueId(),service.getName()));
     }
@@ -81,5 +83,26 @@ public interface ICloudPlayer {
      * @param updateReason the reason of the update
      */
     void update(@NotNull CloudPlayerUpdateEvent.UpdateReason updateReason);
+
+    /**
+     * writes the player to a network buf
+     */
+    default void write(@NotNull NetworkBuf networkBuf) {
+        networkBuf.writeUUID(this.getUniqueId());
+        networkBuf.writeString(this.getUsername());
+        networkBuf.writeString(this.getProxyServer().getName());
+        networkBuf.writeString(this.getServer().getName());
+    }
+
+    /**
+     * reads a player from a network buf
+     */
+    static CloudPlayer read(@NotNull NetworkBuf networkBuf) {
+        return new SimpleCloudPlayer(
+            networkBuf.readUUID(),
+            networkBuf.readString(),
+            CloudAPI.getInstance().getServiceManager().getService(networkBuf.readString()).orElse(null),
+            CloudAPI.getInstance().getServiceManager().getService(networkBuf.readString()).orElse(null));
+    }
 
 }

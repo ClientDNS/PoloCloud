@@ -7,32 +7,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public interface IGroupManager {
+public interface GroupManager {
 
     /**
      * gets all cached service groups
      * @return the cached service groups
      */
-    @NotNull List<IServiceGroup> getAllCachedServiceGroups();
+    @NotNull List<ServiceGroup> getAllCachedServiceGroups();
 
     /**
      * adds a service group
      * @param serviceGroup the service group to add
      */
-    void addServiceGroup(@NotNull IServiceGroup serviceGroup);
+    void addServiceGroup(@NotNull ServiceGroup serviceGroup);
 
     /**
      * removes a service group
      * @param serviceGroup the service group to remove
      */
-    void removeServiceGroup(@NotNull IServiceGroup serviceGroup);
+    void removeServiceGroup(@NotNull ServiceGroup serviceGroup);
 
     /**
      * gets a service group
      * @param name the name of the service group
      * @return the service group in an optional
      */
-    default @NotNull Optional<IServiceGroup> getServiceGroupByName(@NotNull String name) {
+    default @NotNull Optional<ServiceGroup> getServiceGroupByName(@NotNull String name) {
         return this.getAllCachedServiceGroups().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findAny();
     }
 
@@ -41,7 +41,7 @@ public interface IGroupManager {
      * @param name the name of the service group
      * @return the service group or null when it not exists
      */
-    default @Nullable IServiceGroup getServiceGroupByNameOrNull(@NotNull String name) {
+    default @Nullable ServiceGroup getServiceGroupByNameOrNull(@NotNull String name) {
         return this.getServiceGroupByName(name).orElse(null);
     }
 
@@ -59,7 +59,7 @@ public interface IGroupManager {
      * @param node the node
      * @return all services of the node
      */
-    default @NotNull List<IServiceGroup> getServiceGroup(@NotNull String node) {
+    default @NotNull List<ServiceGroup> getServiceGroup(@NotNull String node) {
         return this.getAllCachedServiceGroups().stream()
             .filter(it -> it.getNode().equalsIgnoreCase(node))
             .collect(Collectors.toList());
@@ -69,6 +69,6 @@ public interface IGroupManager {
      * update a group
      * @param serviceGroup the group to update
      */
-    void updateServiceGroup(@NotNull IServiceGroup serviceGroup);
+    void updateServiceGroup(@NotNull ServiceGroup serviceGroup);
 
 }

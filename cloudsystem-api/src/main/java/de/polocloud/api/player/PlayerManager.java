@@ -8,41 +8,41 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface IPlayerManager {
+public interface PlayerManager {
 
     /**
      * @return a list of all cloud players
      */
-    @NotNull List<ICloudPlayer> getPlayers();
+    @NotNull List<CloudPlayer> getPlayers();
 
     /**
      * @return a list of all cloud players on the service
      */
-    @NotNull List<ICloudPlayer> getAllServicePlayers();
+    @NotNull List<CloudPlayer> getAllServicePlayers();
 
     /**
      * @param uniqueId the unique id to get the player
      * @return the player in an optional
      */
-    @NotNull Optional<ICloudPlayer> getCloudPlayer(@NotNull UUID uniqueId);
+    @NotNull Optional<CloudPlayer> getCloudPlayer(@NotNull UUID uniqueId);
 
     /**
      * @param username the username to get the player
      * @return the player in an optional
      */
-    @NotNull Optional<ICloudPlayer> getCloudPlayer(@NotNull String username);
+    @NotNull Optional<CloudPlayer> getCloudPlayer(@NotNull String username);
 
     /**
      * @param uniqueId the unique id to get the player
      * @return the player
      */
-    @Nullable ICloudPlayer getCloudPlayerByUniqueIdOrNull(@NotNull UUID uniqueId);
+    @Nullable CloudPlayer getCloudPlayerByUniqueIdOrNull(@NotNull UUID uniqueId);
 
     /**
      * @param username the username to get the player
      * @return the player
      */
-    @Nullable ICloudPlayer getCloudPlayerByNameOrNull(@NotNull String username);
+    @Nullable CloudPlayer getCloudPlayerByNameOrNull(@NotNull String username);
 
     /**
      * @return the online count
@@ -55,20 +55,20 @@ public interface IPlayerManager {
      * registers a cloud player
      * @param cloudPlayer the player to register
      */
-    void registerCloudPlayer(@NotNull ICloudPlayer cloudPlayer);
+    void registerCloudPlayer(@NotNull CloudPlayer cloudPlayer);
 
     /**
      * update a cloud player
      * @param cloudPlayer the unique id of the player
      */
-    void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer);
+    void updateCloudPlayer(@NotNull CloudPlayer cloudPlayer);
 
     /**
      * update a cloud player
      * @param cloudPlayer the unique id of the player
      * @param updateReason the reason of the update
      */
-    void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer, CloudPlayerUpdateEvent.@NotNull UpdateReason updateReason);
+    void updateCloudPlayer(@NotNull CloudPlayer cloudPlayer, CloudPlayerUpdateEvent.@NotNull UpdateReason updateReason);
 
     /**
      * unregisters a cloud player
@@ -81,6 +81,6 @@ public interface IPlayerManager {
      * @param cloudPlayer the cloud player
      * @param message the message to send
      */
-    void sendCloudPlayerMessage(@NotNull ICloudPlayer cloudPlayer, @NotNull String message);
+    void sendCloudPlayerMessage(@NotNull CloudPlayer cloudPlayer, @NotNull String message);
 
 }

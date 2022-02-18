@@ -1,6 +1,6 @@
 package de.polocloud.database;
 
-public enum DatabaseTypes {
+public enum DatabaseType {
 
     MYSQL,
     MONGODB;

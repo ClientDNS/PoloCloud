@@ -12,6 +12,6 @@ public class DatabaseConfiguration {
 
     private int port = 3306;
 
-    private DatabaseTypes databaseTypes = DatabaseTypes.MYSQL;
+    private DatabaseType databaseType = DatabaseType.MYSQL;
 
 }

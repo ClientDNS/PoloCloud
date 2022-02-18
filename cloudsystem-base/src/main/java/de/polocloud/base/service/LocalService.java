@@ -3,10 +3,10 @@ package de.polocloud.base.service;
 import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.base.config.editor.ConfigurationFileEditor;
-import de.polocloud.api.groups.IServiceGroup;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.groups.utils.ServiceType;
 import de.polocloud.api.json.Document;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.api.version.GameServerVersion;
@@ -30,9 +30,9 @@ import java.util.jar.JarInputStream;
 
 @Getter
 @Setter
-public class LocalService implements IService {
+public class LocalService implements CloudService {
 
-    private final IServiceGroup group;
+    private final ServiceGroup group;
     private final int serviceId;
     private final String node;
     private final int port;
@@ -48,7 +48,7 @@ public class LocalService implements IService {
 
     private Process process;
 
-    public LocalService(final IServiceGroup group, final int id, final int port, final String hostname) {
+    public LocalService(final ServiceGroup group, final int id, final int port, final String hostname) {
         this.group = group;
         this.serviceId = id;
         this.node = Base.getInstance().getNode().getName();
@@ -163,7 +163,7 @@ public class LocalService implements IService {
     }
 
     @Override
-    public void edit(final @NotNull Consumer<IService> serviceConsumer) {
+    public void edit(final @NotNull Consumer<CloudService> serviceConsumer) {
         serviceConsumer.accept(this);
         this.update();
     }
@@ -245,8 +245,8 @@ public class LocalService implements IService {
             "-Dio.netty.recycler.maxCapacity.default=0",
             "-Djline.terminal=jline.UnsupportedTerminal",
             "-DIReallyKnowWhatIAmDoingISwear=true",
-            "-Xms" + this.group.getMemory() + "M",
-            "-Xmx" + this.group.getMemory() + "M"));
+            "-Xms" + this.group.getMaxMemory() + "M",
+            "-Xmx" + this.group.getMaxMemory() + "M"));
 
         final var wrapperFile = Paths.get("storage", "jars", "wrapper.jar");
         final var applicationFile = new File(this.workingDirectory, this.group.getGameServerVersion().getJar());

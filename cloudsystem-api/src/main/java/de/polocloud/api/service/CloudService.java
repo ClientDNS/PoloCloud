@@ -1,15 +1,17 @@
 package de.polocloud.api.service;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.groups.IServiceGroup;
+import de.polocloud.api.groups.ServiceGroup;
+import de.polocloud.api.service.impl.SimpleService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
+import de.polocloud.network.packet.NetworkBuf;
 import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public interface IService {
+public interface CloudService {
 
     /**
      * @return the name of the service
@@ -39,13 +41,13 @@ public interface IService {
     /**
      * @return the group of the service
      */
-    @NotNull IServiceGroup getGroup();
+    @NotNull ServiceGroup getGroup();
 
     /**
      * @return the group of the service
      */
     @Deprecated(forRemoval = true)
-    default @NotNull IServiceGroup getServiceGroup() {
+    default @NotNull ServiceGroup getServiceGroup() {
         return this.getGroup();
     }
 
@@ -90,7 +92,7 @@ public interface IService {
         return (int) CloudAPI.getInstance().getPlayerManager().getPlayers()
             .stream()
             .filter(player -> {
-                IService service = this.getGroup().getGameServerVersion().isProxy() ? player.getProxyServer() : player.getServer();
+                CloudService service = this.getGroup().getGameServerVersion().isProxy() ? player.getProxyServer() : player.getServer();
                 return service != null && service.equals(this);
             }).count();
     }
@@ -106,7 +108,7 @@ public interface IService {
      * edits the properties of the service and update then
      * @param serviceConsumer the consumer to change the properties
      */
-    void edit(@NotNull Consumer<IService> serviceConsumer);
+    void edit(@NotNull Consumer<CloudService> serviceConsumer);
 
     /**
      * @return the motd of the service
@@ -139,5 +141,36 @@ public interface IService {
      * updates the properties of the service
      */
     void update();
+
+    /**
+     * writes the service to a network buf
+     */
+    default void write(@NotNull NetworkBuf networkBuf) {
+        networkBuf.writeString(this.getGroup().getName());
+        networkBuf.writeInt(this.getServiceId());
+        networkBuf.writeString(this.getNode());
+        networkBuf.writeInt(this.getPort());
+        networkBuf.writeString(this.getHostName());
+        networkBuf.writeInt(this.getMaxPlayers());
+        networkBuf.writeInt(this.getServiceState().ordinal());
+        networkBuf.writeInt(this.getServiceVisibility().ordinal());
+        networkBuf.writeString(this.getMotd());
+    }
+
+    /**
+     * reads a service from a network buf
+     */
+    static CloudService read(@NotNull NetworkBuf networkBuf) {
+        return new SimpleService(
+            networkBuf.readString(),
+            networkBuf.readInt(),
+            networkBuf.readString(),
+            networkBuf.readInt(),
+            networkBuf.readString(),
+            networkBuf.readInt(),
+            ServiceState.values()[networkBuf.readInt()],
+            ServiceVisibility.values()[networkBuf.readInt()],
+            networkBuf.readString());
+    }
 
 }

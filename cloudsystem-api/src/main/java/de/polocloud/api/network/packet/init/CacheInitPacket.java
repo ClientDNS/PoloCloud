@@ -1,21 +1,19 @@
 package de.polocloud.api.network.packet.init;
 
-import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.groups.IServiceGroup;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.groups.impl.AbstractGroupManager;
-import de.polocloud.api.network.packet.PacketHelper;
-import de.polocloud.api.player.ICloudPlayer;
+import de.polocloud.api.player.CloudPlayer;
 import de.polocloud.api.player.impl.AbstractPlayerManager;
-import de.polocloud.api.service.IService;
-import de.polocloud.network.packet.Packet;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.network.packet.NetworkBuf;
+import de.polocloud.network.packet.Packet;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,42 +21,42 @@ import java.util.concurrent.ConcurrentHashMap;
 @NoArgsConstructor
 public class CacheInitPacket implements Packet {
 
-    private List<IServiceGroup> groups;
-    private List<IService> services;
-    private List<ICloudPlayer> players;
+    private List<ServiceGroup> groups;
+    private List<CloudService> services;
+    private List<CloudPlayer> players;
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
         byteBuf.writeInt(this.groups.size());
-        this.groups.forEach(group -> PacketHelper.writeServiceGroup(byteBuf, group));
+        this.groups.forEach(group -> group.write(byteBuf));
         byteBuf.writeInt(this.services.size());
-        this.services.forEach(service -> PacketHelper.writeService(byteBuf, service));
+        this.services.forEach(service -> service.write(byteBuf));
         byteBuf.writeInt(this.players.size());
-        this.players.forEach(player -> PacketHelper.writeCloudPlayer(byteBuf, player));
+        this.players.forEach(player -> player.write(byteBuf));
     }
 
     @Override
     public void read(@NotNull NetworkBuf byteBuf) {
-        this.groups = Lists.newArrayList();
+        this.groups = new ArrayList<>();
         final var groupSize = byteBuf.readInt();
         for (int i = 0; i < groupSize; i++) {
-            this.groups.add(PacketHelper.readServiceGroup(byteBuf));
+            this.groups.add(ServiceGroup.read(byteBuf));
         }
 
         ((AbstractGroupManager) CloudAPI.getInstance().getGroupManager()).setAllCachedServiceGroups(this.groups);
 
-        this.services = Lists.newArrayList();
+        this.services = new ArrayList<>();
         final var serviceSize = byteBuf.readInt();
         for (int i = 0; i < serviceSize; i++) {
-            this.services.add(PacketHelper.readService(byteBuf));
+            this.services.add(CloudService.read(byteBuf));
         }
 
         CloudAPI.getInstance().getServiceManager().setAllCachedServices(this.services);
 
-        final Map<UUID, ICloudPlayer> players = new ConcurrentHashMap<>();
+        final var players = new ConcurrentHashMap<UUID, CloudPlayer>();
         final var playerSize = byteBuf.readInt();
         for (int i = 0; i < playerSize; i++) {
-            final var cloudPlayer = PacketHelper.readCloudPlayer(byteBuf);
+            final var cloudPlayer = CloudPlayer.read(byteBuf);
             players.put(cloudPlayer.getUniqueId(), cloudPlayer);
         }
 

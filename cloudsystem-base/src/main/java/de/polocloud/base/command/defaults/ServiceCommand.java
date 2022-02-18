@@ -4,7 +4,7 @@ import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.base.command.CloudCommand;
 import de.polocloud.api.logger.LogType;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 
 import java.util.Arrays;
@@ -65,7 +65,7 @@ public final class ServiceCommand extends CloudCommand {
     @Override
     public List<String> tabComplete(String[] arguments) {
         if (arguments.length == 1) {
-            return Base.getInstance().getServiceManager().getAllCachedServices().stream().map(IService::getName).toList();
+            return Base.getInstance().getServiceManager().getAllCachedServices().stream().map(CloudService::getName).toList();
         } else if (arguments.length == 2) {
             return Arrays.asList("list", "start", "stop", "command");
         }

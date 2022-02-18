@@ -1,8 +1,8 @@
 package de.polocloud.api.service.impl;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.groups.IServiceGroup;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.groups.ServiceGroup;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.network.packet.Packet;
@@ -14,9 +14,9 @@ import java.util.function.Consumer;
 
 @Getter
 @Setter
-public final class SimpleService implements IService {
+public final class SimpleService implements CloudService {
 
-    private final IServiceGroup group;
+    private final ServiceGroup group;
     private final int serviceId;
     private final String node;
 
@@ -53,7 +53,7 @@ public final class SimpleService implements IService {
     }
 
     @Override
-    public void edit(final @NotNull Consumer<IService> serviceConsumer) {
+    public void edit(final @NotNull Consumer<CloudService> serviceConsumer) {
         serviceConsumer.accept(this);
         this.update();
     }

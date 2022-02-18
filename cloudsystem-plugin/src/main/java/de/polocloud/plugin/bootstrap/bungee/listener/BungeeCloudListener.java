@@ -5,7 +5,7 @@ import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.network.packet.player.CloudPlayerKickPacket;
 import de.polocloud.api.network.packet.player.CloudPlayerMessagePacket;
 import de.polocloud.api.network.packet.player.CloudPlayerSendServicePacket;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.wrapper.Wrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -18,7 +18,7 @@ public final class BungeeCloudListener {
     public BungeeCloudListener() {
 
         // load all current groups
-        for (final IService allCachedService : Wrapper.getInstance().getServiceManager().getAllCachedServices()) {
+        for (final CloudService allCachedService : Wrapper.getInstance().getServiceManager().getAllCachedServices()) {
             if (!allCachedService.getGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
 
@@ -61,7 +61,7 @@ public final class BungeeCloudListener {
         ProxyServer.getInstance().getServers().remove(name);
     }
 
-    public void registerService(IService service) {
+    public void registerService(CloudService service) {
         this.registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 

@@ -1,6 +1,6 @@
 package de.polocloud.api.network.packet.group;
 
-import de.polocloud.api.groups.IServiceGroup;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.network.packet.Packet;
 import de.polocloud.network.packet.NetworkBuf;
@@ -24,12 +24,12 @@ public final class ServiceGroupUpdatePacket implements Packet {
     private boolean fallback;
     private boolean maintenance;
 
-    public ServiceGroupUpdatePacket(final IServiceGroup serviceGroup) {
+    public ServiceGroupUpdatePacket(final ServiceGroup serviceGroup) {
         this.name = serviceGroup.getName();
         this.node = serviceGroup.getNode();
         this.template = serviceGroup.getTemplate();
         this.motd = serviceGroup.getMotd();
-        this.memory = serviceGroup.getMemory();
+        this.memory = serviceGroup.getMaxMemory();
         this.minOnlineService = serviceGroup.getMinOnlineService();
         this.maxOnlineService = serviceGroup.getMaxOnlineService();
         this.defaultMaxPlayers = serviceGroup.getDefaultMaxPlayers();

@@ -1,13 +1,13 @@
 package de.polocloud.api.event.player;
 
-import de.polocloud.api.player.ICloudPlayer;
+import de.polocloud.api.player.CloudPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public final class CloudPlayerUpdateEvent extends DefaultPlayerEvent {
 
     private final UpdateReason updateReason;
 
-    public CloudPlayerUpdateEvent(final @NotNull ICloudPlayer cloudPlayer, final @NotNull UpdateReason updateReason) {
+    public CloudPlayerUpdateEvent(final @NotNull CloudPlayer cloudPlayer, final @NotNull UpdateReason updateReason) {
         super(cloudPlayer);
         this.updateReason = updateReason;
     }

@@ -2,12 +2,12 @@ package de.polocloud.base;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
-import de.polocloud.api.groups.IGroupManager;
+import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.logger.Logger;
-import de.polocloud.api.player.IPlayerManager;
-import de.polocloud.api.service.IServiceManager;
+import de.polocloud.api.player.PlayerManager;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.base.command.CommandManager;
 import de.polocloud.base.command.SimpleCommandManager;
 import de.polocloud.base.command.defaults.*;
@@ -19,10 +19,10 @@ import de.polocloud.base.logger.SimpleLogger;
 import de.polocloud.base.node.BaseNode;
 import de.polocloud.base.player.SimplePlayerManager;
 import de.polocloud.base.service.LocalService;
-import de.polocloud.base.service.ServiceManager;
+import de.polocloud.base.service.SimpleServiceManager;
 import de.polocloud.base.service.queue.QueueService;
 import de.polocloud.base.templates.GroupTemplateService;
-import de.polocloud.database.IDatabaseManager;
+import de.polocloud.database.DatabaseManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,10 +45,10 @@ public final class Base extends CloudAPI {
 
     private final CommandManager commandManager;
     private final BaseNode node;
-    private final IDatabaseManager databaseManager;
-    private final IGroupManager groupManager;
-    private final IServiceManager serviceManager;
-    private final IPlayerManager playerManager;
+    private final DatabaseManager databaseManager;
+    private final GroupManager groupManager;
+    private final ServiceManager serviceManager;
+    private final PlayerManager playerManager;
     private final GroupTemplateService groupTemplateService;
     private final QueueService queueService;
     private boolean running = true;
@@ -98,9 +98,9 @@ public final class Base extends CloudAPI {
             return null;
         });
 
-        this.databaseManager = IDatabaseManager.newInstance(this.config.getDatabaseConfiguration());
+        this.databaseManager = DatabaseManager.newInstance(this.config.getDatabaseConfiguration());
         this.groupManager = new SimpleGroupManager();
-        this.serviceManager = new ServiceManager();
+        this.serviceManager = new SimpleServiceManager();
         this.groupTemplateService = new GroupTemplateService();
         this.playerManager = new SimplePlayerManager();
         this.node = new BaseNode(this.config);

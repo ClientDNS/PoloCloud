@@ -1,7 +1,7 @@
 package de.polocloud.plugin.bootstrap.bungee;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.plugin.bootstrap.bungee.listener.BungeeCloudListener;
@@ -21,7 +21,7 @@ public class BungeeBootstrap extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new BungeeListener(this));
 
         // update that the service is ready to use
-        IService service = Wrapper.getInstance().thisService();
+        CloudService service = Wrapper.getInstance().thisService();
 
         if (service.getGroup().isAutoUpdating()) {
             service.setServiceVisibility(ServiceVisibility.VISIBLE);
@@ -37,14 +37,14 @@ public class BungeeBootstrap extends Plugin {
         });
     }
 
-    public Optional<IService> getFallback(final ProxiedPlayer player) {
+    public Optional<CloudService> getFallback(final ProxiedPlayer player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
             .filter(service -> service.getServiceState() == ServiceState.ONLINE)
             .filter(service -> service.getServiceVisibility() == ServiceVisibility.VISIBLE)
             .filter(service -> !service.getGroup().getGameServerVersion().isProxy())
             .filter(service -> service.getGroup().isFallbackGroup())
             .filter(service -> (player.getServer() == null || !player.getServer().getInfo().getName().equals(service.getName())))
-            .min(Comparator.comparing(IService::getOnlineCount));
+            .min(Comparator.comparing(CloudService::getOnlineCount));
     }
 
 }

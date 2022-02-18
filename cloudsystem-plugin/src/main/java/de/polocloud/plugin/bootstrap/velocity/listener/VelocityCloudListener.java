@@ -7,7 +7,7 @@ import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.network.packet.player.CloudPlayerKickPacket;
 import de.polocloud.api.network.packet.player.CloudPlayerMessagePacket;
 import de.polocloud.api.network.packet.player.CloudPlayerSendServicePacket;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
 
@@ -19,7 +19,7 @@ public record VelocityCloudListener(ProxyServer proxyServer) {
         this.proxyServer = proxyServer;
 
         // load all current groups
-        for (final IService allCachedService : Wrapper.getInstance().getServiceManager().getAllCachedServices()) {
+        for (final CloudService allCachedService : Wrapper.getInstance().getServiceManager().getAllCachedServices()) {
             if (!allCachedService.getGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
 
@@ -59,7 +59,7 @@ public record VelocityCloudListener(ProxyServer proxyServer) {
             .ifPresent(registeredServer -> this.proxyServer.unregisterServer(registeredServer.getServerInfo()));
     }
 
-    public void registerService(final IService service) {
+    public void registerService(final CloudService service) {
         this.registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 

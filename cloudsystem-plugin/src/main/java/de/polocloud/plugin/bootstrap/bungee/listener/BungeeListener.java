@@ -2,7 +2,7 @@ package de.polocloud.plugin.bootstrap.bungee.listener;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
-import de.polocloud.api.player.IPlayerManager;
+import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.bungee.BungeeBootstrap;
 import de.polocloud.wrapper.Wrapper;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public final class BungeeListener implements Listener {
 
     private final BungeeBootstrap bootstrap;
-    private final IPlayerManager playerManager;
+    private final PlayerManager playerManager;
 
     public BungeeListener(final BungeeBootstrap bootstrap) {
         this.bootstrap = bootstrap;

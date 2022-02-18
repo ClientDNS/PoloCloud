@@ -1,6 +1,6 @@
 package de.polocloud.plugin.bootstrap.bukkit;
 
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.wrapper.Wrapper;
@@ -11,7 +11,7 @@ public class BukkitBootstrap extends JavaPlugin {
     @Override
     public void onEnable() {
         // update that the service is ready to use
-        final IService service = Wrapper.getInstance().thisService();
+        final CloudService service = Wrapper.getInstance().thisService();
 
         if (service.getGroup().isAutoUpdating()) {
             service.setServiceVisibility(ServiceVisibility.VISIBLE);

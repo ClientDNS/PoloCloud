@@ -1,7 +1,6 @@
 package de.polocloud.api.network.packet.service;
 
-import de.polocloud.api.network.packet.PacketHelper;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.network.packet.Packet;
 import de.polocloud.network.packet.NetworkBuf;
 import lombok.AllArgsConstructor;
@@ -14,16 +13,16 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class ServiceAddPacket implements Packet {
 
-    private IService service;
+    private CloudService service;
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        PacketHelper.writeService(byteBuf, this.service);
+        this.service.write(byteBuf);
     }
 
     @Override
     public void read(@NotNull NetworkBuf byteBuf) {
-        this.service = PacketHelper.readService(byteBuf);
+        this.service = CloudService.read(byteBuf);
     }
 
 }

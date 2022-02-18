@@ -1,11 +1,11 @@
 package de.polocloud.database.manager;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.groups.IServiceGroup;
-import de.polocloud.api.groups.impl.ServiceGroup;
+import de.polocloud.api.groups.ServiceGroup;
+import de.polocloud.api.groups.impl.SimpleServiceGroup;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.database.DatabaseConfiguration;
-import de.polocloud.database.ICloudDatabaseProvider;
+import de.polocloud.database.CloudDatabaseProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
+public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
     private static final String DEFAULT_JDBC = "jdbc:mysql://";
     private static final String DEFAULT_PROPERTIES = "&serverTimezone=UTC&autoReconnect=true";
@@ -65,18 +65,18 @@ public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
     }
 
     @Override
-    public void removeGroup(final @NotNull IServiceGroup serviceGroup) {
+    public void removeGroup(final @NotNull ServiceGroup serviceGroup) {
         this.executeUpdate("DELETE FROM " + GROUP_TABLE + " WHERE name ='" + serviceGroup.getName() + "'");
     }
 
     @SneakyThrows
     @Override
-    public List<IServiceGroup> getAllServiceGroups() {
-        final List<IServiceGroup> groups = new ArrayList<>();
+    public List<ServiceGroup> getAllServiceGroups() {
+        final List<ServiceGroup> groups = new ArrayList<>();
         try (final var preparedStatement = this.connection
             .prepareStatement("SELECT * FROM " + GROUP_TABLE); var result = preparedStatement.executeQuery()) {
             while (result.next()) {
-                groups.add(new ServiceGroup(
+                groups.add(new SimpleServiceGroup(
                     result.getString("name"),
                     result.getString("template"),
                     result.getString("node"),
@@ -104,10 +104,10 @@ public class SQLCloudDatabaseHandler implements ICloudDatabaseProvider {
     }
 
     @Override
-    public void addGroup(final @NotNull IServiceGroup group) {
+    public void addGroup(final @NotNull ServiceGroup group) {
         this.executeUpdate("INSERT INTO " + GROUP_TABLE +
             "(name, template, node, memory, minOnlineService, maxOnlineService, static, fallbackGroup, version, maxPlayers, motd, maintenance, autoUpdating) " +
-            "VALUES (" + "'" + group.getName() + "', '" + group.getTemplate() + "', '" + group.getNode() + "', " + group.getMemory() + ", " + group.getMinOnlineService() + ", " + group.getMaxOnlineService() + ", " + conBool(group.isStatic()) + ", " + conBool(group.isFallbackGroup()) + ", '" + group.getGameServerVersion().getName() + "', " + group.getDefaultMaxPlayers() + ",'" + group.getMotd() + "', " + conBool(group.isMaintenance()) + ", " + conBool(group.isAutoUpdating()) + ");");
+            "VALUES (" + "'" + group.getName() + "', '" + group.getTemplate() + "', '" + group.getNode() + "', " + group.getMaxMemory() + ", " + group.getMinOnlineService() + ", " + group.getMaxOnlineService() + ", " + conBool(group.isStatic()) + ", " + conBool(group.isFallbackGroup()) + ", '" + group.getGameServerVersion().getName() + "', " + group.getDefaultMaxPlayers() + ",'" + group.getMotd() + "', " + conBool(group.isMaintenance()) + ", " + conBool(group.isAutoUpdating()) + ");");
     }
 
     private int conBool(final boolean state) {

@@ -2,7 +2,7 @@ package de.polocloud.api;
 
 import de.polocloud.api.event.EventHandler;
 import de.polocloud.api.event.IEventHandler;
-import de.polocloud.api.groups.IGroupManager;
+import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.logger.Logger;
 import de.polocloud.api.network.packet.CustomPacket;
 import de.polocloud.api.network.packet.QueryPacket;
@@ -16,8 +16,8 @@ import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
-import de.polocloud.api.player.IPlayerManager;
-import de.polocloud.api.service.IServiceManager;
+import de.polocloud.api.player.PlayerManager;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.network.packet.PacketHandler;
 import de.polocloud.network.packet.auth.NodeHandshakeAuthenticationPacket;
 import lombok.Getter;
@@ -59,17 +59,17 @@ public abstract class CloudAPI {
     /**
      * @return the group manager
      */
-    public abstract @NotNull IGroupManager getGroupManager();
+    public abstract @NotNull GroupManager getGroupManager();
 
     /**
      * @return the service manager
      */
-    public abstract @NotNull IServiceManager getServiceManager();
+    public abstract @NotNull ServiceManager getServiceManager();
 
     /**
      * @return the player manager
      */
-    public abstract @NotNull IPlayerManager getPlayerManager();
+    public abstract @NotNull PlayerManager getPlayerManager();
 
 }
 

@@ -2,8 +2,8 @@ package de.polocloud.api.network.packet.player;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
-import de.polocloud.api.player.ICloudPlayer;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.player.CloudPlayer;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.network.packet.Packet;
 import de.polocloud.network.packet.NetworkBuf;
 import lombok.Getter;
@@ -17,10 +17,10 @@ import java.util.UUID;
 public class CloudPlayerUpdatePacket implements Packet {
 
     private UUID uuid;
-    private IService server;
+    private CloudService server;
     private CloudPlayerUpdateEvent.UpdateReason updateReason;
 
-    public CloudPlayerUpdatePacket(@NotNull ICloudPlayer cloudPlayer, @NotNull CloudPlayerUpdateEvent.UpdateReason updateReason) {
+    public CloudPlayerUpdatePacket(@NotNull CloudPlayer cloudPlayer, @NotNull CloudPlayerUpdateEvent.UpdateReason updateReason) {
         this.uuid = cloudPlayer.getUniqueId();
         this.server = cloudPlayer.getServer();
         this.updateReason = updateReason;

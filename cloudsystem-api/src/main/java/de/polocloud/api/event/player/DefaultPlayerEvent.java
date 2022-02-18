@@ -1,18 +1,18 @@
 package de.polocloud.api.event.player;
 
 import de.polocloud.api.event.ICloudEvent;
-import de.polocloud.api.player.ICloudPlayer;
+import de.polocloud.api.player.CloudPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class DefaultPlayerEvent implements ICloudEvent {
 
-    private final ICloudPlayer player;
+    private final CloudPlayer player;
 
-    public DefaultPlayerEvent(final @NotNull ICloudPlayer player) {
+    public DefaultPlayerEvent(final @NotNull CloudPlayer player) {
         this.player = player;
     }
 
-    public ICloudPlayer getPlayer() {
+    public CloudPlayer getPlayer() {
         return this.player;
     }
 

@@ -4,8 +4,7 @@ import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.base.Base;
 import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
-import de.polocloud.api.service.IService;
-import de.polocloud.api.service.IServiceManager;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.network.NetworkType;
 import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
@@ -14,11 +13,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class ServiceManager implements IServiceManager {
+public final class SimpleServiceManager implements de.polocloud.api.service.ServiceManager {
 
-    private List<IService> allCachedServices;
+    private List<CloudService> allCachedServices;
 
-    public ServiceManager() {
+    public SimpleServiceManager() {
         this.allCachedServices = new CopyOnWriteArrayList<>();
 
         Base.getInstance().getPacketHandler().registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
@@ -37,31 +36,31 @@ public final class ServiceManager implements IServiceManager {
 
     @NotNull
     @Override
-    public List<IService> getAllCachedServices() {
+    public List<CloudService> getAllCachedServices() {
         return this.allCachedServices;
     }
 
     @Override
-    public void setAllCachedServices(@NotNull List<IService> services) {
+    public void setAllCachedServices(@NotNull List<CloudService> services) {
         this.allCachedServices = services;
     }
 
-    public void start(final IService service) {
+    public void start(final CloudService service) {
         this.startService(service);
         Base.getInstance().getLogger().log("The service '§b" + service.getName() + "§7' selected and will now started.");
     }
 
-    public void startService(final @NotNull IService service) {
+    public void startService(final @NotNull CloudService service) {
         ((LocalService) service).start();
     }
 
-    public void sendPacketToService(final IService service, final Packet packet) {
+    public void sendPacketToService(final CloudService service, final Packet packet) {
         Base.getInstance().getNode().getClients().stream()
             .filter(it -> it.name().equals(service.getName())).findAny().ifPresent(it -> it.sendPacket(packet));
     }
 
     @Override
-    public void updateService(@NotNull IService service) {
+    public void updateService(@NotNull CloudService service) {
         ServiceUpdatePacket packet = new ServiceUpdatePacket(service);
         //update all other nodes and this connected services
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);

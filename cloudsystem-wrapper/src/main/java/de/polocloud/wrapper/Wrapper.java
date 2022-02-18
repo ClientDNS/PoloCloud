@@ -2,18 +2,16 @@ package de.polocloud.wrapper;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
-import de.polocloud.api.groups.IGroupManager;
+import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.Logger;
 import de.polocloud.api.network.packet.init.CacheInitPacket;
-import de.polocloud.api.player.IPlayerManager;
-import de.polocloud.api.service.IService;
-import de.polocloud.api.service.IServiceManager;
-import de.polocloud.wrapper.group.GroupManager;
+import de.polocloud.api.player.PlayerManager;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.player.CloudPlayerManager;
-import de.polocloud.wrapper.service.ServiceManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -91,9 +89,9 @@ public final class Wrapper extends CloudAPI {
 
     private static Wrapper instance;
 
-    private final IGroupManager groupManager;
-    private final IServiceManager serviceManager;
-    private final IPlayerManager playerManager;
+    private final GroupManager groupManager;
+    private final ServiceManager serviceManager;
+    private final PlayerManager playerManager;
     private final WrapperClient client;
 
     public Wrapper() {
@@ -104,8 +102,8 @@ public final class Wrapper extends CloudAPI {
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
         this.logger = new WrapperLogger();
-        this.groupManager = new GroupManager();
-        this.serviceManager = new ServiceManager(property);
+        this.groupManager = new de.polocloud.wrapper.group.GroupManager();
+        this.serviceManager = new de.polocloud.wrapper.service.ServiceManager(property);
         this.playerManager = new CloudPlayerManager();
         this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
     }
@@ -120,22 +118,22 @@ public final class Wrapper extends CloudAPI {
     }
 
     @Override
-    public @NotNull IGroupManager getGroupManager() {
+    public @NotNull GroupManager getGroupManager() {
         return this.groupManager;
     }
 
     @Override
-    public @NotNull IServiceManager getServiceManager() {
+    public @NotNull ServiceManager getServiceManager() {
         return this.serviceManager;
     }
 
     @Override
-    public @NotNull IPlayerManager getPlayerManager() {
+    public @NotNull PlayerManager getPlayerManager() {
         return this.playerManager;
     }
 
-    public IService thisService() {
-        return ((ServiceManager) serviceManager).thisService();
+    public CloudService thisService() {
+        return ((de.polocloud.wrapper.service.ServiceManager) serviceManager).thisService();
     }
 
     public WrapperClient getClient() {

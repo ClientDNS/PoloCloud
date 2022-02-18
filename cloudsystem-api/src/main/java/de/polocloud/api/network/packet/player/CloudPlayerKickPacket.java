@@ -20,9 +20,9 @@ public class CloudPlayerKickPacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeUUID(uuid);
-        byteBuf.writeString(proxyService);
-        byteBuf.writeString(reason);
+        byteBuf.writeUUID(this.uuid);
+        byteBuf.writeString(this.proxyService);
+        byteBuf.writeString(this.reason);
     }
 
     @Override
