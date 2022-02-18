@@ -45,13 +45,12 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     public void handle(final ServerConnectedEvent event) {
         final var player = event.getPlayer();
 
-        player.getCurrentServer().ifPresent(serverConnection ->
-            CloudAPI.getInstance().getPlayerManager().getCloudPlayer(player.getUniqueId())
-                .ifPresent(cloudPlayer -> {
-                    cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
-                        .getServiceByNameOrNull(serverConnection.getServerInfo().getName())));
-                    cloudPlayer.update(CloudPlayerUpdateEvent.UpdateReason.SERVER_SWITCH);
-                }));
+        CloudAPI.getInstance().getPlayerManager().getCloudPlayer(player.getUniqueId())
+            .ifPresent(cloudPlayer -> {
+                cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
+                    .getServiceByNameOrNull(event.getServer().getServerInfo().getName())));
+                cloudPlayer.update(CloudPlayerUpdateEvent.UpdateReason.SERVER_SWITCH);
+            });
     }
 
     @Subscribe
