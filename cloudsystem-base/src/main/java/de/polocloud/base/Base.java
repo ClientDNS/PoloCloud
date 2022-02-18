@@ -141,6 +141,7 @@ public final class Base extends CloudAPI {
         if (!this.running) return;
         this.running = false;
         this.logger.log("Trying to terminate cloudsystem.");
+        ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
         this.serviceManager.getAllCachedServices()
             .forEach(service -> {
                 if (service instanceof LocalService localService) localService.stop();
@@ -156,13 +157,10 @@ public final class Base extends CloudAPI {
             e.printStackTrace();
         }
 
-        /*this.node.shutdownConnection()
-            .addResultListener(unused -> {
-                this.databaseManager.close();
-                this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
-                System.exit(0);
-            });*/
+        this.node.close();
+        this.databaseManager.close();
+        this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+        System.exit(0);
     }
 
     public boolean isRunning() {

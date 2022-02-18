@@ -195,11 +195,11 @@ public class LocalService implements IService {
         if (this.process != null) {
             this.executeCommand(this.group.getGameServerVersion().isProxy() ? "end" : "stop");
             try {
-                if (this.process.waitFor(5, TimeUnit.SECONDS)) this.process = null;
-                return;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                if (this.process.waitFor(5, TimeUnit.SECONDS)) {
+                    this.process = null;
+                    return;
+                }
+            } catch (InterruptedException ignored) {}
             this.process.destroy();
             this.process = null;
         }
