@@ -5,6 +5,7 @@ import de.polocloud.api.CloudAPIType;
 import de.polocloud.api.groups.IGroupManager;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.Logger;
+import de.polocloud.api.network.packet.init.CacheInitPacket;
 import de.polocloud.api.player.IPlayerManager;
 import de.polocloud.api.service.IService;
 import de.polocloud.api.service.IServiceManager;
@@ -23,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -37,7 +39,12 @@ public final class Wrapper extends CloudAPI {
 
     public static void main(String[] args) {
         try {
-            new Wrapper();
+            final var wrapper = new Wrapper();
+
+            var cacheInitialized = new AtomicBoolean(false);
+            wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class, (channelHandlerContext, packet) -> {
+                cacheInitialized.set(true);
+            });
 
             final var arguments = new ArrayList<>(Arrays.asList(args));
             final var main = arguments.remove(0);
@@ -71,7 +78,12 @@ public final class Wrapper extends CloudAPI {
                 }
             }, "Minecraft-Thread");
             thread.setContextClassLoader(classLoader);
-            thread.start();
+            if (cacheInitialized.get()) {
+                thread.start();
+            } else {
+                wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class,
+                    (channelHandlerContext, packet) -> thread.start());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
