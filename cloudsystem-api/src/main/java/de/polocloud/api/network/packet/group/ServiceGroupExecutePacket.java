@@ -2,37 +2,38 @@ package de.polocloud.api.network.packet.group;
 
 import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.network.packet.PacketHelper;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.NetworkBuf;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class ServiceGroupExecutePacket implements IPacket {
+public class ServiceGroupExecutePacket implements Packet {
 
     private IServiceGroup group;
-    private executor executorType;
+    private Executor executorType;
 
-    public enum executor {
+    public enum Executor {
         REMOVE, CREATE
     }
 
-    public ServiceGroupExecutePacket(IServiceGroup group, executor executorType) {
+    public ServiceGroupExecutePacket(IServiceGroup group, Executor executorType) {
         this.group = group;
         this.executorType = executorType;
     }
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
+    public void write(@NotNull NetworkBuf byteBuf) {
         PacketHelper.writeServiceGroup(byteBuf, group);
         byteBuf.writeInt(executorType.ordinal());
     }
 
     @Override
-    public void read(NetworkByteBuf byteBuf) {
+    public void read(@NotNull NetworkBuf byteBuf) {
         this.group = PacketHelper.readServiceGroup(byteBuf);
-        this.executorType = executor.values()[byteBuf.readInt()];
+        this.executorType = Executor.values()[byteBuf.readInt()];
     }
 
 }

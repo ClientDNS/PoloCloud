@@ -11,9 +11,7 @@ import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.base.service.statistic.SimpleStatisticManager;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.promise.CommunicationPromise;
-import de.polocloud.network.promise.ICommunicationPromise;
+import de.polocloud.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -53,7 +51,7 @@ public class LocalService implements IService {
     public LocalService(final IServiceGroup group, final int id, final int port, final String hostname) {
         this.group = group;
         this.serviceId = id;
-        this.node = Base.getInstance().getNode().getNodeName();
+        this.node = Base.getInstance().getNode().getName();
         this.port = port;
         this.hostName = hostname;
         assert this.group != null;
@@ -64,7 +62,7 @@ public class LocalService implements IService {
     }
 
     @SneakyThrows
-    public ICommunicationPromise<IService> start() {
+    public void start() {
         this.setServiceState(ServiceState.STARTING);
 
         this.group.getGameServerVersion().download(this.group.getTemplate());
@@ -152,14 +150,11 @@ public class LocalService implements IService {
             }
         }
 
-        final var communicationPromise = new CommunicationPromise<IService>();
         final var processBuilder = new ProcessBuilder(this.arguments())
             .directory(this.workingDirectory);
         processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
 
         this.process = processBuilder.start();
-        communicationPromise.setSuccess(this);
-        return communicationPromise;
     }
 
     @Override
@@ -178,7 +173,7 @@ public class LocalService implements IService {
     }
 
     @Override
-    public void sendPacket(@NotNull IPacket packet) {
+    public void sendPacket(@NotNull Packet packet) {
         CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
     }
 
@@ -200,11 +195,11 @@ public class LocalService implements IService {
         if (this.process != null) {
             this.executeCommand(this.group.getGameServerVersion().isProxy() ? "end" : "stop");
             try {
-                if (this.process.waitFor(5, TimeUnit.SECONDS)) this.process = null;
-                return;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                if (this.process.waitFor(5, TimeUnit.SECONDS)) {
+                    this.process = null;
+                    return;
+                }
+            } catch (InterruptedException ignored) {}
             this.process.destroy();
             this.process = null;
         }

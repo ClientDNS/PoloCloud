@@ -10,11 +10,11 @@ import de.polocloud.api.service.impl.SimpleService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.api.version.GameServerVersion;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.network.packet.NetworkBuf;
 
 public class PacketHelper {
 
-    public static void writeService(NetworkByteBuf byteBuf, IService service) {
+    public static void writeService(NetworkBuf byteBuf, IService service) {
         byteBuf.writeString(service.getGroup().getName());
         byteBuf.writeInt(service.getServiceId());
         byteBuf.writeString(service.getNode());
@@ -26,27 +26,27 @@ public class PacketHelper {
         byteBuf.writeString(service.getMotd());
     }
 
-    public static IService readService(NetworkByteBuf byteBuf) {
+    public static IService readService(NetworkBuf byteBuf) {
         return new SimpleService(byteBuf.readString(), byteBuf.readInt(), byteBuf.readString(),
             byteBuf.readInt(), byteBuf.readString(), byteBuf.readInt(), ServiceState.values()[byteBuf.readInt()],
             ServiceVisibility.values()[byteBuf.readInt()], byteBuf.readString());
     }
 
-    public static void writeCloudPlayer(NetworkByteBuf byteBuf, ICloudPlayer cloudPlayer) {
+    public static void writeCloudPlayer(NetworkBuf byteBuf, ICloudPlayer cloudPlayer) {
         byteBuf.writeUUID(cloudPlayer.getUniqueId());
         byteBuf.writeString(cloudPlayer.getUsername());
         byteBuf.writeString(cloudPlayer.getProxyServer().getName());
         byteBuf.writeString(cloudPlayer.getServer().getName());
     }
 
-    public static ICloudPlayer readCloudPlayer(NetworkByteBuf byteBuf) {
+    public static ICloudPlayer readCloudPlayer(NetworkBuf byteBuf) {
         SimpleCloudPlayer simpleCloudPlayer = new SimpleCloudPlayer(byteBuf.readUUID(), byteBuf.readString(),
             CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString()));
         simpleCloudPlayer.setServer(CloudAPI.getInstance().getServiceManager().getServiceByNameOrNull(byteBuf.readString()));
         return simpleCloudPlayer;
     }
 
-    public static void writeServiceGroup(NetworkByteBuf byteBuf, IServiceGroup group) {
+    public static void writeServiceGroup(NetworkBuf byteBuf, IServiceGroup group) {
         byteBuf.writeString(group.getName());
         byteBuf.writeString(group.getTemplate());
         byteBuf.writeString(group.getNode());
@@ -63,7 +63,7 @@ public class PacketHelper {
         byteBuf.writeInt(group.getGameServerVersion().ordinal());
     }
 
-    public static IServiceGroup readServiceGroup(NetworkByteBuf byteBuf) {
+    public static IServiceGroup readServiceGroup(NetworkBuf byteBuf) {
         return new ServiceGroup(byteBuf.readString(),
             byteBuf.readString(),
             byteBuf.readString(),

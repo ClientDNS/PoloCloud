@@ -4,7 +4,7 @@ import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
-import de.polocloud.network.packet.IPacket;
+import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -123,7 +123,7 @@ public interface IService {
      * sends a packet to a service
      * @param packet the packet to send
      */
-    void sendPacket(@NotNull IPacket packet);
+    void sendPacket(@NotNull Packet packet);
 
     /**
      * executes a command on the service

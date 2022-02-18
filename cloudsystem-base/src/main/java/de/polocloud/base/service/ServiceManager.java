@@ -1,14 +1,13 @@
 package de.polocloud.base.service;
 
-import de.polocloud.base.Base;
 import de.polocloud.api.network.packet.QueryPacket;
+import de.polocloud.base.Base;
 import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
 import de.polocloud.api.service.IService;
 import de.polocloud.api.service.IServiceManager;
-import de.polocloud.network.cluster.type.NetworkType;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.promise.ICommunicationPromise;
+import de.polocloud.network.NetworkType;
+import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public final class ServiceManager implements IServiceManager {
     public ServiceManager() {
         this.allCachedServices = new CopyOnWriteArrayList<>();
 
-        Base.getInstance().getNetworkHandler().registerPacketListener(ServiceUpdatePacket.class, (ctx, packet) ->
+        Base.getInstance().getPacketHandler().registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
             this.getService(packet.getService()).ifPresent(service -> {
                 service.setServiceState(packet.getState());
                 service.setServiceVisibility(packet.getServiceVisibility());
@@ -30,10 +29,10 @@ public final class ServiceManager implements IServiceManager {
                 service.setMotd(packet.getMotd());
             }));
 
-        Base.getInstance().getNetworkHandler().registerPacketListener(ServiceRequestShutdownPacket.class,
-            (channelHandlerContext, serviceRequestShutdownPacket) ->
+        Base.getInstance().getPacketHandler().registerPacketListener(ServiceRequestShutdownPacket.class,
+            (channelHandlerContext, packet) ->
                 Objects.requireNonNull(Base.getInstance().getServiceManager()
-                    .getServiceByNameOrNull(serviceRequestShutdownPacket.getService())).stop());
+                    .getServiceByNameOrNull(packet.getService())).stop());
     }
 
     @NotNull
@@ -48,19 +47,17 @@ public final class ServiceManager implements IServiceManager {
     }
 
     public void start(final IService service) {
-        this.startService(service).addResultListener(it ->
-            Base.getInstance().getLogger()
-                .log("The service '§b" + service.getName() + "§7' selected and will now started."))
-            .addFailureListener(Throwable::printStackTrace);
+        this.startService(service);
+        Base.getInstance().getLogger().log("The service '§b" + service.getName() + "§7' selected and will now started.");
     }
 
-    public ICommunicationPromise<IService> startService(final @NotNull IService service) {
-        return ((LocalService) service).start();
+    public void startService(final @NotNull IService service) {
+        ((LocalService) service).start();
     }
 
-    public void sendPacketToService(final IService service, final IPacket packet) {
-        Base.getInstance().getNode().getAllCachedConnectedClients().stream()
-            .filter(it -> it.getName().equals(service.getName())).findAny().ifPresent(it -> it.sendPacket(packet));
+    public void sendPacketToService(final IService service, final Packet packet) {
+        Base.getInstance().getNode().getClients().stream()
+            .filter(it -> it.name().equals(service.getName())).findAny().ifPresent(it -> it.sendPacket(packet));
     }
 
     @Override
@@ -69,7 +66,7 @@ public final class ServiceManager implements IServiceManager {
         //update all other nodes and this connected services
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
         //update own service caches
-        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.SERVICE);
+        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.WRAPPER);
     }
 
 }

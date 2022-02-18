@@ -5,7 +5,7 @@ import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.service.IService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
-import de.polocloud.network.packet.IPacket;
+import de.polocloud.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -83,7 +83,7 @@ public final class SimpleService implements IService {
     }
 
     @Override
-    public void sendPacket(@NotNull IPacket packet) {
+    public void sendPacket(@NotNull Packet packet) {
         CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
     }
 

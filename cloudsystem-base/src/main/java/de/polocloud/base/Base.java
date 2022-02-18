@@ -1,6 +1,5 @@
 package de.polocloud.base;
 
-import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
 import de.polocloud.api.groups.IGroupManager;
@@ -24,7 +23,6 @@ import de.polocloud.base.service.ServiceManager;
 import de.polocloud.base.service.queue.QueueService;
 import de.polocloud.base.templates.GroupTemplateService;
 import de.polocloud.database.IDatabaseManager;
-import de.polocloud.network.promise.ICommunicationPromise;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -143,27 +141,26 @@ public final class Base extends CloudAPI {
         if (!this.running) return;
         this.running = false;
         this.logger.log("Trying to terminate cloudsystem.");
+        ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
         this.serviceManager.getAllCachedServices()
             .forEach(service -> {
                 if (service instanceof LocalService localService) localService.stop();
             });
 
         // delete wrapper and plugin jars
-        ErrorHandler.defaultInstance().runOnly(() -> {
+        try {
             final var storageDirectory = new File("storage/jars");
 
             Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
             Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
-            return null;
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection()))
-            .addResultListener(unused -> {
-                this.databaseManager.close();
-                this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
-                System.exit(0);
-            });
+        this.node.close();
+        this.databaseManager.close();
+        this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+        System.exit(0);
     }
 
     public boolean isRunning() {

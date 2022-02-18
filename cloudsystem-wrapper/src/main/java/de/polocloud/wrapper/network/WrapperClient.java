@@ -1,18 +1,18 @@
 package de.polocloud.wrapper.network;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.network.cluster.impl.client.NodeClient;
-import de.polocloud.network.cluster.type.NetworkType;
+import de.polocloud.network.NetworkType;
+import de.polocloud.network.client.NettyClient;
+import de.polocloud.network.packet.PacketHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public final class WrapperClient extends NodeClient {
+public final class WrapperClient extends NettyClient {
 
-    public WrapperClient(final String clientName, final String hostname, final int port) {
-        super(clientName, NetworkType.SERVICE);
+    public WrapperClient(final PacketHandler packetHandler, final String name, final String hostname, final int port) {
+        super(packetHandler, name, NetworkType.WRAPPER);
 
-        this.connectEstablishment(hostname, port).addResultListener(it ->
-            CloudAPI.getInstance().getLogger().log("The service start successfully network service."))
-            .addFailureListener(Throwable::printStackTrace);
+        this.connect(hostname, port);
+        CloudAPI.getInstance().getLogger().log("The service start successfully network service.");
     }
 
     @Override

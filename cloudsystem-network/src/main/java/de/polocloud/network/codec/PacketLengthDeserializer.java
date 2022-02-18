@@ -1,4 +1,4 @@
-package de.polocloud.network.codec.prepender;
+package de.polocloud.network.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -7,7 +7,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.util.List;
 
-public class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
+public class PacketLengthDeserializer extends ByteToMessageDecoder {
 
     private final int byteSize = 5;
 
@@ -18,14 +18,12 @@ public class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
                 byteBuf.skipBytes(byteBuf.readableBytes());
                 return;
             }
-            if (!byteBuf.isReadable()) {
-                return;
-            }
+            if (!byteBuf.isReadable()) return;
 
-            int readerIndex = byteBuf.readerIndex();
-            byte[] bytes = new byte[byteSize];
+            final var readerIndex = byteBuf.readerIndex();
+            final var bytes = new byte[this.byteSize];
 
-            for (int i = 0; i < byteSize; i++) {
+            for (int i = 0; i < this.byteSize; i++) {
                 if (!byteBuf.isReadable()) {
                     byteBuf.readerIndex(readerIndex);
                     return;
@@ -33,7 +31,7 @@ public class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
 
                 bytes[i] = byteBuf.readByte();
                 if (bytes[i] >= 0) {
-                    ByteBuf buf = Unpooled.wrappedBuffer(bytes);
+                    final var buf = Unpooled.wrappedBuffer(bytes);
 
                     try {
                         final var length = this.readVarIntUnchecked(buf);
@@ -47,7 +45,6 @@ public class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
                     } finally {
                         buf.release();
                     }
-
                     return;
                 }
             }
@@ -58,7 +55,7 @@ public class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
 
     private int readVarIntUnchecked(ByteBuf byteBuf) {
         int i = 0;
-        int maxRead = Math.min(byteSize, byteBuf.readableBytes());
+        final var maxRead = Math.min(this.byteSize, byteBuf.readableBytes());
         for (int j = 0; j < maxRead; j++) {
             int k = byteBuf.readByte();
             i |= (k & 127) << j * 7;

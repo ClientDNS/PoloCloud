@@ -34,7 +34,7 @@ public final class GroupTemplateService {
     }
 
     public void createTemplateFolder(IServiceGroup group) {
-        if (!group.getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) return;
+        if (!group.getNode().equalsIgnoreCase(Base.getInstance().getNode().getName())) return;
         final var file = new File("templates/" + group.getTemplate());
         if (!file.exists()) //noinspection ResultOfMethodCallIgnored
             file.mkdirs();

@@ -1,13 +1,13 @@
 package de.polocloud.base.player;
 
+import de.polocloud.api.network.packet.QueryPacket;
+import de.polocloud.api.network.packet.player.CloudPlayerUpdatePacket;
 import de.polocloud.base.Base;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
-import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.player.CloudPlayerMessagePacket;
-import de.polocloud.api.network.packet.player.CloudPlayerUpdatePacket;
 import de.polocloud.api.player.ICloudPlayer;
 import de.polocloud.api.player.impl.AbstractPlayerManager;
-import de.polocloud.network.cluster.type.NetworkType;
+import de.polocloud.network.NetworkType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public final class SimplePlayerManager extends AbstractPlayerManager {
         // update all other nodes and this connected services
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
         // update own service caches
-        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.SERVICE);
+        Base.getInstance().getNode().sendPacketToType(packet, NetworkType.WRAPPER);
         // call event
         Base.getInstance().getEventHandler().call(new CloudPlayerUpdateEvent(cloudPlayer, updateReason));
     }

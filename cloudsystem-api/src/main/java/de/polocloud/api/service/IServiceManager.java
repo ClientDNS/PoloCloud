@@ -2,8 +2,7 @@ package de.polocloud.api.service;
 
 import de.polocloud.api.groups.IServiceGroup;
 import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.promise.ICommunicationPromise;
+import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +62,7 @@ public interface IServiceManager {
      * starts a service
      * @param service the service to start
      */
-    ICommunicationPromise<IService> startService(@NotNull IService service);
+    void startService(@NotNull IService service);
 
     /**
      * update a service
@@ -76,6 +75,6 @@ public interface IServiceManager {
      * @param service the service to start
      * @param packet the packet to send
      */
-    void sendPacketToService(IService service, IPacket packet);
+    void sendPacketToService(IService service, Packet packet);
 
 }
