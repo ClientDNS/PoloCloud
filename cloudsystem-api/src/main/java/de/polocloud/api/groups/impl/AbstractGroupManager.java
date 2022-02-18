@@ -19,7 +19,7 @@ public abstract class AbstractGroupManager implements IGroupManager {
     private List<IServiceGroup> allCachedServiceGroups = Lists.newArrayList();
 
     public AbstractGroupManager() {
-        CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupUpdatePacket.class, packet -> {
+        CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) -> {
             final IServiceGroup serviceGroup = this.getServiceGroupByNameOrNull(packet.getName());
             Objects.requireNonNull(serviceGroup, "Updated service group is null.");
 

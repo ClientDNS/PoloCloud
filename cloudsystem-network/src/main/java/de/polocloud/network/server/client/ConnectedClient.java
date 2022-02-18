@@ -11,4 +11,9 @@ public record ConnectedClient(String name, Channel channel, NetworkType networkT
         this.channel.writeAndFlush(packet);
     }
 
+    public void sendPackets(@NotNull Packet... packets) {
+        for (final var packet : packets) this.channel.write(packet);
+        this.channel.flush();
+    }
+
 }

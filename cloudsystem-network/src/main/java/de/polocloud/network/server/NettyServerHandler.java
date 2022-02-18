@@ -14,13 +14,14 @@ public final class NettyServerHandler extends SimpleChannelInboundHandler<Packet
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Packet Packet) {
-        System.out.println("channel  read" + Packet);
-        if (Packet instanceof NodeHandshakeAuthenticationPacket authenticationPacket) {
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Packet packet) {
+        if (packet instanceof NodeHandshakeAuthenticationPacket authenticationPacket) {
             this.nettyServer.addClient(
                 channelHandlerContext.channel(),
                 authenticationPacket.getName(),
                 authenticationPacket.getType());
+        } else {
+            this.nettyServer.getPacketHandler().call(channelHandlerContext, packet);
         }
     }
 

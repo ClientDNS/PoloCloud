@@ -69,7 +69,12 @@ public abstract class NettyServer extends Node {
     }
 
     public void closeClient(final ChannelHandlerContext channelHandlerContext) {
-        this.connectedClients.remove(channelHandlerContext.channel());
+        final var client = this.connectedClients.remove(channelHandlerContext.channel());
+        if (client == null) return;
+        switch (client.networkType()) {
+            case NODE -> this.onNodeDisconnected(client);
+            case WRAPPER -> this.onServiceDisconnected(client);
+        }
         channelHandlerContext.close();
     }
 

@@ -26,19 +26,19 @@ public final class EventHandler implements IEventHandler {
         final var packetHandler = CloudAPI.getInstance().getPacketHandler();
 
         // service register event
-        packetHandler.registerPacketListener(ServiceAddPacket.class, packet ->
+        packetHandler.registerPacketListener(ServiceAddPacket.class, (channelHandlerContext, packet) ->
             this.call(new CloudServiceRegisterEvent(packet.getService())));
 
         // service remove event
-        packetHandler.registerPacketListener(ServiceRemovePacket.class, packet ->
+        packetHandler.registerPacketListener(ServiceRemovePacket.class, (channelHandlerContext, packet) ->
             this.call(new CloudServiceRemoveEvent(packet.getService())));
 
         // service state update event
-        packetHandler.registerPacketListener(ServiceUpdatePacket.class, packet ->
+        packetHandler.registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
             CloudAPI.getInstance().getServiceManager().getService(packet.getService()).ifPresent(it -> this.call(new CloudServiceUpdateEvent(it))));
 
         // service group update event
-        packetHandler.registerPacketListener(ServiceGroupUpdatePacket.class, packet ->
+        packetHandler.registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) ->
             this.call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(
                 CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName())))));
     }

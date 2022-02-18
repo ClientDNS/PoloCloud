@@ -30,6 +30,7 @@ public final class PacketHandler {
 
     @SuppressWarnings("unchecked")
     public <T extends Packet> void call(final ChannelHandlerContext channelHandlerContext, final @NotNull T t) {
+        if (!this.packetListener.containsKey(t.getClass())) return;
         this.packetListener.get(t.getClass()).forEach(listener -> listener.handle(channelHandlerContext, t));
     }
 
