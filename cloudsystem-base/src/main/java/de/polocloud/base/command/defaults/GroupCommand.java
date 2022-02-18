@@ -21,8 +21,6 @@ public final class GroupCommand extends CloudCommand {
 
     @Override
     public void execute(CloudAPI cloudAPI, String[] args) {
-
-
         final var groupManager = cloudAPI.getGroupManager();
         final var logger = cloudAPI.getLogger();
 
@@ -49,9 +47,7 @@ public final class GroupCommand extends CloudCommand {
                 if (gameServerVersion == null) {
                     logger.log("This version is not available.", LogType.WARNING);
                     logger.log("Use one of the following versions:");
-                    for (final var version : GameServerVersion.values()) {
-                        logger.log("- " + version.getName());
-                    }
+                    for (final var version : GameServerVersion.values()) logger.log("- " + version.getName());
                     return;
                 }
 
@@ -126,17 +122,39 @@ public final class GroupCommand extends CloudCommand {
                     logger.log("§7Successfully set default max players to " + args[3]);
                     return;
                 case "fallback":
-                    serviceGroup.setFallbackGroup(Boolean.parseBoolean(args[3]));
+                    final var fallback = args[3].toLowerCase();
+
+                    if (!fallback.equals("true") && !fallback.equals("false")) {
+                        logger.log("Please use true/false");
+                        return;
+                    }
+
+                    serviceGroup.setFallbackGroup(Boolean.parseBoolean(fallback));
                     serviceGroup.update();
-                    logger.log("§7Successfully set fallback to " + args[3]);
+                    logger.log("§7Successfully set fallback to " + fallback);
                     return;
                 case "maintenance":
-                    serviceGroup.setMaintenance(Boolean.parseBoolean(args[3]));
+                    final var maintenance = args[3].toLowerCase();
+
+                    if (!maintenance.equals("true") && !maintenance.equals("false")) {
+                        logger.log("Please use true/false");
+                        return;
+                    }
+
+                    serviceGroup.setMaintenance(Boolean.parseBoolean(maintenance));
                     serviceGroup.update();
-                    logger.log("§7Successfully set maintenance to " + args[3]);
+                    logger.log("§7Successfully set maintenance to " + maintenance);
                     return;
                 case "version":
-                    serviceGroup.setGameServerVersion(GameServerVersion.valueOf(args[3]));
+                    final var gameServerVersion = GameServerVersion.getVersionByName(args[3]);
+
+                    if (gameServerVersion == null) {
+                        logger.log("This version is not available.", LogType.WARNING);
+                        logger.log("Use one of the following versions:");
+                        for (final var version : GameServerVersion.values()) logger.log("- " + version.getName());
+                        return;
+                    }
+                    serviceGroup.setGameServerVersion(gameServerVersion);
                     serviceGroup.update();
                     logger.log("§7Successfully set version to " + args[3]);
                     return;
@@ -160,12 +178,18 @@ public final class GroupCommand extends CloudCommand {
             }
         } else if (arguments.length == 3) {
             if (arguments[0].equalsIgnoreCase("edit")) {
-                return Arrays.asList("memory", "minservicecount", "maxservicecount",
-                    "defaultmaxplayers", "fallback", "maintenance", "version");
+                return Arrays.asList("memory", "minServiceCount", "maxServiceCount",
+                    "defaultMaxPlayers", "fallback", "maintenance", "version");
             }
         } else if (arguments.length == 4) {
             if (arguments[0].equalsIgnoreCase("create")) {
                 return Arrays.asList("true", "false");
+            } else if (arguments[0].equalsIgnoreCase("edit")) {
+                if (arguments[2].equalsIgnoreCase("fallback") || arguments[2].equalsIgnoreCase("maintenance")) {
+                    return Arrays.asList("true", "false");
+                } else if (arguments[2].equalsIgnoreCase("version")) {
+                    return Arrays.stream(GameServerVersion.values()).map(GameServerVersion::getName).toList();
+                }
             }
         } else if (arguments.length == 5) {
             if (arguments[0].equalsIgnoreCase("create")) {
