@@ -6,7 +6,6 @@ import de.polocloud.api.service.CloudService;
 import de.polocloud.base.command.CloudCommand;
 import de.polocloud.base.service.LocalService;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ScreenCommand extends CloudCommand {
