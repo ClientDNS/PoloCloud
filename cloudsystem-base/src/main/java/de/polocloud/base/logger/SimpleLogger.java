@@ -3,6 +3,7 @@ package de.polocloud.base.logger;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.logger.LoggerAnsiFactory;
 import de.polocloud.api.logger.Logger;
+import de.polocloud.base.console.SimpleConsoleManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jline.reader.LineReader;
