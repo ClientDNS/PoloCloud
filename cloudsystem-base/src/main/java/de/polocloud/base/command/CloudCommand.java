@@ -21,7 +21,7 @@ public abstract class CloudCommand {
     public abstract void execute(CloudAPI cloudAPI, String[] args);
 
     public List<String> tabComplete(final String[] arguments) {
-        return new ArrayList<>();
+        return null;
     }
 
 }

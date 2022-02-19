@@ -20,7 +20,6 @@ import de.polocloud.base.node.BaseNode;
 import de.polocloud.base.player.SimplePlayerManager;
 import de.polocloud.base.service.LocalService;
 import de.polocloud.base.service.SimpleServiceManager;
-import de.polocloud.base.service.queue.QueueService;
 import de.polocloud.base.templates.GroupTemplateService;
 import de.polocloud.database.DatabaseManager;
 import lombok.Getter;
@@ -50,7 +49,6 @@ public final class Base extends CloudAPI {
     private final ServiceManager serviceManager;
     private final PlayerManager playerManager;
     private final GroupTemplateService groupTemplateService;
-    private final QueueService queueService;
     private boolean running = true;
 
     public Base() {
@@ -112,9 +110,8 @@ public final class Base extends CloudAPI {
             new HelpCommand(),
             new InfoCommand(),
             new ServiceCommand(),
-            new ShutdownCommand());
-
-        this.queueService = new QueueService();
+            new ShutdownCommand(),
+            new ScreenCommand());
 
         // add a shutdown hook for fast closes
         Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
@@ -126,7 +123,7 @@ public final class Base extends CloudAPI {
 
         ((SimpleLogger) this.logger).getConsoleManager().start();
 
-        this.queueService.checkForQueue();
+        new WorkerThread(this).start();
     }
 
     private void loadConfig(@NotNull File file) {

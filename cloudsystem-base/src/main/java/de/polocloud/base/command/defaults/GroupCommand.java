@@ -57,7 +57,6 @@ public final class GroupCommand extends CloudCommand {
 
                 Base.getInstance().getGroupTemplateService().createTemplateFolder(serviceGroup);
                 logger.log("The group '§b" + name + "§7' is now registered and online.");
-                Base.getInstance().getQueueService().checkForQueue();
                 return;
             } catch (NumberFormatException ignored) {}
             logger.log("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);

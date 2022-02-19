@@ -64,7 +64,6 @@ public final class BaseNode extends NettyServer {
         service.update();
 
         Base.getInstance().getLogger().log("The service '§b" + connectedClient.name() + "§7'§a successfully §7connect to the cluster. ("+ SimpleStatisticManager.getProcessingTime(service) + "ms)");
-        Base.getInstance().getQueueService().checkForQueue();
     }
 
     @Override
@@ -78,7 +77,6 @@ public final class BaseNode extends NettyServer {
                 base.getNode().sendPacketToAll(new ServiceRemovePacket(service.getName()));
                 base.getServiceManager().getAllCachedServices().remove(service);
                 base.getLogger().log("The service '§b" + service.getName() + "§7' disconnect.");
-                base.getQueueService().checkForQueue();
         }, () ->
                 base.getLogger().log("Service " + client.name() + " disconnected but not exists!", LogType.WARNING));
     }

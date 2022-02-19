@@ -48,6 +48,8 @@ public class LocalService implements CloudService {
 
     private Process process;
 
+    private boolean screen = false;
+
     public LocalService(final ServiceGroup group, final int id, final int port, final String hostname) {
         this.group = group;
         this.serviceId = id;
@@ -152,7 +154,7 @@ public class LocalService implements CloudService {
 
         final var processBuilder = new ProcessBuilder(this.arguments())
             .directory(this.workingDirectory);
-        processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
+        //processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
 
         this.process = processBuilder.start();
     }
@@ -279,6 +281,14 @@ public class LocalService implements CloudService {
         }
 
         return arguments;
+    }
+
+    public boolean isScreen() {
+        return this.screen;
+    }
+
+    public void setScreen(final boolean screen) {
+        this.screen = screen;
     }
 
 }
