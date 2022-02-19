@@ -1,8 +1,6 @@
 package de.polocloud.network;
 
-import de.polocloud.network.packet.Packet;
 import de.polocloud.network.packet.PacketHandler;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
