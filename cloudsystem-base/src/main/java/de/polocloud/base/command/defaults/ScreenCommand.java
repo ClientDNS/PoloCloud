@@ -16,16 +16,20 @@ public final class ScreenCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(CloudAPI cloudAPI, String[] args) {
-        cloudAPI.getServiceManager().getService(args[0]).ifPresentOrElse(
-            cloudService -> {
-                if (cloudService instanceof LocalService localService) {
-                    localService.setScreen(!localService.isScreen());
-                } else {
-                    cloudAPI.getLogger().log("The service must be on this node!", LogType.WARNING);
-                }
-            },
-            () -> cloudAPI.getLogger().log("This service does not exists.", LogType.WARNING));
+    public void execute(CloudAPI cloudAPI, String[] arguments) {
+        if (arguments.length == 1) {
+            cloudAPI.getServiceManager().getService(arguments[0]).ifPresentOrElse(
+                cloudService -> {
+                    if (cloudService instanceof LocalService localService) {
+                        localService.setScreen(!localService.isScreen());
+                    } else {
+                        cloudAPI.getLogger().log("The service must be on this node!", LogType.WARNING);
+                    }
+                },
+                () -> cloudAPI.getLogger().log("This service does not exists.", LogType.WARNING));
+        } else {
+            cloudAPI.getLogger().log("§7Use following command: §bscreen <Service>> - Activates/deactivates the screen of a service");
+        }
     }
 
     @Override
