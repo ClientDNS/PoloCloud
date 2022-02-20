@@ -21,6 +21,8 @@ public final class WrapperServiceManager implements ServiceManager {
     private List<CloudService> allCachedServices;
     private final PropertyFile property;
 
+    private CloudService thisService;
+
     public WrapperServiceManager(final PropertyFile property) {
         this.allCachedServices = new CopyOnWriteArrayList<>();
         this.property = property;
@@ -48,6 +50,8 @@ public final class WrapperServiceManager implements ServiceManager {
     @Override
     public void setAllCachedServices(@NotNull List<CloudService> allCachedServices) {
         this.allCachedServices = allCachedServices;
+        this.thisService = this.allCachedServices.stream()
+            .filter(cloudService -> cloudService.getName().equalsIgnoreCase(this.property.getService())).findAny().orElse(null);
     }
 
     @Override
@@ -56,7 +60,7 @@ public final class WrapperServiceManager implements ServiceManager {
     }
 
     public CloudService thisService() {
-        return this.allCachedServices.stream().filter(it -> it.getName().equalsIgnoreCase(this.property.getService())).findAny().orElse(null);
+        return this.thisService;
     }
 
     @Override
