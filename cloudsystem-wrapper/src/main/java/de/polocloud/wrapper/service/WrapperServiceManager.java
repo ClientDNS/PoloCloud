@@ -69,7 +69,7 @@ public final class WrapperServiceManager implements ServiceManager {
     }
 
     @Override
-    public void sendPacketToService(CloudService service, Packet packet) {
+    public void sendPacketToService(@NotNull CloudService service, @NotNull Packet packet) {
         if (service.equals(thisService())) {
             Wrapper.getInstance().getPacketHandler().call(null, packet);
             return;

@@ -54,7 +54,7 @@ public final class SimpleServiceManager implements de.polocloud.api.service.Serv
         ((LocalService) service).start();
     }
 
-    public void sendPacketToService(final CloudService service, final Packet packet) {
+    public void sendPacketToService(final @NotNull CloudService service, final @NotNull Packet packet) {
         Base.getInstance().getNode().getClients().stream()
             .filter(it -> it.name().equals(service.getName())).findAny().ifPresent(it -> it.sendPacket(packet));
     }

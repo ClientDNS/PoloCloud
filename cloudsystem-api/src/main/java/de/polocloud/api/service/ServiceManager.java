@@ -68,13 +68,13 @@ public interface ServiceManager {
      * update a service
      * @param service the service to start
      */
-    void updateService(CloudService service);
+    void updateService(@NotNull CloudService service);
 
     /**
      * send a service a packet
      * @param service the service to start
      * @param packet the packet to send
      */
-    void sendPacketToService(CloudService service, Packet packet);
+    void sendPacketToService(@NotNull CloudService service, @NotNull Packet packet);
 
 }
