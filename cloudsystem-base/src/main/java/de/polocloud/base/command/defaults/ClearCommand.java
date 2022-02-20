@@ -1,6 +1,6 @@
 package de.polocloud.base.command.defaults;
 
-import de.polocloud.api.CloudAPI;
+import de.polocloud.base.Base;
 import de.polocloud.base.command.CloudCommand;
 
 public final class ClearCommand extends CloudCommand {
@@ -10,8 +10,8 @@ public final class ClearCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(CloudAPI cloudAPI, String[] args) {
-        cloudAPI.getLogger().clearConsole();
+    public void execute(Base base, String[] args) {
+        base.getLogger().clearConsole();
     }
 
 }

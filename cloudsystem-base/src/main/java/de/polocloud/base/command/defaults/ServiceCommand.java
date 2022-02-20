@@ -1,11 +1,10 @@
 package de.polocloud.base.command.defaults;
 
-import de.polocloud.base.Base;
-import de.polocloud.api.CloudAPI;
-import de.polocloud.base.command.CloudCommand;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
+import de.polocloud.base.Base;
+import de.polocloud.base.command.CloudCommand;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,15 +16,15 @@ public final class ServiceCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(CloudAPI cloudAPI, String[] args) {
-        final var logger = cloudAPI.getLogger();
+    public void execute(Base base, String[] args) {
+        final var logger = base.getLogger();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            cloudAPI.getServiceManager().getAllCachedServices().forEach(it -> logger
+            base.getServiceManager().getAllCachedServices().forEach(it -> logger
                 .log("Name of service '§b" + it.getName() + "§7' (§7State of service '§b" + it.getServiceState().getName() + "§7' | Node: '" + it.getGroup().getNode() + "')"));
             return;
         } else if (args.length >= 1) {
-            cloudAPI.getServiceManager().getService(args[0]).ifPresentOrElse(service -> {
+            base.getServiceManager().getService(args[0]).ifPresentOrElse(service -> {
 
                 if (args.length == 2 && args[1].equalsIgnoreCase("stop")) {
                     if (service.getServiceState() == ServiceState.PREPARED || service.getServiceState() == ServiceState.STOPPING) {

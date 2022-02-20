@@ -1,9 +1,8 @@
 package de.polocloud.base.command.defaults;
 
-import de.polocloud.base.Base;
-import de.polocloud.api.CloudAPI;
-import de.polocloud.base.command.CloudCommand;
 import de.polocloud.api.logger.Logger;
+import de.polocloud.base.Base;
+import de.polocloud.base.command.CloudCommand;
 
 public final class InfoCommand extends CloudCommand {
 
@@ -12,8 +11,8 @@ public final class InfoCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(CloudAPI cloudAPI, String[] args) {
-        final Logger logger = cloudAPI.getLogger();
+    public void execute(Base base, String[] args) {
+        final Logger logger = base.getLogger();
 
         logger.log("§7Version: §b" + Base.getInstance().getVersion());
         logger.log("§7Node: §b" + Base.getInstance().getNode().getName());

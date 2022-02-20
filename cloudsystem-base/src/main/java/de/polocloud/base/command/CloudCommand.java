@@ -1,6 +1,6 @@
 package de.polocloud.base.command;
 
-import de.polocloud.api.CloudAPI;
+import de.polocloud.base.Base;
 import lombok.Getter;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public abstract class CloudCommand {
         this.aliases = aliases;
     }
 
-    public abstract void execute(CloudAPI cloudAPI, String[] args);
+    public abstract void execute(Base base, String[] args);
 
     public List<String> tabComplete(final String[] arguments) {
         return null;

@@ -1,7 +1,6 @@
 package de.polocloud.base.command.defaults;
 
 import de.polocloud.base.Base;
-import de.polocloud.api.CloudAPI;
 import de.polocloud.base.command.CloudCommand;
 
 public final class ShutdownCommand extends CloudCommand {
@@ -11,8 +10,8 @@ public final class ShutdownCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(CloudAPI cloudAPI, String[] args) {
-        Base.getInstance().onShutdown();
+    public void execute(Base base, String[] args) {
+        base.onShutdown();
     }
 
 }

@@ -2,6 +2,7 @@ package de.polocloud.base.command;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
+import de.polocloud.base.Base;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +23,7 @@ public class SimpleCommandManager implements CommandManager {
             final var cloudCommand = this.cachedCloudCommands.get(args.get(0));
             if (cloudCommand == null) return;
             args.remove(0);
-            cloudCommand.execute(CloudAPI.getInstance(), args.toArray(new String[]{}));
+            cloudCommand.execute(Base.getInstance(), args.toArray(new String[]{}));
         }
     }
 

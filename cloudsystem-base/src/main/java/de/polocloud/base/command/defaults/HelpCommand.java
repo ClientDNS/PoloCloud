@@ -1,7 +1,6 @@
 package de.polocloud.base.command.defaults;
 
 import de.polocloud.base.Base;
-import de.polocloud.api.CloudAPI;
 import de.polocloud.base.command.CloudCommand;
 
 public final class HelpCommand extends CloudCommand {
@@ -11,11 +10,11 @@ public final class HelpCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(CloudAPI cloudAPI, String[] args) {
+    public void execute(Base base, String[] args) {
         final var manager = Base.getInstance().getCommandManager();
 
-        cloudAPI.getLogger().log("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
-        manager.getCachedCloudCommands().values().forEach(it -> cloudAPI.getLogger()
+        base.getLogger().log("All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
+        manager.getCachedCloudCommands().values().forEach(it -> base.getLogger()
             .log("§b" + it.getName() + getAliases(it) + " - " + it.getDescription()));
     }
 
