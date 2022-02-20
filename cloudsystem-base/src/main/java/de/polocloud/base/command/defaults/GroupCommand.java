@@ -3,7 +3,7 @@ package de.polocloud.base.command.defaults;
 import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.base.command.CloudCommand;
-import de.polocloud.api.groups.DefaultGroup;
+import de.polocloud.base.group.DefaultGroup;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.service.CloudService;
@@ -51,7 +51,7 @@ public final class GroupCommand extends CloudCommand {
                     return;
                 }
 
-                final var serviceGroup = new DefaultGroup(name, memory, isStatic, gameServerVersion);
+                final var serviceGroup = new DefaultGroup(name, Base.getInstance().getNode().getName(), memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
                 serviceGroup.getGameServerVersion().download(serviceGroup.getTemplate());
 
