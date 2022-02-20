@@ -33,7 +33,7 @@ public final class ScreenCommand extends CloudCommand {
 
     @Override
     public List<String> tabComplete(String[] arguments) {
-        if (arguments.length == 0) {
+        if (arguments.length == 1) {
             return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().map(CloudService::getName).toList();
         }
         return super.tabComplete(arguments);
