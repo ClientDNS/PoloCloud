@@ -3,7 +3,6 @@ package de.polocloud.base.templates;
 import de.polocloud.base.Base;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.service.CloudService;
-import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -40,9 +39,12 @@ public final class GroupTemplateService {
             file.mkdirs();
     }
 
-    @SneakyThrows
     public void initFolder(String file) {
-        FileUtils.forceMkdir(new File(file));
+        try {
+            FileUtils.forceMkdir(new File(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -6,8 +6,9 @@ import de.polocloud.network.packet.NetworkBuf;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.InvocationTargetException;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,17 +26,19 @@ public class RedirectPacket implements Packet {
     }
 
 
-    @SneakyThrows
     @Override
     public void read(@NotNull NetworkBuf byteBuf) {
         this.client = byteBuf.readString();
         this.initPacket(byteBuf, CloudAPI.getInstance().getPacketHandler().getPacketClass(byteBuf.readInt()));
     }
 
-    @SneakyThrows
     public void initPacket(NetworkBuf byteBuf, Class<? extends Packet> it) {
-        this.packet = it.getConstructor().newInstance();
-        this.packet.read(byteBuf);
+        try {
+            this.packet = it.getConstructor().newInstance();
+            this.packet.read(byteBuf);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
 }

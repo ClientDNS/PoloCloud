@@ -6,8 +6,9 @@ import de.polocloud.network.packet.Packet;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.InvocationTargetException;
 
 @Getter
 @AllArgsConstructor
@@ -32,7 +33,6 @@ public class QueryPacket implements Packet {
         byteBuf.writeInt(this.state.ordinal());
     }
 
-    @SneakyThrows
     @Override
     public void read(@NotNull NetworkBuf byteBuf) {
         final var packetId = byteBuf.readInt();
@@ -40,12 +40,15 @@ public class QueryPacket implements Packet {
         this.initPacket(byteBuf, CloudAPI.getInstance().getPacketHandler().getPacketClass(packetId));
     }
 
-    @SneakyThrows
     private void initPacket(NetworkBuf byteBuf, Class<? extends Packet> it){
-        this.packet = it.getConstructor().newInstance();
-        this.packet.read(byteBuf);
+        try {
+            this.packet = it.getConstructor().newInstance();
+            this.packet.read(byteBuf);
 
-        this.state = QueryState.values()[byteBuf.readInt()];
+            this.state = QueryState.values()[byteBuf.readInt()];
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
 }
