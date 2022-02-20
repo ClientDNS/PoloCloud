@@ -13,6 +13,8 @@ public interface CloudDatabaseProvider {
 
     List<ServiceGroup> getAllServiceGroups();
 
+    void updateGroupProperty(@NotNull String group, @NotNull String property, @NotNull Object value);
+
     void disconnect();
 
 }

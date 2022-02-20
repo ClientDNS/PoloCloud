@@ -46,11 +46,11 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
             "name VARCHAR(100), " +
             "template VARCHAR(100), " +
             "node VARCHAR(100), " +
-            "memory INT, " +
+            "maxMemory INT, " +
             "minOnlineService INT, " +
             "maxOnlineService INT, " +
             "static BOOL, " +
-            "fallbackGroup BOOL, " +
+            "fallback BOOL, " +
             "version VARCHAR(100), " +
             "maxPlayers INT, " +
             "motd TEXT, " +
@@ -81,12 +81,12 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
                     result.getString("template"),
                     result.getString("node"),
                     result.getString("motd"),
-                    result.getInt("memory"),
+                    result.getInt("maxMemory"),
                     result.getInt("maxPlayers"),
                     result.getInt("minOnlineService"),
                     result.getInt("maxOnlineService"),
                     result.getBoolean("static"),
-                    result.getBoolean("fallbackGroup"),
+                    result.getBoolean("fallback"),
                     result.getBoolean("maintenance"),
                     result.getBoolean("autoUpdating"),
                     GameServerVersion.getVersionByName(result.getString("version"))));
@@ -95,6 +95,11 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
             exception.printStackTrace();
         }
         return groups;
+    }
+
+    @Override
+    public void updateGroupProperty(@NotNull String group, @NotNull String property, @NotNull Object value) {
+        this.executeUpdate("UPDATE " + GROUP_TABLE + " SET " + property + " = '" + value + "' WHERE name = '" + group + "'");
     }
 
     @SneakyThrows
@@ -106,7 +111,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
     @Override
     public void addGroup(final @NotNull ServiceGroup group) {
         this.executeUpdate("INSERT INTO " + GROUP_TABLE +
-            "(name, template, node, memory, minOnlineService, maxOnlineService, static, fallbackGroup, version, maxPlayers, motd, maintenance, autoUpdating) " +
+            "(name, template, node, maxMemory, minOnlineService, maxOnlineService, static, fallback, version, maxPlayers, motd, maintenance, autoUpdating) " +
             "VALUES (" + "'" + group.getName() + "', '" + group.getTemplate() + "', '" + group.getNode() + "', " + group.getMaxMemory() + ", " + group.getMinOnlineService() + ", " + group.getMaxOnlineService() + ", " + conBool(group.isStatic()) + ", " + conBool(group.isFallbackGroup()) + ", '" + group.getGameServerVersion().getName() + "', " + group.getDefaultMaxPlayers() + ",'" + group.getMotd() + "', " + conBool(group.isMaintenance()) + ", " + conBool(group.isAutoUpdating()) + ");");
     }
 

@@ -51,14 +51,15 @@ public final class GroupCommand extends CloudCommand {
                     return;
                 }
 
-                final var serviceGroup = new DefaultGroup(name, Base.getInstance().getNode().getName(), memory, isStatic, gameServerVersion);
+                final var serviceGroup = new DefaultGroup(Base.getInstance().getNode().getName(), name, memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
                 serviceGroup.getGameServerVersion().download(serviceGroup.getTemplate());
 
                 Base.getInstance().getGroupTemplateService().createTemplateFolder(serviceGroup);
                 logger.log("The group '§b" + name + "§7' is now registered and online.");
                 return;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
             logger.log("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
@@ -106,18 +107,34 @@ public final class GroupCommand extends CloudCommand {
             final var key = args[2].toLowerCase();
             switch (key) {
                 case "memory":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxMemory);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setMaxMemory(integer);
+                        Base.getInstance().getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "maxMemory", integer);
+                    });
                     logger.log("§7Successfully set memory to " + args[3] + "mb");
                 case "minservicecount":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMinOnlineService);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setMinOnlineService(integer);
+                        Base.getInstance().getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "minOnlineService", integer);
+                    });
                     logger.log("§7Successfully set min service count to " + args[3]);
                     return;
                 case "maxservicecount":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxOnlineService);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setMaxOnlineService(integer);
+                        Base.getInstance().getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "maxOnlineService", integer);
+                    });
                     logger.log("§7Successfully set max service count to " + args[3]);
                     return;
                 case "defaultmaxplayers":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setDefaultMaxPlayers);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setDefaultMaxPlayers(integer);
+                        Base.getInstance().getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "maxPlayers", integer);
+                    });
                     logger.log("§7Successfully set default max players to " + args[3]);
                     return;
                 case "fallback":
@@ -130,6 +147,8 @@ public final class GroupCommand extends CloudCommand {
 
                     serviceGroup.setFallbackGroup(Boolean.parseBoolean(fallback));
                     serviceGroup.update();
+                    Base.getInstance().getDatabaseManager().getProvider()
+                        .updateGroupProperty(serviceGroup.getName(), "fallback", (fallback.equals("true") ? 1 : 0));
                     logger.log("§7Successfully set fallback to " + fallback);
                     return;
                 case "maintenance":
@@ -142,6 +161,8 @@ public final class GroupCommand extends CloudCommand {
 
                     serviceGroup.setMaintenance(Boolean.parseBoolean(maintenance));
                     serviceGroup.update();
+                    Base.getInstance().getDatabaseManager().getProvider()
+                        .updateGroupProperty(serviceGroup.getName(), "maintenance", (maintenance.equals("true") ? 1 : 0));
                     logger.log("§7Successfully set maintenance to " + maintenance);
                     return;
                 case "version":
