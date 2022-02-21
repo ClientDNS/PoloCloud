@@ -44,14 +44,6 @@ public interface CloudService {
     @NotNull ServiceGroup getGroup();
 
     /**
-     * @return the group of the service
-     */
-    @Deprecated(forRemoval = true)
-    default @NotNull ServiceGroup getServiceGroup() {
-        return this.getGroup();
-    }
-
-    /**
      * sets the service state
      *
      * @param serviceState the state to set
