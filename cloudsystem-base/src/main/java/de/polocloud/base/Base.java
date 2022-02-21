@@ -151,7 +151,7 @@ public final class Base extends CloudAPI {
         try {
             final var storageDirectory = new File("storage/jars");
 
-            Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
+            Files.deleteIfExists(((SimpleServiceManager) this.getServiceManager()).getWrapperPath());
             Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
         } catch (IOException e) {
             e.printStackTrace();
