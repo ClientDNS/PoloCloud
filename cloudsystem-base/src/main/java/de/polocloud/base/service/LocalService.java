@@ -81,7 +81,8 @@ public class LocalService implements CloudService {
         FileUtils.copyFile(new File(storageFolder, jar), new File(this.workingDirectory, jar));
 
         // copy plugin
-        FileUtils.copyFile(new File(storageFolder, "/plugin.jar"), new File(this.workingDirectory, "plugins/plugin.jar"));
+        FileUtils.copyFile(((SimpleServiceManager) Base.getInstance().getServiceManager()).getPluginPath().toFile(),
+            new File(this.workingDirectory, "plugins/plugin.jar"));
 
         // write property for identify service
         new Document()

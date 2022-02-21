@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,16 +24,30 @@ public final class SimpleServiceManager implements de.polocloud.api.service.Serv
     private List<CloudService> allCachedServices;
 
     private final Path wrapperPath;
+    private final Path pluginPath;
 
     private String wrapperMainClass;
 
-    public SimpleServiceManager(final Path wrapperPath) {
+    public SimpleServiceManager() {
         this.allCachedServices = new CopyOnWriteArrayList<>();
 
-        this.wrapperPath = wrapperPath.toAbsolutePath();
+        final var storageDirectory = new File("storage/jars");
+        this.wrapperPath = new File(storageDirectory, "wrapper.jar").toPath().toAbsolutePath();
+        this.pluginPath = new File(storageDirectory, "plugin.jar").toPath();
 
-        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(wrapperPath))) {
-            this.wrapperMainClass = jarInputStream.getManifest().getMainAttributes().getValue("Main-Class");
+        try {
+            storageDirectory.mkdirs();
+
+            // copy wrapper and plugin jar
+            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("wrapper.jar")),
+                this.wrapperPath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream("plugin.jar")),
+                this.pluginPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // gets the main class from the wrapper
+            try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(this.wrapperPath))) {
+                this.wrapperMainClass = jarInputStream.getManifest().getMainAttributes().getValue("Main-Class");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,6 +102,10 @@ public final class SimpleServiceManager implements de.polocloud.api.service.Serv
 
     public Path getWrapperPath() {
         return this.wrapperPath;
+    }
+
+    public Path getPluginPath() {
+        return this.pluginPath;
     }
 
     public String getWrapperMainClass() {
