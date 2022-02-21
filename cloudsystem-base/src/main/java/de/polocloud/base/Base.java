@@ -84,21 +84,24 @@ public final class Base extends CloudAPI {
         this.commandManager = new SimpleCommandManager();
 
         // copy wrapper and plugin jar
-        ErrorHandler.defaultInstance().runOnly(() -> {
-            final var storageDirectory = new File("storage/jars");
+        final var storageDirectory = new File("storage/jars");
+        final var wrapperPath = new File(storageDirectory, "wrapper.jar").toPath();
+
+        try {
             storageDirectory.mkdirs();
 
             var loader = this.getClass().getClassLoader();
             var copyOption = StandardCopyOption.REPLACE_EXISTING;
 
-            Files.copy(Objects.requireNonNull(loader.getResourceAsStream("wrapper.jar")), new File(storageDirectory, "wrapper.jar").toPath(), copyOption);
+            Files.copy(Objects.requireNonNull(loader.getResourceAsStream("wrapper.jar")), wrapperPath, copyOption);
             Files.copy(Objects.requireNonNull(loader.getResourceAsStream("plugin.jar")), new File(storageDirectory, "plugin.jar").toPath(), copyOption);
-            return null;
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.databaseManager = DatabaseManager.newInstance(this.config.getDatabaseConfiguration());
         this.groupManager = new SimpleGroupManager();
-        this.serviceManager = new SimpleServiceManager();
+        this.serviceManager = new SimpleServiceManager(wrapperPath);
         this.groupTemplateService = new GroupTemplateService();
         this.playerManager = new SimplePlayerManager();
         this.node = new BaseNode(this.config);

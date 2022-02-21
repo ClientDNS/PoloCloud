@@ -1,8 +1,6 @@
 package de.polocloud.base.service;
 
-import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
-import de.polocloud.base.config.editor.ConfigurationFileEditor;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.groups.utils.ServiceType;
 import de.polocloud.api.json.Document;
@@ -10,6 +8,8 @@ import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.api.version.GameServerVersion;
+import de.polocloud.base.Base;
+import de.polocloud.base.config.editor.ConfigurationFileEditor;
 import de.polocloud.base.service.statistic.SimpleStatisticManager;
 import de.polocloud.network.packet.Packet;
 import lombok.Getter;
@@ -20,13 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
 
 @Getter
 @Setter
@@ -201,7 +198,8 @@ public class LocalService implements CloudService {
                     this.process = null;
                     return;
                 }
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
             this.process.destroy();
             this.process = null;
         }
@@ -250,18 +248,14 @@ public class LocalService implements CloudService {
             "-Xms" + this.group.getMaxMemory() + "M",
             "-Xmx" + this.group.getMaxMemory() + "M"));
 
-        final var wrapperFile = Paths.get("storage", "jars", "wrapper.jar");
+        final var serviceManager = (SimpleServiceManager) Base.getInstance().getServiceManager();
         final var applicationFile = new File(this.workingDirectory, this.group.getGameServerVersion().getJar());
 
         arguments.addAll(Arrays.asList(
-            "-cp", wrapperFile.toAbsolutePath().toString(),
-            "-javaagent:" + wrapperFile.toAbsolutePath()));
+            "-cp", serviceManager.getWrapperPath().toString(),
+            "-javaagent:" + serviceManager.getWrapperPath()));
 
-        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(wrapperFile))) {
-            arguments.add(jarInputStream.getManifest().getMainAttributes().getValue("Main-Class"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        arguments.add(serviceManager.getWrapperMainClass());
 
         boolean preLoadClasses = false;
 

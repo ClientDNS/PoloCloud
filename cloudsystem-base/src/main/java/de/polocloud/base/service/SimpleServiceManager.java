@@ -9,16 +9,33 @@ import de.polocloud.network.NetworkType;
 import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.jar.JarInputStream;
 
 public final class SimpleServiceManager implements de.polocloud.api.service.ServiceManager {
 
     private List<CloudService> allCachedServices;
 
-    public SimpleServiceManager() {
+    private final Path wrapperPath;
+
+    private String wrapperMainClass;
+
+    public SimpleServiceManager(final Path wrapperPath) {
         this.allCachedServices = new CopyOnWriteArrayList<>();
+
+        this.wrapperPath = wrapperPath.toAbsolutePath();
+
+        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(wrapperPath))) {
+            this.wrapperMainClass = jarInputStream.getManifest().getMainAttributes().getValue("Main-Class");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Base.getInstance().getPacketHandler().registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
             this.getService(packet.getService()).ifPresent(service -> {
@@ -66,6 +83,14 @@ public final class SimpleServiceManager implements de.polocloud.api.service.Serv
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
         //update own service caches
         Base.getInstance().getNode().sendPacketToType(packet, NetworkType.WRAPPER);
+    }
+
+    public Path getWrapperPath() {
+        return this.wrapperPath;
+    }
+
+    public String getWrapperMainClass() {
+        return this.wrapperMainClass;
     }
 
 }
