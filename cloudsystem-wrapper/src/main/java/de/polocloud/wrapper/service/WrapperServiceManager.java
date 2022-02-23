@@ -31,8 +31,7 @@ public final class WrapperServiceManager implements ServiceManager {
 
         networkHandler.registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
             this.getService(packet.getService()).ifPresent(service -> {
-                service.setServiceState(packet.getState());
-                service.setServiceVisibility(packet.getServiceVisibility());
+                service.setState(packet.getState());
                 service.setMaxPlayers(packet.getMaxPlayers());
                 service.setMotd(packet.getMotd());
             }));

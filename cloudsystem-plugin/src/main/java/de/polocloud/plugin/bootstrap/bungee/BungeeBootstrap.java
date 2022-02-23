@@ -2,8 +2,7 @@ package de.polocloud.plugin.bootstrap.bungee;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.service.CloudService;
-import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.api.service.utils.ServiceVisibility;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.plugin.bootstrap.bungee.listener.BungeeCloudListener;
 import de.polocloud.plugin.bootstrap.bungee.listener.BungeeListener;
 import de.polocloud.wrapper.Wrapper;
@@ -13,7 +12,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.util.Comparator;
 import java.util.Optional;
 
-public class BungeeBootstrap extends Plugin {
+public final class BungeeBootstrap extends Plugin {
 
     @Override
     public void onEnable() {
@@ -24,23 +23,14 @@ public class BungeeBootstrap extends Plugin {
         CloudService service = Wrapper.getInstance().thisService();
 
         if (service.getGroup().isAutoUpdating()) {
-            service.setServiceVisibility(ServiceVisibility.VISIBLE);
+            service.setState(ServiceState.ONLINE);
             service.update();
         }
     }
 
-    @Override
-    public void onDisable() {
-        Wrapper.getInstance().thisService().edit(service -> {
-            service.setServiceState(ServiceState.STOPPING);
-            service.setServiceVisibility(ServiceVisibility.INVISIBLE);
-        });
-    }
-
     public Optional<CloudService> getFallback(final ProxiedPlayer player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
-            .filter(service -> service.getServiceState() == ServiceState.ONLINE)
-            .filter(service -> service.getServiceVisibility() == ServiceVisibility.VISIBLE)
+            .filter(service -> service.getState().equals(ServiceState.ONLINE))
             .filter(service -> !service.getGroup().getGameServerVersion().isProxy())
             .filter(service -> service.getGroup().isFallbackGroup())
             .filter(service -> (player.getServer() == null || !player.getServer().getInfo().getName().equals(service.getName())))

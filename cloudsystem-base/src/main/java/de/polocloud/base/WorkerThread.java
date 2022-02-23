@@ -3,7 +3,7 @@ package de.polocloud.base;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
-import de.polocloud.api.service.utils.ServiceState;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.base.service.LocalService;
 import de.polocloud.base.service.SimpleServiceManager;
 import de.polocloud.base.service.port.PortHandler;
@@ -71,7 +71,7 @@ public final class WorkerThread extends Thread {
                 this.base.getNode().sendPacketToAll(new ServiceAddPacket(service));
                 this.base.getLogger()
                     .log("The group '§b" + serviceGroup.getName() + "§7' start new instance of '§b" + service.getName()
-                        + "§7' (" + service.getServiceState().getName() + "§7)");
+                        + "§7' (§6Prepared§7)");
             });
     }
 

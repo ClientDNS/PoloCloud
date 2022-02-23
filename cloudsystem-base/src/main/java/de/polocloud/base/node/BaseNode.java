@@ -7,7 +7,7 @@ import de.polocloud.base.Base;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.service.CloudService;
-import de.polocloud.api.service.utils.ServiceState;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.base.config.CloudConfiguration;
 import de.polocloud.base.service.LocalService;
 import de.polocloud.base.service.statistic.SimpleStatisticManager;
@@ -53,7 +53,7 @@ public final class BaseNode extends NettyServer {
 
         // set online
         final CloudService service = Base.getInstance().getServiceManager().getServiceByNameOrNull(connectedClient.name());
-        Objects.requireNonNull(service).setServiceState(ServiceState.ONLINE);
+        Objects.requireNonNull(service).setState(ServiceState.ONLINE);
 
         // update cache
         connectedClient.sendPacket(new CacheInitPacket(

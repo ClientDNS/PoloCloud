@@ -1,7 +1,6 @@
 package de.polocloud.api.service;
 
 import de.polocloud.api.groups.ServiceGroup;
-import de.polocloud.api.service.utils.ServiceState;
 import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,11 +32,11 @@ public interface ServiceManager {
 
     /**
      * gets all services of a state
-     * @param serviceState the state of the services
+     * @param state the state of the services
      * @return the services of a state
      */
-    default List<CloudService> getAllServicesByState(@NotNull ServiceState serviceState) {
-        return this.getAllCachedServices().stream().filter(it -> it.getServiceState() == serviceState).collect(Collectors.toList());
+    default List<CloudService> getAllServicesByState(@NotNull String state) {
+        return this.getAllCachedServices().stream().filter(it -> it.getState().equalsIgnoreCase(state)).collect(Collectors.toList());
     }
 
     /**

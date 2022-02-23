@@ -3,8 +3,6 @@ package de.polocloud.api.service;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.service.impl.SimpleService;
-import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.api.service.utils.ServiceVisibility;
 import de.polocloud.network.packet.NetworkBuf;
 import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
@@ -44,16 +42,16 @@ public interface CloudService {
     @NotNull ServiceGroup getGroup();
 
     /**
-     * sets the service state
+     * sets the state
      *
-     * @param serviceState the state to set
+     * @param state the state to set
      */
-    void setServiceState(@NotNull ServiceState serviceState);
+    void setState(@NotNull String state);
 
     /**
      * @return the state of the service
      */
-    @NotNull ServiceState getServiceState();
+    @NotNull String getState();
 
     /**
      * @return the max players of the service
@@ -65,17 +63,6 @@ public interface CloudService {
      * @param slots the amount to set
      */
     void setMaxPlayers(int slots);
-
-    /**
-     * @return the service visibility of the service
-     */
-    @NotNull ServiceVisibility getServiceVisibility();
-
-    /**
-     * sets the service visibility
-     * @param serviceVisibility the service visibility to set
-     */
-    void setServiceVisibility(@NotNull ServiceVisibility serviceVisibility);
 
     /**
      * @return the online amount of the service
@@ -144,8 +131,7 @@ public interface CloudService {
         networkBuf.writeInt(this.getPort());
         networkBuf.writeString(this.getHostName());
         networkBuf.writeInt(this.getMaxPlayers());
-        networkBuf.writeInt(this.getServiceState().ordinal());
-        networkBuf.writeInt(this.getServiceVisibility().ordinal());
+        networkBuf.writeString(this.getState());
         networkBuf.writeString(this.getMotd());
     }
 
@@ -160,8 +146,7 @@ public interface CloudService {
             networkBuf.readInt(),
             networkBuf.readString(),
             networkBuf.readInt(),
-            ServiceState.values()[networkBuf.readInt()],
-            ServiceVisibility.values()[networkBuf.readInt()],
+            networkBuf.readString(),
             networkBuf.readString());
     }
 

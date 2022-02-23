@@ -41,9 +41,7 @@ public final class Wrapper extends CloudAPI {
             final var wrapper = new Wrapper();
 
             var cacheInitialized = new AtomicBoolean(false);
-            wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class, (channelHandlerContext, packet) -> {
-                cacheInitialized.set(true);
-            });
+            wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class, (channelHandlerContext, packet) -> cacheInitialized.set(true));
 
             final var arguments = new ArrayList<>(Arrays.asList(args));
             final var main = arguments.remove(0);

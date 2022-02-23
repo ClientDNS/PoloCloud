@@ -2,7 +2,7 @@ package de.polocloud.base.command.defaults;
 
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.service.CloudService;
-import de.polocloud.api.service.utils.ServiceState;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.base.Base;
 import de.polocloud.base.command.CloudCommand;
 
@@ -21,13 +21,13 @@ public final class ServiceCommand extends CloudCommand {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             base.getServiceManager().getAllCachedServices().forEach(it -> logger
-                .log("Name of service '§b" + it.getName() + "§7' (§7State of service '§b" + it.getServiceState().getName() + "§7' | Node: '" + it.getGroup().getNode() + "')"));
+                .log("Name of service '§b" + it.getName() + "§7' (§7State of service '§b" + it.getState() + "§7' | Node: '" + it.getGroup().getNode() + "')"));
             return;
         } else if (args.length >= 1) {
             base.getServiceManager().getService(args[0]).ifPresentOrElse(service -> {
 
                 if (args.length == 2 && args[1].equalsIgnoreCase("stop")) {
-                    if (service.getServiceState() == ServiceState.PREPARED || service.getServiceState() == ServiceState.STOPPING) {
+                    if (service.getState().equals(ServiceState.PREPARED) || service.getState().equals(ServiceState.STOPPED)) {
                         logger.log("This service ist not started or already in stopping state.", LogType.WARNING);
                         return;
                     }
@@ -42,7 +42,7 @@ public final class ServiceCommand extends CloudCommand {
                 } else {
                     logger.log("Service information:",
                         "Name: §b" + service.getName(),
-                        "Visibility: §b" + service.getServiceVisibility() + " &7/ State: §b" + service.getServiceState(),
+                        "State: §b" + service.getState(),
                         "Players: §b" + service.getOnlineCount() + " &7/ Port: §b" + service.getMaxPlayers(),
                         "Host: §b" + service.getHostName() + " &7/ Port: §b" + service.getPort(),
                         "Motd: §b" + service.getMotd());

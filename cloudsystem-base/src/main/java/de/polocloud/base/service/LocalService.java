@@ -5,8 +5,7 @@ import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.groups.utils.ServiceType;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.service.CloudService;
-import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.api.service.utils.ServiceVisibility;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.base.Base;
 import de.polocloud.base.config.editor.ConfigurationFileEditor;
@@ -38,8 +37,7 @@ public class LocalService implements CloudService {
     private int maxPlayers;
     private String motd;
 
-    private ServiceState serviceState = ServiceState.PREPARED;
-    private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
+    private String state = ServiceState.PREPARED;
 
     private final File workingDirectory;
 
@@ -62,7 +60,7 @@ public class LocalService implements CloudService {
 
     @SneakyThrows
     public void start() {
-        this.setServiceState(ServiceState.STARTING);
+        this.setState(ServiceState.STARTING);
 
         this.group.getGameServerVersion().download(this.group.getTemplate());
 

@@ -3,8 +3,7 @@ package de.polocloud.api.service.impl;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.service.CloudService;
-import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.api.service.utils.ServiceVisibility;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +24,7 @@ public final class SimpleService implements CloudService {
     private int maxPlayers;
     private String motd;
 
-    private ServiceState serviceState = ServiceState.PREPARED;
-    private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
+    private String state = ServiceState.PREPARED;
 
     public SimpleService(String group, int id, final String node, int port, String hostname) {
         this.group = CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
@@ -39,11 +37,10 @@ public final class SimpleService implements CloudService {
         this.maxPlayers = this.group.getDefaultMaxPlayers();
     }
 
-    public SimpleService(String group, int id, final String node, int port, String hostName, int maxPlayers, ServiceState serviceState, ServiceVisibility serviceVisibility, String motd) {
+    public SimpleService(String group, int id, final String node, int port, String hostName, int maxPlayers, String state, String motd) {
         this(group, id, node, port, hostName);
         this.maxPlayers = maxPlayers;
-        this.serviceState = serviceState;
-        this.serviceVisibility = serviceVisibility;
+        this.state = state;
         this.motd = motd;
     }
 
