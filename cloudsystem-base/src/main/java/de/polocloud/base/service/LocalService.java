@@ -148,11 +148,9 @@ public class LocalService implements CloudService {
             }
         }
 
-        final var processBuilder = new ProcessBuilder(this.arguments())
-            .directory(this.workingDirectory);
-        //processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
-
-        this.process = processBuilder.start();
+        this.process = new ProcessBuilder(this.arguments())
+            .directory(this.workingDirectory)
+            .start();
     }
 
     @Override
