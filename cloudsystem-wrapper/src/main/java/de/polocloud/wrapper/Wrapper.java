@@ -105,10 +105,16 @@ public final class Wrapper extends CloudAPI {
         this.serviceManager = new WrapperServiceManager(property);
         this.playerManager = new CloudPlayerManager();
         this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
     }
 
     public static Wrapper getInstance() {
         return instance;
+    }
+
+    private void stop() {
+        this.client.close();
     }
 
     @Override
