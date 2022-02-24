@@ -243,6 +243,8 @@ public class LocalService implements CloudService {
             "-Dio.netty.recycler.maxCapacity=0",
             "-Dio.netty.recycler.maxCapacity.default=0",
             "-Djline.terminal=jline.UnsupportedTerminal",
+            "-Dfile.encoding=UTF-8",
+            "-Dclient.encoding.override=UTF-8",
             "-DIReallyKnowWhatIAmDoingISwear=true",
             "-Xms" + this.group.getMaxMemory() + "M",
             "-Xmx" + this.group.getMaxMemory() + "M"));
