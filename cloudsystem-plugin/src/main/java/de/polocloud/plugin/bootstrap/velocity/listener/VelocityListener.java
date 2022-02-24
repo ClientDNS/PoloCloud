@@ -12,6 +12,7 @@ import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.velocity.VelocityBootstrap;
 import de.polocloud.wrapper.Wrapper;
+import net.kyori.adventure.text.Component;
 
 import java.util.Objects;
 
@@ -27,11 +28,16 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
 
     @Subscribe
     public void handle(final ServerPreConnectEvent event) {
-        if (event.getPlayer().getCurrentServer().isEmpty()) {
-            this.bootstrap.getFallback(event.getPlayer()).flatMap(service -> this.proxyServer.getServer(service.getName()))
+        final var player = event.getPlayer();
+
+        if (player.getCurrentServer().isEmpty()) {
+            this.bootstrap.getFallback(player).flatMap(service -> this.proxyServer.getServer(service.getName()))
                 .ifPresentOrElse(
                     registeredServer -> event.setResult(ServerPreConnectEvent.ServerResult.allowed(registeredServer)),
-                    () -> event.setResult(ServerPreConnectEvent.ServerResult.denied()));
+                    () -> {
+                        event.setResult(ServerPreConnectEvent.ServerResult.denied());
+                        player.disconnect(Component.text("§cNo fallback could be found."));
+                    });
         }
     }
 
@@ -39,13 +45,12 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     public void handle(final ServerConnectedEvent event) {
         final var player = event.getPlayer();
 
-        player.getCurrentServer().ifPresent(serverConnection ->
-            CloudAPI.getInstance().getPlayerManager().getCloudPlayer(player.getUniqueId())
-                .ifPresent(cloudPlayer -> {
-                    cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
-                        .getServiceByNameOrNull(serverConnection.getServerInfo().getName())));
-                    cloudPlayer.update(CloudPlayerUpdateEvent.UpdateReason.SERVER_SWITCH);
-                }));
+        CloudAPI.getInstance().getPlayerManager().getCloudPlayer(player.getUniqueId())
+            .ifPresent(cloudPlayer -> {
+                cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
+                    .getServiceByNameOrNull(event.getServer().getServerInfo().getName())));
+                cloudPlayer.update(CloudPlayerUpdateEvent.UpdateReason.SERVER_SWITCH);
+            });
     }
 
     @Subscribe

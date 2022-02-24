@@ -9,7 +9,10 @@ import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -82,7 +85,7 @@ public enum GameServerVersion {
             FileUtils.copyURLToFile(new URL(url), file);
 
             if (this.title.equals("paper")) {
-                final var process = new ProcessBuilder("java", "-DPaperclip.patchonly=true", "-jar", this.getJar())
+                final var process = new ProcessBuilder("java", "-Dpaperclip.patchonly=true", "-jar", this.getJar())
                     .directory(file.getParentFile()).start();
                 final var inputStreamReader = new InputStreamReader(process.getInputStream());
                 final var bufferedReader = new BufferedReader(inputStreamReader);

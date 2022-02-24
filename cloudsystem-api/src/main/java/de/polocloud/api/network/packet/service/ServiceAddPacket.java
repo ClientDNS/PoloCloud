@@ -1,28 +1,28 @@
 package de.polocloud.api.network.packet.service;
 
-import de.polocloud.api.network.packet.PacketHelper;
-import de.polocloud.api.service.IService;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.packet.NetworkByteBuf;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.NetworkBuf;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class ServiceAddPacket implements IPacket {
+public class ServiceAddPacket implements Packet {
 
-    private IService service;
+    private CloudService service;
 
     @Override
-    public void write(NetworkByteBuf byteBuf) {
-        PacketHelper.writeService(this.service, byteBuf);
+    public void write(@NotNull NetworkBuf byteBuf) {
+        this.service.write(byteBuf);
     }
 
     @Override
-    public void read(NetworkByteBuf byteBuf) {
-        this.service = PacketHelper.readService(byteBuf);
+    public void read(@NotNull NetworkBuf byteBuf) {
+        this.service = CloudService.read(byteBuf);
     }
 
 }

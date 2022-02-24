@@ -24,7 +24,7 @@ public final class ConsoleReadingThread extends Thread {
     @Override
     public void run() {
         try {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!this.isInterrupted()) {
                 this.line.accept(this.lineReader.readLine(this.consolePrompt));
             }
         } catch (UserInterruptException ignored) {}

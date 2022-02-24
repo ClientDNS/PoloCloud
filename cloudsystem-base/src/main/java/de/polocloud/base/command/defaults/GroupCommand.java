@@ -3,10 +3,10 @@ package de.polocloud.base.command.defaults;
 import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.base.command.CloudCommand;
-import de.polocloud.api.groups.DefaultGroup;
-import de.polocloud.api.groups.IServiceGroup;
+import de.polocloud.base.group.DefaultGroup;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.logger.LogType;
-import de.polocloud.api.service.IService;
+import de.polocloud.api.service.CloudService;
 import de.polocloud.api.version.GameServerVersion;
 
 import java.util.Arrays;
@@ -20,14 +20,12 @@ public final class GroupCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(CloudAPI cloudAPI, String[] args) {
-
-
-        final var groupManager = cloudAPI.getGroupManager();
-        final var logger = cloudAPI.getLogger();
+    public void execute(Base base, String[] args) {
+        final var groupManager = base.getGroupManager();
+        final var logger = base.getLogger();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            for (final IServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
+            for (final ServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
                 logger.log("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
@@ -49,21 +47,19 @@ public final class GroupCommand extends CloudCommand {
                 if (gameServerVersion == null) {
                     logger.log("This version is not available.", LogType.WARNING);
                     logger.log("Use one of the following versions:");
-                    for (final var version : GameServerVersion.values()) {
-                        logger.log("- " + version.getName());
-                    }
+                    for (final var version : GameServerVersion.values()) logger.log("- " + version.getName());
                     return;
                 }
 
-                final var serviceGroup = new DefaultGroup(name, memory, isStatic, gameServerVersion);
+                final var serviceGroup = new DefaultGroup(base.getNode().getName(), name, memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
                 serviceGroup.getGameServerVersion().download(serviceGroup.getTemplate());
 
-                Base.getInstance().getGroupTemplateService().createTemplateFolder(serviceGroup);
+                base.getGroupTemplateService().createTemplateFolder(serviceGroup);
                 logger.log("The group '§b" + name + "§7' is now registered and online.");
-                Base.getInstance().getQueueService().checkForQueue();
                 return;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
             logger.log("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
@@ -76,7 +72,7 @@ public final class GroupCommand extends CloudCommand {
             }
             groupManager.removeServiceGroup(serviceGroup);
 
-            cloudAPI.getServiceManager().getAllServicesByGroup(serviceGroup).forEach(IService::stop);
+            base.getServiceManager().getAllServicesByGroup(serviceGroup).forEach(CloudService::stop);
 
             logger.log("The group '§b" + name + "§7' is now deleted.");
             return;
@@ -90,10 +86,10 @@ public final class GroupCommand extends CloudCommand {
             }
 
             logger.log("Group information's: ");
-            logger.log("Groupname: §b" + serviceGroup.getName());
+            logger.log("Group: §b" + serviceGroup.getName());
             logger.log("Template: §b" + serviceGroup.getTemplate());
             logger.log("Node: §b" + serviceGroup.getNode());
-            logger.log("Memory: §b" + serviceGroup.getMemory() + "mb");
+            logger.log("Max Memory: §b" + serviceGroup.getMaxMemory() + "mb");
             logger.log("Min online services: §b" + serviceGroup.getMinOnlineService());
             logger.log("Max online services: §b" + serviceGroup.getMaxOnlineService());
             logger.log("Static: §b" + serviceGroup.isStatic());
@@ -111,32 +107,74 @@ public final class GroupCommand extends CloudCommand {
             final var key = args[2].toLowerCase();
             switch (key) {
                 case "memory":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMemory);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setMaxMemory(integer);
+                        base.getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "maxMemory", integer);
+                    });
                     logger.log("§7Successfully set memory to " + args[3] + "mb");
                 case "minservicecount":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMinOnlineService);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setMinOnlineService(integer);
+                        base.getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "minOnlineService", integer);
+                    });
                     logger.log("§7Successfully set min service count to " + args[3]);
                     return;
                 case "maxservicecount":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setMaxOnlineService);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setMaxOnlineService(integer);
+                        base.getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "maxOnlineService", integer);
+                    });
                     logger.log("§7Successfully set max service count to " + args[3]);
                     return;
                 case "defaultmaxplayers":
-                    this.getAndSetInt(key, args[3], serviceGroup, serviceGroup::setDefaultMaxPlayers);
+                    this.getAndSetInt(key, args[3], serviceGroup, integer -> {
+                        serviceGroup.setDefaultMaxPlayers(integer);
+                        base.getDatabaseManager().getProvider()
+                            .updateGroupProperty(serviceGroup.getName(), "maxPlayers", integer);
+                    });
                     logger.log("§7Successfully set default max players to " + args[3]);
                     return;
                 case "fallback":
-                    serviceGroup.setFallbackGroup(Boolean.parseBoolean(args[3]));
+                    final var fallback = args[3].toLowerCase();
+
+                    if (!fallback.equals("true") && !fallback.equals("false")) {
+                        logger.log("Please use true/false");
+                        return;
+                    }
+
+                    serviceGroup.setFallbackGroup(Boolean.parseBoolean(fallback));
                     serviceGroup.update();
-                    logger.log("§7Successfully set fallback to " + args[3]);
+                    base.getDatabaseManager().getProvider()
+                        .updateGroupProperty(serviceGroup.getName(), "fallback", (fallback.equals("true") ? 1 : 0));
+                    logger.log("§7Successfully set fallback to " + fallback);
                     return;
                 case "maintenance":
-                    serviceGroup.setMaintenance(Boolean.parseBoolean(args[3]));
+                    final var maintenance = args[3].toLowerCase();
+
+                    if (!maintenance.equals("true") && !maintenance.equals("false")) {
+                        logger.log("Please use true/false");
+                        return;
+                    }
+
+                    serviceGroup.setMaintenance(Boolean.parseBoolean(maintenance));
                     serviceGroup.update();
-                    logger.log("§7Successfully set maintenance to " + args[3]);
+                    base.getDatabaseManager().getProvider()
+                        .updateGroupProperty(serviceGroup.getName(), "maintenance", (maintenance.equals("true") ? 1 : 0));
+                    logger.log("§7Successfully set maintenance to " + maintenance);
                     return;
                 case "version":
-                    serviceGroup.setGameServerVersion(GameServerVersion.valueOf(args[3]));
+                    final var gameServerVersion = GameServerVersion.getVersionByName(args[3]);
+
+                    if (gameServerVersion == null) {
+                        logger.log("This version is not available.", LogType.WARNING);
+                        logger.log("Use one of the following versions:");
+                        for (final var version : GameServerVersion.values()) logger.log("- " + version.getName());
+                        return;
+                    }
+                    serviceGroup.setGameServerVersion(gameServerVersion);
                     serviceGroup.update();
                     logger.log("§7Successfully set version to " + args[3]);
                     return;
@@ -156,16 +194,22 @@ public final class GroupCommand extends CloudCommand {
             return Arrays.asList("list", "create", "remove", "info", "edit");
         } else if (arguments.length == 2) {
             if (!arguments[0].equalsIgnoreCase("list")) {
-                return Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(IServiceGroup::getName).toList();
+                return Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(ServiceGroup::getName).toList();
             }
         } else if (arguments.length == 3) {
             if (arguments[0].equalsIgnoreCase("edit")) {
-                return Arrays.asList("memory", "minservicecount", "maxservicecount",
-                    "defaultmaxplayers", "fallback", "maintenance", "version");
+                return Arrays.asList("memory", "minServiceCount", "maxServiceCount",
+                    "defaultMaxPlayers", "fallback", "maintenance", "version");
             }
         } else if (arguments.length == 4) {
             if (arguments[0].equalsIgnoreCase("create")) {
                 return Arrays.asList("true", "false");
+            } else if (arguments[0].equalsIgnoreCase("edit")) {
+                if (arguments[2].equalsIgnoreCase("fallback") || arguments[2].equalsIgnoreCase("maintenance")) {
+                    return Arrays.asList("true", "false");
+                } else if (arguments[2].equalsIgnoreCase("version")) {
+                    return Arrays.stream(GameServerVersion.values()).map(GameServerVersion::getName).toList();
+                }
             }
         } else if (arguments.length == 5) {
             if (arguments[0].equalsIgnoreCase("create")) {
@@ -175,7 +219,7 @@ public final class GroupCommand extends CloudCommand {
         return super.tabComplete(arguments);
     }
 
-    private void getAndSetInt(final String key, final String value, final IServiceGroup group, final Consumer<Integer> consumer) {
+    private void getAndSetInt(final String key, final String value, final ServiceGroup group, final Consumer<Integer> consumer) {
         try {
             consumer.accept(Integer.parseInt(value));
             group.update();

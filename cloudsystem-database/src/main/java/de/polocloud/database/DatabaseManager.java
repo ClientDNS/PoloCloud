@@ -1,27 +1,15 @@
 package de.polocloud.database;
 
-import de.polocloud.database.manager.SQLCloudDatabaseHandler;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-@Getter
-public class DatabaseManager implements IDatabaseManager {
+public interface DatabaseManager {
 
-    private ICloudDatabaseProvider provider;
+    CloudDatabaseProvider getProvider();
 
-    public DatabaseManager(@NotNull final DatabaseConfiguration configuration) {
-        if(configuration.getDatabaseTypes() == DatabaseTypes.MYSQL) {
-            SQLCloudDatabaseHandler provider = new SQLCloudDatabaseHandler(configuration);
-            provider.connect();
-
-            this.provider = provider;
-        } else {
-            //TODO MONGODB
-        }
+    static DatabaseManager newInstance(@NotNull final DatabaseConfiguration configuration) {
+        return new SimpleDatabaseManager(configuration);
     }
 
-    @Override
-    public void close() {
-        this.provider.disconnect();
-    }
+    void close();
+
 }

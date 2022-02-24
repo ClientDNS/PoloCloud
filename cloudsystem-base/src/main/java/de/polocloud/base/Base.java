@@ -1,14 +1,13 @@
 package de.polocloud.base;
 
-import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
-import de.polocloud.api.groups.IGroupManager;
+import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.logger.Logger;
-import de.polocloud.api.player.IPlayerManager;
-import de.polocloud.api.service.IServiceManager;
+import de.polocloud.api.player.PlayerManager;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.base.command.CommandManager;
 import de.polocloud.base.command.SimpleCommandManager;
 import de.polocloud.base.command.defaults.*;
@@ -20,19 +19,15 @@ import de.polocloud.base.logger.SimpleLogger;
 import de.polocloud.base.node.BaseNode;
 import de.polocloud.base.player.SimplePlayerManager;
 import de.polocloud.base.service.LocalService;
-import de.polocloud.base.service.ServiceManager;
-import de.polocloud.base.service.queue.QueueService;
+import de.polocloud.base.service.SimpleServiceManager;
 import de.polocloud.base.templates.GroupTemplateService;
-import de.polocloud.database.IDatabaseManager;
-import de.polocloud.network.promise.ICommunicationPromise;
+import de.polocloud.database.DatabaseManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.Objects;
 import java.util.jar.Manifest;
 
 @Getter
@@ -47,12 +42,11 @@ public final class Base extends CloudAPI {
 
     private final CommandManager commandManager;
     private final BaseNode node;
-    private final IDatabaseManager databaseManager;
-    private final IGroupManager groupManager;
-    private final IServiceManager serviceManager;
-    private final IPlayerManager playerManager;
+    private final DatabaseManager databaseManager;
+    private final GroupManager groupManager;
+    private final ServiceManager serviceManager;
+    private final PlayerManager playerManager;
     private final GroupTemplateService groupTemplateService;
-    private final QueueService queueService;
     private boolean running = true;
 
     public Base() {
@@ -87,22 +81,9 @@ public final class Base extends CloudAPI {
         this.logger.log(" ", LogType.EMPTY);
         this.commandManager = new SimpleCommandManager();
 
-        // copy wrapper and plugin jar
-        ErrorHandler.defaultInstance().runOnly(() -> {
-            final var storageDirectory = new File("storage/jars");
-            storageDirectory.mkdirs();
-
-            var loader = this.getClass().getClassLoader();
-            var copyOption = StandardCopyOption.REPLACE_EXISTING;
-
-            Files.copy(Objects.requireNonNull(loader.getResourceAsStream("wrapper.jar")), new File(storageDirectory, "wrapper.jar").toPath(), copyOption);
-            Files.copy(Objects.requireNonNull(loader.getResourceAsStream("plugin.jar")), new File(storageDirectory, "plugin.jar").toPath(), copyOption);
-            return null;
-        });
-
-        this.databaseManager = IDatabaseManager.newInstance(this.config.getDatabaseConfiguration());
+        this.databaseManager = DatabaseManager.newInstance(this.config.getDatabaseConfiguration());
         this.groupManager = new SimpleGroupManager();
-        this.serviceManager = new ServiceManager();
+        this.serviceManager = new SimpleServiceManager();
         this.groupTemplateService = new GroupTemplateService();
         this.playerManager = new SimplePlayerManager();
         this.node = new BaseNode(this.config);
@@ -114,9 +95,8 @@ public final class Base extends CloudAPI {
             new HelpCommand(),
             new InfoCommand(),
             new ServiceCommand(),
-            new ShutdownCommand());
-
-        this.queueService = new QueueService();
+            new ShutdownCommand(),
+            new ScreenCommand());
 
         // add a shutdown hook for fast closes
         Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
@@ -128,7 +108,7 @@ public final class Base extends CloudAPI {
 
         ((SimpleLogger) this.logger).getConsoleManager().start();
 
-        this.queueService.checkForQueue();
+        new WorkerThread(this).start();
     }
 
     private void loadConfig(@NotNull File file) {
@@ -143,27 +123,24 @@ public final class Base extends CloudAPI {
         if (!this.running) return;
         this.running = false;
         this.logger.log("Trying to terminate cloudsystem.");
+        ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
         this.serviceManager.getAllCachedServices()
             .forEach(service -> {
                 if (service instanceof LocalService localService) localService.stop();
             });
 
         // delete wrapper and plugin jars
-        ErrorHandler.defaultInstance().runOnly(() -> {
-            final var storageDirectory = new File("storage/jars");
+        try {
+            Files.deleteIfExists(((SimpleServiceManager) this.getServiceManager()).getWrapperPath());
+            Files.deleteIfExists(((SimpleServiceManager) this.getServiceManager()).getPluginPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            Files.deleteIfExists(new File(storageDirectory, "wrapper.jar").toPath());
-            Files.deleteIfExists(new File(storageDirectory, "plugin.jar").toPath());
-            return null;
-        });
-
-        ICommunicationPromise.combineAll(Lists.newArrayList(this.node.shutdownConnection()))
-            .addResultListener(unused -> {
-                this.databaseManager.close();
-                this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
-                ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
-                System.exit(0);
-            });
+        this.node.close();
+        this.databaseManager.close();
+        this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+        System.exit(0);
     }
 
     public boolean isRunning() {

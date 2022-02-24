@@ -1,14 +1,12 @@
 package de.polocloud.base.command;
 
-import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
+import de.polocloud.base.Base;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class SimpleCommandManager implements CommandManager {
@@ -19,13 +17,13 @@ public class SimpleCommandManager implements CommandManager {
         this.cachedCloudCommands = new HashMap<>();
     }
 
-    public void execute(final @NotNull String command){
-        final List<String> args = Lists.newArrayList(command.split(" "));
-        if(CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPIType.NODE)) {
-           final var cloudCommand = this.cachedCloudCommands.get(args.get(0));
+    public void execute(final @NotNull String command) {
+        final List<String> args = new ArrayList<>(Arrays.asList(command.split(" ")));
+        if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPIType.NODE)) {
+            final var cloudCommand = this.cachedCloudCommands.get(args.get(0));
             if (cloudCommand == null) return;
             args.remove(0);
-            cloudCommand.execute(CloudAPI.getInstance(), args.toArray(new String[]{}));
+            cloudCommand.execute(Base.getInstance(), args.toArray(new String[]{}));
         }
     }
 

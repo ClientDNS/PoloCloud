@@ -2,18 +2,17 @@ package de.polocloud.wrapper;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.CloudAPIType;
-import de.polocloud.api.groups.IGroupManager;
+import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.json.Document;
-import de.polocloud.api.logger.LogType;
 import de.polocloud.api.logger.Logger;
-import de.polocloud.api.player.IPlayerManager;
-import de.polocloud.api.service.IService;
-import de.polocloud.api.service.IServiceManager;
-import de.polocloud.wrapper.group.GroupManager;
+import de.polocloud.api.network.packet.init.CacheInitPacket;
+import de.polocloud.api.player.PlayerManager;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.player.CloudPlayerManager;
-import de.polocloud.wrapper.service.ServiceManager;
+import de.polocloud.wrapper.service.WrapperServiceManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -24,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -38,7 +38,10 @@ public final class Wrapper extends CloudAPI {
 
     public static void main(String[] args) {
         try {
-            new Wrapper();
+            final var wrapper = new Wrapper();
+
+            var cacheInitialized = new AtomicBoolean(false);
+            wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class, (channelHandlerContext, packet) -> cacheInitialized.set(true));
 
             final var arguments = new ArrayList<>(Arrays.asList(args));
             final var main = arguments.remove(0);
@@ -72,7 +75,12 @@ public final class Wrapper extends CloudAPI {
                 }
             }, "Minecraft-Thread");
             thread.setContextClassLoader(classLoader);
-            thread.start();
+            if (cacheInitialized.get()) {
+                thread.start();
+            } else {
+                wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class,
+                    (channelHandlerContext, packet) -> thread.start());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,9 +88,9 @@ public final class Wrapper extends CloudAPI {
 
     private static Wrapper instance;
 
-    private final IGroupManager groupManager;
-    private final IServiceManager serviceManager;
-    private final IPlayerManager playerManager;
+    private final GroupManager groupManager;
+    private final ServiceManager serviceManager;
+    private final PlayerManager playerManager;
     private final WrapperClient client;
 
     public Wrapper() {
@@ -93,12 +101,10 @@ public final class Wrapper extends CloudAPI {
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
         this.logger = new WrapperLogger();
-        this.groupManager = new GroupManager();
-        this.serviceManager = new ServiceManager(property);
+        this.groupManager = new de.polocloud.wrapper.group.GroupManager();
+        this.serviceManager = new WrapperServiceManager(property);
         this.playerManager = new CloudPlayerManager();
-        this.client = new WrapperClient(property.getService(), property.getHostname(), property.getPort());
-
-        this.logger.log("Successfully started plugin client.", LogType.SUCCESS);
+        this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
     }
 
     public static Wrapper getInstance() {
@@ -111,22 +117,22 @@ public final class Wrapper extends CloudAPI {
     }
 
     @Override
-    public @NotNull IGroupManager getGroupManager() {
+    public @NotNull GroupManager getGroupManager() {
         return this.groupManager;
     }
 
     @Override
-    public @NotNull IServiceManager getServiceManager() {
+    public @NotNull ServiceManager getServiceManager() {
         return this.serviceManager;
     }
 
     @Override
-    public @NotNull IPlayerManager getPlayerManager() {
+    public @NotNull PlayerManager getPlayerManager() {
         return this.playerManager;
     }
 
-    public IService thisService() {
-        return ((ServiceManager) serviceManager).thisService();
+    public CloudService thisService() {
+        return ((WrapperServiceManager) this.serviceManager).thisService();
     }
 
     public WrapperClient getClient() {

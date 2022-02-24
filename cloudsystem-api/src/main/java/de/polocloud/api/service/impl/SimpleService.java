@@ -1,11 +1,10 @@
 package de.polocloud.api.service.impl;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.groups.IServiceGroup;
-import de.polocloud.api.service.IService;
-import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.api.service.utils.ServiceVisibility;
-import de.polocloud.network.packet.IPacket;
+import de.polocloud.api.groups.ServiceGroup;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.api.service.ServiceState;
+import de.polocloud.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -14,9 +13,9 @@ import java.util.function.Consumer;
 
 @Getter
 @Setter
-public final class SimpleService implements IService {
+public final class SimpleService implements CloudService {
 
-    private final IServiceGroup group;
+    private final ServiceGroup group;
     private final int serviceId;
     private final String node;
 
@@ -25,8 +24,7 @@ public final class SimpleService implements IService {
     private int maxPlayers;
     private String motd;
 
-    private ServiceState serviceState = ServiceState.PREPARED;
-    private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
+    private String state = ServiceState.PREPARED;
 
     public SimpleService(String group, int id, final String node, int port, String hostname) {
         this.group = CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(group);
@@ -39,11 +37,10 @@ public final class SimpleService implements IService {
         this.maxPlayers = this.group.getDefaultMaxPlayers();
     }
 
-    public SimpleService(String group, int id, final String node, int port, String hostName, int maxPlayers, ServiceState serviceState, ServiceVisibility serviceVisibility, String motd) {
+    public SimpleService(String group, int id, final String node, int port, String hostName, int maxPlayers, String state, String motd) {
         this(group, id, node, port, hostName);
         this.maxPlayers = maxPlayers;
-        this.serviceState = serviceState;
-        this.serviceVisibility = serviceVisibility;
+        this.state = state;
         this.motd = motd;
     }
 
@@ -53,7 +50,7 @@ public final class SimpleService implements IService {
     }
 
     @Override
-    public void edit(final @NotNull Consumer<IService> serviceConsumer) {
+    public void edit(final @NotNull Consumer<CloudService> serviceConsumer) {
         serviceConsumer.accept(this);
         this.update();
     }
@@ -83,7 +80,7 @@ public final class SimpleService implements IService {
     }
 
     @Override
-    public void sendPacket(@NotNull IPacket packet) {
+    public void sendPacket(@NotNull Packet packet) {
         CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
     }
 

@@ -1,40 +1,29 @@
 package de.polocloud.wrapper.player;
 
-import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerDisconnectEvent;
 import de.polocloud.api.event.player.CloudPlayerLoginEvent;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.player.*;
-import de.polocloud.api.player.ICloudPlayer;
+import de.polocloud.api.player.CloudPlayer;
 import de.polocloud.api.player.impl.AbstractPlayerManager;
 import de.polocloud.wrapper.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public final class CloudPlayerManager extends AbstractPlayerManager {
 
-    public CloudPlayerManager() {
-        CloudAPI.getInstance().getNetworkHandler().registerPacketListener(CloudPlayerCachePacket.class, (ctx, packet) -> {
-            final Map<UUID, ICloudPlayer> cloudPlayerMap = new ConcurrentHashMap<>();
-            packet.getCloudPlayers().forEach(cloudPlayer -> cloudPlayerMap.put(cloudPlayer.getUniqueId(), cloudPlayer));
-            this.setPlayers(cloudPlayerMap);
-        });
-    }
-
     @Override
-    public @NotNull List<ICloudPlayer> getAllServicePlayers() {
+    public @NotNull List<CloudPlayer> getAllServicePlayers() {
         return this.getPlayers().stream()
             .filter(it -> it.getServer().getName().equalsIgnoreCase(Wrapper.getInstance().thisService().getName())).collect(Collectors.toList());
     }
 
     @Override
-    public void registerCloudPlayer(@NotNull ICloudPlayer cloudPlayer) {
+    public void registerCloudPlayer(@NotNull CloudPlayer cloudPlayer) {
         this.players.put(cloudPlayer.getUniqueId(), cloudPlayer);
         Wrapper.getInstance().getEventHandler().call(new CloudPlayerLoginEvent(cloudPlayer));
         Wrapper.getInstance().getClient().sendPacket(new QueryPacket(new CloudPlayerLoginPacket(cloudPlayer.getUsername(),
@@ -48,17 +37,17 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
     }
 
     @Override
-    public void sendCloudPlayerMessage(@NotNull ICloudPlayer cloudPlayer, @NotNull String message) {
+    public void sendCloudPlayerMessage(@NotNull CloudPlayer cloudPlayer, @NotNull String message) {
         cloudPlayer.getProxyServer().sendPacket(new CloudPlayerMessagePacket(cloudPlayer.getUniqueId(), message));
     }
 
     @Override
-    public void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer) {
+    public void updateCloudPlayer(@NotNull CloudPlayer cloudPlayer) {
         this.updateCloudPlayer(cloudPlayer, CloudPlayerUpdateEvent.UpdateReason.UNKNOWN);
     }
 
     @Override
-    public void updateCloudPlayer(@NotNull ICloudPlayer cloudPlayer, @NotNull CloudPlayerUpdateEvent.UpdateReason updateReason) {
+    public void updateCloudPlayer(@NotNull CloudPlayer cloudPlayer, @NotNull CloudPlayerUpdateEvent.UpdateReason updateReason) {
         Wrapper.getInstance().getClient()
             .sendPacket(new QueryPacket(new CloudPlayerUpdatePacket(cloudPlayer, updateReason), QueryPacket.QueryState.FIRST_RESPONSE));
         Wrapper.getInstance().getEventHandler().call(new CloudPlayerUpdateEvent(cloudPlayer, updateReason));

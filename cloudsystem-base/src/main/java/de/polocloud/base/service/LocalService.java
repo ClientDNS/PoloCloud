@@ -1,20 +1,16 @@
 package de.polocloud.base.service;
 
-import de.polocloud.base.Base;
 import de.polocloud.api.CloudAPI;
-import de.polocloud.base.config.editor.ConfigSplitSpacer;
-import de.polocloud.base.config.editor.ConfigurationFileEditor;
-import de.polocloud.api.groups.IServiceGroup;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.groups.utils.ServiceType;
 import de.polocloud.api.json.Document;
-import de.polocloud.api.service.IService;
-import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.api.service.utils.ServiceVisibility;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.api.version.GameServerVersion;
+import de.polocloud.base.Base;
+import de.polocloud.base.config.editor.ConfigurationFileEditor;
 import de.polocloud.base.service.statistic.SimpleStatisticManager;
-import de.polocloud.network.packet.IPacket;
-import de.polocloud.network.promise.CommunicationPromise;
-import de.polocloud.network.promise.ICommunicationPromise;
+import de.polocloud.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -23,19 +19,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
 
 @Getter
 @Setter
-public class LocalService implements IService {
+public class LocalService implements CloudService {
 
-    private final IServiceGroup group;
+    private final ServiceGroup group;
     private final int serviceId;
     private final String node;
     private final int port;
@@ -44,17 +37,18 @@ public class LocalService implements IService {
     private int maxPlayers;
     private String motd;
 
-    private ServiceState serviceState = ServiceState.PREPARED;
-    private ServiceVisibility serviceVisibility = ServiceVisibility.BLANK;
+    private String state = ServiceState.PREPARED;
 
     private final File workingDirectory;
 
     private Process process;
 
-    public LocalService(final IServiceGroup group, final int id, final int port, final String hostname) {
+    private boolean screen = false;
+
+    public LocalService(final ServiceGroup group, final int id, final int port, final String hostname) {
         this.group = group;
         this.serviceId = id;
-        this.node = Base.getInstance().getNode().getNodeName();
+        this.node = Base.getInstance().getNode().getName();
         this.port = port;
         this.hostName = hostname;
         assert this.group != null;
@@ -65,8 +59,8 @@ public class LocalService implements IService {
     }
 
     @SneakyThrows
-    public ICommunicationPromise<IService> start() {
-        this.setServiceState(ServiceState.STARTING);
+    public void start() {
+        this.setState(ServiceState.STARTING);
 
         this.group.getGameServerVersion().download(this.group.getTemplate());
 
@@ -85,7 +79,8 @@ public class LocalService implements IService {
         FileUtils.copyFile(new File(storageFolder, jar), new File(this.workingDirectory, jar));
 
         // copy plugin
-        FileUtils.copyFile(new File(storageFolder, "/plugin.jar"), new File(this.workingDirectory, "plugins/plugin.jar"));
+        FileUtils.copyFile(((SimpleServiceManager) Base.getInstance().getServiceManager()).getPluginPath().toFile(),
+            new File(this.workingDirectory, "plugins/plugin.jar"));
 
         // write property for identify service
         new Document()
@@ -104,9 +99,13 @@ public class LocalService implements IService {
                     FileUtils.copyToFile(inputStream, file);
                 }
             }
-            final var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.YAML);
-            editor.setValue("host", "0.0.0.0:" + this.port);
-            editor.saveFile();
+            new ConfigurationFileEditor(file, s -> {
+                if (s.startsWith("  host: ")) {
+                    return "  host: 0.0.0.0:" + this.port;
+                } else {
+                    return s;
+                }
+            });
         } else if (this.group.getGameServerVersion() == GameServerVersion.VELOCITY) {
             final var file = new File(this.workingDirectory, "velocity.toml");
             if (!file.exists()) {
@@ -115,9 +114,13 @@ public class LocalService implements IService {
                     FileUtils.copyToFile(inputStream, file);
                 }
             }
-            final var editor = new ConfigurationFileEditor(file, ConfigSplitSpacer.TOML);
-            editor.setValue("bind", "\"0.0.0.0:" + this.port + "\"");
-            editor.saveFile();
+            new ConfigurationFileEditor(file, s -> {
+                if (s.startsWith("bind = ")) {
+                    return "bind = \"0.0.0.0:" + this.port + "\"";
+                } else {
+                    return s;
+                }
+            });
         } else {
             final var properties = new Properties();
             final var file = new File(this.workingDirectory, "server.properties");
@@ -145,14 +148,11 @@ public class LocalService implements IService {
             }
         }
 
-        final var communicationPromise = new CommunicationPromise<IService>();
         final var processBuilder = new ProcessBuilder(this.arguments())
             .directory(this.workingDirectory);
-        processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
+        //processBuilder.redirectOutput(new File(this.workingDirectory, "/wrapper.log"));
 
         this.process = processBuilder.start();
-        communicationPromise.setSuccess(this);
-        return communicationPromise;
     }
 
     @Override
@@ -161,7 +161,7 @@ public class LocalService implements IService {
     }
 
     @Override
-    public void edit(final @NotNull Consumer<IService> serviceConsumer) {
+    public void edit(final @NotNull Consumer<CloudService> serviceConsumer) {
         serviceConsumer.accept(this);
         this.update();
     }
@@ -171,7 +171,7 @@ public class LocalService implements IService {
     }
 
     @Override
-    public void sendPacket(@NotNull IPacket packet) {
+    public void sendPacket(@NotNull Packet packet) {
         CloudAPI.getInstance().getServiceManager().sendPacketToService(this, packet);
     }
 
@@ -193,10 +193,11 @@ public class LocalService implements IService {
         if (this.process != null) {
             this.executeCommand(this.group.getGameServerVersion().isProxy() ? "end" : "stop");
             try {
-                if (this.process.waitFor(5, TimeUnit.SECONDS)) this.process = null;
-                return;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                if (this.process.waitFor(5, TimeUnit.SECONDS)) {
+                    this.process = null;
+                    return;
+                }
+            } catch (InterruptedException ignored) {
             }
             this.process.destroy();
             this.process = null;
@@ -243,21 +244,17 @@ public class LocalService implements IService {
             "-Dio.netty.recycler.maxCapacity.default=0",
             "-Djline.terminal=jline.UnsupportedTerminal",
             "-DIReallyKnowWhatIAmDoingISwear=true",
-            "-Xms" + this.group.getMemory() + "M",
-            "-Xmx" + this.group.getMemory() + "M"));
+            "-Xms" + this.group.getMaxMemory() + "M",
+            "-Xmx" + this.group.getMaxMemory() + "M"));
 
-        final var wrapperFile = Paths.get("storage", "jars", "wrapper.jar");
+        final var serviceManager = (SimpleServiceManager) Base.getInstance().getServiceManager();
         final var applicationFile = new File(this.workingDirectory, this.group.getGameServerVersion().getJar());
 
         arguments.addAll(Arrays.asList(
-            "-cp", wrapperFile.toAbsolutePath().toString(),
-            "-javaagent:" + wrapperFile.toAbsolutePath()));
+            "-cp", serviceManager.getWrapperPath().toString(),
+            "-javaagent:" + serviceManager.getWrapperPath()));
 
-        try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(wrapperFile))) {
-            arguments.add(jarInputStream.getManifest().getMainAttributes().getValue("Main-Class"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        arguments.add(serviceManager.getWrapperMainClass());
 
         boolean preLoadClasses = false;
 
@@ -277,6 +274,14 @@ public class LocalService implements IService {
         }
 
         return arguments;
+    }
+
+    public boolean isScreen() {
+        return this.screen;
+    }
+
+    public void setScreen(final boolean screen) {
+        this.screen = screen;
     }
 
 }

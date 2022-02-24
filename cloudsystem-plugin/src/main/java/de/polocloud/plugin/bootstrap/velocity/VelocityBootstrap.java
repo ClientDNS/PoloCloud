@@ -7,11 +7,11 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.service.IService;
-import de.polocloud.api.service.utils.ServiceState;
-import de.polocloud.api.service.utils.ServiceVisibility;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.api.service.ServiceState;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityCloudListener;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityListener;
+import de.polocloud.wrapper.Wrapper;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -31,17 +31,24 @@ public final class VelocityBootstrap {
         new VelocityCloudListener(this.proxyServer);
 
         this.proxyServer.getEventManager().register(this, new VelocityListener(this, this.proxyServer));
+
+        // update that the service is ready to use
+        final CloudService service = Wrapper.getInstance().thisService();
+
+        if (service.getGroup().isAutoUpdating()) {
+            service.setState(ServiceState.ONLINE);
+            service.update();
+        }
     }
 
-    public Optional<IService> getFallback(final Player player) {
+    public Optional<CloudService> getFallback(final Player player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
-            .filter(service -> service.getServiceState() == ServiceState.ONLINE)
-            .filter(service -> service.getServiceVisibility() == ServiceVisibility.VISIBLE)
+            .filter(service -> service.getState().equals(ServiceState.ONLINE))
             .filter(service -> !service.getGroup().getGameServerVersion().isProxy())
             .filter(service -> service.getGroup().isFallbackGroup())
             .filter(service -> (player.getCurrentServer().isEmpty()
                 || !player.getCurrentServer().get().getServerInfo().getName().equals(service.getName())))
-            .min(Comparator.comparing(IService::getOnlineCount));
+            .min(Comparator.comparing(CloudService::getOnlineCount));
     }
 
 }

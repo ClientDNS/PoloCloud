@@ -2,15 +2,13 @@ package de.polocloud.plugin.bootstrap.velocity.listener;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
-import de.polocloud.api.CloudAPI;
-import de.polocloud.api.event.IEventHandler;
 import de.polocloud.api.event.service.CloudServiceRegisterEvent;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.network.packet.player.CloudPlayerKickPacket;
 import de.polocloud.api.network.packet.player.CloudPlayerMessagePacket;
 import de.polocloud.api.network.packet.player.CloudPlayerSendServicePacket;
-import de.polocloud.api.service.IService;
-import de.polocloud.network.NetworkManager;
+import de.polocloud.api.service.CloudService;
+import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
 
 import java.net.InetSocketAddress;
@@ -21,12 +19,13 @@ public record VelocityCloudListener(ProxyServer proxyServer) {
         this.proxyServer = proxyServer;
 
         // load all current groups
-        for (final IService allCachedService : CloudAPI.getInstance().getServiceManager().getAllCachedServices()) {
+        for (final CloudService allCachedService : Wrapper.getInstance().getServiceManager().getAllCachedServices()) {
             if (!allCachedService.getGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
 
         // register events
-        final IEventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
+        final var packetHandler = Wrapper.getInstance().getPacketHandler();
+        final var eventHandler = Wrapper.getInstance().getEventHandler();
 
         eventHandler.registerEvent(CloudServiceRegisterEvent.class, event -> {
             if (!event.getService().getGroup().getGameServerVersion().isProxy())
@@ -35,13 +34,13 @@ public record VelocityCloudListener(ProxyServer proxyServer) {
 
         eventHandler.registerEvent(CloudServiceRemoveEvent.class, event -> unregisterService(event.getService()));
 
-        NetworkManager.registerPacketListener(CloudPlayerKickPacket.class, (ctx, packet) ->
+        packetHandler.registerPacketListener(CloudPlayerKickPacket.class, (channelHandlerContext, packet) ->
             proxyServer.getPlayer(packet.getUuid()).ifPresent(player -> player.disconnect(Component.text(packet.getReason()))));
 
-        NetworkManager.registerPacketListener(CloudPlayerMessagePacket.class, (ctx, packet) ->
+        packetHandler.registerPacketListener(CloudPlayerMessagePacket.class, (channelHandlerContext, packet) ->
             proxyServer.getPlayer(packet.getUuid()).ifPresent(player -> player.sendMessage(Component.text(packet.getMessage()))));
 
-        NetworkManager.registerPacketListener(CloudPlayerSendServicePacket.class, (ctx, packet) -> proxyServer.getPlayer(packet.getUuid()).ifPresent(player -> {
+        packetHandler.registerPacketListener(CloudPlayerSendServicePacket.class, (channelHandlerContext, packet) -> proxyServer.getPlayer(packet.getUuid()).ifPresent(player -> {
             if (player.getCurrentServer().isEmpty() && player.getCurrentServer().get().getServerInfo().getName()
                 .equals(packet.getService()))
                 return;
@@ -60,7 +59,7 @@ public record VelocityCloudListener(ProxyServer proxyServer) {
             .ifPresent(registeredServer -> this.proxyServer.unregisterServer(registeredServer.getServerInfo()));
     }
 
-    public void registerService(final IService service) {
+    public void registerService(final CloudService service) {
         this.registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 

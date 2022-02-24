@@ -1,43 +1,37 @@
 package de.polocloud.base.node;
 
-import de.polocloud.base.Base;
-import de.polocloud.api.CloudAPI;
-import de.polocloud.api.network.INetworkHandler;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.RedirectPacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
-import de.polocloud.api.service.IServiceManager;
-import de.polocloud.network.NetworkManager;
-import de.polocloud.network.cluster.type.NetworkType;
-import de.polocloud.network.master.cache.IConnectedClient;
+import de.polocloud.base.Base;
+import de.polocloud.network.NetworkType;
 
 public final class BaseNodeNetwork {
 
     public BaseNodeNetwork() {
+        final var packetHandler = Base.getInstance().getPacketHandler();
+        final var serviceManager = Base.getInstance().getServiceManager();
 
-        final INetworkHandler networkHandler = CloudAPI.getInstance().getNetworkHandler();
-        final IServiceManager serviceManager = CloudAPI.getInstance().getServiceManager();
-
-        networkHandler.registerPacketListener(QueryPacket.class, (ctx, packet) -> {
-
-            IConnectedClient connectedClient = Base.getInstance().getNode().getConnectedClientByChannel(ctx.channel());
+        packetHandler.registerPacketListener(QueryPacket.class, (channelHandlerContext, packet) -> {
+            final var connectedClient = Base.getInstance().getNode().getClient(channelHandlerContext.channel());
 
             //send to all services as not query packet
-            Base.getInstance().getNode().getAllServices().stream()
+            Base.getInstance().getNode().getServices().stream()
                 .filter(it -> !it.equals(connectedClient)).forEach(it -> it.sendPacket(packet.getPacket()));
 
             if (packet.getState() == QueryPacket.QueryState.FIRST_RESPONSE) {
                 //send to all another nodes
-                Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet.getPacket(), QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
+                Base.getInstance().getNode()
+                    .sendPacketToType(new QueryPacket(packet.getPacket(), QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
             }
             //call local packet is communing
-            NetworkManager.callPacket(ctx, packet.getPacket());
+            packetHandler.call(channelHandlerContext, packet.getPacket());
         });
 
-        networkHandler.registerPacketListener(RedirectPacket.class, (ctx, packet) ->
-            CloudAPI.getInstance().getServiceManager().getService(packet.getClient()).ifPresent(it -> {
-                if (it.getGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getNodeName())) {
+        packetHandler.registerPacketListener(RedirectPacket.class, (channelHandlerContext, packet) ->
+             Base.getInstance().getServiceManager().getService(packet.getClient()).ifPresent(it -> {
+                if (it.getGroup().getNode().equalsIgnoreCase(Base.getInstance().getNode().getName())) {
                     Base.getInstance().getNode().getClient(it.getName())
                         .ifPresent(service -> service.sendPacket(packet.getPacket()));
                 } else {
@@ -46,9 +40,10 @@ public final class BaseNodeNetwork {
                 }
             }));
 
-        networkHandler.registerPacketListener(ServiceRemovePacket.class, (ctx, packet) ->
+        packetHandler.registerPacketListener(ServiceRemovePacket.class, (channelHandlerContext, packet) ->
             serviceManager.getAllCachedServices().remove(serviceManager.getServiceByNameOrNull(packet.getService())));
-        networkHandler.registerPacketListener(ServiceAddPacket.class, (ctx, packet) ->
+
+        packetHandler.registerPacketListener(ServiceAddPacket.class, (ctx, packet) ->
             serviceManager.getAllCachedServices().add(packet.getService()));
 
     }
