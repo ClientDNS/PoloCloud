@@ -199,7 +199,7 @@ public class LocalService implements CloudService {
                 }
             } catch (InterruptedException ignored) {
             }
-            this.process.destroy();
+            this.process.toHandle().destroyForcibly();
             this.process = null;
         }
     }
