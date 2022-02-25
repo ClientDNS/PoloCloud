@@ -1,14 +1,12 @@
 package de.polocloud.api.event;
 
+import de.polocloud.api.CloudAPI;
+import de.polocloud.api.event.group.CloudServiceGroupUpdateEvent;
+import de.polocloud.api.event.service.CloudServiceRegisterEvent;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
-import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
-import de.polocloud.api.CloudAPI;
-import de.polocloud.api.event.group.CloudServiceGroupUpdateEvent;
-import de.polocloud.api.event.service.CloudServiceRegisterEvent;
-import de.polocloud.api.event.service.CloudServiceUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
