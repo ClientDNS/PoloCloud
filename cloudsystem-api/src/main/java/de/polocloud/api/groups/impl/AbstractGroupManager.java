@@ -1,6 +1,7 @@
 package de.polocloud.api.groups.impl;
 
 import de.polocloud.api.CloudAPI;
+import de.polocloud.api.event.group.CloudServiceGroupUpdateEvent;
 import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -30,6 +32,8 @@ public abstract class AbstractGroupManager implements GroupManager {
                 group.setGameServerVersion(packet.getGameServerVersion());
                 group.setFallbackGroup(packet.isFallback());
                 group.setMaintenance(packet.isMaintenance());
+                CloudAPI.getInstance().getEventHandler().call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(
+                    CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName()))))
             }));
     }
 

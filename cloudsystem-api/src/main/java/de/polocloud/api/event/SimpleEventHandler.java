@@ -1,10 +1,8 @@
 package de.polocloud.api.event;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.event.group.CloudServiceGroupUpdateEvent;
 import de.polocloud.api.event.service.CloudServiceRegisterEvent;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
-import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -30,11 +27,6 @@ public final class SimpleEventHandler implements EventHandler {
         // service remove event
         packetHandler.registerPacketListener(ServiceRemovePacket.class, (channelHandlerContext, packet) ->
             this.call(new CloudServiceRemoveEvent(packet.getService())));
-
-        // service group update event
-        packetHandler.registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) ->
-            this.call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(
-                CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName())))));
     }
 
     public <T extends CloudEvent> void registerEvent(@NotNull Class<T> clazz, @NotNull Consumer<T> event) {
