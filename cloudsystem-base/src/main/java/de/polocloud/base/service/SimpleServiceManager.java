@@ -1,6 +1,8 @@
 package de.polocloud.base.service;
 
+import de.polocloud.api.event.service.CloudServiceUpdateEvent;
 import de.polocloud.api.network.packet.QueryPacket;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.base.Base;
 import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
@@ -19,7 +21,7 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarInputStream;
 
-public final class SimpleServiceManager implements de.polocloud.api.service.ServiceManager {
+public final class SimpleServiceManager implements ServiceManager {
 
     private List<CloudService> allCachedServices;
 
@@ -57,6 +59,7 @@ public final class SimpleServiceManager implements de.polocloud.api.service.Serv
                 service.setState(packet.getState());
                 service.setMaxPlayers(packet.getMaxPlayers());
                 service.setMotd(packet.getMotd());
+                Base.getInstance().getEventHandler().call(new CloudServiceUpdateEvent(service));
             }));
 
         Base.getInstance().getPacketHandler().registerPacketListener(ServiceRequestShutdownPacket.class,

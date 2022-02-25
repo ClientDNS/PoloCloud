@@ -33,10 +33,6 @@ public final class EventHandler implements IEventHandler {
         packetHandler.registerPacketListener(ServiceRemovePacket.class, (channelHandlerContext, packet) ->
             this.call(new CloudServiceRemoveEvent(packet.getService())));
 
-        // service state update event
-        packetHandler.registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
-            CloudAPI.getInstance().getServiceManager().getService(packet.getService()).ifPresent(it -> this.call(new CloudServiceUpdateEvent(it))));
-
         // service group update event
         packetHandler.registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) ->
             this.call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(

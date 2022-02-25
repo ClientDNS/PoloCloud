@@ -1,5 +1,6 @@
 package de.polocloud.wrapper.service;
 
+import de.polocloud.api.event.service.CloudServiceUpdateEvent;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.RedirectPacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
@@ -34,6 +35,7 @@ public final class WrapperServiceManager implements ServiceManager {
                 service.setState(packet.getState());
                 service.setMaxPlayers(packet.getMaxPlayers());
                 service.setMotd(packet.getMotd());
+                Wrapper.getInstance().getEventHandler().call(new CloudServiceUpdateEvent(service));
             }));
 
         networkHandler.registerPacketListener(ServiceRemovePacket.class, (channelHandlerContext, packet) -> this.allCachedServices.remove(getServiceByNameOrNull(packet.getService())));
