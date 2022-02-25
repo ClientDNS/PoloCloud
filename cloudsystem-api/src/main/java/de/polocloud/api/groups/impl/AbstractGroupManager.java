@@ -19,20 +19,19 @@ public abstract class AbstractGroupManager implements GroupManager {
     private List<ServiceGroup> allCachedServiceGroups = new ArrayList<>();
 
     public AbstractGroupManager() {
-        CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) -> {
-            final ServiceGroup serviceGroup = this.getServiceGroupByNameOrNull(packet.getName());
-            Objects.requireNonNull(serviceGroup, "Updated service group is null.");
-
-            serviceGroup.setNode(packet.getNode());
-            serviceGroup.setTemplate(packet.getTemplate());
-            serviceGroup.setMotd(packet.getMotd());
-            serviceGroup.setMaxMemory(packet.getMemory());
-            serviceGroup.setMinOnlineService(packet.getMinOnlineService());
-            serviceGroup.setMaxOnlineService(packet.getMaxOnlineService());
-            serviceGroup.setDefaultMaxPlayers(packet.getDefaultMaxPlayers());
-            serviceGroup.setGameServerVersion(packet.getGameServerVersion());
-            serviceGroup.setFallbackGroup(packet.isFallback());
-        });
+        CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) ->
+            this.getServiceGroupByName(packet.getName()).ifPresent(group -> {
+                group.setNode(packet.getNode());
+                group.setTemplate(packet.getTemplate());
+                group.setMotd(packet.getMotd());
+                group.setMaxMemory(packet.getMemory());
+                group.setMinOnlineService(packet.getMinOnlineService());
+                group.setMaxOnlineService(packet.getMaxOnlineService());
+                group.setDefaultMaxPlayers(packet.getDefaultMaxPlayers());
+                group.setGameServerVersion(packet.getGameServerVersion());
+                group.setFallbackGroup(packet.isFallback());
+                group.setMaintenance(packet.isMaintenance());
+            }));
     }
 
     @Override
