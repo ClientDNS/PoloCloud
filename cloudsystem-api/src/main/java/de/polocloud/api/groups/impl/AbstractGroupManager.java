@@ -33,7 +33,7 @@ public abstract class AbstractGroupManager implements GroupManager {
                 group.setFallbackGroup(packet.isFallback());
                 group.setMaintenance(packet.isMaintenance());
                 CloudAPI.getInstance().getEventHandler().call(new CloudServiceGroupUpdateEvent(Objects.requireNonNull(
-                    CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName()))))
+                    CloudAPI.getInstance().getGroupManager().getServiceGroupByNameOrNull(packet.getName()))));
             }));
     }
 
