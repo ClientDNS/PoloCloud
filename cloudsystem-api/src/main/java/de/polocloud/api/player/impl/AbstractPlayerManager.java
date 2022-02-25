@@ -1,7 +1,7 @@
 package de.polocloud.api.player.impl;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.event.IEventHandler;
+import de.polocloud.api.event.EventHandler;
 import de.polocloud.api.event.player.CloudPlayerDisconnectEvent;
 import de.polocloud.api.event.player.CloudPlayerLoginEvent;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
@@ -25,7 +25,7 @@ public abstract class AbstractPlayerManager implements PlayerManager {
     public AbstractPlayerManager() {
 
         final PacketHandler packetHandler = CloudAPI.getInstance().getPacketHandler();
-        final IEventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
+        final EventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
 
         packetHandler.registerPacketListener(CloudPlayerUpdatePacket.class, (channelHandlerContext, packet) ->
             this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {

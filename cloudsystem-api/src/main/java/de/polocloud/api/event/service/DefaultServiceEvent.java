@@ -1,10 +1,10 @@
 package de.polocloud.api.event.service;
 
-import de.polocloud.api.event.ICloudEvent;
+import de.polocloud.api.event.CloudEvent;
 import de.polocloud.api.service.CloudService;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class DefaultServiceEvent implements ICloudEvent {
+public abstract class DefaultServiceEvent implements CloudEvent {
 
     private final CloudService service;
 

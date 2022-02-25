@@ -1,7 +1,7 @@
 package de.polocloud.api;
 
+import de.polocloud.api.event.SimpleEventHandler;
 import de.polocloud.api.event.EventHandler;
-import de.polocloud.api.event.IEventHandler;
 import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.logger.Logger;
 import de.polocloud.api.network.packet.CustomPacket;
@@ -31,7 +31,7 @@ public abstract class CloudAPI {
 
     private final CloudAPIType cloudAPITypes;
     protected final PacketHandler packetHandler;
-    protected final IEventHandler eventHandler;
+    protected final EventHandler eventHandler;
 
     protected Logger logger;
 
@@ -46,7 +46,7 @@ public abstract class CloudAPI {
             CloudPlayerLoginPacket.class, CloudPlayerMessagePacket.class, CloudPlayerSendServicePacket.class,
             CloudPlayerUpdatePacket.class, ServiceAddPacket.class, ServiceRemovePacket.class,
             ServiceRequestShutdownPacket.class, ServiceUpdatePacket.class);
-        this.eventHandler = new EventHandler();
+        this.eventHandler = new SimpleEventHandler();
     }
 
     /**
