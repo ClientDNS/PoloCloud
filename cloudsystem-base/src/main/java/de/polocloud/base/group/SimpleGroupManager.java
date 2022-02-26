@@ -23,15 +23,6 @@ public final class SimpleGroupManager extends AbstractGroupManager {
         // loading all database groups
         this.getAllCachedServiceGroups().addAll(this.database.getAllServiceGroups());
 
-        CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupExecutePacket.class, (channelHandlerContext, packet) -> {
-            if (packet.getExecutorType().equals(ServiceGroupExecutePacket.Executor.CREATE)) {
-                getAllCachedServiceGroups().add(packet.getGroup());
-                Base.getInstance().getGroupTemplateService().createTemplateFolder(packet.getGroup());
-            } else {
-                this.getAllCachedServiceGroups().remove(packet.getGroup());
-            }
-        });
-
         CloudAPI.getInstance().getLogger().log("§7Loading following groups: §b"
             + this.getAllCachedServiceGroups().stream().map(ServiceGroup::getName).collect(Collectors.joining("§7, §b")));
     }

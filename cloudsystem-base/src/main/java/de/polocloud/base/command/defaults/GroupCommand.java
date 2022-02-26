@@ -58,8 +58,7 @@ public final class GroupCommand extends CloudCommand {
                 base.getGroupTemplateService().createTemplateFolder(serviceGroup);
                 logger.log("The group '§b" + name + "§7' is now registered and online.");
                 return;
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
             logger.log("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
             return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
