@@ -57,6 +57,7 @@ Currently we offer these **Server-Softwares**:
 	- Mac --> start.sh
 4. Wait till the cloud stops
 5. Enter your Database-Credentials in the **config.json**
+6. Start the Cloud again
 
 # For Developers
 
