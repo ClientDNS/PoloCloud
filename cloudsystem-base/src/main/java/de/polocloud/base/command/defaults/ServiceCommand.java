@@ -1,13 +1,16 @@
 package de.polocloud.base.command.defaults;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceState;
 import de.polocloud.base.Base;
 import de.polocloud.base.command.CloudCommand;
+import de.polocloud.base.service.LocalService;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,12 +31,12 @@ public final class ServiceCommand extends CloudCommand {
             return;
         } else if (args.length >= 1) {
             base.getServiceManager().getService(args[0]).ifPresentOrElse(service -> {
-                if(args.length == 4 && args[1].equalsIgnoreCase("edit")) {
+                if (args.length == 4 && args[1].equalsIgnoreCase("edit")) {
                     final var key = args[2].toLowerCase();
 
                     switch (key) {
                         case "maxplayers":
-                            this.getAndSetInt(key, args[3], service, integer -> service.setMaxPlayers(integer));
+                            this.getAndSetInt(key, args[3], service, service::setMaxPlayers);
                             logger.log("§7Successfully set max players count to " + args[3]);
                             return;
                     }
@@ -47,6 +50,18 @@ public final class ServiceCommand extends CloudCommand {
                     }
                     service.stop();
                     logger.log("The service '§b" + service.getName() + "§7' is now stopped.");
+                } else if (args.length == 2 && args[1].equalsIgnoreCase("copy")) {
+                    if (service instanceof LocalService localService) {
+                        final var template = new File("templates/" + localService.getGroup().getTemplate());
+                        try {
+                            FileUtils.copyDirectory(localService.getWorkingDirectory(), template);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        logger.log("Moved all files into template.");
+                    } else {
+                        logger.log("The service must be a service on this node.", LogType.WARNING);
+                    }
                 } else if (args.length > 1 && args[1].equalsIgnoreCase("command")) {
                     final var stringBuilder = new StringBuilder();
                     for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
@@ -57,7 +72,7 @@ public final class ServiceCommand extends CloudCommand {
                     logger.log("Service information:",
                         "Name: §b" + service.getName(),
                         "State: §b" + service.getState(),
-                        "Players: §b" + service.getOnlineCount() + " &7/ Port: §b" + service.getMaxPlayers(),
+                        "Players: §b" + service.getOnlineCount() + " &7/ Max: §b" + service.getMaxPlayers(),
                         "Host: §b" + service.getHostName() + " &7/ Port: §b" + service.getPort(),
                         "Motd: §b" + service.getMotd());
                 }
@@ -73,7 +88,8 @@ public final class ServiceCommand extends CloudCommand {
             help + "service (name) stop §7- Stopping a specific service that exists.",
             help + "service (name) §7- Prints information about the specific service.",
             help + "service (name) command (command) §7- Executes a command on a server.",
-            help + "service (name) edit (key) (value) §7- Change properties of online service.");
+            help + "service (name) edit (key) (value) §7- Change properties of online service.",
+            help + "service (name) copy §7- Copies all files of the service to the template.");
     }
 
     @Override
