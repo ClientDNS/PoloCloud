@@ -1,6 +1,5 @@
 package de.polocloud.base.command.defaults;
 
-import de.polocloud.api.logger.Logger;
 import de.polocloud.base.Base;
 import de.polocloud.base.command.CloudCommand;
 
@@ -12,7 +11,7 @@ public final class InfoCommand extends CloudCommand {
 
     @Override
     public void execute(Base base, String[] args) {
-        final Logger logger = base.getLogger();
+        final var logger = base.getLogger();
 
         logger.log("§7Version: §b" + Base.getInstance().getVersion());
         logger.log("§7Node: §b" + Base.getInstance().getNode().getName());

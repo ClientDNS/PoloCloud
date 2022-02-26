@@ -25,8 +25,8 @@ public class CloudPlayerSendServicePacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeUUID(uuid);
-        byteBuf.writeString(service);
+        byteBuf.writeUUID(this.uuid);
+        byteBuf.writeString(this.service);
     }
 
 }

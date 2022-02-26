@@ -6,7 +6,7 @@ public record ErrorMatcher(Class<? extends Exception> errorClass) implements Mat
 
     @Override
     public boolean matches(Throwable throwable) {
-        return errorClass.isInstance(throwable);
+        return this.errorClass.isInstance(throwable);
     }
 
 }

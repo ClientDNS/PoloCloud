@@ -30,7 +30,7 @@ public final class SimpleEventHandler implements EventHandler {
     }
 
     public <T extends CloudEvent> void registerEvent(@NotNull Class<T> clazz, @NotNull Consumer<T> event) {
-        final List<Consumer> consumers = events.getOrDefault(clazz, new ArrayList<>());
+        final var consumers = this.events.getOrDefault(clazz, new ArrayList<>());
         consumers.add(event);
         this.events.put(clazz, consumers);
     }

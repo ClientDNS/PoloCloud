@@ -61,7 +61,7 @@ public class Document {
     }
 
     public Document read(final File file) {
-        try (final FileReader fileReader = new FileReader(file)) {
+        try (final var fileReader = new FileReader(file)) {
             this.jsonObject = JsonParser.parseReader(fileReader).getAsJsonObject();
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class Document {
     }
 
     public Document write(final File file) {
-        try (final FileWriter fileWriter = new FileWriter(file)) {
+        try (final var fileWriter = new FileWriter(file)) {
             fileWriter.write(GSON.toJson(this.jsonObject));
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,8 +1,7 @@
 package de.polocloud.base.service.port;
 
-import de.polocloud.base.Base;
 import de.polocloud.api.groups.ServiceGroup;
-import de.polocloud.api.service.CloudService;
+import de.polocloud.base.Base;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -21,12 +20,12 @@ public final class PortHandler {
     }
 
     private static boolean isPortUsed(int port) {
-        for (final CloudService service : Base.getInstance().getServiceManager().getAllCachedServices()) {
+        for (final var service : Base.getInstance().getServiceManager().getAllCachedServices()) {
             if (service.getNode().equals(Base.getInstance().getNode().getName())) {
                 if (service.getPort() == port) return true;
             }
         }
-        try (final ServerSocket serverSocket = new ServerSocket()) {
+        try (final var serverSocket = new ServerSocket()) {
             serverSocket.bind(new InetSocketAddress(port));
             return false;
         } catch (Exception exception) {
