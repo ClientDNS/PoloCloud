@@ -9,8 +9,8 @@ import java.net.ServerSocket;
 
 public final class PortHandler {
 
-    private static final int PORTS_BOUNCE_PROXY = 25565;
-    private static final int PORTS_BOUNCE = 30000;
+    private static final int PORTS_BOUNCE_PROXY = Base.getInstance().getConfig().getProxyStartPort();
+    private static final int PORTS_BOUNCE = Base.getInstance().getConfig().getMinecraftStartPort();
 
     public static int getNextPort(ServiceGroup service) {
         int port = service.getGameServerVersion().isProxy() ? PORTS_BOUNCE_PROXY : PORTS_BOUNCE;
