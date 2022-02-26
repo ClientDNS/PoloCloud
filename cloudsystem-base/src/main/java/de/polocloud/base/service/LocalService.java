@@ -256,7 +256,7 @@ public class LocalService implements CloudService {
 
         arguments.add(serviceManager.getWrapperMainClass());
 
-        boolean preLoadClasses = false;
+        var preLoadClasses = false;
 
         try (final JarFile jarFile = new JarFile(applicationFile)) {
             arguments.add(jarFile.getManifest().getMainAttributes().getValue("Main-Class"));

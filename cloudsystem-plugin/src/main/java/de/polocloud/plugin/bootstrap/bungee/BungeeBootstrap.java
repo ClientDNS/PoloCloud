@@ -20,7 +20,7 @@ public final class BungeeBootstrap extends Plugin {
         this.getProxy().getPluginManager().registerListener(this, new BungeeListener(this));
 
         // update that the service is ready to use
-        CloudService service = Wrapper.getInstance().thisService();
+        var service = Wrapper.getInstance().thisService();
 
         if (service.getGroup().isAutoUpdating()) {
             service.setState(ServiceState.ONLINE);

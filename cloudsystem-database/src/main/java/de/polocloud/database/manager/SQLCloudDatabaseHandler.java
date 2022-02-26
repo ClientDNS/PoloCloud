@@ -72,7 +72,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
     @SneakyThrows
     @Override
     public List<ServiceGroup> getAllServiceGroups() {
-        final List<ServiceGroup> groups = new ArrayList<>();
+        final var groups = new ArrayList<ServiceGroup>();
         try (final var preparedStatement = this.connection
             .prepareStatement("SELECT * FROM " + GROUP_TABLE); var result = preparedStatement.executeQuery()) {
             while (result.next()) {

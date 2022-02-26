@@ -13,7 +13,7 @@ public final class PortHandler {
     private static final int PORTS_BOUNCE = Base.getInstance().getConfig().getMinecraftStartPort();
 
     public static int getNextPort(ServiceGroup service) {
-        int port = service.getGameServerVersion().isProxy() ? PORTS_BOUNCE_PROXY : PORTS_BOUNCE;
+        var port = service.getGameServerVersion().isProxy() ? PORTS_BOUNCE_PROXY : PORTS_BOUNCE;
         while (isPortUsed(port)) {
             port++;
         }

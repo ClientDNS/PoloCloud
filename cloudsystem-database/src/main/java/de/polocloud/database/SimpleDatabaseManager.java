@@ -11,7 +11,7 @@ public class SimpleDatabaseManager implements DatabaseManager {
 
     public SimpleDatabaseManager(@NotNull final DatabaseConfiguration configuration) {
         if(configuration.getDatabaseType() == DatabaseType.MYSQL) {
-            SQLCloudDatabaseHandler provider = new SQLCloudDatabaseHandler(configuration);
+            var provider = new SQLCloudDatabaseHandler(configuration);
             provider.connect();
 
             this.provider = provider;

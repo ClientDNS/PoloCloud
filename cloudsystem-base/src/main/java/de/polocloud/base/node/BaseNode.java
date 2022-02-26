@@ -52,7 +52,7 @@ public final class BaseNode extends NettyServer {
     public void onServiceConnected(final ConnectedClient connectedClient) {
 
         // set online
-        final CloudService service = Base.getInstance().getServiceManager().getServiceByNameOrNull(connectedClient.name());
+        final var service = Base.getInstance().getServiceManager().getServiceByNameOrNull(connectedClient.name());
         Objects.requireNonNull(service).setState(ServiceState.STARTED);
 
         // update cache

@@ -71,8 +71,8 @@ public final class BungeeListener implements Listener {
 
     @EventHandler
     public void handle(ProxyPingEvent event) {
-        final ServerPing response = event.getResponse();
-        final ServerPing.Players players = response.getPlayers();
+        final var response = event.getResponse();
+        final var players = response.getPlayers();
 
         players.setMax(Wrapper.getInstance().thisService().getMaxPlayers());
         players.setOnline(this.playerManager.getOnlineCount());

@@ -34,19 +34,19 @@ public final class BungeeCloudListener {
         eventHandler.registerEvent(CloudServiceRemoveEvent.class, event -> unregisterService(event.getService()));
 
         packetHandler.registerPacketListener(CloudPlayerKickPacket.class, (channelHandlerContext, packet) -> {
-            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
+            var player = ProxyServer.getInstance().getPlayer(packet.getUuid());
             assert player != null;
             player.disconnect(new TextComponent(packet.getReason()));
         });
 
         packetHandler.registerPacketListener(CloudPlayerMessagePacket.class, (channelHandlerContext, packet) -> {
-            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
+            var player = ProxyServer.getInstance().getPlayer(packet.getUuid());
             assert player != null;
             player.sendMessage(new TextComponent(packet.getMessage()));
         });
 
         packetHandler.registerPacketListener(CloudPlayerSendServicePacket.class, (channelHandlerContext, packet) -> {
-            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(packet.getUuid());
+            var player = ProxyServer.getInstance().getPlayer(packet.getUuid());
             assert player != null;
             if (player.getServer() != null && player.getServer().getInfo().getName().equals(packet.getService())) return;
             player.connect(ProxyServer.getInstance().getServerInfo(packet.getService()));
