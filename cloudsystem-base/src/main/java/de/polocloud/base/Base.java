@@ -27,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.jar.Manifest;
 
@@ -79,6 +81,7 @@ public final class Base extends CloudAPI {
             "Date: §b19.01.2020 §7| " +
             "§7Version: §b" + this.version, LogType.EMPTY);
         this.logger.log(" ", LogType.EMPTY);
+        this.checkVersion();
         this.commandManager = new SimpleCommandManager();
 
         this.databaseManager = DatabaseManager.newInstance(this.config.getDatabaseConfiguration());
@@ -117,6 +120,23 @@ public final class Base extends CloudAPI {
             return;
         }
         new Document(this.config = new CloudConfiguration()).write(file);
+    }
+
+    private void checkVersion() {
+        if (this.config.isCheckForUpdate() && !this.version.endsWith("SNAPSHOT")) {
+            try {
+                final var url = new URL("https://api.spigotmc.org/simple/0.2/index.php?action=getResource&id=96270");
+                final var inputStream = url.openStream();
+                final var inputStreamReader = new InputStreamReader(url.openStream());
+                if (!this.version.equals(new Document(inputStreamReader).get("current_version", String.class))) {
+                    this.logger.log("A newer version of the cloud is available.", LogType.WARNING);
+                }
+                inputStreamReader.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onShutdown() {
