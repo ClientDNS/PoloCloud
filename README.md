@@ -2,7 +2,7 @@
 
 
 #### What is "PoloCloud"?
-**PoloCloud** ist the simplest and easiest **Cloud** for **Minecraft**
+**PoloCloud** is the simplest and easiest **Cloud** for **Minecraft**.
 
 The Cloud will manage ServerGroups **automaticly** and start Servers **dynamicly**.
 
