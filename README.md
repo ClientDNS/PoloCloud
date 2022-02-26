@@ -4,18 +4,18 @@
 #### What is "PoloCloud"?
 **PoloCloud** is the simplest and easiest **Cloud** for **Minecraft**.
 
-The Cloud will manage ServerGroups **automaticly** and start Servers **dynamicly**.
+The Cloud will manage ServerGroups **automatically** and start Servers **dynamically**.
 
-Currently we offer these **Server-Softwares**:
-- **Proxy-Softwares**
+Currently, we offer these **Server-Software's**:
+- **Proxy-Software's**
 	- Waterfall
 	- Velocity
-- **Bukkit-Softwares**
+- **Bukkit-Software's**
 	- Paper (1.18.X - 1.8.X)
 
 :information_source: We recommend using Paper 1.12.X or later...
 
-:information_source: [List with all softwares](#software-versions)
+:information_source: [List with all pieces of software](#software-versions)
 
 # Features
 - Template System
@@ -30,7 +30,7 @@ Currently we offer these **Server-Softwares**:
 
 # Disclaimer
 
-:warning: Plase note that this is the first Relase of the V2. Errors could occur, please report them to our Discord.
+:warning: Please note that this is the first release of the V2. Errors could occur, please report them to our Discord.
 <br>
 <br>
 :triangular_flag_on_post: The [**DSGVO**](https://dsgvo-gesetz.de) is currently not compliant
@@ -87,7 +87,7 @@ Link: [**Discord**](https://discord.com/invite/2yDWH3VxKC)
  - **Paper-1.9.4**
  - **Paper-1.8.8 (Partly unsupported)**
 
-<hr></hr>
+<hr>
 
 ###### Last Update: **26.02.2022**
 ###### ~ThePoloCloud Team
