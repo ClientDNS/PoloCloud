@@ -4,7 +4,7 @@
 #### What is "PoloCloud"?
 **PoloCloud** is the simplest and easiest **Cloud** for **Minecraft**.
 
-The Cloud will manage ServerGroups **automatically** and start Servers **dynamically**.
+The Cloud will manage ServerGroups **automatically** and start servers **dynamically**.
 
 Currently, we offer these **Server-Software's**:
 - **Proxy-Software's**
@@ -30,17 +30,17 @@ Currently, we offer these **Server-Software's**:
 
 # Disclaimer
 
-:warning: Please note that this is the first release of the V2. Errors could occur, please report them to our Discord.
+:warning: Please note: These are the first releases of the V2. Errors could occur, please report them to our Discord.
 <br>
 <br>
-:triangular_flag_on_post: The [**DSGVO**](https://dsgvo-gesetz.de) is currently not compliant
+:triangular_flag_on_post: The [**DSGVO**](https://dsgvo-gesetz.de) is currently not compliant.
 
 # Requirements and install :zap:
 
 ### Requirements
 
 #### Software-Requirements:
--  :warning: **Java 17**
+- :warning: [**Java 17**](https://adoptium.net)
 - Database (SQL)
 
 #### Hardware-Requirements:
@@ -49,24 +49,22 @@ Currently, we offer these **Server-Software's**:
 
 ### Install
 
-1. Download the latest release of the [**Cloud**](https://github.com/PoloServices/PoloCloud/releases)
-2. Extract the ZIP-File
-3. Run these File on different Platforms
+1. Download the latest release of the [**Cloud**](https://github.com/PoloServices/PoloCloud/releases).
+2. Extract the ZIP-File.
+3. Run these File on different platforms:
 	- Windows --> start.bat
-	- Linux --> start.sh
-	- Mac --> start.sh
-4. Wait till the cloud stops
-5. Enter your Database-Credentials in the **config.json**
-6. Start the Cloud again
+	- Mac/Linux --> start.sh
+4. Wait until the cloud stops.
+5. Enter your Database-Credentials in the **config.json**.
+6. Start the Cloud again.
 
 # For Developers
 
-### Looking how to develop something for the Cloud? Read our Wiki (available shortly after Release) here on Github
+### Looking how to develop something for the Cloud? Read our Wiki (available shortly after Release) here on GitHub
 
 ## Contact
 
-You can reach us at our **Discord**!
-Link: [**Discord**](https://discord.com/invite/2yDWH3VxKC)
+You can reach us at our [**Discord**](https://discord.com/invite/2yDWH3VxKC)!
 
 ## Software-Versions
 
