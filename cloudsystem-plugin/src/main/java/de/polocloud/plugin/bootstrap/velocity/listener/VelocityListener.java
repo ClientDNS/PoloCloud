@@ -1,5 +1,6 @@
 package de.polocloud.plugin.bootstrap.velocity.listener;
 
+import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
@@ -23,6 +24,13 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     public void handle(final LoginEvent event) {
         final var player = event.getPlayer();
 
+        if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
+            if(!player.hasPermission("cloud.network.full.join")) {
+                player.disconnect(Component.text("§cThis network has reached the maximum number of players."));
+                return;
+            }
+        }
+
         Wrapper.getInstance().getPlayerManager().registerCloudPlayer(
             new SimpleCloudPlayer(player.getUniqueId(), player.getUsername(), Wrapper.getInstance().thisService()));
     }
@@ -32,13 +40,6 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
         final var player = event.getPlayer();
 
         if (player.getCurrentServer().isEmpty()) {
-
-            if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
-                event.setResult(ServerPreConnectEvent.ServerResult.denied());
-                player.disconnect(Component.text("§cThis network has reached the maximum number of players."));
-                return;
-            }
-
 
             this.bootstrap.getFallback(player).flatMap(service -> this.proxyServer.getServer(service.getName()))
                 .ifPresentOrElse(
