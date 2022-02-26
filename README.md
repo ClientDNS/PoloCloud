@@ -13,6 +13,8 @@ Currently we offer these **Server-Softwares**:
 - **Bukkit-Softwares**
 	- Paper (1.18.X - 1.8.X)
 
+:information_source: We recommend using Paper 1.12.X or later...
+
 :information_source: [List with all softwares](#software-versions)
 
 # Features
@@ -55,6 +57,7 @@ Currently we offer these **Server-Softwares**:
 	- Mac --> start.sh
 4. Wait till the cloud stops
 5. Enter your Database-Credentials in the **config.json**
+6. Start the Cloud again
 
 # For Developers
 
@@ -82,9 +85,9 @@ Link: [**Discord**](https://discord.com/invite/2yDWH3VxKC)
  - **Paper-1.11.2**
  - **Paper-1.10.2**
  - **Paper-1.9.4**
- - **Paper-1.8.8**
+ - **Paper-1.8.8 (Partly unsupported)**
 
 <hr></hr>
 
 ###### Last Update: **26.02.2022**
-###### ~iPommes
+###### ~ThePoloCloud Team
