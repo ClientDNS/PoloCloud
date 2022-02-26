@@ -40,7 +40,7 @@ Currently, we offer these **Server-Software's**:
 ### Requirements
 
 #### Software-Requirements:
-- :warning: [**Java 17**](https://adoptium.net)
+- :warning: **Java 17**
 - Database (SQL)
 
 #### Hardware-Requirements:
