@@ -1,9 +1,9 @@
 package de.polocloud.plugin.bootstrap.velocity.listener;
 
-import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
+import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
@@ -14,7 +14,6 @@ import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.velocity.VelocityBootstrap;
 import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Objects;
 
@@ -24,8 +23,8 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     public void handle(final LoginEvent event) {
         final var player = event.getPlayer();
 
-        if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
-            if(!player.hasPermission("cloud.network.full.join")) {
+        if (CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()) {
+            if (!player.hasPermission("cloud.network.full.join")) {
                 player.disconnect(Component.text("§cThis network has reached the maximum number of players."));
                 return;
             }
@@ -74,6 +73,12 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
             .onlinePlayers(Wrapper.getInstance().getPlayerManager().getOnlineCount())
             .maximumPlayers(Wrapper.getInstance().thisService().getMaxPlayers())
             .build());
+    }
+
+    @Subscribe
+    public void handle(final KickedFromServerEvent event) {
+        this.bootstrap.getFallback(event.getPlayer()).flatMap(service -> this.proxyServer.getServer(service.getName()))
+            .ifPresent(registeredServer -> event.setResult(KickedFromServerEvent.RedirectPlayer.create(registeredServer)));
     }
 
 }
