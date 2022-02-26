@@ -181,11 +181,12 @@ public final class GroupCommand extends CloudCommand {
             }
         }
 
-        logger.log("§7Use following command: §bgroup list - List all groups");
-        logger.log("§7Use following command: §bgroup create §7(§bname§7) (§bmemory§7) (§bstatic§7) (§bversion§7)");
-        logger.log("§7Use following command: §bgroup remove §7(§bname§7)");
-        logger.log("§7Use following command: §bgroup info §7(§bname§7)");
-        logger.log("§7Use following command: §bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
+        String defaultText = "§7Use following command: §b";
+        logger.log(defaultText + "group list - List all groups");
+        logger.log(defaultText + "§bgroup create §7(§bname§7) (§bmemory§7) (§bstatic§7) (§bversion§7)");
+        logger.log(defaultText + "§bgroup remove §7(§bname§7)");
+        logger.log(defaultText + "§bgroup info §7(§bname§7)");
+        logger.log(defaultText + "§bgroup edit §7(§bname§7) (§bkey§7) (§bvalue§7)");
     }
 
     @Override
