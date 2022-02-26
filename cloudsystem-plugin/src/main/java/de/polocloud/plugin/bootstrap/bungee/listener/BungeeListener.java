@@ -6,6 +6,7 @@ import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.bungee.BungeeBootstrap;
 import de.polocloud.wrapper.Wrapper;
+import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.service.WrapperServiceManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
@@ -28,6 +29,14 @@ public final class BungeeListener implements Listener {
 
     @EventHandler
     public void handle(final LoginEvent event) {
+
+
+        if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
+            event.setCancelReason(new TextComponent("§cThis network has reached the maximum number of players."));
+            event.setCancelled(true);
+            return;
+        }
+
         final var connection = event.getConnection();
 
         this.playerManager.registerCloudPlayer(new SimpleCloudPlayer(connection.getUniqueId(), connection.getName(),

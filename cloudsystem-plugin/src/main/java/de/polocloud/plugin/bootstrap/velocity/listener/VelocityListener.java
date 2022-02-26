@@ -13,6 +13,7 @@ import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.velocity.VelocityBootstrap;
 import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Objects;
 
@@ -31,6 +32,14 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
         final var player = event.getPlayer();
 
         if (player.getCurrentServer().isEmpty()) {
+
+            if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
+                event.setResult(ServerPreConnectEvent.ServerResult.denied());
+                player.disconnect(Component.text("§cThis network has reached the maximum number of players."));
+                return;
+            }
+
+
             this.bootstrap.getFallback(player).flatMap(service -> this.proxyServer.getServer(service.getName()))
                 .ifPresentOrElse(
                     registeredServer -> event.setResult(ServerPreConnectEvent.ServerResult.allowed(registeredServer)),
