@@ -13,6 +13,8 @@ Currently we offer these **Server-Softwares**:
 - **Bukkit-Softwares**
 	- Paper (1.18.X - 1.8.X)
 
+:information_source: We recommend using Paper 1.12.X or later...
+
 :information_source: [List with all softwares](#software-versions)
 
 # Features
@@ -82,7 +84,7 @@ Link: [**Discord**](https://discord.com/invite/2yDWH3VxKC)
  - **Paper-1.11.2**
  - **Paper-1.10.2**
  - **Paper-1.9.4**
- - **Paper-1.8.8**
+ - **Paper-1.8.8 (Partly unsupported)**
 
 <hr></hr>
 
