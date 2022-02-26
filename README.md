@@ -29,7 +29,9 @@ Currently we offer these **Server-Softwares**:
 # Disclaimer
 
 :warning: Plase note that this is the first Relase of the V2. Errors could occur, please report them to our Discord.
-:triangular_flag_on_post: The [**DSGVO**](https://dsgvo-gesetz.de) is currently compliant
+<br>
+<br>
+:triangular_flag_on_post: The [**DSGVO**](https://dsgvo-gesetz.de) is currently not compliant
 
 # Requirements and install :zap:
 
