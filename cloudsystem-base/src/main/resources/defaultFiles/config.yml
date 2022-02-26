@@ -47,4 +47,4 @@ groups:
 connection_throttle: 4000
 stats: c4f06029-b14e-4c94-9f45-f84eab90b260
 connection_throttle_limit: 3
-log_pings: true
+log_pings: false
