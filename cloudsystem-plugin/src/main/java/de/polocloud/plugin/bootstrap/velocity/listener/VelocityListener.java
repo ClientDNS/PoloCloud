@@ -1,5 +1,6 @@
 package de.polocloud.plugin.bootstrap.velocity.listener;
 
+import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
@@ -13,6 +14,7 @@ import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.velocity.VelocityBootstrap;
 import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Objects;
 
@@ -21,6 +23,13 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     @Subscribe
     public void handle(final LoginEvent event) {
         final var player = event.getPlayer();
+
+        if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
+            if(!player.hasPermission("cloud.network.full.join")) {
+                player.disconnect(Component.text("§cThis network has reached the maximum number of players."));
+                return;
+            }
+        }
 
         Wrapper.getInstance().getPlayerManager().registerCloudPlayer(
             new SimpleCloudPlayer(player.getUniqueId(), player.getUsername(), Wrapper.getInstance().thisService()));
@@ -31,6 +40,7 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
         final var player = event.getPlayer();
 
         if (player.getCurrentServer().isEmpty()) {
+
             this.bootstrap.getFallback(player).flatMap(service -> this.proxyServer.getServer(service.getName()))
                 .ifPresentOrElse(
                     registeredServer -> event.setResult(ServerPreConnectEvent.ServerResult.allowed(registeredServer)),
