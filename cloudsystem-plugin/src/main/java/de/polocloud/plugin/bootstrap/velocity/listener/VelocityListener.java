@@ -77,8 +77,10 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
 
     @Subscribe
     public void handle(final KickedFromServerEvent event) {
-        this.bootstrap.getFallback(event.getPlayer()).flatMap(service -> this.proxyServer.getServer(service.getName()))
-            .ifPresent(registeredServer -> event.setResult(KickedFromServerEvent.RedirectPlayer.create(registeredServer)));
+        if (event.getPlayer().isActive()) {
+            this.bootstrap.getFallback(event.getPlayer()).flatMap(service -> this.proxyServer.getServer(service.getName()))
+                .ifPresent(registeredServer -> event.setResult(KickedFromServerEvent.RedirectPlayer.create(registeredServer)));
+        }
     }
 
 }
