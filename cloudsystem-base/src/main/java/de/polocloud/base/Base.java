@@ -27,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.jar.Manifest;
 
@@ -40,13 +42,13 @@ public final class Base extends CloudAPI {
 
     private CloudConfiguration config;
 
-    private final CommandManager commandManager;
-    private final BaseNode node;
-    private final DatabaseManager databaseManager;
-    private final GroupManager groupManager;
-    private final ServiceManager serviceManager;
-    private final PlayerManager playerManager;
-    private final GroupTemplateService groupTemplateService;
+    private CommandManager commandManager;
+    private BaseNode node;
+    private DatabaseManager databaseManager;
+    private GroupManager groupManager;
+    private ServiceManager serviceManager;
+    private PlayerManager playerManager;
+    private GroupTemplateService groupTemplateService;
     private boolean running = true;
 
     public Base() {
@@ -70,15 +72,20 @@ public final class Base extends CloudAPI {
                 throwable.printStackTrace();
             });
 
-        this.loadConfig(new File("config.json"));
-
-        new DefaultExceptionCodes();
-
         this.logger.log("§7Cloudsystem > §b@PoloCloud §7| " +
             "§7Developed by: §bHttpMarco §7| " +
             "Date: §b19.01.2020 §7| " +
             "§7Version: §b" + this.version, LogType.EMPTY);
         this.logger.log(" ", LogType.EMPTY);
+
+        if (this.loadConfig(new File("config.json"))) {
+            this.logger.log("Please configure your database in the config.json!", LogType.WARNING);
+            return;
+        }
+        this.checkVersion();
+
+        new DefaultExceptionCodes();
+
         this.commandManager = new SimpleCommandManager();
 
         this.databaseManager = DatabaseManager.newInstance(this.config.getDatabaseConfiguration());
@@ -111,12 +118,30 @@ public final class Base extends CloudAPI {
         new WorkerThread(this).start();
     }
 
-    private void loadConfig(@NotNull File file) {
+    private boolean loadConfig(@NotNull File file) {
         if (file.exists()) {
             this.config = new Document(file).get(CloudConfiguration.class);
-            return;
+            return false;
         }
         new Document(this.config = new CloudConfiguration()).write(file);
+        return true;
+    }
+
+    private void checkVersion() {
+        if (this.config.isCheckForUpdate() && !this.version.endsWith("SNAPSHOT")) {
+            try {
+                final var url = new URL("https://api.spigotmc.org/simple/0.2/index.php?action=getResource&id=96270");
+                final var inputStream = url.openStream();
+                final var inputStreamReader = new InputStreamReader(url.openStream());
+                if (!this.version.equals(new Document(inputStreamReader).get("current_version", String.class))) {
+                    this.logger.log("A newer version of the cloud is available.", LogType.WARNING);
+                }
+                inputStreamReader.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onShutdown() {

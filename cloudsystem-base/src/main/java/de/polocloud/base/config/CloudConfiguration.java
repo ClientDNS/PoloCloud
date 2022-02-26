@@ -13,6 +13,9 @@ public class CloudConfiguration {
     private final List<NodeConfiguration> connectedNodes;
     private final DatabaseConfiguration databaseConfiguration;
     private final String javaCommand;
+    private final int minecraftStartPort;
+    private final int proxyStartPort;
+    private final boolean checkForUpdate;
 
     // default parameters
     public CloudConfiguration() {
@@ -20,6 +23,9 @@ public class CloudConfiguration {
         this.connectedNodes = new ArrayList<>();
         this.databaseConfiguration = new DatabaseConfiguration();
         this.javaCommand = "java";
+        this.minecraftStartPort = 30000;
+        this.proxyStartPort = 25565;
+        this.checkForUpdate = true;
     }
 
 }
