@@ -18,7 +18,7 @@ import java.util.Objects;
 @Setter
 public abstract class AbstractGroupManager implements GroupManager {
 
-    private final List<ServiceGroup> allCachedServiceGroups = new ArrayList<>();
+    private List<ServiceGroup> allCachedServiceGroups = new ArrayList<>();
 
     public AbstractGroupManager() {
         CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) ->
