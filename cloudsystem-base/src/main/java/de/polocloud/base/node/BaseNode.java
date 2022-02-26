@@ -72,12 +72,11 @@ public final class BaseNode extends NettyServer {
 
         base.getServiceManager().getService(client.name())
             .ifPresentOrElse(service -> {
-                ((LocalService) service).delete();
                 base.getEventHandler().call(new CloudServiceRemoveEvent(service.getName()));
                 base.getNode().sendPacketToAll(new ServiceRemovePacket(service.getName()));
                 base.getServiceManager().getAllCachedServices().remove(service);
                 base.getLogger().log("The service '§b" + service.getName() + "§7' disconnect.");
-        }, () ->
+            }, () ->
                 base.getLogger().log("Service " + client.name() + " disconnected but not exists!", LogType.WARNING));
     }
 

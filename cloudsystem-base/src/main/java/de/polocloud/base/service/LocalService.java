@@ -28,6 +28,7 @@ import java.util.jar.JarFile;
 @Setter
 public class LocalService implements CloudService {
 
+    private final UUID uuid;
     private final ServiceGroup group;
     private final int serviceId;
     private final String node;
@@ -46,6 +47,7 @@ public class LocalService implements CloudService {
     private boolean screen = false;
 
     public LocalService(final ServiceGroup group, final int id, final int port, final String hostname) {
+        this.uuid = UUID.randomUUID();
         this.group = group;
         this.serviceId = id;
         this.node = Base.getInstance().getNode().getName();
@@ -55,7 +57,7 @@ public class LocalService implements CloudService {
         this.motd = this.group.getMotd();
         this.maxPlayers = this.group.getDefaultMaxPlayers();
 
-        this.workingDirectory = new File((!this.group.isStatic() ? "tmp" : "static") + "/" + this.getName());
+        this.workingDirectory = new File((!this.group.isStatic() ? "tmp" : "static") + "/" + this.getName() + "." + this.uuid);
     }
 
     @SneakyThrows
@@ -188,6 +190,11 @@ public class LocalService implements CloudService {
 
     @Override
     public void stop() {
+        this.stopProcess();
+        this.delete();
+    }
+
+    private void stopProcess() {
         if (this.process != null) {
             this.executeCommand(this.group.getGameServerVersion().isProxy() ? "end" : "stop");
             try {
@@ -202,7 +209,7 @@ public class LocalService implements CloudService {
         }
     }
 
-    public void delete() {
+    private void delete() {
         if (this.group.isStatic()) return;
         synchronized (this) {
             try {
