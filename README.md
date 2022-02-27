@@ -11,9 +11,9 @@ Currently, we offer these **Server-Software's**:
 	- Waterfall
 	- Velocity
 - **Bukkit-Software's**
-	- Paper (1.18.X - 1.8.X)
+	- Paper (1.8.8 - 1.18.1)
 
-:information_source: We recommend using Paper 1.12.X or later...
+:information_source: We recommend using Paper 1.18.1
 
 :information_source: [List with all pieces of software](#software-versions)
 
@@ -65,25 +65,6 @@ Currently, we offer these **Server-Software's**:
 ## Contact
 
 You can reach us at our [**Discord**](https://discord.com/invite/2yDWH3VxKC)!
-
-## Software-Versions
-
-### **Proxy-Versions**
-- **Waterfall**
-- **Velocity**
-
-### **Server-Versions**
- - **Paper-1.18.1**
- - **Paper-1.17.1**
- - **Paper-1.16.5**
- - **Paper-1.15.2**
- - **Paper-1.14.4**
- - **Paper-1.13.2**
- - **Paper-1.12.2**
- - **Paper-1.11.2**
- - **Paper-1.10.2**
- - **Paper-1.9.4**
- - **Paper-1.8.8 (:warning: Unsupported)**
 
 <hr>
 
