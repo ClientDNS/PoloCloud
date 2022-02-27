@@ -49,7 +49,7 @@ Currently, we offer these **Server-Software's**:
 
 ### Install
 
-1. Download the latest release of the [**Cloud**](https://github.com/PoloServices/PoloCloud/releases).
+1. Download the latest release of the [**Cloud**](https://github.com/PoloServices/PoloCloud/releases/latest/download/PoloCloud.zip).
 2. Extract the ZIP-File.
 3. Run these File on different platforms:
 	- Windows --> start.bat
