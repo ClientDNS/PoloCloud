@@ -39,7 +39,6 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
         final var player = event.getPlayer();
 
         if (player.getCurrentServer().isEmpty()) {
-
             this.bootstrap.getFallback(player).flatMap(service -> this.proxyServer.getServer(service.getName()))
                 .ifPresentOrElse(
                     registeredServer -> event.setResult(ServerPreConnectEvent.ServerResult.allowed(registeredServer)),
@@ -64,7 +63,10 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
 
     @Subscribe
     public void handle(final DisconnectEvent event) {
-        Wrapper.getInstance().getPlayerManager().unregisterCloudPlayer(event.getPlayer().getUniqueId());
+        if (event.getLoginStatus() == DisconnectEvent.LoginStatus.SUCCESSFUL_LOGIN
+            || event.getLoginStatus() == DisconnectEvent.LoginStatus.PRE_SERVER_JOIN) {
+            Wrapper.getInstance().getPlayerManager().unregisterCloudPlayer(event.getPlayer().getUniqueId());
+        }
     }
 
     @Subscribe
