@@ -16,6 +16,7 @@ public class CloudConfiguration {
     private final int minecraftStartPort;
     private final int proxyStartPort;
     private final boolean checkForUpdate;
+    private final List<String> jvmFlags;
 
     // default parameters
     public CloudConfiguration() {
@@ -26,6 +27,7 @@ public class CloudConfiguration {
         this.minecraftStartPort = 30000;
         this.proxyStartPort = 25565;
         this.checkForUpdate = true;
+        this.jvmFlags = new ArrayList<>();
     }
 
 }

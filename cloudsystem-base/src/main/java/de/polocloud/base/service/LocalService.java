@@ -254,6 +254,8 @@ public class LocalService implements CloudService {
             "-Xms" + this.group.getMaxMemory() + "M",
             "-Xmx" + this.group.getMaxMemory() + "M"));
 
+        arguments.addAll(Base.getInstance().getConfig().getJvmFlags());
+
         final var serviceManager = (SimpleServiceManager) Base.getInstance().getServiceManager();
         final var applicationFile = new File(this.workingDirectory, this.group.getGameServerVersion().getJar());
 
