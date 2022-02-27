@@ -83,7 +83,7 @@ You can reach us at our [**Discord**](https://discord.com/invite/2yDWH3VxKC)!
  - **Paper-1.11.2**
  - **Paper-1.10.2**
  - **Paper-1.9.4**
- - **Paper-1.8.8 (Partly unsupported)**
+ - **Paper-1.8.8 (:warning: Unsupported)**
 
 <hr>
 
