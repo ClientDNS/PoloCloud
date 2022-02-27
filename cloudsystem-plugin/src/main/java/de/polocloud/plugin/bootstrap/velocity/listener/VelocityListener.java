@@ -4,8 +4,8 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
+import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
-import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import de.polocloud.api.CloudAPI;
@@ -35,18 +35,9 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     }
 
     @Subscribe
-    public void handle(final ServerPreConnectEvent event) {
-        final var player = event.getPlayer();
-
-        if (player.getCurrentServer().isEmpty()) {
-            this.bootstrap.getFallback(player).flatMap(service -> this.proxyServer.getServer(service.getName()))
-                .ifPresentOrElse(
-                    registeredServer -> event.setResult(ServerPreConnectEvent.ServerResult.allowed(registeredServer)),
-                    () -> {
-                        event.setResult(ServerPreConnectEvent.ServerResult.denied());
-                        player.disconnect(Component.text("§cNo fallback could be found."));
-                    });
-        }
+    public void handle(final PlayerChooseInitialServerEvent event) {
+        this.bootstrap.getFallback(event.getPlayer()).flatMap(service -> this.proxyServer.getServer(service.getName()))
+            .ifPresent(event::setInitialServer);
     }
 
     @Subscribe
