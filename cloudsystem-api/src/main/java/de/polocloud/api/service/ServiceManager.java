@@ -27,7 +27,7 @@ public interface ServiceManager {
      * @return the services of a group
      */
     default List<CloudService> getAllServicesByGroup(@NotNull ServiceGroup serviceGroup) {
-        return this.getAllCachedServices().stream().filter(service -> service.getGroup().equals(serviceGroup)).collect(Collectors.toList());
+        return this.getAllCachedServices().stream().filter(service -> service.getGroup().equals(serviceGroup)).toList();
     }
 
     /**
@@ -36,7 +36,7 @@ public interface ServiceManager {
      * @return the services of a state
      */
     default List<CloudService> getAllServicesByState(@NotNull String state) {
-        return this.getAllCachedServices().stream().filter(it -> it.getState().equalsIgnoreCase(state)).collect(Collectors.toList());
+        return this.getAllCachedServices().stream().filter(it -> it.getState().equalsIgnoreCase(state)).toList();
     }
 
     /**
@@ -75,5 +75,11 @@ public interface ServiceManager {
      * @param packet the packet to send
      */
     void sendPacketToService(@NotNull CloudService service, @NotNull Packet packet);
+
+    /**
+     * shutdown a current service
+     * @param service
+     */
+    void shutdownService(@NotNull CloudService service);
 
 }

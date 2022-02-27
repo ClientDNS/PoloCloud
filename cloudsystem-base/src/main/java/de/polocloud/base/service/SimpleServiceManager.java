@@ -92,6 +92,11 @@ public final class SimpleServiceManager implements ServiceManager {
     }
 
     @Override
+    public void shutdownService(@NotNull CloudService service) {
+        service.stop();
+    }
+
+    @Override
     public void updateService(@NotNull CloudService service) {
         final var packet = new ServiceUpdatePacket(service);
         //update all other nodes and this connected services

@@ -1,10 +1,12 @@
 package de.polocloud.wrapper.service;
 
 import de.polocloud.api.event.service.CloudServiceUpdateEvent;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.RedirectPacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
 import de.polocloud.api.network.packet.service.ServiceRemovePacket;
+import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceManager;
@@ -55,7 +57,7 @@ public final class WrapperServiceManager implements ServiceManager {
     }
 
     @Override
-    public void startService(@NotNull CloudService service) {
+    public void startService(@NotNull CloudService group) {
         //TODO SEND PACKET
     }
 
@@ -75,6 +77,11 @@ public final class WrapperServiceManager implements ServiceManager {
             return;
         }
         Wrapper.getInstance().getClient().sendPacket(new RedirectPacket(service.getName(), packet));
+    }
+
+    @Override
+    public void shutdownService(@NotNull CloudService service) {
+        Wrapper.getInstance().getClient().sendPacket(new ServiceRequestShutdownPacket(service.getName()));
     }
 
 }

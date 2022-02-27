@@ -91,7 +91,7 @@ public final class SimpleService implements CloudService {
 
     @Override
     public void stop() {
-        // TODO send packet to node that to stop the service
+        CloudAPI.getInstance().getServiceManager().shutdownService(this);
     }
 
 }
