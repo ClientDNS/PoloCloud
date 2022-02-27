@@ -29,7 +29,6 @@ public final class GroupCommand extends CloudCommand {
                 logger.log("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
-            return;
         } else if (args.length == 5 && args[0].equalsIgnoreCase("create")) {
             final var name = args[1];
 
@@ -60,17 +59,14 @@ public final class GroupCommand extends CloudCommand {
                 return;
             } catch (NumberFormatException ignored) {}
             logger.log("Use following command: §bcreate (name) (memory) (static) (version)", LogType.WARNING);
-            return;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
             groupManager.getServiceGroupByName(args[1]).ifPresentOrElse(group -> {
                 groupManager.removeServiceGroup(group);
                 base.getServiceManager().getAllServicesByGroup(group).forEach(CloudService::stop);
                 logger.log("The group '§b" + group.getName() + "§7' is now deleted.");
-            }, () -> {
-                logger.log("This group does not exists", LogType.WARNING);
-            });
+            }, () -> logger.log("This group does not exists", LogType.WARNING));
         } else if (args.length == 2 && args[0].equalsIgnoreCase("info")) {
-            groupManager.getServiceGroupByName(args[1]).ifPresentOrElse(group -> {
+            groupManager.getServiceGroupByName(args[1]).ifPresentOrElse(group ->
                 logger.log("Group information's: ",
                     "Group: §b" + group.getName(),
                     "Template: §b" + group.getTemplate(),
@@ -80,8 +76,7 @@ public final class GroupCommand extends CloudCommand {
                     "Max online services: §b" + group.getMaxOnlineService(),
                     "Static: §b" + group.isStatic(),
                     "Version: §b" + group.getGameServerVersion().getName(),
-                    "Maintenance: §b" + group.isMaintenance());
-            }, () -> logger.log("This group does not exists", LogType.WARNING));
+                    "Maintenance: §b" + group.isMaintenance()), () -> logger.log("This group does not exists", LogType.WARNING));
         } else if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {
             groupManager.getServiceGroupByName(args[1]).ifPresentOrElse(group -> {
                 final var key = args[2].toLowerCase();
@@ -154,12 +149,8 @@ public final class GroupCommand extends CloudCommand {
                         group.setGameServerVersion(gameServerVersion);
                         group.update();
                         logger.log("§7Successfully set version to " + args[3]);
-                        return;
                 }
-            }, () -> {
-                logger.log("This group does not exists", LogType.WARNING);
-                return;
-            });
+            }, () -> logger.log("This group does not exists", LogType.WARNING));
         }
     }
 
