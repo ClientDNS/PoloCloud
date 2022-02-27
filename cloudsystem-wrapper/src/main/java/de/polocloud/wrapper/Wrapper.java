@@ -56,7 +56,7 @@ public final class Wrapper extends CloudAPI {
                     JarEntry jarEntry;
                     while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
                         if (jarEntry.getName().endsWith(".class")) {
-                            final String className = jarEntry.getName()
+                            final var className = jarEntry.getName()
                                 .replace('/', '.').replace(".class", "");
                             Class.forName(className, false, classLoader);
                         }

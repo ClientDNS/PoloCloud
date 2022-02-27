@@ -22,7 +22,7 @@ public final class GroupCommand extends CloudCommand {
         final var logger = base.getLogger();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            for (final ServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
+            for (final var serviceGroup : groupManager.getAllCachedServiceGroups()) {
                 logger.log("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }

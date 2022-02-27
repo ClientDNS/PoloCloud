@@ -125,7 +125,7 @@ public enum GameServerVersion {
         if (paperVersion.equals("latest")) {
             paperVersion = this.getLatestVersion(title);
         }
-        final Document document = this.paperApiRequest("https://papermc.io/api/v2/projects/" + title + "/versions/" + paperVersion + "/");
+        final var document = this.paperApiRequest("https://papermc.io/api/v2/projects/" + title + "/versions/" + paperVersion + "/");
         if (document != null) {
             final List<Integer> buildNumbers = document.get("builds", TypeToken.getParameterized(List.class, Integer.class).getType());
             return buildNumbers.get(buildNumbers.size() - 1);

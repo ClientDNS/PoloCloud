@@ -28,7 +28,7 @@ public final class WrapperServiceManager implements ServiceManager {
         this.allCachedServices = new CopyOnWriteArrayList<>();
         this.property = property;
 
-        final PacketHandler networkHandler = Wrapper.getInstance().getPacketHandler();
+        final var networkHandler = Wrapper.getInstance().getPacketHandler();
 
         networkHandler.registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
             this.getService(packet.getService()).ifPresent(service -> {

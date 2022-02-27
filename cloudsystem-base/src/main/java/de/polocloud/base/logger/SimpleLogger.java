@@ -30,7 +30,7 @@ public final class SimpleLogger implements Logger {
 
     @Override
     public String format(@NotNull String text, @NotNull LogType logType) {
-        String message = "§r" + text + "§r";
+        var message = "§r" + text + "§r";
         if (logType != LogType.EMPTY) {
             message = " " + this.dataFormat.format(Calendar.getInstance().getTime()) + " §7" + (this.isWindows() ? "|" : "┃") + " §r" +
                 logType.getTextField() + " " + (this.isWindows() ? ">" : "»") + " §r" + message + "§r";
