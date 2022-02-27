@@ -33,7 +33,7 @@ public final class VelocityBootstrap {
         this.proxyServer.getEventManager().register(this, new VelocityListener(this, this.proxyServer));
 
         // update that the service is ready to use
-        final CloudService service = Wrapper.getInstance().thisService();
+        final var service = Wrapper.getInstance().thisService();
 
         if (service.getGroup().isAutoUpdating()) {
             service.setState(ServiceState.ONLINE);

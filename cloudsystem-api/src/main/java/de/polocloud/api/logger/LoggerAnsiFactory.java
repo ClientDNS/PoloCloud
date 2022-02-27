@@ -31,8 +31,8 @@ public enum LoggerAnsiFactory {
 
     public static String toColorCode(final String value) {
         var message = value;
-        for (LoggerAnsiFactory ansiColorFactory : values()) {
-            for (char replacement : REPLACEMENTS) {
+        for (var ansiColorFactory : values()) {
+            for (var replacement : REPLACEMENTS) {
                 message = message.replace(replacement + "" + ansiColorFactory.index, ansiColorFactory.code);
             }
         }

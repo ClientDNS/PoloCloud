@@ -26,9 +26,9 @@ public class ServiceGroupCacheUpdatePacket implements Packet {
 
     @Override
     public void read(@NotNull NetworkBuf byteBuf) {
-        int amount = byteBuf.readInt();
+        var amount = byteBuf.readInt();
         this.groups = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
+        for (var i = 0; i < amount; i++) {
             this.groups.add(ServiceGroup.read(byteBuf));
         }
     }

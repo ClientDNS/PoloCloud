@@ -20,13 +20,13 @@ public record NetworkBuf(ByteBuf byteBuf) {
     }
 
     public <T extends Enum<T>> T readEnum() {
-        final boolean nulled = this.byteBuf.readBoolean();
+        final var nulled = this.byteBuf.readBoolean();
         if (nulled) return null;
         Class<?> enumClass;
         try {
             final var classString = this.readString();
             enumClass = Class.forName(classString);
-            final int varInt = this.readVarInt();
+            final var varInt = this.readVarInt();
             return (T) enumClass.getEnumConstants()[varInt];
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -67,11 +67,11 @@ public record NetworkBuf(ByteBuf byteBuf) {
     }
 
     public int readVarInt() {
-        int i = 0;
-        int j = 0;
+        var i = 0;
+        var j = 0;
 
         while (true) {
-            byte b0 = this.byteBuf.readByte();
+            var b0 = this.byteBuf.readByte();
             i |= (b0 & 127) << j++ * 7;
 
             if (j > 5) {

@@ -17,10 +17,10 @@ public final class ConsoleCompleter implements Completer {
         List<String> suggestions = null;
         var arguments = input.split(" ");
         if (input.isEmpty() || input.indexOf(' ') == -1) {
-            final Collection<String> registeredCommands = Base.getInstance().getCommandManager().getCachedCloudCommands().keySet();
+            final var registeredCommands = Base.getInstance().getCommandManager().getCachedCloudCommands().keySet();
             final var toTest = arguments[arguments.length - 1];
             final List<String> result = new LinkedList<>();
-            for (final String s : registeredCommands) {
+            for (final var s : registeredCommands) {
                 if (s != null && (toTest.trim().isEmpty() || s.toLowerCase().contains(toTest.toLowerCase()))) {
                     result.add(s);
                 }

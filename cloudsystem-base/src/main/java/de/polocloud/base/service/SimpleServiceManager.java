@@ -47,7 +47,7 @@ public final class SimpleServiceManager implements ServiceManager {
                 this.pluginPath, StandardCopyOption.REPLACE_EXISTING);
 
             // gets the main class from the wrapper
-            try (final JarInputStream jarInputStream = new JarInputStream(Files.newInputStream(this.wrapperPath))) {
+            try (final var jarInputStream = new JarInputStream(Files.newInputStream(this.wrapperPath))) {
                 this.wrapperMainClass = jarInputStream.getManifest().getMainAttributes().getValue("Main-Class");
             }
         } catch (IOException e) {

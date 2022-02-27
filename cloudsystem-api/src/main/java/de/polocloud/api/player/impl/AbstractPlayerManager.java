@@ -33,7 +33,7 @@ public abstract class AbstractPlayerManager implements PlayerManager {
 
         packetHandler.registerPacketListener(CloudPlayerLoginPacket.class, (channelHandlerContext, packet) ->
             CloudAPI.getInstance().getServiceManager().getService(packet.getProxyServer()).ifPresentOrElse(service -> {
-                final CloudPlayer cloudPlayer = new SimpleCloudPlayer(packet.getUuid(), packet.getUsername(), service);
+                final var cloudPlayer = new SimpleCloudPlayer(packet.getUuid(), packet.getUsername(), service);
                 this.players.put(packet.getUuid(), cloudPlayer);
                 eventHandler.call(new CloudPlayerLoginEvent(cloudPlayer));
             }, () -> CloudAPI.getInstance().getLogger()

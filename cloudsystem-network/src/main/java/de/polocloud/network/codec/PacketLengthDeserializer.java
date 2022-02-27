@@ -23,7 +23,7 @@ public class PacketLengthDeserializer extends ByteToMessageDecoder {
             final var readerIndex = byteBuf.readerIndex();
             final var bytes = new byte[this.byteSize];
 
-            for (int i = 0; i < this.byteSize; i++) {
+            for (var i = 0; i < this.byteSize; i++) {
                 if (!byteBuf.isReadable()) {
                     byteBuf.readerIndex(readerIndex);
                     return;
@@ -54,10 +54,10 @@ public class PacketLengthDeserializer extends ByteToMessageDecoder {
     }
 
     private int readVarIntUnchecked(ByteBuf byteBuf) {
-        int i = 0;
+        var i = 0;
         final var maxRead = Math.min(this.byteSize, byteBuf.readableBytes());
-        for (int j = 0; j < maxRead; j++) {
-            int k = byteBuf.readByte();
+        for (var j = 0; j < maxRead; j++) {
+            var k = byteBuf.readByte();
             i |= (k & 127) << j * 7;
             if ((k & 128) != 128) {
                 return i;
