@@ -3,9 +3,10 @@ package de.polocloud.database.manager;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.groups.impl.SimpleServiceGroup;
+import de.polocloud.api.logger.LogType;
 import de.polocloud.api.version.GameServerVersion;
-import de.polocloud.database.DatabaseConfiguration;
 import de.polocloud.database.CloudDatabaseProvider;
+import de.polocloud.database.DatabaseConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +24,8 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
     private static final String DEFAULT_PROPERTIES = "&serverTimezone=UTC&autoReconnect=true";
 
     private static final String GROUP_TABLE = "cloudsystem_groups";
-
-    private Connection connection;
     private final DatabaseConfiguration config;
+    private Connection connection;
 
     @SneakyThrows
     public void connect() {
@@ -33,7 +33,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
         this.createTable();
 
-        CloudAPI.getInstance().getLogger().log("The connection is now established to the database.");
+        CloudAPI.getInstance().getLogger().log("§7The connection is now §aestablished §7to the §bdatabase§8.", LogType.SUCCESS);
     }
 
     @SneakyThrows

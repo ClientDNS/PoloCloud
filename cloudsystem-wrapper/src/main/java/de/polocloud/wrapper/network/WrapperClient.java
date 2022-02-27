@@ -12,7 +12,7 @@ public final class WrapperClient extends NettyClient {
         super(packetHandler, name, NetworkType.WRAPPER);
 
         this.connect(hostname, port);
-        CloudAPI.getInstance().getLogger().log("The service start successfully network service.");
+        CloudAPI.getInstance().getLogger().log("§7The service started successfully network service.");
     }
 
     @Override

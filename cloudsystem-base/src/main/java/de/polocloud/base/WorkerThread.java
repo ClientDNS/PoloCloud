@@ -70,7 +70,7 @@ public final class WorkerThread extends Thread {
                 this.base.getServiceManager().getAllCachedServices().add(service);
                 this.base.getNode().sendPacketToAll(new ServiceAddPacket(service));
                 this.base.getLogger()
-                    .log("The group '§b" + serviceGroup.getName() + "§7' start new instance of '§b" + service.getName()
+                    .log("§7The group '§b" + serviceGroup.getName() + "§7' starts a new instance of '§b" + service.getName()
                         + "§7' (§6Prepared§7)");
             });
     }

@@ -73,7 +73,7 @@ public final class Base extends CloudAPI {
         this.logger.log(" ", LogType.EMPTY);
 
         if (this.loadConfig(new File("config.json"))) {
-            this.logger.log("Please configure your database in the config.json!", LogType.WARNING);
+            this.logger.log("§cPlease configure your database in the '§bconfig.json§7'!", LogType.WARNING);
             return;
         }
         this.checkVersion();

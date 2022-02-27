@@ -31,19 +31,19 @@ public final class BaseNode extends NettyServer {
         new BaseNodeNetwork();
 
         this.connect(this.hostName, this.port);
-        Base.getInstance().getLogger().log("§7The node clustering is§a successfully §7started.");
+        Base.getInstance().getLogger().log("§7The node clustering is §asuccessfully §7started.");
     }
 
     @Override
     public void onNodeConnected(final ConnectedClient connectedClient) {
         Base.getInstance().getLogger()
-            .log("The node '§b" + connectedClient.name() + "§7' logged in the cluster.");
+            .log("§7The node '§b" + connectedClient.name() + "§7' §alogged §7into cluster.");
     }
 
     @Override
     public void onNodeDisconnected(final ConnectedClient connectedClient) {
         Base.getInstance().getLogger()
-            .log("The node '§b" + connectedClient.name() + "§7' leaves in the cluster.");
+            .log("§7The node '§b" + connectedClient.name() + "§7' §cleaved §7the cluster.");
     }
 
     @Override
@@ -61,7 +61,7 @@ public final class BaseNode extends NettyServer {
 
         service.update();
 
-        Base.getInstance().getLogger().log("The service '§b" + connectedClient.name() + "§7'§a successfully §7connect to the cluster. ("+ SimpleStatisticManager.getProcessingTime(service) + "ms)");
+        Base.getInstance().getLogger().log("§7The service '§b" + connectedClient.name() + "§7' has §asuccessfully §7connected to the cluster. (§b" + SimpleStatisticManager.getProcessingTime(service) + "ms)");
     }
 
     @Override
@@ -73,9 +73,9 @@ public final class BaseNode extends NettyServer {
                 base.getEventHandler().call(new CloudServiceRemoveEvent(service.getName()));
                 base.getNode().sendPacketToAll(new ServiceRemovePacket(service.getName()));
                 base.getServiceManager().getAllCachedServices().remove(service);
-                base.getLogger().log("The service '§b" + service.getName() + "§7' disconnect.");
+                base.getLogger().log("§7The service '§b" + service.getName() + "§7' has §cdisconnected§8.");
             }, () ->
-                base.getLogger().log("Service " + client.name() + " disconnected but not exists!", LogType.WARNING));
+                base.getLogger().log("§7Service §b" + client.name() + " §cdisconnected §7but doesn't exist!", LogType.WARNING));
     }
 
 }

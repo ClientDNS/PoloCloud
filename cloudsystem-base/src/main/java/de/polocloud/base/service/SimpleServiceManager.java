@@ -2,11 +2,11 @@ package de.polocloud.base.service;
 
 import de.polocloud.api.event.service.CloudServiceUpdateEvent;
 import de.polocloud.api.network.packet.QueryPacket;
-import de.polocloud.api.service.ServiceManager;
-import de.polocloud.base.Base;
 import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
 import de.polocloud.api.service.CloudService;
+import de.polocloud.api.service.ServiceManager;
+import de.polocloud.base.Base;
 import de.polocloud.network.NetworkType;
 import de.polocloud.network.packet.Packet;
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +23,9 @@ import java.util.jar.JarInputStream;
 
 public final class SimpleServiceManager implements ServiceManager {
 
-    private List<CloudService> allCachedServices;
-
     private final Path wrapperPath;
     private final Path pluginPath;
-
+    private List<CloudService> allCachedServices;
     private String wrapperMainClass;
 
     public SimpleServiceManager() {
@@ -81,7 +79,7 @@ public final class SimpleServiceManager implements ServiceManager {
 
     public void start(final CloudService service) {
         this.startService(service);
-        Base.getInstance().getLogger().log("The service '§b" + service.getName() + "§7' selected and will now started.");
+        Base.getInstance().getLogger().log("§7The service '§b" + service.getName() + "§7' was selected and will now be started.");
     }
 
     public void startService(final @NotNull CloudService service) {

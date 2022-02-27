@@ -24,7 +24,7 @@ public final class ServiceCommand extends CloudCommand {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             base.getServiceManager().getAllCachedServices().forEach(it -> logger
-                .log("Name of service '§b" + it.getName() + "§7' (§7State of service '§b" + it.getState() + "§7' | Node: '" + it.getGroup().getNode() + "')"));
+                .log("§7Name of service '§b" + it.getName() + "§7' (§7State of service '§b" + it.getState() + "§7' | Node: '" + it.getGroup().getNode() + "')"));
             return;
         } else if (args.length >= 1) {
             base.getServiceManager().getService(args[0]).ifPresentOrElse(service -> {
@@ -41,11 +41,11 @@ public final class ServiceCommand extends CloudCommand {
 
                 if (args.length == 2 && args[1].equalsIgnoreCase("stop")) {
                     if (service.getState().equals(ServiceState.PREPARED) || service.getState().equals(ServiceState.STOPPED)) {
-                        logger.log("This service ist not started or already in stopping state.", LogType.WARNING);
+                        logger.log("§7This service ist §cnot §7started or already in §cstopping §7state.", LogType.WARNING);
                         return;
                     }
                     service.stop();
-                    logger.log("The service '§b" + service.getName() + "§7' is now stopped.");
+                    logger.log("§7The service '§b" + service.getName() + "§7' is now §cstopped§7.");
                 } else if (args.length == 2 && args[1].equalsIgnoreCase("copy")) {
                     if (service instanceof LocalService localService) {
                         final var template = new File("templates/" + localService.getGroup().getTemplate());
@@ -54,16 +54,16 @@ public final class ServiceCommand extends CloudCommand {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        logger.log("Moved all files into template.");
+                        logger.log("§aSuccessfully §7moved all files into the template.");
                     } else {
-                        logger.log("The service must be a service on this node.", LogType.WARNING);
+                        logger.log("§7The service §cmust §7be a service on §ethis §7node.", LogType.WARNING);
                     }
                 } else if (args.length > 1 && args[1].equalsIgnoreCase("command")) {
                     final var stringBuilder = new StringBuilder();
                     for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
                     final var command = stringBuilder.toString();
                     service.executeCommand(command);
-                    logger.log("Executed command '" + command + "' on service " + service.getName());
+                    logger.log("§7Executed command '§b" + command + "§7' on service §b" + service.getName());
                 } else {
                     logger.log("Service information:",
                         "Name: §b" + service.getName(),

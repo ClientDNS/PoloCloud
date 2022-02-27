@@ -54,6 +54,10 @@ public enum GameServerVersion {
         this.serviceTypes = serviceTypes;
     }
 
+    public static GameServerVersion getVersionByName(final String value) {
+        return Arrays.stream(values()).filter(version -> version.getName().equalsIgnoreCase(value)).findAny().orElse(null);
+    }
+
     public String getName() {
         return this.title + (!this.version.equals("latest") ? "-" + this.version : "");
     }
@@ -64,10 +68,6 @@ public enum GameServerVersion {
 
     public String getJar() {
         return this.title + (!Objects.equals(this.version, "latest") ? "-" + this.version : "") + ".jar";
-    }
-
-    public static GameServerVersion getVersionByName(final String value) {
-        return Arrays.stream(values()).filter(version -> version.getName().equalsIgnoreCase(value)).findAny().orElse(null);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -117,7 +117,7 @@ public enum GameServerVersion {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        CloudAPI.getInstance().getLogger().log("Downloading of (§3" + this.getName() + "§7)§a successfully §7completed.");
+        CloudAPI.getInstance().getLogger().log("§7Downloading of (§3" + this.getName() + "§7)§a successfully §7completed.");
     }
 
     private int getBuildNumber(final @NotNull String title, final @NotNull String version) {

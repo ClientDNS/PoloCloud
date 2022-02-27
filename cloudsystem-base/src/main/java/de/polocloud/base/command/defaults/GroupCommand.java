@@ -25,7 +25,7 @@ public final class GroupCommand extends CloudCommand {
 
         if (args.length == 1 && args[0].equals("list")) {
             for (final var serviceGroup : groupManager.getAllCachedServiceGroups()) {
-                logger.log("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
+                logger.log("§7Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
             return;
@@ -47,8 +47,8 @@ public final class GroupCommand extends CloudCommand {
                 groupManager.getServiceGroupByName(args[0]).ifPresentOrElse(group -> {
                     groupManager.removeServiceGroup(group);
                     base.getServiceManager().getAllServicesByGroup(group).forEach(CloudService::stop);
-                    logger.log("The group '§b" + group.getName() + "§7' is now deleted.");
-                }, () -> logger.log("This group does not exists", LogType.WARNING));
+                    logger.log("§7The group '§b" + group.getName() + "§7' is now §cdeleted§7.");
+                }, () -> logger.log("§cThis group does not exists", LogType.WARNING));
                 return;
             }
         } else if (args.length == 4 && args[1].equalsIgnoreCase("edit")) {
@@ -89,7 +89,7 @@ public final class GroupCommand extends CloudCommand {
                     case "fallback":
                         final var fallback = args[3].toLowerCase();
                         if (!fallback.equals("true") && !fallback.equals("false")) {
-                            logger.log("Please use true/false");
+                            logger.log("§7Please use §btrue§7/§bfalse");
                             return;
                         }
                         group.setFallbackGroup(Boolean.parseBoolean(fallback));
@@ -115,8 +115,8 @@ public final class GroupCommand extends CloudCommand {
                         final var gameServerVersion = GameServerVersion.getVersionByName(args[3]);
 
                         if (gameServerVersion == null) {
-                            logger.log("This version is not available.", LogType.WARNING);
-                            logger.log("Use one of the following versions:");
+                            logger.log("§7This version is §cnot §7available.", LogType.WARNING);
+                            logger.log("§7Please use one of the following versions:");
                             for (final var version : GameServerVersion.values()) logger.log("- " + version.getName());
                             return;
                         }
