@@ -58,7 +58,7 @@ Currently, we offer these **Server-Software's**:
 
 # For Developers
 
-### Looking how to develop something for the Cloud? Read our Wiki (available shortly after Release) here on GitHub
+### Looking how to develop something for the Cloud? Read our [**Wiki**](https://github.com/PoloServices/PoloCloud/wiki/getStarted)
 
 ## Contact
 
