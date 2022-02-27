@@ -9,6 +9,7 @@ import de.polocloud.api.network.packet.init.CacheInitPacket;
 import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceManager;
+import de.polocloud.wrapper.group.WrapperGroupManager;
 import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.player.CloudPlayerManager;
@@ -101,7 +102,7 @@ public final class Wrapper extends CloudAPI {
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
         this.logger = new WrapperLogger();
-        this.groupManager = new de.polocloud.wrapper.group.GroupManager();
+        this.groupManager = new WrapperGroupManager();
         this.serviceManager = new WrapperServiceManager(property);
         this.playerManager = new CloudPlayerManager();
         this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
