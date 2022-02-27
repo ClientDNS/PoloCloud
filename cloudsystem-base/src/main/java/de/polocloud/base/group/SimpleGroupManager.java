@@ -44,7 +44,7 @@ public final class SimpleGroupManager extends AbstractGroupManager {
 
     @Override
     public void updateServiceGroup(@NotNull ServiceGroup serviceGroup) {
-        final ServiceGroupUpdatePacket packet = new ServiceGroupUpdatePacket(serviceGroup);
+        final var packet = new ServiceGroupUpdatePacket(serviceGroup);
         // update all other nodes and this service groups
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
         // update own service group caches

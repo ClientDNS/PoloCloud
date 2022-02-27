@@ -1,5 +1,5 @@
 name: PoloCloud
 api-version: 1.13
-version: 2.0.0
+version: "${project.version}"
 author: HttpMarco
 main: de.polocloud.plugin.bootstrap.bukkit.BukkitBootstrap

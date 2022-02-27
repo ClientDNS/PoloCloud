@@ -60,7 +60,7 @@ public final class SimpleService implements CloudService {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final SimpleService that = (SimpleService) o;
+        final var that = (SimpleService) o;
 
         if (this.serviceId != that.serviceId) return false;
         if (this.port != that.port) return false;
@@ -69,7 +69,7 @@ public final class SimpleService implements CloudService {
 
     @Override
     public int hashCode() {
-        int result = this.group.hashCode();
+        var result = this.group.hashCode();
         result = 31 * result + this.serviceId;
         result = 31 * result + this.port;
         return result;

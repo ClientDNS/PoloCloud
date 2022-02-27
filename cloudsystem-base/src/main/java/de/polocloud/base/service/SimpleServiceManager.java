@@ -95,7 +95,7 @@ public final class SimpleServiceManager implements ServiceManager {
 
     @Override
     public void updateService(@NotNull CloudService service) {
-        var packet = new ServiceUpdatePacket(service);
+        final var packet = new ServiceUpdatePacket(service);
         //update all other nodes and this connected services
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
         //update own service caches

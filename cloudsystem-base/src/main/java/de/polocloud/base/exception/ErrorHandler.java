@@ -15,7 +15,7 @@ public class ErrorHandler {
 
     private static ErrorHandler defaultInstance = null;
 
-    private final Map<ErrorCodeIdentifier<?>, MatcherFactory> errorCodeMap;
+    private final Map<ErrorCodeIdentifier<?>, MatcherFactory<?>> errorCodeMap;
 
     private final List<ActionEntry> actions;
     private final List<ErrorAction> otherwiseActions;
@@ -109,7 +109,7 @@ public class ErrorHandler {
         if (exceptionClass == null) {
             throw new IllegalArgumentException("Tried to register a 'onError' in ExceptionHandler, but the ExceptionClass is null");
         }
-        actions.add(new ActionEntry(new ErrorMatcher(exceptionClass), action));
+        this.actions.add(new ActionEntry(new ErrorMatcher(exceptionClass), action));
         return this;
     }
 
@@ -126,13 +126,13 @@ public class ErrorHandler {
             throw new IllegalArgumentException("Tried to register a 'onError' in ExceptionHandler, but the ErrorCode is null");
         }
 
-        MatcherFactory<? super T> matcherFactory = getMatcherFactoryFromErrorCode(errorCode);
+        final var matcherFactory = getMatcherFactoryFromErrorCode(errorCode);
         if (matcherFactory == null) {
             System.out.println("Tried to register a 'onError' in ExceptionHandler, but the ErrorCode is not registered. Skipped...");
             return this;
         }
 
-        actions.add(new ActionEntry(matcherFactory.build(errorCode), action));
+        this.actions.add(new ActionEntry(matcherFactory.build(errorCode), action));
         return this;
     }
 
@@ -145,7 +145,7 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public ErrorHandler orElse(@NotNull ErrorAction action) {
-        otherwiseActions.add(action);
+        this.otherwiseActions.add(action);
         return this;
     }
 
@@ -158,7 +158,7 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public ErrorHandler doAlways(@NotNull ErrorAction action) {
-        alwaysActions.add(action);
+        this.alwaysActions.add(action);
         return this;
     }
 
@@ -168,8 +168,8 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public ErrorHandler ignoreFollowing() {
-        if (localContext != null) {
-            localContext.get().skipFollowing = true;
+        if (this.localContext != null) {
+            this.localContext.get().skipFollowing = true;
         }
         return this;
     }
@@ -180,8 +180,8 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public ErrorHandler ignoreAlways() {
-        if (localContext != null) {
-            localContext.get().skipAlways = true;
+        if (this.localContext != null) {
+            this.localContext.get().skipAlways = true;
         }
         return this;
     }
@@ -192,8 +192,8 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public ErrorHandler ignoreDefaults() {
-        if (localContext != null) {
-            localContext.get().skipDefaults = true;
+        if (this.localContext != null) {
+            this.localContext.get().skipDefaults = true;
         }
         return this;
     }
@@ -221,10 +221,10 @@ public class ErrorHandler {
         if (error == null)
             throw new IllegalArgumentException("Tried to 'handle' in ExceptionHandler, but the Error (Throwable) is null");
 
-        localContext = context;
-        var ctx = localContext.get();
+        this.localContext = context;
+        final var ctx = this.localContext.get();
 
-        for (ActionEntry actionEntry : actions) {
+        for (final var actionEntry : this.actions) {
             if (ctx.skipFollowing) break;
             if (actionEntry.matcher().matches(error)) {
                 actionEntry.action().execute(error, this);
@@ -233,21 +233,21 @@ public class ErrorHandler {
         }
 
         if (!ctx.handled && !otherwiseActions.isEmpty()) {
-            for (ErrorAction action : otherwiseActions) {
+            for (final var action : this.otherwiseActions) {
                 action.execute(error, this);
                 ctx.handled = true;
             }
         }
 
         if (!ctx.skipAlways) {
-            for (ErrorAction action : alwaysActions) {
+            for (final var action : this.alwaysActions) {
                 action.execute(error, this);
                 ctx.handled = true;
             }
         }
 
-        if (parentErrorHandler != null && !ctx.skipDefaults) {
-            parentErrorHandler.handle(error, localContext);
+        if (this.parentErrorHandler != null && !ctx.skipDefaults) {
+            this.parentErrorHandler.handle(error, this.localContext);
         }
     }
 
@@ -264,7 +264,7 @@ public class ErrorHandler {
      * @return the Object, which was returned of the Callable
      */
     public <T> T run(Callable<T> callable) {
-        return runOrDefault(callable, null, true);
+        return this.runOrDefault(callable, null, true);
     }
 
     /**
@@ -282,7 +282,7 @@ public class ErrorHandler {
      * @return the Object, which was returned of the Callable
      */
     public <T> T runOrDefault(Callable<T> callable, T defaultValue) {
-        return runOrDefault(callable, defaultValue, true);
+        return this.runOrDefault(callable, defaultValue, true);
     }
 
     /**
@@ -304,7 +304,7 @@ public class ErrorHandler {
             return callable.call();
         } catch (Exception exception) {
             if (reportException) {
-                handle(exception, localContext);
+                handle(exception, this.localContext);
             }
         }
         return defaultValue;
@@ -324,8 +324,8 @@ public class ErrorHandler {
      * @return the Object, which was returned of the Callable
      */
     public <T> T runUntilSuccess(T defaultValue, List<Callable<T>> actions) {
-        for (Callable<T> action : actions) {
-            T execution = runOrDefault(action, null, false);
+        for (final var action : actions) {
+            final var execution = runOrDefault(action, null, false);
             if (execution != null) {
                 return execution;
             }
@@ -348,7 +348,7 @@ public class ErrorHandler {
      */
     @SafeVarargs
     public final <T> T runUntilSuccess(T defaultValue, @NotNull Callable<T>... tries) {
-        return runUntilSuccess(defaultValue, Arrays.stream(tries).toList());
+        return this.runUntilSuccess(defaultValue, Arrays.stream(tries).toList());
     }
 
     /**
@@ -362,7 +362,7 @@ public class ErrorHandler {
         try {
             callable.call();
         } catch (Exception exception) {
-            handle(exception, localContext);
+            this.handle(exception, this.localContext);
         }
     }
 
@@ -374,7 +374,7 @@ public class ErrorHandler {
      * @param error the {@link Throwable error}
      */
     public void handle(Throwable error) {
-        this.handle(error, localContext);
+        this.handle(error, this.localContext);
     }
 
     /**
@@ -387,11 +387,9 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public <T> ErrorHandler bindCode(T errorCode, MatcherFactory<? super T> matcherFactory, ErrorAction... actions) {
-        errorCodeMap.put(new ErrorCodeIdentifier<>(errorCode), matcherFactory);
+        this.errorCodeMap.put(new ErrorCodeIdentifier<>(errorCode), matcherFactory);
 
-        for (ErrorAction action : actions) {
-            onError(errorCode, action);
-        }
+        for (final var action : actions) this.onError(errorCode, action);
 
         return this;
     }
@@ -406,11 +404,9 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public <T> ErrorHandler bindClass(Class<T> errorCodeClass, MatcherFactory<? super T> matcherFactory, ErrorAction... actions) {
-        errorCodeMap.put(new ErrorCodeIdentifier<>(errorCodeClass), matcherFactory);
+        this.errorCodeMap.put(new ErrorCodeIdentifier<>(errorCodeClass), matcherFactory);
 
-        for (ErrorAction action : actions) {
-            onError(errorCodeClass, action);
-        }
+        for (final var action : actions) this.onError(errorCodeClass, action);
 
         return this;
     }
@@ -435,12 +431,12 @@ public class ErrorHandler {
      * @return the found {@link MatcherFactory}
      */
     protected <T> MatcherFactory<? super T> getMatcherFactoryFromErrorCode(T errorCode) {
-        MatcherFactory<T> matcherFactory = errorCodeMap.get(new ErrorCodeIdentifier<>(errorCode));
+        var matcherFactory = this.errorCodeMap.get(new ErrorCodeIdentifier<>(errorCode));
         if (matcherFactory != null) {
-            return matcherFactory;
+            return (MatcherFactory<? super T>) matcherFactory;
         }
-        matcherFactory = errorCodeMap.get(new ErrorCodeIdentifier(errorCode.getClass()));
-        return matcherFactory != null ? matcherFactory : (parentErrorHandler != null ? parentErrorHandler.getMatcherFactoryFromErrorCode(errorCode) : null);
+        matcherFactory = this.errorCodeMap.get(new ErrorCodeIdentifier<>(errorCode.getClass()));
+        return matcherFactory != null ? (MatcherFactory<? super T>) matcherFactory : (parentErrorHandler != null ? parentErrorHandler.getMatcherFactoryFromErrorCode(errorCode) : null);
     }
 
     /**
@@ -449,13 +445,11 @@ public class ErrorHandler {
      * @return the Instance of the current {@link ErrorHandler}
      */
     public ErrorHandler clearErrorHandler() {
-        actions.clear();
-        errorCodeMap.clear();
-        otherwiseActions.clear();
-        alwaysActions.clear();
-        if (localContext != null) {
-            localContext.get().clear();
-        }
+        this.actions.clear();
+        this.errorCodeMap.clear();
+        this.otherwiseActions.clear();
+        this.alwaysActions.clear();
+        if (this.localContext != null) this.localContext.get().clear();
         return this;
     }
 
@@ -465,7 +459,9 @@ public class ErrorHandler {
      * @return a Lists with all ErrorCodes
      */
     public List<Object> getRegisteredErrorCodes() {
-        return this.errorCodeMap.keySet().stream().map(errorCodeIdentifier -> errorCodeIdentifier.errorCode == null ? errorCodeIdentifier.errorCodeClass : errorCodeIdentifier.errorCode).collect(Collectors.toList());
+        return this.errorCodeMap.keySet().stream()
+            .map(errorCodeIdentifier -> errorCodeIdentifier.errorCode == null ? errorCodeIdentifier.errorCodeClass :
+                errorCodeIdentifier.errorCode).collect(Collectors.toList());
     }
 
     private static class ExceptionContext {
@@ -478,9 +474,9 @@ public class ErrorHandler {
          * Clears this Instance
          */
         void clear() {
-            skipDefaults = false;
-            skipFollowing = false;
-            skipAlways = false;
+            this.skipDefaults = false;
+            this.skipFollowing = false;
+            this.skipAlways = false;
         }
     }
 
@@ -500,13 +496,13 @@ public class ErrorHandler {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            var that = (ErrorCodeIdentifier<?>) o;
-            return Objects.equals(errorCode, that.errorCode) && Objects.equals(errorCodeClass, that.errorCodeClass);
+            final var that = (ErrorCodeIdentifier<?>) o;
+            return Objects.equals(this.errorCode, that.errorCode) && Objects.equals(this.errorCodeClass, that.errorCodeClass);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(errorCode, errorCodeClass);
+            return Objects.hash(this.errorCode, this.errorCodeClass);
         }
     }
 

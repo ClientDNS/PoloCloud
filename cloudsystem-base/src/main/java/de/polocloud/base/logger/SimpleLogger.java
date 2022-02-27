@@ -40,8 +40,8 @@ public final class SimpleLogger implements Logger {
 
     @Override
     public void log(@NotNull String text, @NotNull LogType logType) {
-        final String coloredMessage = this.format(text, logType);
-        final LineReader lineReader = this.consoleManager.getLineReader();
+        final var coloredMessage = this.format(text, logType);
+        final var lineReader = this.consoleManager.getLineReader();
         lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         lineReader.getTerminal().writer().println(coloredMessage);
         lineReader.getTerminal().flush();
@@ -53,7 +53,7 @@ public final class SimpleLogger implements Logger {
 
     @Override
     public void log(final String... text) {
-        for (final String s : text) this.log(s);
+        for (final var s : text) this.log(s);
     }
 
     public boolean isWindows() {

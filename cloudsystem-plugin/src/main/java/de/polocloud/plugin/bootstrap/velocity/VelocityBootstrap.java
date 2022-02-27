@@ -16,7 +16,7 @@ import de.polocloud.wrapper.Wrapper;
 import java.util.Comparator;
 import java.util.Optional;
 
-@Plugin(id = "polocloud", name = "PoloCloud", authors = "HttpMarco", version = "2.0.0")
+@Plugin(id = "polocloud", name = "PoloCloud", authors = "HttpMarco", version = "2.1.0-SNAPSHOT")
 public final class VelocityBootstrap {
 
     private final ProxyServer proxyServer;

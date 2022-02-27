@@ -1,18 +1,16 @@
 package de.polocloud.api.player.impl;
 
 import de.polocloud.api.CloudAPI;
-import de.polocloud.api.event.EventHandler;
 import de.polocloud.api.event.player.CloudPlayerDisconnectEvent;
 import de.polocloud.api.event.player.CloudPlayerLoginEvent;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.network.packet.player.CloudPlayerDisconnectPacket;
+import de.polocloud.api.network.packet.player.CloudPlayerLoginPacket;
 import de.polocloud.api.network.packet.player.CloudPlayerUpdatePacket;
 import de.polocloud.api.player.CloudPlayer;
-import de.polocloud.api.network.packet.player.CloudPlayerLoginPacket;
 import de.polocloud.api.player.PlayerManager;
-import de.polocloud.network.packet.PacketHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -24,8 +22,8 @@ public abstract class AbstractPlayerManager implements PlayerManager {
 
     public AbstractPlayerManager() {
 
-        final PacketHandler packetHandler = CloudAPI.getInstance().getPacketHandler();
-        final EventHandler eventHandler = CloudAPI.getInstance().getEventHandler();
+        final var packetHandler = CloudAPI.getInstance().getPacketHandler();
+        final var eventHandler = CloudAPI.getInstance().getEventHandler();
 
         packetHandler.registerPacketListener(CloudPlayerUpdatePacket.class, (channelHandlerContext, packet) ->
             this.getCloudPlayer(packet.getUuid()).ifPresent(cloudPlayer -> {

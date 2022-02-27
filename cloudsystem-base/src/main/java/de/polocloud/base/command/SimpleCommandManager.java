@@ -18,7 +18,7 @@ public class SimpleCommandManager implements CommandManager {
     }
 
     public void execute(final @NotNull String command) {
-        final List<String> args = new ArrayList<>(Arrays.asList(command.split(" ")));
+        final var args = new ArrayList<>(Arrays.asList(command.split(" ")));
         if (CloudAPI.getInstance().getCloudAPITypes().equals(CloudAPIType.NODE)) {
             final var cloudCommand = this.cachedCloudCommands.get(args.get(0));
             if (cloudCommand == null) return;
@@ -35,7 +35,7 @@ public class SimpleCommandManager implements CommandManager {
 
     @Override
     public void registerCommands(@NotNull CloudCommand... commands) {
-        for (final CloudCommand command : commands) this.registerCommand(command);
+        for (final var command : commands) this.registerCommand(command);
     }
 
     @Override

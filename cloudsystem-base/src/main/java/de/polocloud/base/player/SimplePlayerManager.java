@@ -42,7 +42,7 @@ public final class SimplePlayerManager extends AbstractPlayerManager {
 
     @Override
     public void updateCloudPlayer(@NotNull CloudPlayer cloudPlayer, @NotNull CloudPlayerUpdateEvent.UpdateReason updateReason) {
-        CloudPlayerUpdatePacket packet = new CloudPlayerUpdatePacket(cloudPlayer, updateReason);
+        final var packet = new CloudPlayerUpdatePacket(cloudPlayer, updateReason);
         // update all other nodes and this connected services
         Base.getInstance().getNode().sendPacketToType(new QueryPacket(packet, QueryPacket.QueryState.SECOND_RESPONSE), NetworkType.NODE);
         // update own service caches

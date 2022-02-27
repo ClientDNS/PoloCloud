@@ -23,16 +23,16 @@ public enum LoggerAnsiFactory {
     LIGHT_BLUE("light_blue", 'b', Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).bold().toString()),
     CYAN("cyan", '3', Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).boldOff().toString());
 
-    private static final char[] replacements = new char[]{'§', '&'};
+    private static final char[] REPLACEMENTS = new char[]{'§', '&'};
 
     private final String name;
     private final char index;
     private final String code;
 
-    public static String toColorCode(String value) {
-        String message = value;
+    public static String toColorCode(final String value) {
+        var message = value;
         for (LoggerAnsiFactory ansiColorFactory : values()) {
-            for (char replacement : replacements) {
+            for (char replacement : REPLACEMENTS) {
                 message = message.replace(replacement + "" + ansiColorFactory.index, ansiColorFactory.code);
             }
         }

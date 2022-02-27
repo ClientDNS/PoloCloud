@@ -14,7 +14,7 @@ public final class SimpleStatisticManager {
     }
 
     public static long getProcessingTime(CloudService service){
-        long time = System.currentTimeMillis() - SERVICE_START_UP.getOrDefault(service, (System.currentTimeMillis() - 1));
+        final var time = System.currentTimeMillis() - SERVICE_START_UP.getOrDefault(service, (System.currentTimeMillis() - 1));
         SERVICE_START_UP.remove(service);
         return time;
     }

@@ -7,7 +7,7 @@ import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.wrapper.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
-public final class GroupManager extends AbstractGroupManager {
+public final class WrapperGroupManager extends AbstractGroupManager {
 
     @Override
     public void updateServiceGroup(@NotNull ServiceGroup serviceGroup) {
