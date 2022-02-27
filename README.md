@@ -15,8 +15,6 @@ Currently, we offer these **Server-Software's**:
 
 :information_source: We recommend using Paper 1.18.1
 
-:information_source: [List with all pieces of software](#software-versions)
-
 # Features
 - Template System
 - Node Clustering
@@ -68,5 +66,5 @@ You can reach us at our [**Discord**](https://discord.com/invite/2yDWH3VxKC)!
 
 <hr>
 
-###### Last Update: **26.02.2022**
+###### Last Update: **27.02.2022**
 ###### ~ThePoloCloud Team
