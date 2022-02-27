@@ -94,6 +94,10 @@ public abstract class NettyServer extends Node {
         return this.getClients().stream().filter(connectedClient -> connectedClient.networkType() == NetworkType.WRAPPER).toList();
     }
 
+    public List<ConnectedClient> getNodes() {
+        return this.getClients().stream().filter(connectedClient -> connectedClient.networkType() == NetworkType.NODE).toList();
+    }
+
     public void sendPacketToAll(final Packet packet) {
         this.connectedClients.keySet().forEach(channel -> channel.writeAndFlush(packet));
     }
