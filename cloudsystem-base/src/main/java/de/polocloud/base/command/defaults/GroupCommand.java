@@ -79,7 +79,7 @@ public final class GroupCommand extends CloudCommand {
                     "Min online services: §b" + group.getMinOnlineService(),
                     "Max online services: §b" + group.getMaxOnlineService(),
                     "Static: §b" + group.isStatic(),
-                    "Version: §b" + group.getGameServerVersion().getTitle(),
+                    "Version: §b" + group.getGameServerVersion().getName(),
                     "Maintenance: §b" + group.isMaintenance());
             }, () -> logger.log("This group does not exists", LogType.WARNING));
         } else if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {

@@ -77,7 +77,7 @@ public enum GameServerVersion {
 
         if (file.exists()) return;
 
-        CloudAPI.getInstance().getLogger().log("§7Downloading §bVersion§7... (§3" + this.getTitle() + "§7)");
+        CloudAPI.getInstance().getLogger().log("§7Downloading §bVersion§7... (§3" + this.getName() + "§7)");
 
         file.getParentFile().mkdirs();
         try {
@@ -112,12 +112,12 @@ public enum GameServerVersion {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            CloudAPI.getInstance().getLogger().log("§cFailed to download version§7... (§3" + this.getTitle() + "§7)", LogType.ERROR);
+            CloudAPI.getInstance().getLogger().log("§cFailed to download version§7... (§3" + this.getName() + "§7)", LogType.ERROR);
             return;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        CloudAPI.getInstance().getLogger().log("Downloading of (§3" + this.getTitle() + "§7)§a successfully §7completed.");
+        CloudAPI.getInstance().getLogger().log("Downloading of (§3" + this.getName() + "§7)§a successfully §7completed.");
     }
 
     private int getBuildNumber(final @NotNull String title, final @NotNull String version) {
