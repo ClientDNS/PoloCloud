@@ -31,11 +31,10 @@ public final class ServiceCommand extends CloudCommand {
                 if (args.length == 4 && args[1].equalsIgnoreCase("edit")) {
                     final var key = args[2].toLowerCase();
 
-                    switch (key) {
-                        case "maxplayers":
-                            this.getAndSetInt(key, args[3], service, service::setMaxPlayers);
-                            logger.log("§7Successfully set max players count to " + args[3]);
-                            return;
+                    if (key.equals("maxplayers")) {
+                        this.getAndSetInt(key, args[3], service, service::setMaxPlayers);
+                        logger.log("§7Successfully set max players count to " + args[3]);
+                        return;
                     }
                     return;
                 }

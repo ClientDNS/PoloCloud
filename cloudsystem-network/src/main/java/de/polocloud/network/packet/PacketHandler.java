@@ -13,6 +13,7 @@ public final class PacketHandler {
 
     private final List<Class<? extends Packet>> packets;
 
+    @SuppressWarnings("rawtypes")
     private final Map<Class<? extends Packet>, List<PacketListener>> packetListener;
 
     @SafeVarargs

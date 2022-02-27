@@ -19,6 +19,7 @@ public record NetworkBuf(ByteBuf byteBuf) {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Enum<T>> T readEnum() {
         final var nulled = this.byteBuf.readBoolean();
         if (nulled) return null;

@@ -16,6 +16,7 @@ import de.polocloud.wrapper.Wrapper;
 import java.util.Comparator;
 import java.util.Optional;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Plugin(id = "polocloud", name = "PoloCloud", authors = "HttpMarco", version = "2.1.0-SNAPSHOT")
 public final class VelocityBootstrap {
 

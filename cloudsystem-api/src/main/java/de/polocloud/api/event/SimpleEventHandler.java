@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 
 public final class SimpleEventHandler implements EventHandler {
 
+    @SuppressWarnings("rawtypes")
     private final Map<Class<? extends CloudEvent>, List<Consumer>> events = new ConcurrentHashMap<>();
 
     public SimpleEventHandler() {

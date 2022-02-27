@@ -10,14 +10,13 @@ public class SimpleDatabaseManager implements DatabaseManager {
     private CloudDatabaseProvider provider;
 
     public SimpleDatabaseManager(@NotNull final DatabaseConfiguration configuration) {
-        if(configuration.getDatabaseType() == DatabaseType.MYSQL) {
+        if (configuration.getDatabaseType() == DatabaseType.MYSQL) {
             var provider = new SQLCloudDatabaseHandler(configuration);
             provider.connect();
 
             this.provider = provider;
-        } else {
-            //TODO MONGODB
-        }
+        }  //TODO MONGODB
+
     }
 
     @Override

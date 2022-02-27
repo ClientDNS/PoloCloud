@@ -201,7 +201,7 @@ public class ErrorHandler {
     /**
      * Ignores the orElse, Always, upon Following {@link ErrorAction} actions
      * <p>
-     * Via {@link #ignoreDefaults()} {@link #ignoreAlways()} ()} {@link #ignoreFollowing()} ()}
+     * Via {@link #ignoreDefaults()} {@link #ignoreAlways()} () {@link #ignoreFollowing()} ()
      *
      * @return the Instance of the current {@link ErrorHandler}
      */

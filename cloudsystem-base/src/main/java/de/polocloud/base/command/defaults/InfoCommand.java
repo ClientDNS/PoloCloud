@@ -17,7 +17,7 @@ public final class InfoCommand extends CloudCommand {
             "§7RAM: §b" + ((runtime.totalMemory() - calcMemory(runtime.freeMemory()) + "/" + calcMemory(runtime.maxMemory()) + "mb")));
     }
 
-    private long calcMemory(final @NotNull long memory){
+    private long calcMemory(final long memory){
         return memory / 1024 / 1024;
     }
 
