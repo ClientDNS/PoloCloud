@@ -1,6 +1,7 @@
 package de.polocloud.plugin.bootstrap.velocity;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
@@ -9,6 +10,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceState;
+import de.polocloud.plugin.bootstrap.velocity.commands.VelocityCloudCommand;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityCloudListener;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityListener;
 import de.polocloud.wrapper.Wrapper;
@@ -33,12 +35,14 @@ public final class VelocityBootstrap {
 
         this.proxyServer.getEventManager().register(this, new VelocityListener(this, this.proxyServer));
 
+        CommandMeta meta = this.proxyServer.getCommandManager().metaBuilder("cloud").build();
+        this.proxyServer.getCommandManager().register(meta, new VelocityCloudCommand());
+
         // update that the service is ready to use
         final var service = Wrapper.getInstance().thisService();
 
         if (service.getGroup().isAutoUpdating()) {
-            service.setState(ServiceState.ONLINE);
-            service.update();
+            service.edit(cloudService -> cloudService.setState(ServiceState.ONLINE));
         }
     }
 
