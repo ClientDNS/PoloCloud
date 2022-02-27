@@ -18,8 +18,7 @@ public final class CloudPlayerManager extends AbstractPlayerManager {
 
     @Override
     public @NotNull List<CloudPlayer> getAllServicePlayers() {
-        return this.getPlayers().stream()
-            .filter(it -> it.getServer().getName().equalsIgnoreCase(Wrapper.getInstance().thisService().getName())).collect(Collectors.toList());
+        return this.getPlayers().stream().filter(it -> it.getServer().getName().equals(Wrapper.getInstance().thisService().getName())).toList();
     }
 
     @Override

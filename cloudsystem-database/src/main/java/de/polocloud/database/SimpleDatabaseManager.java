@@ -15,8 +15,7 @@ public class SimpleDatabaseManager implements DatabaseManager {
             provider.connect();
 
             this.provider = provider;
-        }  //TODO MONGODB
-
+        }
     }
 
     @Override
