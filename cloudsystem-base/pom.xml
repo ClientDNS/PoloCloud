@@ -71,7 +71,7 @@
                             <mainClass>de.polocloud.base.bootstrap.BaseBootstrap</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Version>${project.version}</Version>
+                            <Implementation-Version>${project.version}</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>

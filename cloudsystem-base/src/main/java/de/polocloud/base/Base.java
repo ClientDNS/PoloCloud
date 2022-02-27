@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.jar.Manifest;
 
 @Getter
 public final class Base extends CloudAPI {
@@ -38,7 +37,7 @@ public final class Base extends CloudAPI {
     @Getter
     private static Base instance;
 
-    private String version;
+    private final String version;
 
     private CloudConfiguration config;
 
@@ -56,12 +55,7 @@ public final class Base extends CloudAPI {
 
         instance = this;
 
-        try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
-            .nextElement().openStream()) {
-            this.version = new Manifest(stream).getMainAttributes().getValue("Version");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.version = this.getClass().getPackage().getImplementationVersion();
 
         this.logger = new SimpleLogger();
 
