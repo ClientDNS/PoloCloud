@@ -8,11 +8,8 @@ import de.polocloud.base.service.LocalService;
 
 import java.util.List;
 
+@CloudCommand.Command(name = "screen", description = "Opens a screen", aliases = "scr")
 public final class ScreenCommand extends CloudCommand {
-
-    public ScreenCommand() {
-        super("screen", "Opens a screen", "scr");
-    }
 
     @Override
     public void execute(Base base, String[] arguments) {
@@ -21,9 +18,9 @@ public final class ScreenCommand extends CloudCommand {
                 cloudService -> {
                     if (cloudService instanceof LocalService localService) {
                         localService.setScreen(!localService.isScreen());
-                    } else {
-                        base.getLogger().log("The service must be on this node!", LogType.WARNING);
+                        return;
                     }
+                    base.getLogger().log("The service must be on this node!", LogType.WARNING);
                 },
                 () -> base.getLogger().log("This service does not exists.", LogType.WARNING));
         } else {

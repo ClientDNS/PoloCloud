@@ -3,11 +3,8 @@ package de.polocloud.base.command.defaults;
 import de.polocloud.base.Base;
 import de.polocloud.base.command.CloudCommand;
 
+@CloudCommand.Command(name = "help", description = "All commands and help description")
 public final class HelpCommand extends CloudCommand {
-
-    public HelpCommand() {
-        super("help", "All commands and help descriptions");
-    }
 
     @Override
     public void execute(Base base, String[] args) {

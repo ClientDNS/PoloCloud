@@ -13,11 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+@CloudCommand.Command(name = "group", description = "Manage the cloud groups")
 public final class GroupCommand extends CloudCommand {
-
-    public GroupCommand() {
-        super("group", "Manage the cloud groups");
-    }
 
     @Override
     public void execute(Base base, String[] args) {
