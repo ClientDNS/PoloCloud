@@ -33,7 +33,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
         this.createTable();
 
-        CloudAPI.getInstance().getLogger().log("§7The connection is now §aestablished §7to the §bdatabase§8.", LogType.SUCCESS);
+        CloudAPI.getInstance().getLogger().log("§7The connection is now §aestablished §7to the §bdatabase§7.", LogType.SUCCESS);
     }
 
     @SneakyThrows

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>cloudsystem</artifactId>
@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cloudsystem-base</artifactId>
+
+
+    <properties>
+        <maven.build.timestamp.format>dd.MM.yyyy</maven.build.timestamp.format>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -39,6 +44,7 @@
     </dependencies>
 
     <build>
+
         <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
         <!-- Resources -->
         <resources>
@@ -72,6 +78,7 @@
                         </manifest>
                         <manifestEntries>
                             <Implementation-Version>${project.version}</Implementation-Version>
+                            <version-date>${maven.build.timestamp}</version-date>
                         </manifestEntries>
                     </archive>
                 </configuration>

@@ -12,7 +12,7 @@ public final class HelpCommand extends CloudCommand {
 
         base.getLogger().log("§7All possible commands(§b" + manager.getCachedCloudCommands().size() + "§7):");
         manager.getCachedCloudCommands().values().stream().distinct().forEach(it -> base.getLogger()
-            .log("§b" + it.getName() + getAliases(it) + " - " + it.getDescription()));
+            .log("§b" + it.getName() + getAliases(it) + " §7- " + it.getDescription()));
     }
 
     private String getAliases(CloudCommand command) {

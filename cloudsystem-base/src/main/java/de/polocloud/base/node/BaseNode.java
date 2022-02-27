@@ -61,7 +61,7 @@ public final class BaseNode extends NettyServer {
 
         service.update();
 
-        Base.getInstance().getLogger().log("§7The service '§b" + connectedClient.name() + "§7' has §asuccessfully §7connected to the cluster. (§b" + SimpleStatisticManager.getProcessingTime(service) + "ms)");
+        Base.getInstance().getLogger().log("§7The service '§b" + connectedClient.name() + "§7' has §asuccessfully §7connected to the cluster. (§b" + SimpleStatisticManager.getProcessingTime(service) + " §7ms)");
     }
 
     @Override

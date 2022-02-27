@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.jar.Manifest;
 
 @Getter
 public final class Base extends CloudAPI {
@@ -55,6 +56,16 @@ public final class Base extends CloudAPI {
 
         instance = this;
 
+        String date = "19.01.2020";
+        try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
+            .nextElement().openStream()) {
+            Manifest manifest = new Manifest(stream);
+            if (manifest.getMainAttributes().getValue("version-date") != null) {
+                date = manifest.getMainAttributes().getValue("version-date");
+            }
+        } catch (IOException ignored) {
+        }
+
         this.version = this.getClass().getPackage().getImplementationVersion();
 
         this.logger = new SimpleLogger();
@@ -68,7 +79,7 @@ public final class Base extends CloudAPI {
 
         this.logger.log("§7Cloudsystem > §b@PoloCloud §7| " +
             "§7Developed by: §bHttpMarco §7| " +
-            "Date: §b19.01.2020 §7| " +
+            "Date: §b" + (date.equalsIgnoreCase("19.01.2020") ? date : (date + " §7(Since §b19.01.2020§7)")) + " §7| " +
             "§7Version: §b" + this.version, LogType.EMPTY);
         this.logger.log(" ", LogType.EMPTY);
 
@@ -141,7 +152,7 @@ public final class Base extends CloudAPI {
     public void onShutdown() {
         if (!this.running) return;
         this.running = false;
-        this.logger.log("Trying to terminate cloudsystem.");
+        this.logger.log("§eTrying to terminate the §bcloudsystem§7.");
         ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
         this.serviceManager.getAllCachedServices()
             .forEach(service -> {
@@ -158,7 +169,7 @@ public final class Base extends CloudAPI {
 
         this.node.close();
         this.databaseManager.close();
-        this.logger.log("Successfully shutdown the cloudsystem.", LogType.SUCCESS);
+        this.logger.log("§aSuccessfully §7stopped the §bcloudsystem§7.", LogType.SUCCESS);
         System.exit(0);
     }
 
