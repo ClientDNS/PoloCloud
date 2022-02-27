@@ -15,11 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+@CloudCommand.Command(name = "service", description = "Manage services", aliases = "ser")
 public final class ServiceCommand extends CloudCommand {
-
-    public ServiceCommand() {
-        super("service", "Manage services", "ser");
-    }
 
     @Override
     public void execute(Base base, String[] args) {

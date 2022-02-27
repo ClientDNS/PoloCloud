@@ -30,7 +30,6 @@ public final class BungeeListener implements Listener {
     @EventHandler
     public void handle(final LoginEvent event) {
 
-
         if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
             event.setCancelReason(new TextComponent("§cThis network has reached the maximum number of players."));
             event.setCancelled(true);

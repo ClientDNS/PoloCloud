@@ -18,7 +18,7 @@ public final class BungeeCloudListener {
     public BungeeCloudListener() {
 
         // load all current groups
-        for (final CloudService allCachedService : Wrapper.getInstance().getServiceManager().getAllCachedServices()) {
+        for (final var allCachedService : Wrapper.getInstance().getServiceManager().getAllCachedServices()) {
             if (!allCachedService.getGroup().getGameServerVersion().isProxy()) registerService(allCachedService);
         }
 

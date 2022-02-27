@@ -49,7 +49,7 @@ Currently, we offer these **Server-Software's**:
 
 ### Install
 
-1. Download the latest release of the [**Cloud**](https://github.com/PoloServices/PoloCloud/releases).
+1. Download the latest release of the [**Cloud**](https://github.com/PoloServices/PoloCloud/releases/latest/download/PoloCloud.zip).
 2. Extract the ZIP-File.
 3. Run these File on different platforms:
 	- Windows --> start.bat
@@ -83,7 +83,7 @@ You can reach us at our [**Discord**](https://discord.com/invite/2yDWH3VxKC)!
  - **Paper-1.11.2**
  - **Paper-1.10.2**
  - **Paper-1.9.4**
- - **Paper-1.8.8 (Partly unsupported)**
+ - **Paper-1.8.8 (:warning: Unsupported)**
 
 <hr>
 

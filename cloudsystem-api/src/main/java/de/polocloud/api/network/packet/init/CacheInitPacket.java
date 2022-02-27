@@ -39,7 +39,7 @@ public class CacheInitPacket implements Packet {
     public void read(@NotNull NetworkBuf byteBuf) {
         this.groups = new ArrayList<>();
         final var groupSize = byteBuf.readInt();
-        for (int i = 0; i < groupSize; i++) {
+        for (var i = 0; i < groupSize; i++) {
             this.groups.add(ServiceGroup.read(byteBuf));
         }
 
@@ -47,7 +47,7 @@ public class CacheInitPacket implements Packet {
 
         this.services = new ArrayList<>();
         final var serviceSize = byteBuf.readInt();
-        for (int i = 0; i < serviceSize; i++) {
+        for (var i = 0; i < serviceSize; i++) {
             this.services.add(CloudService.read(byteBuf));
         }
 
@@ -55,7 +55,7 @@ public class CacheInitPacket implements Packet {
 
         final var players = new ConcurrentHashMap<UUID, CloudPlayer>();
         final var playerSize = byteBuf.readInt();
-        for (int i = 0; i < playerSize; i++) {
+        for (var i = 0; i < playerSize; i++) {
             final var cloudPlayer = CloudPlayer.read(byteBuf);
             players.put(cloudPlayer.getUniqueId(), cloudPlayer);
         }

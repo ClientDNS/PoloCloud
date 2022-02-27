@@ -221,7 +221,7 @@ public class LocalService implements CloudService {
     }
 
     private List<String> arguments() {
-        final List<String> arguments = new ArrayList<>(Arrays.asList(
+        final var arguments = new ArrayList<>(Arrays.asList(
             Base.getInstance().getConfig().getJavaCommand(),
             "-XX:+UseG1GC",
             "-XX:+ParallelRefProcEnabled",
@@ -267,7 +267,7 @@ public class LocalService implements CloudService {
 
         var preLoadClasses = false;
 
-        try (final JarFile jarFile = new JarFile(applicationFile)) {
+        try (final var jarFile = new JarFile(applicationFile)) {
             arguments.add(jarFile.getManifest().getMainAttributes().getValue("Main-Class"));
             preLoadClasses = jarFile.getEntry("META-INF/versions.list") != null;
         } catch (IOException exception) {

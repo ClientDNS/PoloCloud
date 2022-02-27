@@ -23,7 +23,7 @@ public final class PacketHandler {
     }
 
     public <T extends Packet> void registerPacketListener(final @NotNull Class<T> clazz, final @NotNull PacketListener<T> packetListener) {
-        final List<PacketListener> packetListeners = this.packetListener.getOrDefault(clazz, new ArrayList<>());
+        final var packetListeners = this.packetListener.getOrDefault(clazz, new ArrayList<>());
         packetListeners.add(packetListener);
         this.packetListener.put(clazz, packetListeners);
     }

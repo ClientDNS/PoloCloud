@@ -13,11 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+@CloudCommand.Command(name = "group", description = "Manage the cloud groups")
 public final class GroupCommand extends CloudCommand {
-
-    public GroupCommand() {
-        super("group", "Manage the cloud groups");
-    }
 
     @Override
     public void execute(Base base, String[] args) {
@@ -25,7 +22,7 @@ public final class GroupCommand extends CloudCommand {
         final var logger = base.getLogger();
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            for (final ServiceGroup serviceGroup : groupManager.getAllCachedServiceGroups()) {
+            for (final var serviceGroup : groupManager.getAllCachedServiceGroups()) {
                 logger.log("Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
                     + serviceGroup.getGameServerVersion() + "§7' | Node: '" + serviceGroup.getNode() + "')");
             }
