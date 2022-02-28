@@ -7,7 +7,7 @@
     <groupId>de.polocloud</groupId>
     <artifactId>cloudsystem</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>2.1.1-RELEASE</version>
     <modules>
         <module>cloudsystem-network</module>
         <module>cloudsystem-api</module>
