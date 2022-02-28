@@ -3,6 +3,7 @@ package de.polocloud.plugin.bootstrap.bungee;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceState;
+import de.polocloud.plugin.bootstrap.bungee.commands.BungeeCloudCommand;
 import de.polocloud.plugin.bootstrap.bungee.listener.BungeeCloudListener;
 import de.polocloud.plugin.bootstrap.bungee.listener.BungeeListener;
 import de.polocloud.wrapper.Wrapper;
@@ -26,6 +27,8 @@ public final class BungeeBootstrap extends Plugin {
             service.setState(ServiceState.ONLINE);
             service.update();
         }
+
+        getProxy().getPluginManager().registerCommand(this, new BungeeCloudCommand());
     }
 
     public Optional<CloudService> getFallback(final ProxiedPlayer player) {
