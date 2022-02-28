@@ -1,7 +1,6 @@
 package de.polocloud.wrapper.service;
 
 import de.polocloud.api.event.service.CloudServiceUpdateEvent;
-import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.RedirectPacket;
 import de.polocloud.api.network.packet.service.ServiceAddPacket;
