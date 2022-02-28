@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.Optional;
 
 @SuppressWarnings("ClassCanBeRecord")
-@Plugin(id = "polocloud", name = "PoloCloud", authors = "HttpMarco", version = "2.1.1-RELEASE")
+@Plugin(id = "polocloud", name = "PoloCloud", authors = "HttpMarco", version = "2.2.0-SNAPSHOT")
 public final class VelocityBootstrap {
 
     private final ProxyServer proxyServer;
