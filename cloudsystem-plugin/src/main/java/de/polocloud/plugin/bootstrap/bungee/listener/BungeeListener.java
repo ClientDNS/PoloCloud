@@ -4,6 +4,7 @@ import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.player.CloudPlayerUpdateEvent;
 import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.player.impl.SimpleCloudPlayer;
+import de.polocloud.api.service.ServiceManager;
 import de.polocloud.plugin.bootstrap.bungee.BungeeBootstrap;
 import de.polocloud.wrapper.Wrapper;
 import de.polocloud.wrapper.service.WrapperServiceManager;
@@ -18,26 +19,27 @@ import java.util.Objects;
 public final class BungeeListener implements Listener {
 
     private final BungeeBootstrap bootstrap;
+
     private final PlayerManager playerManager;
+    private final ServiceManager serviceManager;
 
     public BungeeListener(final BungeeBootstrap bootstrap) {
         this.bootstrap = bootstrap;
         this.playerManager = CloudAPI.getInstance().getPlayerManager();
+        this.serviceManager = CloudAPI.getInstance().getServiceManager();
     }
 
     @EventHandler
     public void handle(final LoginEvent event) {
-
-        if(CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()){
+        if (playerManager.getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()) {
             event.setCancelReason(new TextComponent("§cThis network has reached the maximum number of players."));
             event.setCancelled(true);
             return;
         }
 
         final var connection = event.getConnection();
-
         this.playerManager.registerCloudPlayer(new SimpleCloudPlayer(connection.getUniqueId(), connection.getName(),
-            ((WrapperServiceManager) CloudAPI.getInstance().getServiceManager()).thisService()));
+            ((WrapperServiceManager) serviceManager).thisService()));
     }
 
     @EventHandler
@@ -53,7 +55,7 @@ public final class BungeeListener implements Listener {
 
     @EventHandler
     public void handle(final ServerSwitchEvent event) {
-        CloudAPI.getInstance().getPlayerManager().getCloudPlayer(event.getPlayer().getUniqueId())
+        playerManager.getCloudPlayer(event.getPlayer().getUniqueId())
             .ifPresent(cloudPlayer -> {
                 cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
                     .getServiceByNameOrNull(event.getPlayer().getServer().getInfo().getName())));

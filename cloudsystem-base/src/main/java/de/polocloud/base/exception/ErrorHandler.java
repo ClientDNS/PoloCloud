@@ -461,7 +461,7 @@ public class ErrorHandler {
     public List<Object> getRegisteredErrorCodes() {
         return this.errorCodeMap.keySet().stream()
             .map(errorCodeIdentifier -> errorCodeIdentifier.errorCode == null ? errorCodeIdentifier.errorCodeClass :
-                errorCodeIdentifier.errorCode).collect(Collectors.toList());
+                errorCodeIdentifier.errorCode).toList();
     }
 
     private static class ExceptionContext {

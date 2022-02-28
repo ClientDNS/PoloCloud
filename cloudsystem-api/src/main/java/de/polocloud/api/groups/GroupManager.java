@@ -60,9 +60,7 @@ public interface GroupManager {
      * @return all services of the node
      */
     default @NotNull List<ServiceGroup> getServiceGroup(@NotNull String node) {
-        return this.getAllCachedServiceGroups().stream()
-            .filter(it -> it.getNode().equalsIgnoreCase(node))
-            .collect(Collectors.toList());
+        return this.getAllCachedServiceGroups().stream().filter(it -> it.getNode().equalsIgnoreCase(node)).toList();
     }
 
     /**
