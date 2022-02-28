@@ -62,6 +62,7 @@ public final class GroupCommand extends CloudCommand {
                                 .updateGroupProperty(group.getName(), "maxMemory", integer);
                         });
                         logger.log("§7Successfully set memory to " + args[3] + "mb");
+                        return;
                     case "minservicecount":
                         this.getAndSetInt(key, args[3], group, integer -> {
                             group.setMinOnlineService(integer);
