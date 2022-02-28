@@ -4,7 +4,6 @@ import de.polocloud.plugin.bootstrap.global.CloudGlobalCommand;
 import de.polocloud.plugin.bootstrap.global.PlayerMessageObject;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import org.jetbrains.annotations.NotNull;
 
