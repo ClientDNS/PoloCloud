@@ -57,7 +57,11 @@ public class LocalService implements CloudService {
         this.motd = this.group.getMotd();
         this.maxPlayers = this.group.getDefaultMaxPlayers();
 
-        this.workingDirectory = new File((!this.group.isStatic() ? "tmp" : "static") + "/" + this.getName() + "." + this.uuid);
+        if (this.group.isStatic()) {
+            this.workingDirectory = new File("static/" + this.getName());
+        } else {
+            this.workingDirectory = new File("tmp/" + this.getName() + "." + this.uuid);
+        }
     }
 
     @SneakyThrows
