@@ -149,7 +149,6 @@ public final class GroupCommand extends CloudCommand {
 
                 final var serviceGroup = new DefaultGroup(base.getNode().getName(), name, memory, isStatic, gameServerVersion);
                 groupManager.addServiceGroup(serviceGroup);
-                serviceGroup.getGameServerVersion().download(serviceGroup.getTemplate());
 
                 base.getGroupTemplateService().createTemplateFolder(serviceGroup);
                 logger.log("The group '§b" + name + "§7' is now registered and online.");
