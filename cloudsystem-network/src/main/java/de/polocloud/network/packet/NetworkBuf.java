@@ -21,8 +21,8 @@ public record NetworkBuf(ByteBuf byteBuf) {
 
     @SuppressWarnings("unchecked")
     public <T extends Enum<T>> T readEnum() {
-        final var nulled = this.byteBuf.readBoolean();
-        if (nulled) return null;
+        final var nullObject = this.byteBuf.readBoolean();
+        if (nullObject) return null;
         Class<?> enumClass;
         try {
             final var classString = this.readString();

@@ -1,8 +1,10 @@
 package de.polocloud.api.event.player;
 
 import de.polocloud.api.player.CloudPlayer;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public final class CloudPlayerUpdateEvent extends DefaultPlayerEvent {
 
     private final UpdateReason updateReason;
@@ -12,12 +14,7 @@ public final class CloudPlayerUpdateEvent extends DefaultPlayerEvent {
         this.updateReason = updateReason;
     }
 
-    public UpdateReason getUpdateReason() {
-        return this.updateReason;
-    }
-
     public enum UpdateReason {
         UNKNOWN, SERVER_SWITCH
     }
-
 }

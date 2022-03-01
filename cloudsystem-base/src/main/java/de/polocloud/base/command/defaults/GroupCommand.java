@@ -55,7 +55,7 @@ public final class GroupCommand extends CloudCommand {
             groupManager.getServiceGroupByName(args[0]).ifPresentOrElse(group -> {
                 final var key = args[2].toLowerCase();
                 switch (key) {
-                    case "memory":
+                    case "memory" -> {
                         this.getAndSetInt(key, args[3], group, integer -> {
                             group.setMaxMemory(integer);
                             base.getDatabaseManager().getProvider()
@@ -63,7 +63,8 @@ public final class GroupCommand extends CloudCommand {
                         });
                         logger.log("§7Successfully set memory to " + args[3] + "mb");
                         return;
-                    case "minservicecount":
+                    }
+                    case "minservicecount" -> {
                         this.getAndSetInt(key, args[3], group, integer -> {
                             group.setMinOnlineService(integer);
                             base.getDatabaseManager().getProvider()
@@ -71,7 +72,8 @@ public final class GroupCommand extends CloudCommand {
                         });
                         logger.log("§7Successfully set min service count to " + args[3]);
                         return;
-                    case "maxservicecount":
+                    }
+                    case "maxservicecount" -> {
                         this.getAndSetInt(key, args[3], group, integer -> {
                             group.setMaxOnlineService(integer);
                             base.getDatabaseManager().getProvider()
@@ -79,7 +81,8 @@ public final class GroupCommand extends CloudCommand {
                         });
                         logger.log("§7Successfully set max service count to " + args[3]);
                         return;
-                    case "defaultmaxplayers":
+                    }
+                    case "defaultmaxplayers" -> {
                         this.getAndSetInt(key, args[3], group, integer -> {
                             group.setDefaultMaxPlayers(integer);
                             base.getDatabaseManager().getProvider()
@@ -87,7 +90,8 @@ public final class GroupCommand extends CloudCommand {
                         });
                         logger.log("§7Successfully set default max players to " + args[3]);
                         return;
-                    case "fallback":
+                    }
+                    case "fallback" -> {
                         final var fallback = args[3].toLowerCase();
                         if (!fallback.equals("true") && !fallback.equals("false")) {
                             logger.log("§7Please use §btrue§7/§bfalse");
@@ -99,9 +103,9 @@ public final class GroupCommand extends CloudCommand {
                             .updateGroupProperty(group.getName(), "fallback", (fallback.equals("true") ? 1 : 0));
                         logger.log("§7Successfully set fallback to " + fallback);
                         return;
-                    case "maintenance":
+                    }
+                    case "maintenance" -> {
                         final var maintenance = args[3].toLowerCase();
-
                         if (!maintenance.equals("true") && !maintenance.equals("false")) {
                             logger.log("Please use true/false");
                             return;
@@ -112,9 +116,9 @@ public final class GroupCommand extends CloudCommand {
                             .updateGroupProperty(group.getName(), "maintenance", (maintenance.equals("true") ? 1 : 0));
                         logger.log("§7Successfully set maintenance to " + maintenance);
                         return;
-                    case "version":
+                    }
+                    case "version" -> {
                         final var gameServerVersion = GameServerVersion.getVersionByName(args[3]);
-
                         if (gameServerVersion == null) {
                             logger.log("§7This version is §cnot §7available.", LogType.WARNING);
                             logger.log("§7Please use one of the following versions:");
@@ -124,6 +128,7 @@ public final class GroupCommand extends CloudCommand {
                         group.setGameServerVersion(gameServerVersion);
                         group.update();
                         logger.log("§7Successfully set version to " + args[3]);
+                    }
                 }
             }, () -> logger.log("This group does not exists", LogType.WARNING));
             return;
