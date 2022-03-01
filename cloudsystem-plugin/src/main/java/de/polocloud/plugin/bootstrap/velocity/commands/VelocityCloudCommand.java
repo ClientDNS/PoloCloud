@@ -6,6 +6,8 @@ import de.polocloud.plugin.bootstrap.global.PlayerMessageObject;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public final class VelocityCloudCommand implements SimpleCommand {
 
     @Override
@@ -23,4 +25,8 @@ public final class VelocityCloudCommand implements SimpleCommand {
         }, invocation.arguments());
     }
 
+    @Override
+    public List<String> suggest(Invocation invocation) {
+        return CloudGlobalCommand.tabComplete(invocation.arguments(), s -> invocation.source().hasPermission(s));
+    }
 }

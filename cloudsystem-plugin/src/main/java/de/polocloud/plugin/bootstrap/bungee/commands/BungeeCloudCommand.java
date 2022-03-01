@@ -5,9 +5,10 @@ import de.polocloud.plugin.bootstrap.global.PlayerMessageObject;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 
-public class BungeeCloudCommand extends Command {
+public class BungeeCloudCommand extends Command implements TabExecutor {
 
     public BungeeCloudCommand() {
         super("cloud");
@@ -28,4 +29,8 @@ public class BungeeCloudCommand extends Command {
         }, arguments);
     }
 
+    @Override
+    public Iterable<String> onTabComplete(CommandSender commandSender, String[] args) {
+        return CloudGlobalCommand.tabComplete(args, s -> commandSender.hasPermission(s));
+    }
 }

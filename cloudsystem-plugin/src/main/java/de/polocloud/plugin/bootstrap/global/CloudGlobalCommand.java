@@ -1,12 +1,16 @@
 package de.polocloud.plugin.bootstrap.global;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.service.CloudService;
 import io.netty.util.internal.StringUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class CloudGlobalCommand {
 
@@ -61,8 +65,7 @@ public class CloudGlobalCommand {
                 nodeServices.put(allCachedService.getNode(), current);
             }
             nodeServices.keySet().forEach(it -> {
-                final var services = nodeServices.get(it).stream()
-                    .filter(s -> s.getGroup().getGameServerVersion().isProxy());
+                final var services = nodeServices.get(it).stream().filter(s -> s.getGroup().getGameServerVersion().isProxy());
                 source.sendMessage("§8› §7" + it + "§8: (§7Proxies: §c" + services.count() + " Services §8┃ §f"
                     + services.mapToInt(CloudService::getOnlineCount).sum() + " Players§8)");
                 services.forEach(ser -> source.sendMessage("§8● §f" + ser.getName()
@@ -81,6 +84,22 @@ public class CloudGlobalCommand {
         source.sendMessage("§8› §bcloud list §8- §7List all cloud services of every node.");
         source.sendMessage("§8› §bcloud shutdown (service/group) §8- §7Stop a current component.");
         source.sendMessage("§8› §bcloud info (service/group) §8- §7Information about a component.");
+    }
+
+    public static List<String> tabComplete(String[] args, Function<String, Boolean> permissions){
+        if(args.length == 0 || args.length > 2 || !permissions.apply("cloud.network.command")) return ImmutableList.of();
+        List<String> matches = new ArrayList<>();
+
+        if(args.length == 1) {
+            matches.add("list");
+            matches.add("info");
+            matches.add("shutdown");
+        }
+        if(args[0].equalsIgnoreCase("shutdown") || args[0].equalsIgnoreCase("info")) {
+            CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(it -> it.getName()).toList().forEach(it -> matches.add(it));
+            CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().map(it -> it.getName()).toList().forEach(it -> matches.add(it));
+        }
+        return matches;
     }
 
 }
