@@ -127,6 +127,8 @@ public final class GroupCommand extends CloudCommand {
                         }
                         group.setGameServerVersion(gameServerVersion);
                         group.update();
+                        base.getDatabaseManager().getProvider()
+                                .updateGroupProperty(group.getName(), "version", gameServerVersion.getName());
                         logger.log("§7Successfully set version to " + args[3]);
                     }
                 }
