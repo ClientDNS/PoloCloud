@@ -65,14 +65,14 @@ public class CloudGlobalCommand {
                 nodeServices.put(allCachedService.getNode(), current);
             }
             nodeServices.keySet().forEach(it -> {
-                final var services = nodeServices.get(it).stream().filter(s -> s.getGroup().getGameServerVersion().isProxy());
-                source.sendMessage("§8› §7" + it + "§8: (§7Proxies: §c" + services.count() + " Services §8┃ §f"
-                    + services.mapToInt(CloudService::getOnlineCount).sum() + " Players§8)");
+                final var services = nodeServices.get(it).stream().filter(s -> s.getGroup().getGameServerVersion().isProxy()).toList();
+                source.sendMessage("§8› §7" + it + "§8: (§7Proxies: §c" + services.size() + " Services §8┃ §f"
+                    + services.stream().mapToInt(CloudService::getOnlineCount).sum() + " Players§8)");
                 services.forEach(ser -> source.sendMessage("§8● §f" + ser.getName()
                     + "§8 (§b" + ser.getOnlineCount() + "§8/§b" + ser.getMaxPlayers() + " §8┃ §b" + ser.getState() + "§8)"));
                 source.sendMessage(StringUtil.EMPTY_STRING);
-                var server = nodeServices.get(it).stream()
-                    .filter(s -> !s.getGroup().getGameServerVersion().isProxy()).toList();
+
+                var server = nodeServices.get(it).stream().filter(s -> !s.getGroup().getGameServerVersion().isProxy()).toList();
                 source.sendMessage("§8› §7" + it + "§8: (§7Server: §c" + server.size() + " Services §8┃ §f"
                     + server.stream().mapToInt(CloudService::getOnlineCount).sum() + " Players§8)");
                 server.forEach(ser -> source.sendMessage("§8● §f" + ser.getName()
