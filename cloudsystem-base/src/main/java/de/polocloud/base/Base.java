@@ -111,7 +111,7 @@ public final class Base extends CloudAPI {
             new ScreenCommand());
 
         // add a shutdown hook for fast closes
-        Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown, "PoloCloud-Shutdown-Thread"));
 
         // print finish successfully message
         this.logger.log("               ", LogType.EMPTY);

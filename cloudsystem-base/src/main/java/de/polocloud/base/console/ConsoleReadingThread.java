@@ -15,6 +15,7 @@ public final class ConsoleReadingThread extends Thread {
     private final Consumer<String> line;
 
     public ConsoleReadingThread(final Logger logger, LineReader lineReader, Consumer<String> handle, Boolean windows) {
+        super("PoloCloud-Console-Thread");
         this.lineReader = lineReader;
         this.line = handle;
 

@@ -22,6 +22,7 @@ public final class WorkerThread extends Thread {
     private final byte[] bytes = new byte[2048];
 
     public WorkerThread(final Base base) {
+        super("PoloCloud-Worker-Thread");
         this.base = base;
     }
 

@@ -74,7 +74,7 @@ public final class Wrapper extends CloudAPI {
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
-            }, "Minecraft-Thread");
+            }, "PoloCloud-Service-Thread");
             thread.setContextClassLoader(classLoader);
             if (cacheInitialized.get()) {
                 thread.start();
@@ -107,7 +107,7 @@ public final class Wrapper extends CloudAPI {
         this.playerManager = new CloudPlayerManager();
         this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop, "PoloCloud-Shutdown-Thread"));
     }
 
     public static Wrapper getInstance() {
