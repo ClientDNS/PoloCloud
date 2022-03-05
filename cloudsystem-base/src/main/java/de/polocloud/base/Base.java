@@ -23,6 +23,7 @@ import de.polocloud.base.service.SimpleServiceManager;
 import de.polocloud.base.templates.GroupTemplateService;
 import de.polocloud.database.DatabaseManager;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -152,17 +153,20 @@ public final class Base extends CloudAPI {
     public void onShutdown() {
         if (!this.running) return;
         this.running = false;
-        this.logger.log("§eTrying to terminate the §bcloudsystem§7.");
+        this.logger.log("§7Trying to terminate the §bcloudsystem§7.");
         ((SimpleLogger) this.logger).getConsoleManager().shutdownReading();
         this.serviceManager.getAllCachedServices()
             .forEach(service -> {
                 if (service instanceof LocalService localService) localService.stop();
             });
 
-        // delete wrapper and plugin jars
         try {
+            // delete wrapper and plugin jars
             Files.deleteIfExists(((SimpleServiceManager) this.getServiceManager()).getWrapperPath());
             Files.deleteIfExists(((SimpleServiceManager) this.getServiceManager()).getPluginPath());
+
+            // delete temporary directory
+            FileUtils.deleteDirectory(new File("tmp"));
         } catch (IOException e) {
             e.printStackTrace();
         }
