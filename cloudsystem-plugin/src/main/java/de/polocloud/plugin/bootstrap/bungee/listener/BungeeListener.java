@@ -13,6 +13,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -43,7 +44,7 @@ public final class BungeeListener implements Listener {
     }
 
     @EventHandler
-    public void handle(final ServerConnectEvent event) {
+    public void handle(final @NotNull ServerConnectEvent event) {
         if (event.getReason() == ServerConnectEvent.Reason.JOIN_PROXY
             || event.getReason() == ServerConnectEvent.Reason.LOBBY_FALLBACK) {
             this.playerManager.getCloudPlayer(event.getPlayer().getUniqueId()).ifPresent(cloudPlayer ->
@@ -54,7 +55,7 @@ public final class BungeeListener implements Listener {
     }
 
     @EventHandler
-    public void handle(final ServerSwitchEvent event) {
+    public void handle(final @NotNull ServerSwitchEvent event) {
         playerManager.getCloudPlayer(event.getPlayer().getUniqueId())
             .ifPresent(cloudPlayer -> {
                 cloudPlayer.setServer(Objects.requireNonNull(CloudAPI.getInstance().getServiceManager()
@@ -64,12 +65,12 @@ public final class BungeeListener implements Listener {
     }
 
     @EventHandler
-    public void handle(PlayerDisconnectEvent event) {
+    public void handle(@NotNull PlayerDisconnectEvent event) {
         this.playerManager.unregisterCloudPlayer(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
-    public void handle(ProxyPingEvent event) {
+    public void handle(@NotNull ProxyPingEvent event) {
         final var response = event.getResponse();
         final var players = response.getPlayers();
 
@@ -81,7 +82,7 @@ public final class BungeeListener implements Listener {
     }
 
     @EventHandler
-    public void handle(final ServerKickEvent event) {
+    public void handle(final @NotNull ServerKickEvent event) {
         this.bootstrap.getFallback(event.getPlayer())
             .ifPresent(service -> {
                 event.setCancelled(true);

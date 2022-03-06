@@ -14,6 +14,7 @@ import de.polocloud.plugin.bootstrap.velocity.commands.VelocityCloudCommand;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityCloudListener;
 import de.polocloud.plugin.bootstrap.velocity.listener.VelocityListener;
 import de.polocloud.wrapper.Wrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public final class VelocityBootstrap {
         }
     }
 
-    public Optional<CloudService> getFallback(final Player player) {
+    public @NotNull Optional<CloudService> getFallback(final Player player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
             .filter(service -> service.getState().equals(ServiceState.ONLINE))
             .filter(service -> !service.getGroup().getGameServerVersion().isProxy())

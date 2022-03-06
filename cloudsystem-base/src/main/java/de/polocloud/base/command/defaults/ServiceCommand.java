@@ -60,7 +60,7 @@ public final class ServiceCommand extends CloudCommand {
                     }
                 } else if (args.length > 1 && args[1].equalsIgnoreCase("command")) {
                     final var stringBuilder = new StringBuilder();
-                    for (int i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
+                    for (var i = 2; i < args.length; i++) stringBuilder.append(args[i]).append(" ");
                     final var command = stringBuilder.toString();
                     service.executeCommand(command);
                     logger.log("§7Executed command '§b" + command + "§7' on service §b" + service.getName());

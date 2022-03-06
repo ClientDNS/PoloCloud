@@ -9,6 +9,7 @@ import de.polocloud.plugin.bootstrap.bungee.listener.BungeeListener;
 import de.polocloud.wrapper.Wrapper;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public final class BungeeBootstrap extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new BungeeCloudCommand());
     }
 
-    public Optional<CloudService> getFallback(final ProxiedPlayer player) {
+    public @NotNull Optional<CloudService> getFallback(final ProxiedPlayer player) {
         return CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream()
             .filter(service -> service.getState().equals(ServiceState.ONLINE))
             .filter(service -> !service.getGroup().getGameServerVersion().isProxy())

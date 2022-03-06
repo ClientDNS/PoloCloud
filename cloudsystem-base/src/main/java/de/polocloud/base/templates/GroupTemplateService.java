@@ -5,6 +5,7 @@ import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.base.service.LocalService;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public final class GroupTemplateService {
         }
     }
 
-    public void copyTemplates(CloudService service) throws IOException {
+    public void copyTemplates(@NotNull CloudService service) throws IOException {
         final var serviceFolder = ((LocalService) service).getWorkingDirectory();
         FileUtils.copyDirectory(this.everyFolder, serviceFolder);
         FileUtils.copyDirectory(service.getGroup().getGameServerVersion().isProxy()
@@ -37,7 +38,7 @@ public final class GroupTemplateService {
         }
     }
 
-    public void createTemplateFolder(ServiceGroup group) {
+    public void createTemplateFolder(@NotNull ServiceGroup group) {
         if (!group.getNode().equalsIgnoreCase(Base.getInstance().getNode().getName())) return;
         final var file = new File("templates/" + group.getTemplate());
         if (!file.exists()) //noinspection ResultOfMethodCallIgnored

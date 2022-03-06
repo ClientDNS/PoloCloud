@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class VelocityCloudCommand implements SimpleCommand {
 
     @Override
-    public void execute(final Invocation invocation) {
+    public void execute(final @NotNull Invocation invocation) {
         CloudGlobalCommand.execute(new PlayerMessageObject() {
             @Override
             public void sendMessage(@NotNull String message) {

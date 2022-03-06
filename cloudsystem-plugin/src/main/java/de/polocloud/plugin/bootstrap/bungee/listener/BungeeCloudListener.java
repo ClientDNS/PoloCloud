@@ -9,6 +9,7 @@ import de.polocloud.api.service.CloudService;
 import de.polocloud.wrapper.Wrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 
@@ -60,7 +61,7 @@ public final class BungeeCloudListener {
         ProxyServer.getInstance().getServers().remove(name);
     }
 
-    public void registerService(CloudService service) {
+    public void registerService(@NotNull CloudService service) {
         this.registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 

@@ -10,6 +10,7 @@ import de.polocloud.api.network.packet.player.CloudPlayerSendServicePacket;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 
@@ -59,7 +60,7 @@ public record VelocityCloudListener(ProxyServer proxyServer) {
             .ifPresent(registeredServer -> this.proxyServer.unregisterServer(registeredServer.getServerInfo()));
     }
 
-    public void registerService(final CloudService service) {
+    public void registerService(final @NotNull CloudService service) {
         this.registerService(service.getName(), new InetSocketAddress(service.getHostName(), service.getPort()));
     }
 

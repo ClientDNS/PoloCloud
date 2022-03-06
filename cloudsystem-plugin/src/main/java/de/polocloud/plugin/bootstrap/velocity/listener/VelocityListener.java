@@ -14,13 +14,14 @@ import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.velocity.VelocityBootstrap;
 import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxyServer) {
 
     @Subscribe
-    public void handle(final LoginEvent event) {
+    public void handle(final @NotNull LoginEvent event) {
         final var player = event.getPlayer();
 
         if (CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()) {
@@ -35,14 +36,14 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     }
 
     @Subscribe
-    public void handle(final PlayerChooseInitialServerEvent event) {
+    public void handle(final @NotNull PlayerChooseInitialServerEvent event) {
         event.setInitialServer(this.bootstrap.getFallback(event.getPlayer())
             .flatMap(service -> this.proxyServer.getServer(service.getName()))
             .orElse(null));
     }
 
     @Subscribe
-    public void handle(final ServerConnectedEvent event) {
+    public void handle(final @NotNull ServerConnectedEvent event) {
         final var player = event.getPlayer();
 
         CloudAPI.getInstance().getPlayerManager().getCloudPlayer(player.getUniqueId())
@@ -54,7 +55,7 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     }
 
     @Subscribe
-    public void handle(final DisconnectEvent event) {
+    public void handle(final @NotNull DisconnectEvent event) {
         if (event.getLoginStatus() == DisconnectEvent.LoginStatus.SUCCESSFUL_LOGIN
             || event.getLoginStatus() == DisconnectEvent.LoginStatus.PRE_SERVER_JOIN) {
             Wrapper.getInstance().getPlayerManager().unregisterCloudPlayer(event.getPlayer().getUniqueId());
@@ -62,7 +63,7 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     }
 
     @Subscribe
-    public void handle(final ProxyPingEvent event) {
+    public void handle(final @NotNull ProxyPingEvent event) {
         event.setPing(event.getPing().asBuilder()
             .onlinePlayers(Wrapper.getInstance().getPlayerManager().getOnlineCount())
             .maximumPlayers(Wrapper.getInstance().thisService().getMaxPlayers())
@@ -70,7 +71,7 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
     }
 
     @Subscribe
-    public void handle(final KickedFromServerEvent event) {
+    public void handle(final @NotNull KickedFromServerEvent event) {
         if (event.getPlayer().isActive()) {
             this.bootstrap.getFallback(event.getPlayer()).flatMap(service -> this.proxyServer.getServer(service.getName()))
                 .ifPresent(registeredServer -> {
