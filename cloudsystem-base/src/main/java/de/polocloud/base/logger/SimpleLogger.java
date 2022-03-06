@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 public final class SimpleLogger implements Logger {
 
-    private final SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Getter
     private final SimpleConsoleManager consoleManager;
@@ -32,7 +32,7 @@ public final class SimpleLogger implements Logger {
     public String format(@NotNull String text, @NotNull LogType logType) {
         var message = "§r" + text + "§r";
         if (logType != LogType.EMPTY) {
-            message = " " + this.dataFormat.format(Calendar.getInstance().getTime()) + " §7" + (this.isWindows() ? "|" : "┃") + " §r" +
+            message = " " + this.dateFormat.format(Calendar.getInstance().getTime()) + " §7" + (this.isWindows() ? "|" : "┃") + " §r" +
                 logType.getTextField() + " " + (this.isWindows() ? ">" : "»") + " §r" + message + "§r";
         }
         return LoggerAnsiFactory.toColorCode(message);
