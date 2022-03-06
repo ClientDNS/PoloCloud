@@ -57,7 +57,7 @@ public final class Base extends CloudAPI {
 
         instance = this;
 
-        String date = "19.01.2020";
+        var date = "19.01.2020";
         try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
             .nextElement().openStream()) {
             Manifest manifest = new Manifest(stream);

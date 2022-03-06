@@ -19,7 +19,7 @@ public class WrapperLogger implements Logger {
 
     @Override
     public void log(@NotNull String... text) {
-        for (final String s : text) this.log(s);
+        for (final var s : text) this.log(s);
     }
 
     @Override
