@@ -4,13 +4,14 @@ import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.service.CloudService;
 import io.netty.util.internal.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class CloudGlobalCommand {
 
-    public static void execute(final PlayerMessageObject source, final String[] arguments) {
+    public static void execute(final @NotNull PlayerMessageObject source, final String[] arguments) {
 
         if (!source.hasPermission("cloud.network.command")) {
             source.sendMessage("§cYou have no permissions for this command.");
