@@ -178,7 +178,7 @@ public final class GroupCommand extends CloudCommand {
     @Override
     public List<String> tabComplete(String[] arguments) {
         if (arguments.length == 1) {
-            List<String> answers = new ArrayList<>(Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(ServiceGroup::getName).toList());
+            var answers = new ArrayList<String>(Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(ServiceGroup::getName).toList());
             answers.add("list");
             answers.add("create");
             return answers;

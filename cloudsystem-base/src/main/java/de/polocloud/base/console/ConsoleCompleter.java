@@ -19,7 +19,7 @@ public final class ConsoleCompleter implements Completer {
         if (input.isEmpty() || input.indexOf(' ') == -1) {
             final var registeredCommands = Base.getInstance().getCommandManager().getCachedCloudCommands().keySet();
             final var toTest = arguments[arguments.length - 1];
-            final List<String> result = new LinkedList<>();
+            final var result = new LinkedList<String>();
             for (final var s : registeredCommands) {
                 if (s != null && (toTest.trim().isEmpty() || s.toLowerCase().contains(toTest.toLowerCase()))) {
                     result.add(s);
