@@ -27,9 +27,4 @@ public interface Logger {
 
     String format(final @NotNull String text, final @NotNull LogType logType);
 
-    /**
-     * clears the console
-     */
-    void clearConsole();
-
 }

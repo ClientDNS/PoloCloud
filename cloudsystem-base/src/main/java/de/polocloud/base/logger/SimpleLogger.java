@@ -1,15 +1,13 @@
 package de.polocloud.base.logger;
 
 import de.polocloud.api.logger.LogType;
-import de.polocloud.api.logger.LoggerAnsiFactory;
 import de.polocloud.api.logger.Logger;
+import de.polocloud.api.logger.LoggerAnsiFactory;
 import de.polocloud.base.console.SimpleConsoleManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jline.reader.LineReader;
 import org.jline.utils.InfoCmp;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,37 +38,28 @@ public final class SimpleLogger implements Logger {
 
     @Override
     public void log(@NotNull String text, @NotNull LogType logType) {
+        final var terminal = this.consoleManager.getTerminal();
         final var coloredMessage = this.format(text, logType);
-        final var lineReader = this.consoleManager.getLineReader();
-        lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-        lineReader.getTerminal().writer().println(coloredMessage);
-        lineReader.getTerminal().flush();
-        if (lineReader.isReading()) {
-            lineReader.callWidget(LineReader.REDRAW_LINE);
-            lineReader.callWidget(LineReader.REDISPLAY);
-        }
+        terminal.puts(InfoCmp.Capability.carriage_return);
+        terminal.writer().println(coloredMessage);
+        terminal.flush();
+        this.consoleManager.redraw();
     }
 
     @Override
     public void log(final String... text) {
-        for (final var s : text) this.log(s);
+        final var terminal = this.consoleManager.getTerminal();
+        terminal.puts(InfoCmp.Capability.carriage_return);
+        for (final var s : text) {
+            final var coloredMessage = this.format(s, LogType.INFO);
+            terminal.writer().println(coloredMessage);
+        }
+        terminal.flush();
+        this.consoleManager.redraw();
     }
 
     public boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("windows");
-    }
-
-    public void clearConsole() {
-        if (this.isWindows()) {
-            try {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } catch (IOException | InterruptedException exception) {
-                exception.printStackTrace();
-            }
-            return;
-        }
-        System.out.println("\u001b[H\u001b[2J");
-        System.out.flush();
     }
 
 }

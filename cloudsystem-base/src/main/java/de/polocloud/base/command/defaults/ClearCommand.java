@@ -8,7 +8,7 @@ public final class ClearCommand extends CloudCommand {
 
     @Override
     public void execute(Base base, String[] args) {
-        base.getLogger().clearConsole();
+        base.getConsoleManager().clearConsole();
     }
 
 }

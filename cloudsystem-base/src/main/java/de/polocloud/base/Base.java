@@ -12,6 +12,7 @@ import de.polocloud.base.command.CommandManager;
 import de.polocloud.base.command.SimpleCommandManager;
 import de.polocloud.base.command.defaults.*;
 import de.polocloud.base.config.CloudConfiguration;
+import de.polocloud.base.console.SimpleConsoleManager;
 import de.polocloud.base.exception.DefaultExceptionCodes;
 import de.polocloud.base.exception.ErrorHandler;
 import de.polocloud.base.group.SimpleGroupManager;
@@ -188,6 +189,10 @@ public final class Base extends CloudAPI {
 
     public CommandManager getCommandManager() {
         return this.commandManager;
+    }
+
+    public SimpleConsoleManager getConsoleManager() {
+        return ((SimpleLogger) this.logger).getConsoleManager();
     }
 
 }

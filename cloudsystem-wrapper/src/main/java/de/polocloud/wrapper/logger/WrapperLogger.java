@@ -36,7 +36,4 @@ public class WrapperLogger implements Logger {
         return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 
-    @Override
-    public void clearConsole() {}
-
 }
