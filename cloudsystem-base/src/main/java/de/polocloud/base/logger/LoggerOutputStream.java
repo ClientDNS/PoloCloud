@@ -21,7 +21,7 @@ public final class LoggerOutputStream extends ByteArrayOutputStream {
         final var input = this.toString(StandardCharsets.UTF_8);
         this.reset();
         if (input != null && !input.isEmpty()) {
-            this.logger.log(input, this.logType);
+            this.logger.log(input.split("\n"), this.logType);
         }
     }
 

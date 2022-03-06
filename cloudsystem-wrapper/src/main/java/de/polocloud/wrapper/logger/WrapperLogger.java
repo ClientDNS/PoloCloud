@@ -18,6 +18,11 @@ public class WrapperLogger implements Logger {
     }
 
     @Override
+    public void log(@NotNull String[] text, @NotNull LogType logType) {
+        for (final var s : text) this.log(s, logType);
+    }
+
+    @Override
     public void log(@NotNull String... text) {
         for (final var s : text) this.log(s);
     }

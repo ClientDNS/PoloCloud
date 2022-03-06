@@ -20,6 +20,13 @@ public interface Logger {
     }
 
     /**
+     * logs a message
+     * @param text the messages to log
+     * @param logType the type to log
+     */
+    void log(final @NotNull String[] text, final @NotNull LogType logType);
+
+    /**
      * logs messages
      * @param text the messages to log
      */

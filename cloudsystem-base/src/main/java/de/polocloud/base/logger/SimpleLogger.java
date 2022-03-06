@@ -47,15 +47,20 @@ public final class SimpleLogger implements Logger {
     }
 
     @Override
-    public void log(final String... text) {
+    public void log(final @NotNull String[] text, final @NotNull LogType logType) {
         final var terminal = this.consoleManager.getTerminal();
         terminal.puts(InfoCmp.Capability.carriage_return);
         for (final var s : text) {
-            final var coloredMessage = this.format(s, LogType.INFO);
+            final var coloredMessage = this.format(s, logType);
             terminal.writer().println(coloredMessage);
         }
         terminal.flush();
         this.consoleManager.redraw();
+    }
+
+    @Override
+    public void log(final @NotNull String... text) {
+        this.log(text, LogType.INFO);
     }
 
     public boolean isWindows() {
