@@ -18,7 +18,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
     private static final String DEFAULT_JDBC = "jdbc:mysql://";
@@ -28,7 +27,8 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
     private Connection connection;
 
     @SneakyThrows
-    public void connect() {
+    public SQLCloudDatabaseHandler(DatabaseConfiguration config) {
+        this.config = config;
         this.connection = DriverManager.getConnection(getConnectionUrl());
 
         this.createTable();

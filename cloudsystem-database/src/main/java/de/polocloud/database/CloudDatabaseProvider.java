@@ -17,6 +17,4 @@ public interface CloudDatabaseProvider {
 
     void disconnect();
 
-    void connect();
-
 }

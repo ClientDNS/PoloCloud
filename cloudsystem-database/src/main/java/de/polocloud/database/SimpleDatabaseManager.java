@@ -17,7 +17,6 @@ public class SimpleDatabaseManager implements DatabaseManager {
         } else if(configuration.getDatabaseType() == DatabaseType.MONGODB){
             this.provider = new MongoCloudDatabseHandler(configuration);
         }
-        this.provider.connect();
     }
 
 
