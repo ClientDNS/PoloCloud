@@ -66,5 +66,5 @@ You can reach us at our [**Discord**](https://discord.com/invite/2yDWH3VxKC)!
 
 <hr>
 
-###### Last Update: **27.02.2022**
+###### Last Update: **18.03.2022**
 ###### ~ThePoloCloud Team
