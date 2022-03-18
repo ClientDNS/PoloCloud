@@ -149,7 +149,7 @@ public enum GameServerVersion {
         try {
             final var url = new URL(urlString);
             final var inputStream = url.openStream();
-            final var inputStreamReader = new InputStreamReader(url.openStream());
+            final var inputStreamReader = new InputStreamReader(inputStream);
             final var document = new Document(inputStreamReader);
             inputStreamReader.close();
             inputStream.close();
