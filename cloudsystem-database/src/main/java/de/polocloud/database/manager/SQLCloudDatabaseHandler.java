@@ -7,6 +7,7 @@ import de.polocloud.api.logger.LogType;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.database.CloudDatabaseProvider;
 import de.polocloud.database.DatabaseConfiguration;
+import de.polocloud.database.SimpleDatabaseManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,6 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
     private static final String DEFAULT_JDBC = "jdbc:mysql://";
     private static final String DEFAULT_PROPERTIES = "&serverTimezone=UTC&autoReconnect=true";
 
-    private static final String GROUP_TABLE = "cloudsystem_groups";
     private final DatabaseConfiguration config;
     private Connection connection;
 
@@ -38,11 +38,11 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
     @SneakyThrows
     private boolean doesCloudTableExist() {
-        return this.connection.getMetaData().getTables(null, null, GROUP_TABLE, new String[]{"TABLE"}).next();
+        return this.connection.getMetaData().getTables(null, null,  SimpleDatabaseManager.GROUP_TABLE, new String[]{"TABLE"}).next();
     }
 
     public void createTable() {
-        this.executeUpdate("CREATE TABLE IF NOT EXISTS " + GROUP_TABLE + "(" +
+        this.executeUpdate("CREATE TABLE IF NOT EXISTS " + SimpleDatabaseManager.GROUP_TABLE + "(" +
             "name VARCHAR(100), " +
             "template VARCHAR(100), " +
             "node VARCHAR(100), " +
@@ -66,7 +66,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
     @Override
     public void removeGroup(final @NotNull ServiceGroup serviceGroup) {
-        this.executeUpdate("DELETE FROM " + GROUP_TABLE + " WHERE name ='" + serviceGroup.getName() + "'");
+        this.executeUpdate("DELETE FROM " +  SimpleDatabaseManager.GROUP_TABLE + " WHERE name ='" + serviceGroup.getName() + "'");
     }
 
     @SneakyThrows
@@ -74,7 +74,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
     public List<ServiceGroup> getAllServiceGroups() {
         final var groups = new ArrayList<ServiceGroup>();
         try (final var preparedStatement = this.connection
-            .prepareStatement("SELECT * FROM " + GROUP_TABLE); var result = preparedStatement.executeQuery()) {
+            .prepareStatement("SELECT * FROM " +  SimpleDatabaseManager.GROUP_TABLE); var result = preparedStatement.executeQuery()) {
             while (result.next()) {
                 groups.add(new SimpleServiceGroup(
                     result.getString("name"),
@@ -99,7 +99,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
     @Override
     public void updateGroupProperty(@NotNull String group, @NotNull String property, @NotNull Object value) {
-        this.executeUpdate("UPDATE " + GROUP_TABLE + " SET " + property + " = '" + value + "' WHERE name = '" + group + "'");
+        this.executeUpdate("UPDATE " +  SimpleDatabaseManager.GROUP_TABLE + " SET " + property + " = '" + value + "' WHERE name = '" + group + "'");
     }
 
     @SneakyThrows
@@ -110,7 +110,7 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
     @Override
     public void addGroup(final @NotNull ServiceGroup group) {
-        this.executeUpdate("INSERT INTO " + GROUP_TABLE +
+        this.executeUpdate("INSERT INTO " +  SimpleDatabaseManager.GROUP_TABLE +
             "(name, template, node, maxMemory, minOnlineService, maxOnlineService, static, fallback, version, maxPlayers, motd, maintenance, autoUpdating) " +
             "VALUES (" + "'" + group.getName() + "', '" + group.getTemplate() + "', '" + group.getNode() + "', " + group.getMaxMemory() + ", " + group.getMinOnlineService() + ", " + group.getMaxOnlineService() + ", " + conBool(group.isStatic()) + ", " + conBool(group.isFallbackGroup()) + ", '" + group.getGameServerVersion().getName() + "', " + group.getDefaultMaxPlayers() + ",'" + group.getMotd() + "', " + conBool(group.isMaintenance()) + ", " + conBool(group.isAutoUpdating()) + ");");
     }
