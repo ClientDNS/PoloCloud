@@ -18,6 +18,11 @@ public final class ScreenCommand extends CloudCommand {
                 cloudService -> {
                     if (cloudService instanceof LocalService localService) {
                         localService.setScreen(!localService.isScreen());
+                        if (localService.isScreen()) {
+                            base.getLogger().log("The screen of service " + cloudService.getName() + " has been activated.");
+                        } else {
+                            base.getLogger().log("The screen of service " + cloudService.getName() + " has been deactivated.");
+                        }
                         return;
                     }
                     base.getLogger().log("The service must be on this node!", LogType.WARNING);
