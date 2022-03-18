@@ -23,7 +23,8 @@ public enum GameServerVersion {
 
     WATERFALL("waterfall", "latest", ServiceType.PROXY),
     VELOCITY("velocity", "latest", ServiceType.PROXY),
-    PAPER_1_18_1("paper", "1.18.1", ServiceType.SERVER),
+    PAPER_1_18_2("paper", "1.18.2", ServiceType.SERVER),
+    @Deprecated(since = "2.2.0") PAPER_1_18_1("paper", "1.18.1", ServiceType.SERVER),
     PAPER_1_17_1("paper", "1.17.1", ServiceType.SERVER),
     PAPER_1_16_5("paper", "1.16.5", ServiceType.SERVER),
     PAPER_1_15_2("paper", "1.15.2", ServiceType.SERVER),
