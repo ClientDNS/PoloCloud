@@ -24,8 +24,9 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - run: mkdir staging && cp target/*.jar staging
+    - name: Upload artifact
+      run: mkdir tmp && cp target/cloudsystem.jar tmp
     - uses: actions/upload-artifact@v3
       with:
-        name: Package
-        path: staging
+        name: PoloCloud
+        path: tmp
