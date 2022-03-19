@@ -1,7 +1,9 @@
 package de.polocloud.base.service;
 
+import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.service.CloudServiceUpdateEvent;
 import de.polocloud.api.network.packet.QueryPacket;
+import de.polocloud.api.network.packet.service.ServiceCopyRequestPacket;
 import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
 import de.polocloud.api.service.CloudService;
@@ -9,6 +11,7 @@ import de.polocloud.api.service.ServiceManager;
 import de.polocloud.base.Base;
 import de.polocloud.network.NetworkType;
 import de.polocloud.network.packet.Packet;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -52,7 +55,18 @@ public final class SimpleServiceManager implements ServiceManager {
             e.printStackTrace();
         }
 
-        Base.getInstance().getPacketHandler().registerPacketListener(ServiceUpdatePacket.class, (channelHandlerContext, packet) ->
+        Base.getInstance().getPacketHandler().registerPacketListener(ServiceCopyRequestPacket.class, (ctx, packet) ->
+            CloudAPI.getInstance().getServiceManager().getService(packet.getService()).ifPresent(cloudService -> {
+                final var template = new File("templates/" + cloudService.getGroup().getTemplate());
+                final var localService = (LocalService) cloudService;
+                try {
+                    FileUtils.copyDirectory(localService.getWorkingDirectory(), template);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }));
+
+        Base.getInstance().getPacketHandler().registerPacketListener(ServiceUpdatePacket.class, (ctx, packet) ->
             this.getService(packet.getService()).ifPresent(service -> {
                 service.setState(packet.getState());
                 service.setMaxPlayers(packet.getMaxPlayers());
