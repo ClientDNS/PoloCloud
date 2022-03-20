@@ -12,10 +12,7 @@ import de.polocloud.api.network.packet.group.ServiceGroupExecutePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
 import de.polocloud.api.network.packet.init.CacheInitPacket;
 import de.polocloud.api.network.packet.player.*;
-import de.polocloud.api.network.packet.service.ServiceAddPacket;
-import de.polocloud.api.network.packet.service.ServiceRemovePacket;
-import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
-import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
+import de.polocloud.api.network.packet.service.*;
 import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.service.ServiceManager;
 import de.polocloud.network.packet.PacketHandler;
@@ -45,7 +42,7 @@ public abstract class CloudAPI {
             CacheInitPacket.class, CloudPlayerDisconnectPacket.class, CloudPlayerKickPacket.class,
             CloudPlayerLoginPacket.class, CloudPlayerMessagePacket.class, CloudPlayerSendServicePacket.class,
             CloudPlayerUpdatePacket.class, ServiceAddPacket.class, ServiceRemovePacket.class,
-            ServiceRequestShutdownPacket.class, ServiceUpdatePacket.class);
+            ServiceRequestShutdownPacket.class, ServiceUpdatePacket.class, ServiceCopyRequestPacket.class);
         this.eventHandler = new SimpleEventHandler();
     }
 

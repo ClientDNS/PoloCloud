@@ -12,7 +12,6 @@ import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.database.CloudDatabaseProvider;
 import de.polocloud.database.DatabaseConfiguration;
 import de.polocloud.database.SimpleDatabaseManager;
-import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@RequiredArgsConstructor
 public class MongoCloudDatabseHandler implements CloudDatabaseProvider {
 
     private MongoClient mongoClient;
@@ -30,7 +28,9 @@ public class MongoCloudDatabseHandler implements CloudDatabaseProvider {
     private MongoDatabase mongoDatabase;
     private MongoCollection<Document> mongoCollection;
 
-    public void connect() {
+    public MongoCloudDatabseHandler(DatabaseConfiguration config) {
+
+        this.config = config;
 
         Logger logger = Logger.getLogger("org.mongodb.driver");
         logger.setLevel(Level.SEVERE);

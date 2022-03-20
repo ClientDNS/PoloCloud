@@ -3,7 +3,9 @@ package de.polocloud.plugin.bootstrap.global;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
+import de.polocloud.api.network.packet.service.ServiceCopyRequestPacket;
 import de.polocloud.api.service.CloudService;
+import de.polocloud.wrapper.Wrapper;
 import io.netty.util.internal.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,6 +57,14 @@ public class CloudGlobalCommand {
                     source.sendMessage("§8● §7Max online service: §b" + group.getMaxOnlineService());
                     source.sendMessage("§8● §7Node(s): §b" + group.getNode());
                 }, () -> source.sendMessage("§cThis group or service does not exists.")));
+                return;
+            }
+
+            if(arguments[0].equalsIgnoreCase("copy")){
+                serviceManager.getService(arguments[1]).ifPresentOrElse(cloudService -> {
+                    Wrapper.getInstance().getClient().sendPacket(new ServiceCopyRequestPacket(cloudService.getName()));
+                    source.sendMessage("§7You copy the service §8'§b"+ cloudService.getName() + "§8'");
+                }, () -> source.sendMessage("§cThis service does not exists."));
                 return;
             }
         }
