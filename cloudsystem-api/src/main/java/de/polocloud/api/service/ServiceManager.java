@@ -77,7 +77,7 @@ public interface ServiceManager {
 
     /**
      * shutdown a current service
-     * @param service
+     * @param service shutdowns a service
      */
     void shutdownService(@NotNull CloudService service);
 

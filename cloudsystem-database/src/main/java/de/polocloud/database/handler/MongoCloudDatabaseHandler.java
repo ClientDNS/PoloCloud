@@ -1,4 +1,4 @@
-package de.polocloud.database.manager;
+package de.polocloud.database.handler;
 
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoClient;
@@ -20,26 +20,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MongoCloudDatabseHandler implements CloudDatabaseProvider {
+public class MongoCloudDatabaseHandler implements CloudDatabaseProvider {
 
-    private MongoClient mongoClient;
-    private final DatabaseConfiguration config;
+    private final MongoClient mongoClient;
 
-    private MongoDatabase mongoDatabase;
-    private MongoCollection<Document> mongoCollection;
+    private final MongoCollection<Document> mongoCollection;
 
-    public MongoCloudDatabseHandler(DatabaseConfiguration config) {
+    public MongoCloudDatabaseHandler(DatabaseConfiguration config) {
 
-        this.config = config;
-
-        Logger logger = Logger.getLogger("org.mongodb.driver");
+        final var logger = Logger.getLogger("org.mongodb.driver");
         logger.setLevel(Level.SEVERE);
 
-        this.mongoClient = MongoClients.create(new MongoClientURI("mongodb://" + this.config.getUsername() + ":" + this.config.getPassword() + "@" + this.config.getHostname() + ":" + this.config.getPort()).toString());
-        this.mongoDatabase = this.mongoClient.getDatabase(config.getDatabase());
-        this.mongoCollection = this.mongoDatabase.getCollection(SimpleDatabaseManager.GROUP_TABLE);
+        this.mongoClient = MongoClients.create(new MongoClientURI("mongodb://" + config.getUsername() + ":" + config.getPassword() + "@" + config.getHostname() + ":" + config.getPort()).toString());
+        MongoDatabase mongoDatabase = this.mongoClient.getDatabase(config.getDatabase());
+        this.mongoCollection = mongoDatabase.getCollection(SimpleDatabaseManager.GROUP_TABLE);
     }
-
 
     @Override
     public void addGroup(@NotNull ServiceGroup serviceGroup) {
@@ -55,7 +50,8 @@ public class MongoCloudDatabseHandler implements CloudDatabaseProvider {
             .append("static", serviceGroup.isStatic())
             .append("fallbackGroup",serviceGroup.isFallbackGroup())
             .append("maintenance", serviceGroup.isMaintenance())
-            .append("updating", serviceGroup.isAutoUpdating()).append("version", serviceGroup.getGameServerVersion().getName()));
+            .append("updating", serviceGroup.isAutoUpdating())
+            .append("version", serviceGroup.getGameServerVersion().getName()));
     }
 
     @Override
@@ -65,11 +61,21 @@ public class MongoCloudDatabseHandler implements CloudDatabaseProvider {
 
     @Override
     public List<ServiceGroup> getAllServiceGroups() {
-        List<ServiceGroup> groups = new ArrayList<>();
-        for (Document document : mongoCollection.find()) {
-            groups.add(new SimpleServiceGroup(document.getString("name"), document.getString("template"), document.getString("node"), document.getString("motd"),
-                document.getInteger("maxMemory"), document.getInteger("defaultMaxPlayers"), document.getInteger("maxOnlineService"), document.getInteger("minOnlineService"),
-                document.getBoolean("static"), document.getBoolean("fallbackGroup"), document.getBoolean("maintenance"), document.getBoolean("updating"),
+        final var groups = new ArrayList<ServiceGroup>();
+        for (final var document : this.mongoCollection.find()) {
+            groups.add(new SimpleServiceGroup(
+                document.getString("name"),
+                document.getString("template"),
+                document.getString("node"),
+                document.getString("motd"),
+                document.getInteger("maxMemory"),
+                document.getInteger("defaultMaxPlayers"),
+                document.getInteger("maxOnlineService"),
+                document.getInteger("minOnlineService"),
+                document.getBoolean("static"),
+                document.getBoolean("fallbackGroup"),
+                document.getBoolean("maintenance"),
+                document.getBoolean("updating"),
                 GameServerVersion.getVersionByName(document.getString("version"))));
         }
         return groups;
@@ -77,13 +83,15 @@ public class MongoCloudDatabseHandler implements CloudDatabaseProvider {
 
     @Override
     public void updateGroupProperty(@NotNull String group, @NotNull String property, @NotNull Object value) {
-        Document document = this.mongoCollection.find(Filters.eq("name", group)).first();
+        final var document = this.mongoCollection.find(Filters.eq("name", group)).first();
+        assert document != null;
         document.replace(property, value);
-        mongoCollection.replaceOne(Filters.eq("name", group), document);
+        this.mongoCollection.replaceOne(Filters.eq("name", group), document);
     }
 
     @Override
     public void disconnect() {
-        if (this.mongoClient != null) this.mongoClient.close();
+        this.mongoClient.close();
     }
+
 }

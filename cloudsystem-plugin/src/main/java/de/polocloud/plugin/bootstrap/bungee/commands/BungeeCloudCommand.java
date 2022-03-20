@@ -31,6 +31,6 @@ public class BungeeCloudCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender commandSender, String[] args) {
-        return CloudGlobalCommand.tabComplete(args, s -> commandSender.hasPermission(s));
+        return CloudGlobalCommand.tabComplete(args, commandSender::hasPermission);
     }
 }

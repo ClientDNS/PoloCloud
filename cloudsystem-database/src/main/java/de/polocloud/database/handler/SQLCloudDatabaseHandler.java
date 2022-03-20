@@ -1,4 +1,4 @@
-package de.polocloud.database.manager;
+package de.polocloud.database.handler;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
@@ -8,7 +8,6 @@ import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.database.CloudDatabaseProvider;
 import de.polocloud.database.DatabaseConfiguration;
 import de.polocloud.database.SimpleDatabaseManager;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,16 +19,13 @@ import java.util.List;
 
 public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
 
-    private static final String DEFAULT_JDBC = "jdbc:mysql://";
-    private static final String DEFAULT_PROPERTIES = "&serverTimezone=UTC&autoReconnect=true";
-
-    private final DatabaseConfiguration config;
-    private Connection connection;
+    private final Connection connection;
 
     @SneakyThrows
     public SQLCloudDatabaseHandler(DatabaseConfiguration config) {
-        this.config = config;
-        this.connection = DriverManager.getConnection(getConnectionUrl());
+        this.connection = DriverManager.getConnection("jdbc:mysql://" + config.getHostname() + ":"
+            + config.getPort() + "/" + config.getDatabase()
+            + "?user=" + config.getUsername() + "&password=" + config.getPassword() + "&serverTimezone=UTC&autoReconnect=true");
 
         this.createTable();
 
@@ -57,11 +53,6 @@ public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
             "maintenance BOOL, " +
             "autoUpdating BOOL, " +
             "PRIMARY KEY (name))");
-    }
-
-    private String getConnectionUrl() {
-        return DEFAULT_JDBC + this.config.getHostname() + ":" + this.config.getPort() + "/" + this.config.getDatabase()
-            + "?user=" + this.config.getUsername() + "&password=" + this.config.getPassword() + DEFAULT_PROPERTIES;
     }
 
     @Override

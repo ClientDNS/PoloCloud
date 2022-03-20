@@ -22,7 +22,6 @@ public final class GroupCommand extends CloudCommand {
         final var groupManager = base.getGroupManager();
         final var logger = base.getLogger();
 
-
         if (args.length == 1 && args[0].equals("list")) {
             for (final var serviceGroup : groupManager.getAllCachedServiceGroups()) {
                 logger.log("§7Name of group '§b" + serviceGroup.getName() + "§7' (§7Version '§b"
@@ -62,25 +61,22 @@ public final class GroupCommand extends CloudCommand {
                                 .updateGroupProperty(group.getName(), "maxMemory", integer);
                         });
                         logger.log("§7Successfully set memory to " + args[3] + "mb");
-                        return;
                     }
-                    case "minservicecount" -> {
+                    case "minservicecount", "minonlineservice" -> {
                         this.getAndSetInt(key, args[3], group, integer -> {
                             group.setMinOnlineService(integer);
                             base.getDatabaseManager().getProvider()
                                 .updateGroupProperty(group.getName(), "minOnlineService", integer);
                         });
                         logger.log("§7Successfully set min service count to " + args[3]);
-                        return;
                     }
-                    case "maxservicecount" -> {
+                    case "maxservicecount", "maxonlineservice" -> {
                         this.getAndSetInt(key, args[3], group, integer -> {
                             group.setMaxOnlineService(integer);
                             base.getDatabaseManager().getProvider()
                                 .updateGroupProperty(group.getName(), "maxOnlineService", integer);
                         });
                         logger.log("§7Successfully set max service count to " + args[3]);
-                        return;
                     }
                     case "defaultmaxplayers" -> {
                         this.getAndSetInt(key, args[3], group, integer -> {
@@ -89,7 +85,6 @@ public final class GroupCommand extends CloudCommand {
                                 .updateGroupProperty(group.getName(), "maxPlayers", integer);
                         });
                         logger.log("§7Successfully set default max players to " + args[3]);
-                        return;
                     }
                     case "fallback" -> {
                         final var fallback = args[3].toLowerCase();
@@ -102,7 +97,6 @@ public final class GroupCommand extends CloudCommand {
                         base.getDatabaseManager().getProvider()
                             .updateGroupProperty(group.getName(), "fallback", (fallback.equals("true") ? 1 : 0));
                         logger.log("§7Successfully set fallback to " + fallback);
-                        return;
                     }
                     case "maintenance" -> {
                         final var maintenance = args[3].toLowerCase();
@@ -115,7 +109,6 @@ public final class GroupCommand extends CloudCommand {
                         base.getDatabaseManager().getProvider()
                             .updateGroupProperty(group.getName(), "maintenance", (maintenance.equals("true") ? 1 : 0));
                         logger.log("§7Successfully set maintenance to " + maintenance);
-                        return;
                     }
                     case "version" -> {
                         final var gameServerVersion = GameServerVersion.getVersionByName(args[3]);
@@ -178,7 +171,8 @@ public final class GroupCommand extends CloudCommand {
     @Override
     public List<String> tabComplete(String[] arguments) {
         if (arguments.length == 1) {
-            var answers = new ArrayList<String>(Base.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(ServiceGroup::getName).toList());
+            final var answers = new ArrayList<>(Base.getInstance().getGroupManager().getAllCachedServiceGroups()
+                .stream().map(ServiceGroup::getName).toList());
             answers.add("list");
             answers.add("create");
             return answers;

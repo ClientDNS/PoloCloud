@@ -3,6 +3,7 @@ package de.polocloud.plugin.bootstrap.global;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import de.polocloud.api.CloudAPI;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.network.packet.service.ServiceCopyRequestPacket;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.wrapper.Wrapper;
@@ -12,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class CloudGlobalCommand {
@@ -46,7 +46,7 @@ public class CloudGlobalCommand {
                     source.sendMessage("§8● §7Service state: §b" + cloudService.getState());
                     source.sendMessage("§8● §7Motd: §b" + cloudService.getMotd());
                     source.sendMessage("§8● §7Players: §8(§b" + cloudService.getOnlineCount() + "§8/§b" + cloudService.getMaxPlayers() + "§8)");
-                    source.sendMessage("§8● §7Servie node: §b" + cloudService.getNode());
+                    source.sendMessage("§8● §7Service node: §b" + cloudService.getNode());
                     source.sendMessage("§8● §7Port: §b" + cloudService.getPort());
                 }, () -> groupManager.getServiceGroupByName(arguments[1]).ifPresentOrElse(group -> {
                     source.sendMessage("§8› §7All information about the group: §f" + group.getName());
@@ -60,10 +60,10 @@ public class CloudGlobalCommand {
                 return;
             }
 
-            if(arguments[0].equalsIgnoreCase("copy")){
+            if (arguments[0].equalsIgnoreCase("copy")) {
                 serviceManager.getService(arguments[1]).ifPresentOrElse(cloudService -> {
                     Wrapper.getInstance().getClient().sendPacket(new ServiceCopyRequestPacket(cloudService.getName()));
-                    source.sendMessage("§7You copy the service §8'§b"+ cloudService.getName() + "§8'");
+                    source.sendMessage("§7You copy the service §8'§b" + cloudService.getName() + "§8'");
                 }, () -> source.sendMessage("§cThis service does not exists."));
                 return;
             }
@@ -83,7 +83,7 @@ public class CloudGlobalCommand {
                     + "§8 (§b" + ser.getOnlineCount() + "§8/§b" + ser.getMaxPlayers() + " §8┃ §b" + ser.getState() + "§8)"));
                 source.sendMessage(StringUtil.EMPTY_STRING);
 
-                var server = nodeServices.get(it).stream().filter(s -> !s.getGroup().getGameServerVersion().isProxy()).toList();
+                final var server = nodeServices.get(it).stream().filter(s -> !s.getGroup().getGameServerVersion().isProxy()).toList();
                 source.sendMessage("§8› §7" + it + "§8: (§7Server: §c" + server.size() + " Services §8┃ §f"
                     + server.stream().mapToInt(CloudService::getOnlineCount).sum() + " Players§8)");
                 server.forEach(ser -> source.sendMessage("§8● §f" + ser.getName()
@@ -97,18 +97,19 @@ public class CloudGlobalCommand {
         source.sendMessage("§8› §bcloud info (service/group) §8- §7Information about a component.");
     }
 
-    public static List<String> tabComplete(String[] args, Function<String, Boolean> permissions){
-        if(args.length == 0 || args.length > 2 || !permissions.apply("cloud.network.command")) return ImmutableList.of();
-        List<String> matches = new ArrayList<>();
+    public static List<String> tabComplete(String[] args, Function<String, Boolean> permissions) {
+        if (args.length == 0 || args.length > 2 || !permissions.apply("cloud.network.command"))
+            return ImmutableList.of();
+        final var matches = new ArrayList<String>();
 
-        if(args.length == 1) {
+        if (args.length == 1) {
             matches.add("list");
             matches.add("info");
             matches.add("shutdown");
         }
-        if(args[0].equalsIgnoreCase("shutdown") || args[0].equalsIgnoreCase("info")) {
-            CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(it -> it.getName()).toList().forEach(it -> matches.add(it));
-            CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().map(it -> it.getName()).toList().forEach(it -> matches.add(it));
+        if (args[0].equalsIgnoreCase("shutdown") || args[0].equalsIgnoreCase("info")) {
+            matches.addAll(CloudAPI.getInstance().getGroupManager().getAllCachedServiceGroups().stream().map(ServiceGroup::getName).toList());
+            matches.addAll(CloudAPI.getInstance().getServiceManager().getAllCachedServices().stream().map(CloudService::getName).toList());
         }
         return matches;
     }

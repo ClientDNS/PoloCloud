@@ -1,7 +1,7 @@
 package de.polocloud.database;
 
-import de.polocloud.database.manager.MongoCloudDatabseHandler;
-import de.polocloud.database.manager.SQLCloudDatabaseHandler;
+import de.polocloud.database.handler.MongoCloudDatabaseHandler;
+import de.polocloud.database.handler.SQLCloudDatabaseHandler;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public class SimpleDatabaseManager implements DatabaseManager {
         if (configuration.getDatabaseType() == DatabaseType.MYSQL) {
             this.provider = new SQLCloudDatabaseHandler(configuration);
         } else if(configuration.getDatabaseType() == DatabaseType.MONGODB){
-            this.provider = new MongoCloudDatabseHandler(configuration);
+            this.provider = new MongoCloudDatabaseHandler(configuration);
         }
     }
 
