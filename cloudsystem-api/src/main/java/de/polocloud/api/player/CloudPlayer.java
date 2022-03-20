@@ -35,17 +35,27 @@ public interface CloudPlayer {
 
     /**
      * sets the server of the player
+     *
      * @param service the service to set
      */
     void setServer(@NotNull CloudService service);
 
     /**
      * connects the player to a service
+     *
+     * @param service the service to connect
+     */
+    default void connect(@NotNull String service) {
+        this.getProxyServer().sendPacket(new CloudPlayerSendServicePacket(this.getUniqueId(), service));
+    }
+
+    /**
+     * connects the player to a service
+     *
      * @param service the service to connect
      */
     default void connect(@NotNull CloudService service) {
-        assert getProxyServer() != null;
-        this.getProxyServer().sendPacket(new CloudPlayerSendServicePacket(getUniqueId(),service.getName()));
+        this.connect(service.getName());
     }
 
     /**
@@ -57,6 +67,7 @@ public interface CloudPlayer {
 
     /**
      * kicks the player with a reason
+     *
      * @param reason the reason of the kick
      */
     default void kick(@NotNull String reason) {
@@ -66,9 +77,10 @@ public interface CloudPlayer {
 
     /**
      * send the player a message over all proxies
+     *
      * @param message the message
      */
-    default void sendMessage(@NotNull String message){
+    default void sendMessage(@NotNull String message) {
         assert this.getProxyServer() != null;
         CloudAPI.getInstance().getPlayerManager().sendCloudPlayerMessage(this, message);
     }
@@ -80,6 +92,7 @@ public interface CloudPlayer {
 
     /**
      * updates the properties of the player
+     *
      * @param updateReason the reason of the update
      */
     void update(@NotNull CloudPlayerUpdateEvent.UpdateReason updateReason);
