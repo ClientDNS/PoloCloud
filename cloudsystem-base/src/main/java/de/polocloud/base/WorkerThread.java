@@ -11,6 +11,8 @@ import de.polocloud.base.service.port.PortHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public final class WorkerThread extends Thread {
@@ -21,9 +23,12 @@ public final class WorkerThread extends Thread {
     private final StringBuffer stringBuffer = new StringBuffer();
     private final byte[] bytes = new byte[2048];
 
-    public WorkerThread(final Base base) {
+    private final List<Runnable> runnableList;
+
+    WorkerThread(final Base base) {
         super("PoloCloud-Worker-Thread");
         this.base = base;
+        this.runnableList = new ArrayList<>();
     }
 
     @Override
@@ -43,6 +48,9 @@ public final class WorkerThread extends Thread {
                     }
                 }
             }
+
+            this.runnableList.forEach(Runnable::run);
+            this.runnableList.clear();
 
             try {
                 Thread.sleep(200L);
@@ -116,6 +124,10 @@ public final class WorkerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addRunnable(final Runnable runnable) {
+        this.runnableList.add(runnable);
     }
 
 }

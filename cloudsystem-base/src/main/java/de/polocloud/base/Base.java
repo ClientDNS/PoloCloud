@@ -51,6 +51,7 @@ public final class Base extends CloudAPI {
     private ServiceManager serviceManager;
     private PlayerManager playerManager;
     private GroupTemplateService groupTemplateService;
+    private WorkerThread workerThread;
     private boolean running = true;
 
     public Base() {
@@ -65,8 +66,7 @@ public final class Base extends CloudAPI {
             if (manifest.getMainAttributes().getValue("version-date") != null) {
                 date = manifest.getMainAttributes().getValue("version-date");
             }
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) {}
 
         this.version = this.getClass().getPackage().getImplementationVersion();
 
@@ -96,6 +96,7 @@ public final class Base extends CloudAPI {
         this.commandManager = new SimpleCommandManager();
 
         this.databaseManager = DatabaseManager.newInstance(this.config.getDatabaseConfiguration());
+        this.workerThread = new WorkerThread(this);
         this.groupManager = new SimpleGroupManager();
         this.serviceManager = new SimpleServiceManager();
         this.groupTemplateService = new GroupTemplateService();
@@ -122,7 +123,7 @@ public final class Base extends CloudAPI {
 
         ((SimpleLogger) this.logger).getConsoleManager().start();
 
-        new WorkerThread(this).start();
+        this.workerThread.start();
     }
 
     private boolean loadConfig(@NotNull File file) {
@@ -193,6 +194,10 @@ public final class Base extends CloudAPI {
 
     public SimpleConsoleManager getConsoleManager() {
         return ((SimpleLogger) this.logger).getConsoleManager();
+    }
+
+    public WorkerThread getWorkerThread() {
+        return this.workerThread;
     }
 
 }

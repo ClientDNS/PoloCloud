@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +17,7 @@ import java.util.Objects;
 @Setter
 public abstract class AbstractGroupManager implements GroupManager {
 
-    private List<ServiceGroup> allCachedServiceGroups = new ArrayList<>();
+    protected List<ServiceGroup> allCachedServiceGroups;
 
     public AbstractGroupManager() {
         CloudAPI.getInstance().getPacketHandler().registerPacketListener(ServiceGroupUpdatePacket.class, (channelHandlerContext, packet) ->

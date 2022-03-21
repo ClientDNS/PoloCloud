@@ -8,12 +8,13 @@ import org.jline.reader.LineReader;
 public final class ConsoleReadingThread extends Thread {
 
     private final String consolePrompt;
-
+    private final SimpleConsoleManager consoleManager;
     private final LineReader lineReader;
 
-    public ConsoleReadingThread(final Logger logger, LineReader lineReader, boolean windows) {
+    public ConsoleReadingThread(final Logger logger, final SimpleConsoleManager consoleManager, final boolean windows) {
         super("PoloCloud-Console-Thread");
-        this.lineReader = lineReader;
+        this.consoleManager = consoleManager;
+        this.lineReader = this.consoleManager.getLineReader();
         this.consolePrompt = logger.format("§bCloudsystem §7" + (windows ? ">" : "»") + " §f", LogType.EMPTY);
     }
 
@@ -22,7 +23,12 @@ public final class ConsoleReadingThread extends Thread {
         while (!this.isInterrupted()) {
             final var line = this.lineReader.readLine(this.consolePrompt);
             if (line != null && !line.isEmpty()) {
-                Base.getInstance().getCommandManager().execute(line);
+                final var input = this.consoleManager.getInputs().poll();
+                if (input != null) {
+                    input.input().accept(line);
+                } else {
+                    Base.getInstance().getCommandManager().execute(line);
+                }
             }
         }
     }

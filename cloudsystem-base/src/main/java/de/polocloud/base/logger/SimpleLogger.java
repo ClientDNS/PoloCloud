@@ -4,7 +4,7 @@ import de.polocloud.api.logger.LogType;
 import de.polocloud.api.logger.Logger;
 import de.polocloud.api.logger.LoggerAnsiFactory;
 import de.polocloud.base.console.SimpleConsoleManager;
-import lombok.Getter;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jline.utils.InfoCmp;
 
@@ -16,9 +16,9 @@ public final class SimpleLogger implements Logger {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Getter
     private final SimpleConsoleManager consoleManager;
 
+    @SneakyThrows
     public SimpleLogger() {
         this.consoleManager = new SimpleConsoleManager(this);
 
@@ -65,6 +65,10 @@ public final class SimpleLogger implements Logger {
 
     public boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("windows");
+    }
+
+    public SimpleConsoleManager getConsoleManager() {
+        return this.consoleManager;
     }
 
 }

@@ -1,6 +1,7 @@
 package de.polocloud.api.groups.impl;
 
 import de.polocloud.api.CloudAPI;
+import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.version.GameServerVersion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.util.function.Consumer;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SimpleServiceGroup implements de.polocloud.api.groups.ServiceGroup {
+public class SimpleServiceGroup implements ServiceGroup {
 
     private String name, template, node, motd;
     private int maxMemory, defaultMaxPlayers, minOnlineService, maxOnlineService;
