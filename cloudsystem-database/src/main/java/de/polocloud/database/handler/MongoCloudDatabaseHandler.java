@@ -1,6 +1,6 @@
 package de.polocloud.database.handler;
 
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -31,7 +31,8 @@ public class MongoCloudDatabaseHandler implements CloudDatabaseProvider {
         final var logger = Logger.getLogger("org.mongodb.driver");
         logger.setLevel(Level.SEVERE);
 
-        this.mongoClient = MongoClients.create(new MongoClientURI("mongodb://" + config.getUsername() + ":" + config.getPassword() + "@" + config.getHostname() + ":" + config.getPort()).toString());
+        this.mongoClient = MongoClients.create(new ConnectionString("mongodb://" + config.getUsername() + ":"
+            + config.getPassword() + "@" + config.getHostname() + ":" + config.getPort()), null);
         MongoDatabase mongoDatabase = this.mongoClient.getDatabase(config.getDatabase());
         this.mongoCollection = mongoDatabase.getCollection(SimpleDatabaseManager.GROUP_TABLE);
     }
@@ -48,7 +49,7 @@ public class MongoCloudDatabaseHandler implements CloudDatabaseProvider {
             .append("minOnlineService", serviceGroup.getMinOnlineService())
             .append("maxOnlineService", serviceGroup.getMaxOnlineService())
             .append("static", serviceGroup.isStatic())
-            .append("fallbackGroup",serviceGroup.isFallbackGroup())
+            .append("fallbackGroup", serviceGroup.isFallbackGroup())
             .append("maintenance", serviceGroup.isMaintenance())
             .append("updating", serviceGroup.isAutoUpdating())
             .append("version", serviceGroup.getGameServerVersion().getName()));
