@@ -1,4 +1,4 @@
-package de.polocloud.database.handler;
+package de.polocloud.database.sql;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
@@ -17,19 +17,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQLCloudDatabaseHandler implements CloudDatabaseProvider {
+public class SQLDatabaseProvider implements CloudDatabaseProvider {
 
-    private final Connection connection;
+    private Connection connection;
 
-    @SneakyThrows
-    public SQLCloudDatabaseHandler(DatabaseConfiguration config) {
-        this.connection = DriverManager.getConnection("jdbc:mysql://" + config.getHostname() + ":"
-            + config.getPort() + "/" + config.getDatabase()
-            + "?user=" + config.getUsername() + "&password=" + config.getPassword() + "&serverTimezone=UTC&autoReconnect=true");
+    public SQLDatabaseProvider(final DatabaseConfiguration config, final String driver) {
+        try {
+            this.connection = DriverManager.getConnection(driver + "://" + config.getHostname() + ":"
+                + config.getPort() + "/" + config.getDatabase()
+                + "?user=" + config.getUsername() + "&password=" + config.getPassword() + "&serverTimezone=UTC&autoReconnect=true");
 
-        this.createTable();
-
-        CloudAPI.getInstance().getLogger().log("§7The connection is now §aestablished §7to the §bdatabase§7.", LogType.SUCCESS);
+            this.createTable();
+            CloudAPI.getInstance().getLogger().log("§7The connection is now §aestablished §7to the §bdatabase§7.", LogType.SUCCESS);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @SneakyThrows

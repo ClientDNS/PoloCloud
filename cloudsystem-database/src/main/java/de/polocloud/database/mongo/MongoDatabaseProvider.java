@@ -1,4 +1,4 @@
-package de.polocloud.database.handler;
+package de.polocloud.database.mongo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MongoCloudDatabaseHandler implements CloudDatabaseProvider {
+public final class MongoDatabaseProvider implements CloudDatabaseProvider {
 
     private final MongoClient mongoClient;
 
     private final MongoCollection<Document> mongoCollection;
 
-    public MongoCloudDatabaseHandler(DatabaseConfiguration config) {
+    public MongoDatabaseProvider(DatabaseConfiguration config) {
 
         final var logger = Logger.getLogger("org.mongodb.driver");
         logger.setLevel(Level.SEVERE);
