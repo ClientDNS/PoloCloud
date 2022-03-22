@@ -14,11 +14,10 @@ import de.polocloud.api.player.PlayerManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractPlayerManager implements PlayerManager {
 
-    protected Map<UUID, CloudPlayer> players = new ConcurrentHashMap<>();
+    protected Map<UUID, CloudPlayer> players;
 
     public AbstractPlayerManager() {
 

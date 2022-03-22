@@ -12,8 +12,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class SimplePlayerManager extends AbstractPlayerManager {
+
+    public SimplePlayerManager() {
+        super.players = new ConcurrentHashMap<>();
+    }
 
     @Override
     public @NotNull List<CloudPlayer> getAllServicePlayers() {

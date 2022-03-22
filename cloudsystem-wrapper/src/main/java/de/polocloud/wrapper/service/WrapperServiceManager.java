@@ -15,7 +15,6 @@ import de.polocloud.wrapper.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class WrapperServiceManager implements ServiceManager {
 
@@ -25,7 +24,6 @@ public final class WrapperServiceManager implements ServiceManager {
     private CloudService thisService;
 
     public WrapperServiceManager(final PropertyFile property) {
-        this.allCachedServices = new CopyOnWriteArrayList<>();
         this.property = property;
 
         final var networkHandler = Wrapper.getInstance().getPacketHandler();
