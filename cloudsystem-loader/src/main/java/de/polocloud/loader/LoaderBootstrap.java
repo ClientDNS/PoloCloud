@@ -23,6 +23,7 @@ public final class LoaderBootstrap {
                     super.addURL(url);
                 }
             };
+            Thread.currentThread().setContextClassLoader(classLoader);
             classLoader.loadClass("de.polocloud.base.Base").getConstructor().newInstance();
         } catch (IOException | ClassNotFoundException | InvocationTargetException
             | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
