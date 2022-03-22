@@ -15,6 +15,7 @@
         <module>cloudsystem-plugin</module>
         <module>cloudsystem-base</module>
         <module>cloudsystem-database</module>
+        <module>cloudsystem-loader</module>
     </modules>
 
     <properties>

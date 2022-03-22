@@ -8,70 +8,37 @@
         <version>2.3.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cloudsystem-database</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>de.polocloud</groupId>
-            <artifactId>cloudsystem-api</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.10</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+    <artifactId>cloudsystem-loader</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
 
     <build>
         <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
-        <!-- Resources -->
+
         <resources>
             <resource>
                 <targetPath>.</targetPath>
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
             </resource>
+            <resource>
+                <directory>${basedir}/../cloudsystem-base/target</directory>
+                <includes>
+                    <include>cloudsystem-base.jar</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
-            <!-- JAR creation plugin -->
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>de.polocloud.base.bootstrap.BaseBootstrap</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <Version>${project.version}</Version>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <source>17</source>
-                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -87,9 +54,24 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>cloudsystem-database</finalName>
+                    <finalName>cloudsystem</finalName>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.polocloud.loader.LoaderBootstrap</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <version-date>${maven.build.timestamp}</version-date>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

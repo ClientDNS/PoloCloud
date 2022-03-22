@@ -1,7 +1,6 @@
 package de.polocloud.database;
 
 import de.polocloud.database.mongo.MongoDatabaseProvider;
-import de.polocloud.database.sql.SQLDatabaseProvider;
 import de.polocloud.database.sql.mysql.MySQLDatabaseProvider;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

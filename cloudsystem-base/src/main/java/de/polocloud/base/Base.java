@@ -23,6 +23,8 @@ import de.polocloud.base.service.LocalService;
 import de.polocloud.base.service.SimpleServiceManager;
 import de.polocloud.base.templates.GroupTemplateService;
 import de.polocloud.database.DatabaseManager;
+import de.polocloud.base.dependencies.Dependency;
+import de.polocloud.base.dependencies.DependencyHandler;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +46,7 @@ public final class Base extends CloudAPI {
 
     private CloudConfiguration config;
 
+    private DependencyHandler dependencyHandler;
     private CommandManager commandManager;
     private BaseNode node;
     private DatabaseManager databaseManager;
@@ -93,8 +96,13 @@ public final class Base extends CloudAPI {
 
         new DefaultExceptionCodes();
 
-        this.commandManager = new SimpleCommandManager();
+        this.dependencyHandler = new DependencyHandler();
+        this.dependencyHandler.loadDependency(switch (this.config.getDatabaseConfiguration().getDatabaseType()) {
+            case MYSQL -> Dependency.MYSQL_DRIVER;
+            case MONGODB -> Dependency.valueOf("test");
+        });
 
+        this.commandManager = new SimpleCommandManager();
         this.databaseManager = DatabaseManager.newInstance(this.config.getDatabaseConfiguration());
         this.workerThread = new WorkerThread(this);
         this.groupManager = new SimpleGroupManager();
