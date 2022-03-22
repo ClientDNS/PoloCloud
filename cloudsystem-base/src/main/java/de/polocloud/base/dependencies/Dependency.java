@@ -6,6 +6,11 @@ public enum Dependency {
         "mysql",
         "mysql-connector-java",
         "8.0.28"
+    ),
+    MONGO_DRIVER(
+        "org.mongodb",
+        "mongo-java-driver",
+        "3.12.10"
     );
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

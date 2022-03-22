@@ -99,7 +99,7 @@ public final class Base extends CloudAPI {
         this.dependencyHandler = new DependencyHandler();
         this.dependencyHandler.loadDependency(switch (this.config.getDatabaseConfiguration().getDatabaseType()) {
             case MYSQL -> Dependency.MYSQL_DRIVER;
-            case MONGODB -> Dependency.valueOf("test");
+            case MONGODB -> Dependency.MONGO_DRIVER;
         });
 
         this.commandManager = new SimpleCommandManager();
