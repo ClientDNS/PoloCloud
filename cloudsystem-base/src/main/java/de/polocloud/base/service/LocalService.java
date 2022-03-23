@@ -4,6 +4,7 @@ import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.groups.utils.ServiceType;
 import de.polocloud.api.json.Document;
+import de.polocloud.api.logger.LogType;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceState;
 import de.polocloud.api.version.GameServerVersion;
@@ -18,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -70,7 +72,7 @@ public class LocalService implements CloudService {
     public void start() {
         this.setState(ServiceState.STARTING);
 
-        this.group.getGameServerVersion().download(this.group.getTemplate());
+        this.downloadVersion(this.group.getGameServerVersion());
 
         // add statistic to service
         SimpleStatisticManager.registerStartingProcess(this);
@@ -300,6 +302,55 @@ public class LocalService implements CloudService {
 
     public void setScreen(final boolean screen) {
         this.screen = screen;
+    }
+
+    private void downloadVersion(final GameServerVersion gameServerVersion) {
+        final var directory = new File("storage/jars");
+        final var file = new File(directory, gameServerVersion.getJar());
+
+        if (file.exists()) return;
+
+        CloudAPI.getInstance().getLogger().log("§7Downloading §bVersion§7... (§3" + this.getName() + "§7)");
+
+        file.getParentFile().mkdirs();
+        try {
+            var url = gameServerVersion.getUrl();
+            FileUtils.copyURLToFile(new URL(url), file);
+
+            if (gameServerVersion.getTitle().equals("paper")) {
+                final var process = new ProcessBuilder("java", "-Dpaperclip.patchonly=true", "-jar", gameServerVersion.getJar())
+                    .directory(file.getParentFile()).start();
+                final var inputStreamReader = new InputStreamReader(process.getInputStream());
+                final var bufferedReader = new BufferedReader(inputStreamReader);
+                process.waitFor();
+                process.destroyForcibly();
+                bufferedReader.close();
+                inputStreamReader.close();
+                final var cacheDirectory = new File(directory, "cache");
+                final var patchedJar = new File(cacheDirectory, "/patched_" + gameServerVersion.getVersion() + ".jar");
+                if (patchedJar.exists()) {
+                    Files.copy(patchedJar.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } else {
+                    final var templateDirectory = new File("templates/" + this.group.getTemplate());
+                    final var versionsDirectory = new File(directory, "versions");
+                    final var librariesDirectory = new File(directory, "libraries");
+                    FileUtils.copyDirectory(versionsDirectory, new File(templateDirectory, "versions"));
+                    FileUtils.copyDirectory(librariesDirectory, new File(templateDirectory, "libraries"));
+                    FileUtils.copyDirectory(cacheDirectory, new File(templateDirectory, "cache"));
+                    FileUtils.deleteDirectory(versionsDirectory);
+                    FileUtils.deleteDirectory(librariesDirectory);
+                    FileUtils.deleteDirectory(cacheDirectory);
+                }
+                FileUtils.deleteDirectory(new File(directory, "cache"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            CloudAPI.getInstance().getLogger().log("§cFailed to download version§7... (§3" + this.getName() + "§7)", LogType.ERROR);
+            return;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        CloudAPI.getInstance().getLogger().log("§7Downloading of (§3" + this.getName() + "§7)§a successfully §7completed.");
     }
 
 }
