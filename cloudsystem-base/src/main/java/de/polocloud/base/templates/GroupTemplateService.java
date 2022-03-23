@@ -17,12 +17,8 @@ public final class GroupTemplateService {
     private final File everyProxyFolder = new File("templates/EVERY_PROXY");
 
     public GroupTemplateService() {
-        try {
-            FileUtils.forceMkdir(this.everyFolder);
-            FileUtils.forceMkdir(this.everyServiceFolder);
-            FileUtils.forceMkdir(this.everyProxyFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (this.everyFolder.mkdirs() || this.everyServiceFolder.mkdirs() || this.everyProxyFolder.mkdirs()) {
+            Base.getInstance().getLogger().log("Created template folders.");
         }
     }
 

@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -73,8 +75,8 @@ public class LocalService implements CloudService {
         // add statistic to service
         SimpleStatisticManager.registerStartingProcess(this);
 
-        // create tmp file
-        FileUtils.forceMkdir(this.workingDirectory);
+        // create working directory
+        this.workingDirectory.mkdirs();
 
         // load all current group templates
         Base.getInstance().getGroupTemplateService().copyTemplates(this);
@@ -82,11 +84,14 @@ public class LocalService implements CloudService {
         final var storageFolder = new File("storage/jars");
 
         final var jar = this.group.getGameServerVersion().getJar();
-        FileUtils.copyFile(new File(storageFolder, jar), new File(this.workingDirectory, jar));
+        Files.copy(new File(storageFolder, jar).toPath(), new File(this.workingDirectory, jar).toPath(),
+            StandardCopyOption.REPLACE_EXISTING);
 
         // copy plugin
-        FileUtils.copyFile(((SimpleServiceManager) Base.getInstance().getServiceManager()).getPluginPath().toFile(),
-            new File(this.workingDirectory, "plugins/plugin.jar"));
+        final var pluginDirectory = new File(this.workingDirectory, "plugins");
+        pluginDirectory.mkdir();
+        Files.copy(((SimpleServiceManager) Base.getInstance().getServiceManager()).getPluginPath(),
+            new File(pluginDirectory, "plugin.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         // write property for identify service
         new Document()

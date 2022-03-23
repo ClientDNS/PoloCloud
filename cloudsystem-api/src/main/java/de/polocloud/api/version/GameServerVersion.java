@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -97,7 +99,7 @@ public enum GameServerVersion {
                 final var cacheDirectory = new File(directory, "cache");
                 final var patchedJar = new File(cacheDirectory, "/patched_" + this.version + ".jar");
                 if (patchedJar.exists()) {
-                    FileUtils.copyFile(patchedJar, file);
+                    Files.copy(patchedJar.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } else {
                     final var templateDirectory = new File("templates/" + template);
                     final var versionsDirectory = new File(directory, "versions");
