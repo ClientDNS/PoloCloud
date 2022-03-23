@@ -2,6 +2,53 @@ package de.polocloud.base.dependencies;
 
 public enum Dependency {
 
+    GSON(
+        "com.google.code.gson",
+        "gson",
+        "2.9.0"
+    ),
+    JLINE(
+        "org.jline",
+        "jline",
+        "3.21.0"),
+    JANSI(
+        "org.fusesource.jansi",
+        "jansi",
+        "2.4.0"
+    ),
+    COMMONS_IO(
+        "commons-io",
+        "commons-io",
+        "2.11.0"
+    ),
+    NETTY_TRANSPORT(
+        "io.netty",
+        "netty-transport",
+        "4.1.75.Final"),
+    NETTY_COMMON(
+        "io.netty",
+        "netty-common",
+        "4.1.75.Final"),
+    NETTY_BUFFER(
+        "io.netty",
+        "netty-buffer",
+        "4.1.75.Final"),
+    NETTY_RESOLVER(
+        "io.netty",
+        "netty-resolver",
+        "4.1.75.Final"),
+    NETTY_TRANSPORT_EPOLL(
+        "io.netty",
+        "netty-transport-classes-epoll",
+        "4.1.75.Final"),
+    NETTY_UNIX_COMMON(
+        "io.netty",
+        "netty-transport-native-unix-common",
+        "4.1.75.Final"),
+    NETTY_CODEC(
+        "io.netty",
+        "netty-codec",
+        "4.1.75.Final"),
     MYSQL_DRIVER(
         "mysql",
         "mysql-connector-java",

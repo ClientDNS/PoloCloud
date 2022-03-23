@@ -1,9 +1,7 @@
 package de.polocloud.api.logger;
 
-import lombok.AllArgsConstructor;
 import org.fusesource.jansi.Ansi;
 
-@AllArgsConstructor
 public enum LoggerAnsiFactory {
 
     RESET("reset", 'r', Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.DEFAULT).boldOff().toString()),
@@ -28,6 +26,12 @@ public enum LoggerAnsiFactory {
     private final String name;
     private final char index;
     private final String code;
+
+    LoggerAnsiFactory(final String name, final char index, final String code) {
+        this.name = name;
+        this.index = index;
+        this.code = code;
+    }
 
     public static String toColorCode(final String value) {
         var message = value;

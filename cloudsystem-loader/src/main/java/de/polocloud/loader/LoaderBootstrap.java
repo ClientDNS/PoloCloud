@@ -24,9 +24,10 @@ public final class LoaderBootstrap {
                 }
             };
             Thread.currentThread().setContextClassLoader(classLoader);
-            classLoader.loadClass("de.polocloud.base.Base").getConstructor().newInstance();
+
+            classLoader.loadClass("de.polocloud.base.Base").getMethod("main").invoke(null);
         } catch (IOException | ClassNotFoundException | InvocationTargetException
-            | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

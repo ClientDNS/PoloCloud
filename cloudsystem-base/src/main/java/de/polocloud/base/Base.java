@@ -13,6 +13,8 @@ import de.polocloud.base.command.SimpleCommandManager;
 import de.polocloud.base.command.defaults.*;
 import de.polocloud.base.config.CloudConfiguration;
 import de.polocloud.base.console.SimpleConsoleManager;
+import de.polocloud.base.dependencies.Dependency;
+import de.polocloud.base.dependencies.DependencyHandler;
 import de.polocloud.base.exception.DefaultExceptionCodes;
 import de.polocloud.base.exception.ErrorHandler;
 import de.polocloud.base.group.SimpleGroupManager;
@@ -23,8 +25,6 @@ import de.polocloud.base.service.LocalService;
 import de.polocloud.base.service.SimpleServiceManager;
 import de.polocloud.base.templates.GroupTemplateService;
 import de.polocloud.database.DatabaseManager;
-import de.polocloud.base.dependencies.Dependency;
-import de.polocloud.base.dependencies.DependencyHandler;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.jar.Manifest;
 
 @Getter
@@ -46,7 +47,6 @@ public final class Base extends CloudAPI {
 
     private CloudConfiguration config;
 
-    private DependencyHandler dependencyHandler;
     private CommandManager commandManager;
     private BaseNode node;
     private DatabaseManager databaseManager;
@@ -57,7 +57,7 @@ public final class Base extends CloudAPI {
     private WorkerThread workerThread;
     private boolean running = true;
 
-    public Base() {
+    public Base(final DependencyHandler dependencyHandler) {
         super(CloudAPIType.NODE);
 
         instance = this;
@@ -69,7 +69,8 @@ public final class Base extends CloudAPI {
             if (manifest.getMainAttributes().getValue("version-date") != null) {
                 date = manifest.getMainAttributes().getValue("version-date");
             }
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
 
         this.version = this.getClass().getPackage().getImplementationVersion();
 
@@ -96,8 +97,7 @@ public final class Base extends CloudAPI {
 
         new DefaultExceptionCodes();
 
-        this.dependencyHandler = new DependencyHandler();
-        this.dependencyHandler.loadDependency(switch (this.config.getDatabaseConfiguration().getDatabaseType()) {
+        dependencyHandler.loadDependency(switch (this.config.getDatabaseConfiguration().getDatabaseType()) {
             case MYSQL -> Dependency.MYSQL_DRIVER;
             case MONGODB -> Dependency.MONGO_DRIVER;
         });
@@ -132,6 +132,23 @@ public final class Base extends CloudAPI {
         ((SimpleLogger) this.logger).getConsoleManager().start();
 
         this.workerThread.start();
+    }
+
+    public static void main() {
+        final var dependencyHandler = new DependencyHandler();
+        dependencyHandler.loadDependencies(
+            Dependency.GSON,
+            Dependency.JLINE,
+            Dependency.JANSI,
+            Dependency.COMMONS_IO,
+            Dependency.NETTY_CODEC,
+            Dependency.NETTY_TRANSPORT_EPOLL,
+            Dependency.NETTY_TRANSPORT,
+            Dependency.NETTY_BUFFER,
+            Dependency.NETTY_COMMON,
+            Dependency.NETTY_RESOLVER,
+            Dependency.NETTY_UNIX_COMMON);
+        new Base(dependencyHandler);
     }
 
     private boolean loadConfig(@NotNull File file) {
