@@ -17,9 +17,9 @@ public final class GroupTemplateService {
     private final File everyProxyFolder = new File("templates/EVERY_PROXY");
 
     public GroupTemplateService() {
-        if (this.everyFolder.mkdirs() && this.everyServiceFolder.mkdirs() && this.everyProxyFolder.mkdirs()) {
-            Base.getInstance().getLogger().log("Created template folders.");
-        }
+        this.everyFolder.mkdirs();
+        this.everyServiceFolder.mkdirs();
+        this.everyProxyFolder.mkdirs();
     }
 
     public void copyTemplates(@NotNull CloudService service) throws IOException {
