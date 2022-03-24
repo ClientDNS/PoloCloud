@@ -1,6 +1,5 @@
 package de.polocloud.base.node;
 
-import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.service.CloudServiceRemoveEvent;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.network.packet.init.CacheInitPacket;
@@ -8,7 +7,7 @@ import de.polocloud.api.network.packet.service.ServiceRemovePacket;
 import de.polocloud.api.service.ServiceState;
 import de.polocloud.base.Base;
 import de.polocloud.base.config.CloudConfiguration;
-import de.polocloud.base.service.statistic.SimpleStatisticManager;
+import de.polocloud.base.service.LocalService;
 import de.polocloud.network.NetworkType;
 import de.polocloud.network.server.NettyServer;
 import de.polocloud.network.server.client.ConnectedClient;
@@ -23,7 +22,7 @@ public final class BaseNode extends NettyServer {
     private final int port;
 
     public BaseNode(final CloudConfiguration cloudConfiguration) {
-        super(CloudAPI.getInstance().getPacketHandler(), cloudConfiguration.getNodeConfiguration().getNodeName(), NetworkType.NODE);
+        super(Base.getInstance().getPacketHandler(), cloudConfiguration.getNodeConfiguration().getNodeName(), NetworkType.NODE);
 
         this.hostName = cloudConfiguration.getNodeConfiguration().getHostname();
         this.port = cloudConfiguration.getNodeConfiguration().getPort();
@@ -50,18 +49,21 @@ public final class BaseNode extends NettyServer {
     public void onServiceConnected(final ConnectedClient connectedClient) {
 
         // set online
-        final var service = Base.getInstance().getServiceManager().getServiceByNameOrNull(connectedClient.name());
-        Objects.requireNonNull(service).setState(ServiceState.STARTED);
+        if (Base.getInstance().getServiceManager().getServiceByNameOrNull(connectedClient.name())
+            instanceof LocalService localService) {
+            Objects.requireNonNull(localService).setState(ServiceState.STARTED);
 
-        // update cache
-        connectedClient.sendPacket(new CacheInitPacket(
-            Base.getInstance().getGroupManager().getAllCachedServiceGroups(),
-            Base.getInstance().getServiceManager().getAllCachedServices(),
-            Base.getInstance().getPlayerManager().getPlayers()));
+            // update cache
+            connectedClient.sendPacket(new CacheInitPacket(
+                Base.getInstance().getGroupManager().getAllCachedServiceGroups(),
+                Base.getInstance().getServiceManager().getAllCachedServices(),
+                Base.getInstance().getPlayerManager().getPlayers()));
 
-        service.update();
+            localService.update();
 
-        Base.getInstance().getLogger().log("§7The service '§b" + connectedClient.name() + "§7' has §asuccessfully §7connected to the cluster. (§b" + SimpleStatisticManager.getProcessingTime(service) + " §7ms)");
+            Base.getInstance().getLogger().log(
+                "§7The service '§b" + connectedClient.name() + "§7' has §asuccessfully §7connected to the cluster. (§b" + (System.currentTimeMillis() - localService.getStartTime()) +" §7ms)");
+        }
     }
 
     @Override

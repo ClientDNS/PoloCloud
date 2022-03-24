@@ -46,6 +46,8 @@ public final class Base extends CloudAPI {
 
     private CloudConfiguration config;
 
+    private final DependencyHandler dependencyHandler;
+
     private CommandManager commandManager;
     private BaseNode node;
     private DatabaseManager databaseManager;
@@ -60,6 +62,8 @@ public final class Base extends CloudAPI {
         super(CloudAPIType.NODE);
 
         instance = this;
+
+        this.dependencyHandler = dependencyHandler;
 
         var date = "19.01.2020";
         try (final var stream = this.getClass().getClassLoader().getResources("META-INF/MANIFEST.MF")
@@ -96,7 +100,7 @@ public final class Base extends CloudAPI {
 
         new DefaultExceptionCodes();
 
-        dependencyHandler.loadDependency(switch (this.config.getDatabaseConfiguration().getDatabaseType()) {
+        this.dependencyHandler.loadDependency(switch (this.config.getDatabaseConfiguration().getDatabaseType()) {
             case MYSQL -> Dependency.MYSQL_DRIVER;
             case MONGODB -> Dependency.MONGO_DRIVER;
         });

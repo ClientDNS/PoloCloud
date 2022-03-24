@@ -10,7 +10,7 @@ import de.polocloud.api.service.ServiceState;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.base.Base;
 import de.polocloud.base.config.editor.ConfigurationFileEditor;
-import de.polocloud.base.service.statistic.SimpleStatisticManager;
+import de.polocloud.base.dependencies.Dependency;
 import de.polocloud.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,6 +50,8 @@ public class LocalService implements CloudService {
 
     private boolean screen = false;
 
+    private long startTime;
+
     public LocalService(final ServiceGroup group, final int id, final int port, final String hostname) {
         this.uuid = UUID.randomUUID();
         this.group = group;
@@ -74,8 +76,8 @@ public class LocalService implements CloudService {
 
         this.downloadVersion(this.group.getGameServerVersion());
 
-        // add statistic to service
-        SimpleStatisticManager.registerStartingProcess(this);
+        // sets the start time
+        this.startTime = System.currentTimeMillis();
 
         // create working directory
         this.workingDirectory.mkdirs();
@@ -232,8 +234,9 @@ public class LocalService implements CloudService {
     }
 
     private List<String> arguments() {
+        final var base = Base.getInstance();
         final var arguments = new ArrayList<>(Arrays.asList(
-            Base.getInstance().getConfig().getJavaCommand(),
+            base.getConfig().getJavaCommand(),
             "-XX:+UseG1GC",
             "-XX:+ParallelRefProcEnabled",
             "-XX:MaxGCPauseMillis=200",
@@ -265,14 +268,24 @@ public class LocalService implements CloudService {
             "-Xms" + this.group.getMaxMemory() + "M",
             "-Xmx" + this.group.getMaxMemory() + "M"));
 
-        arguments.addAll(Base.getInstance().getConfig().getJvmFlags());
+        arguments.addAll(base.getConfig().getJvmFlags());
 
-        final var serviceManager = (SimpleServiceManager) Base.getInstance().getServiceManager();
+        final var serviceManager = (SimpleServiceManager) base.getServiceManager();
         final var applicationFile = new File(this.workingDirectory, this.group.getGameServerVersion().getJar());
+        final var separator = File.pathSeparator;
 
-        arguments.addAll(Arrays.asList(
-            "-cp", serviceManager.getWrapperPath().toString(),
-            "-javaagent:" + serviceManager.getWrapperPath()));
+        arguments.add("-cp");
+        arguments.add(serviceManager.getWrapperPath().toString() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.GSON).getAbsolutePath() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_CODEC).getAbsolutePath() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_TRANSPORT_EPOLL).getAbsolutePath() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_TRANSPORT).getAbsolutePath() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_BUFFER).getAbsolutePath() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_COMMON).getAbsolutePath() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_RESOLVER).getAbsolutePath() + separator
+            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_UNIX_COMMON).getAbsolutePath() + separator
+        );
+        arguments.add("-javaagent:" + serviceManager.getWrapperPath());
 
         arguments.add(serviceManager.getWrapperMainClass());
 

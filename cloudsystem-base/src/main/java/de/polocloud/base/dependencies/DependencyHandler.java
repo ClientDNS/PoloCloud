@@ -55,4 +55,8 @@ public final class DependencyHandler {
         this.loadedDependencies.put(dependency, file);
     }
 
+    public File getLoadedDependencyFile(final Dependency dependency) {
+        return this.loadedDependencies.get(dependency);
+    }
+
 }
