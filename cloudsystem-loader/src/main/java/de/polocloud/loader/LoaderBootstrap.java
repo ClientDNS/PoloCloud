@@ -14,9 +14,8 @@ public final class LoaderBootstrap {
     public static void main(String[] args) {
         try {
             var path = new File("storage/jars/base.jar").toPath();
-            path.toFile().getParentFile().mkdir();
-            Files.copy(Objects.requireNonNull(ClassLoader.getSystemClassLoader()
-                .getResourceAsStream("cloudsystem-base.jar")), path, StandardCopyOption.REPLACE_EXISTING);
+            path.toFile().getParentFile().mkdirs();
+            Files.copy(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("cloudsystem-base.jar")), path, StandardCopyOption.REPLACE_EXISTING);
             final var classLoader = new URLClassLoader(new URL[]{path.toUri().toURL()}, ClassLoader.getSystemClassLoader()) {
                 @Override
                 public void addURL(URL url) {
