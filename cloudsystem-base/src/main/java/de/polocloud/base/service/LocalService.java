@@ -2,7 +2,6 @@ package de.polocloud.base.service;
 
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
-import de.polocloud.api.groups.utils.ServiceType;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.service.CloudService;
@@ -132,6 +131,21 @@ public class LocalService implements CloudService {
             new ConfigurationFileEditor(file, s -> {
                 if (s.startsWith("bind = ")) {
                     return "bind = \"0.0.0.0:" + this.port + "\"";
+                } else {
+                    return s;
+                }
+            });
+        } else if (this.group.getGameServerVersion().getTitle().equals("glowstone")) {
+            final var file = new File(this.workingDirectory, "config/glowstone.yml");
+            if (!file.exists()) {
+                try (final var inputStream = this.getClass().getClassLoader().getResourceAsStream("defaultFiles/glowstone.yml")) {
+                    assert inputStream != null;
+                    FileUtils.copyToFile(inputStream, file);
+                }
+            }
+            new ConfigurationFileEditor(file, s -> {
+                if (s.startsWith("    port: ")) {
+                    return "    port: " + this.port;
                 } else {
                     return s;
                 }
@@ -302,9 +316,7 @@ public class LocalService implements CloudService {
 
         arguments.add(Boolean.toString(preLoadClasses));
 
-        if (this.group.getGameServerVersion().getServiceTypes() == ServiceType.SERVER) {
-            arguments.add("nogui");
-        }
+        if (this.group.getGameServerVersion().getTitle().equals("paper")) arguments.add("nogui");
 
         return arguments;
     }
