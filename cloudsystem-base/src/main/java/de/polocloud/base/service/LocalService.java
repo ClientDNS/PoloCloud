@@ -323,7 +323,7 @@ public class LocalService implements CloudService {
 
         if (file.exists()) return;
 
-        CloudAPI.getInstance().getLogger().log("§7Downloading §bVersion§7... (§3" + this.getName() + "§7)");
+        CloudAPI.getInstance().getLogger().log("§7Downloading §bVersion§7... (§3" + gameServerVersion.getName() + "§7)");
 
         file.getParentFile().mkdirs();
         try {
