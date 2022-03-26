@@ -9,7 +9,6 @@ import de.polocloud.api.service.ServiceState;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.base.Base;
 import de.polocloud.base.config.editor.ConfigurationFileEditor;
-import de.polocloud.base.dependencies.Dependency;
 import de.polocloud.network.packet.Packet;
 import lombok.Getter;
 import lombok.Setter;
@@ -286,19 +285,9 @@ public class LocalService implements CloudService {
 
         final var serviceManager = (SimpleServiceManager) base.getServiceManager();
         final var applicationFile = new File(this.workingDirectory, this.group.getGameServerVersion().getJar());
-        final var separator = File.pathSeparator;
 
         arguments.add("-cp");
-        arguments.add(serviceManager.getWrapperPath().toString() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.GSON).getAbsolutePath() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_CODEC).getAbsolutePath() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_TRANSPORT_EPOLL).getAbsolutePath() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_TRANSPORT).getAbsolutePath() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_BUFFER).getAbsolutePath() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_COMMON).getAbsolutePath() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_RESOLVER).getAbsolutePath() + separator
-            + base.getDependencyHandler().getLoadedDependencyFile(Dependency.NETTY_UNIX_COMMON).getAbsolutePath() + separator
-        );
+        arguments.add(serviceManager.getWrapperPath().toString());
         arguments.add("-javaagent:" + serviceManager.getWrapperPath());
 
         arguments.add(serviceManager.getWrapperMainClass());

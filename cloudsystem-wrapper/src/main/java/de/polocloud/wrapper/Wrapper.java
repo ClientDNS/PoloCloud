@@ -14,6 +14,12 @@ import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.player.CloudPlayerManager;
 import de.polocloud.wrapper.service.WrapperServiceManager;
+import de.polocloud.wrapper.transformer.ClassTransformer;
+import de.polocloud.wrapper.transformer.Transformer;
+import de.polocloud.wrapper.transformer.bukkit.BukkitCommodoreTransformer;
+import de.polocloud.wrapper.transformer.bukkit.BukkitMainTransformer;
+import de.polocloud.wrapper.transformer.bukkit.PaperConfigTransformer;
+import de.polocloud.wrapper.transformer.netty.NettyEpollTransformer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -25,6 +31,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -99,6 +106,11 @@ public final class Wrapper extends CloudAPI {
 
         instance = this;
 
+        this.addTransformer("org/bukkit/craftbukkit", "Main", new BukkitMainTransformer());
+        this.addTransformer("org/bukkit/craftbukkit", "Commodore", new BukkitCommodoreTransformer());
+        this.addTransformer("org/github/paperspigot", "PaperSpigotConfig", new PaperConfigTransformer());
+        this.addTransformer(name -> name.endsWith("Epoll") && name.startsWith("io") && name.contains("netty/channel/epoll/"), new NettyEpollTransformer());
+
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
         this.logger = new WrapperLogger();
@@ -116,6 +128,22 @@ public final class Wrapper extends CloudAPI {
 
     private void stop() {
         this.client.close();
+    }
+
+    private void addTransformer(final @NotNull Predicate<String> predicate, final @NotNull Transformer transformer) {
+        instrumentation.addTransformer(new ClassTransformer(transformer, predicate, instrumentation));
+    }
+
+    private void addTransformer(final @NotNull String packagePrefix, final @NotNull String className, final @NotNull Transformer transformer) {
+        this.addTransformer(name -> {
+            if (!name.startsWith(packagePrefix)) return false;
+            final var lastSlash = name.lastIndexOf('/');
+            if (lastSlash != -1 && name.length() > lastSlash) {
+                var simpleName = name.substring(lastSlash + 1);
+                return className.equals(simpleName);
+            }
+            return false;
+        }, transformer);
     }
 
     @Override

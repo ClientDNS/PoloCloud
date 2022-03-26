@@ -7,6 +7,7 @@ import de.polocloud.plugin.bootstrap.bungee.commands.BungeeCloudCommand;
 import de.polocloud.plugin.bootstrap.bungee.listener.BungeeCloudListener;
 import de.polocloud.plugin.bootstrap.bungee.listener.BungeeListener;
 import de.polocloud.wrapper.Wrapper;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;

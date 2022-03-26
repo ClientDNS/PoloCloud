@@ -11,6 +11,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cloudsystem-wrapper</artifactId>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
@@ -31,7 +38,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.1-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -44,6 +51,28 @@
                     <finalName>wrapper</finalName>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <relocations>
+                        <relocation>
+                            <pattern>io.netty</pattern>
+                            <shadedPattern>de.polocloud.relocate.io.netty</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.google.gson</pattern>
+                            <shadedPattern>de.polocloud.relocate.com.google.gson</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.objectweb.asm</pattern>
+                            <shadedPattern>de.polocloud.relocate.org.objectweb.asm</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>META-INF/native/netty</pattern>
+                            <shadedPattern>META-INF/native/de_polocloud_relocate_netty</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>META-INF/native/libnetty</pattern>
+                            <shadedPattern>META-INF/native/libde_polocloud_relocate_netty</shadedPattern>
+                        </relocation>
+                    </relocations>
                 </configuration>
             </plugin>
         </plugins>
@@ -63,17 +92,24 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-transport-native-epoll</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-tree</artifactId>
+            <version>9.2</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>
