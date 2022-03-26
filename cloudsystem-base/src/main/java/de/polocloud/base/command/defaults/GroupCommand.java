@@ -115,7 +115,7 @@ public final class GroupCommand extends CloudCommand {
                         if (gameServerVersion == null) {
                             logger.log("§7This version is §cnot §7available.", LogType.WARNING);
                             logger.log("§7Please use one of the following versions:");
-                            for (final var version : GameServerVersion.values()) logger.log("- " + version.getName());
+                            for (final var version : GameServerVersion.VERSIONS.values()) logger.log("- " + version.getName());
                             return;
                         }
                         group.setGameServerVersion(gameServerVersion);
@@ -144,7 +144,7 @@ public final class GroupCommand extends CloudCommand {
                 if (gameServerVersion == null) {
                     logger.log("This version is not available.", LogType.WARNING);
                     logger.log("Use one of the following versions:");
-                    for (final var version : GameServerVersion.values()) logger.log("- " + version.getName());
+                    for (final var version : GameServerVersion.VERSIONS.values()) logger.log("- " + version.getName());
                     return;
                 }
 
@@ -192,12 +192,12 @@ public final class GroupCommand extends CloudCommand {
                 if (arguments[2].equalsIgnoreCase("fallback") || arguments[2].equalsIgnoreCase("maintenance")) {
                     return Arrays.asList("true", "false");
                 } else if (arguments[2].equalsIgnoreCase("version")) {
-                    return Arrays.stream(GameServerVersion.values()).map(GameServerVersion::getName).toList();
+                    return GameServerVersion.VERSIONS.values().stream().map(GameServerVersion::getName).toList();
                 }
             }
         } else if (arguments.length == 5) {
             if (arguments[0].equalsIgnoreCase("create")) {
-                return Arrays.stream(GameServerVersion.values()).map(GameServerVersion::getName).toList();
+                return GameServerVersion.VERSIONS.values().stream().map(GameServerVersion::getName).toList();
             }
         }
         return super.tabComplete(arguments);

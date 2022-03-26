@@ -162,7 +162,7 @@ public interface ServiceGroup {
         networkBuf.writeBoolean(this.isFallbackGroup());
         networkBuf.writeBoolean(this.isMaintenance());
         networkBuf.writeBoolean(this.isAutoUpdating());
-        networkBuf.writeInt(this.getGameServerVersion().ordinal());
+        networkBuf.writeInt(GameServerVersion.VERSIONS.values().stream().toList().indexOf(this.getGameServerVersion()));
     }
 
     /**
@@ -182,7 +182,7 @@ public interface ServiceGroup {
             networkBuf.readBoolean(),
             networkBuf.readBoolean(),
             networkBuf.readBoolean(),
-            GameServerVersion.values()[networkBuf.readInt()]);
+            GameServerVersion.VERSIONS.values().stream().toList().get(networkBuf.readInt()));
     }
 
 }

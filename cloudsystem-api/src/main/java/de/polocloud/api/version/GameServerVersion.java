@@ -8,28 +8,29 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
-public enum GameServerVersion {
+public final class GameServerVersion {
 
-    WATERFALL("waterfall", "latest", true),
-    VELOCITY("velocity", "latest", true),
-    PAPER_1_18_2("paper", "1.18.2"),
-    @Deprecated(since = "2.2.0") PAPER_1_18_1("paper", "1.18.1"),
-    PAPER_1_17_1("paper", "1.17.1"),
-    PAPER_1_16_5("paper", "1.16.5"),
-    PAPER_1_15_2("paper", "1.15.2"),
-    PAPER_1_14_4("paper", "1.14.4"),
-    PAPER_1_13_2("paper", "1.13.2"),
-    PAPER_1_12_2("paper", "1.12.2"),
-    PAPER_1_11_2("paper", "1.11.2"),
-    PAPER_1_10_2("paper", "1.10.2"),
-    PAPER_1_9_4("paper", "1.9.4"),
-    PAPER_1_8_8("paper", "1.8.8"),
-    GLOWSTONE_1_12_2("glowstone", "1.12.2", "https://github.com/GlowstoneMC/Glowstone/releases/download/2021.7.0/glowstone.jar");
+    public static Map<String, GameServerVersion> VERSIONS = new HashMap<>();
+
+    public static GameServerVersion WATERFALL = new GameServerVersion("waterfall", "latest", true);
+    public static GameServerVersion VELOCITY = new GameServerVersion("velocity", "latest", true);
+    public static GameServerVersion PAPER_1_18_2 = new GameServerVersion("paper", "1.18.2");
+    @Deprecated(since = "2.2.0")
+    public static GameServerVersion PAPER_1_18_1 = new GameServerVersion("paper", "1.18.1");
+    public static final GameServerVersion PAPER_1_17_1 = new GameServerVersion("paper", "1.17.1");
+    public static final GameServerVersion PAPER_1_16_5 = new GameServerVersion("paper", "1.16.5");
+    public static final GameServerVersion PAPER_1_15_2 = new GameServerVersion("paper", "1.15.2");
+    public static final GameServerVersion PAPER_1_14_4 = new GameServerVersion("paper", "1.14.4");
+    public static final GameServerVersion PAPER_1_13_2 = new GameServerVersion("paper", "1.13.2");
+    public static final GameServerVersion PAPER_1_12_2 = new GameServerVersion("paper", "1.12.2");
+    public static final GameServerVersion PAPER_1_11_2 = new GameServerVersion("paper", "1.11.2");
+    public static final GameServerVersion PAPER_1_10_2 = new GameServerVersion("paper", "1.10.2");
+    public static final GameServerVersion PAPER_1_9_4 = new GameServerVersion("paper", "1.9.4");
+    public static final GameServerVersion PAPER_1_8_8 = new GameServerVersion("paper", "1.8.8");
+    public static final GameServerVersion GLOWSTONE_1_12_2 = new GameServerVersion("glowstone", "1.12.2", "https://github.com/GlowstoneMC/Glowstone/releases/download/2021.7.0/glowstone.jar");
 
     private final String url;
     private final String title;
@@ -52,6 +53,8 @@ public enum GameServerVersion {
         this.title = title;
         this.version = version;
         this.proxy = proxy;
+
+        VERSIONS.put(getName(), this);
     }
 
     GameServerVersion(final @NotNull String title, final @NotNull String version, final @NotNull String url) {
@@ -59,6 +62,7 @@ public enum GameServerVersion {
         this.title = title;
         this.version = version;
         this.proxy = false;
+        VERSIONS.put(getName(), this);
     }
 
     GameServerVersion(final @NotNull String title, final @NotNull String version, final boolean proxy, final @NotNull String url) {
@@ -66,10 +70,11 @@ public enum GameServerVersion {
         this.title = title;
         this.version = version;
         this.proxy = proxy;
+        VERSIONS.put(getName(), this);
     }
 
     public static GameServerVersion getVersionByName(final @NotNull String value) {
-        return Arrays.stream(values()).filter(version -> version.getName().equalsIgnoreCase(value)).findAny().orElse(null);
+        return VERSIONS.get(value);
     }
 
     public @NotNull String getName() {
