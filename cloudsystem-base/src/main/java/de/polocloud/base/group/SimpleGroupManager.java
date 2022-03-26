@@ -34,9 +34,9 @@ public final class SimpleGroupManager extends AbstractGroupManager {
                 .collect(Collectors.joining("§7, §b")));
         } else {
             base.getWorkerThread().addRunnable(() -> {
-                Base.getInstance().getLogger().log("0 groups loaded, should default groups be created?");
+                Base.getInstance().getLogger().log("0 groups loaded, should default groups be created? (yes/no)");
                 Base.getInstance().getConsoleManager().addInput(input -> {
-                    if (input.startsWith("true")) {
+                    if (input.startsWith("yes")) {
                         this.addServiceGroup(new SimpleServiceGroup("Proxy", "Proxy",
                             Base.getInstance().getNode().getName(), "A default service", 512,
                             100, 1, -1, false, false,
@@ -45,8 +45,9 @@ public final class SimpleGroupManager extends AbstractGroupManager {
                             Base.getInstance().getNode().getName(), "A default service", 1024,
                             100, 1, -1, false, true,
                             false, true, GameServerVersion.PAPER_1_18_2));
+                        Base.getInstance().getLogger().log("§7You create following groups: §b" + "Lobby (Paper 1.18.2)§7, §bProxy (Velocity)");
                     }
-                }, Arrays.asList("true", "false"));
+                }, Arrays.asList("yes", "no"));
             });
         }
     }
