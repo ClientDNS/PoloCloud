@@ -48,7 +48,7 @@ public final class ServiceGroupUpdatePacket implements Packet {
         this.minOnlineService = byteBuf.readInt();
         this.maxOnlineService = byteBuf.readInt();
         this.defaultMaxPlayers = byteBuf.readInt();
-        this.gameServerVersion = GameServerVersion.VERSIONS.values().stream().toList().get(byteBuf.readInt());
+        this.gameServerVersion = GameServerVersion.getVersionByName(byteBuf.readString());
         this.fallback = byteBuf.readBoolean();
         this.maintenance = byteBuf.readBoolean();
     }
@@ -63,7 +63,7 @@ public final class ServiceGroupUpdatePacket implements Packet {
         byteBuf.writeInt(this.minOnlineService);
         byteBuf.writeInt(this.maxOnlineService);
         byteBuf.writeInt(this.defaultMaxPlayers);
-        byteBuf.writeInt(GameServerVersion.VERSIONS.values().stream().toList().indexOf(this.gameServerVersion));
+        byteBuf.writeString(this.gameServerVersion.getName());
         byteBuf.writeBoolean(this.fallback);
         byteBuf.writeBoolean(this.maintenance);
     }

@@ -15,11 +15,10 @@ public final class GameServerVersion {
 
     public static Map<String, GameServerVersion> VERSIONS = new HashMap<>();
 
-    public static GameServerVersion WATERFALL = new GameServerVersion("waterfall", "latest", true);
-    public static GameServerVersion VELOCITY = new GameServerVersion("velocity", "latest", true);
-    public static GameServerVersion PAPER_1_18_2 = new GameServerVersion("paper", "1.18.2");
-    @Deprecated(since = "2.2.0")
-    public static GameServerVersion PAPER_1_18_1 = new GameServerVersion("paper", "1.18.1");
+    public static final GameServerVersion WATERFALL = new GameServerVersion("waterfall", "latest", true);
+    public static final GameServerVersion VELOCITY = new GameServerVersion("velocity", "latest", true);
+    public static final GameServerVersion PAPER_1_18_2 = new GameServerVersion("paper", "1.18.2");
+    public static final @Deprecated(since = "2.2.0") GameServerVersion PAPER_1_18_1 = new GameServerVersion("paper", "1.18.1");
     public static final GameServerVersion PAPER_1_17_1 = new GameServerVersion("paper", "1.17.1");
     public static final GameServerVersion PAPER_1_16_5 = new GameServerVersion("paper", "1.16.5");
     public static final GameServerVersion PAPER_1_15_2 = new GameServerVersion("paper", "1.15.2");
@@ -54,7 +53,7 @@ public final class GameServerVersion {
         this.version = version;
         this.proxy = proxy;
 
-        VERSIONS.put(getName(), this);
+        VERSIONS.put(this.getName(), this);
     }
 
     GameServerVersion(final @NotNull String title, final @NotNull String version, final @NotNull String url) {
@@ -62,7 +61,7 @@ public final class GameServerVersion {
         this.title = title;
         this.version = version;
         this.proxy = false;
-        VERSIONS.put(getName(), this);
+        VERSIONS.put(this.getName(), this);
     }
 
     GameServerVersion(final @NotNull String title, final @NotNull String version, final boolean proxy, final @NotNull String url) {
@@ -70,7 +69,7 @@ public final class GameServerVersion {
         this.title = title;
         this.version = version;
         this.proxy = proxy;
-        VERSIONS.put(getName(), this);
+        VERSIONS.put(this.getName(), this);
     }
 
     public static GameServerVersion getVersionByName(final @NotNull String value) {
