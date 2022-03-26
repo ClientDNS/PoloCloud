@@ -70,7 +70,8 @@ public final class Base extends CloudAPI {
             if (manifest.getMainAttributes().getValue("version-date") != null) {
                 date = manifest.getMainAttributes().getValue("version-date");
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         this.version = this.getClass().getPackage().getImplementationVersion();
