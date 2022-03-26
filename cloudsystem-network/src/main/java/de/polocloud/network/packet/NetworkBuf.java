@@ -7,10 +7,11 @@ import java.util.UUID;
 
 public record NetworkBuf(ByteBuf byteBuf) {
 
-    public void writeString(String string) {
+    public NetworkBuf writeString(String string) {
         final var bytes = string.getBytes(StandardCharsets.UTF_8);
         this.byteBuf.writeInt(bytes.length);
         this.byteBuf.writeBytes(bytes);
+        return this;
     }
 
     public String readString() {
@@ -35,12 +36,13 @@ public record NetworkBuf(ByteBuf byteBuf) {
         return null;
     }
 
-    public void writeEnum(Enum<?> val) {
+    public NetworkBuf writeEnum(Enum<?> val) {
         this.byteBuf.writeBoolean(val == null);
         if (val != null) {
             this.writeString(val.getDeclaringClass().getName());
             this.writeVarInt(val.ordinal());
         }
+        return this;
     }
 
     public void writeVarInt(int input) {
@@ -59,12 +61,14 @@ public record NetworkBuf(ByteBuf byteBuf) {
         return this.byteBuf.readBoolean();
     }
 
-    public void writeBoolean(boolean value) {
+    public NetworkBuf writeBoolean(boolean value) {
         this.byteBuf.writeBoolean(value);
+        return this;
     }
 
-    public void writeInt(int value) {
+    public NetworkBuf writeInt(int value) {
         this.byteBuf.writeInt(value);
+        return this;
     }
 
     public int readVarInt() {
@@ -89,9 +93,10 @@ public record NetworkBuf(ByteBuf byteBuf) {
         return new UUID(this.byteBuf.readLong(), this.byteBuf.readLong());
     }
 
-    public void writeUUID(UUID uniqueId) {
+    public NetworkBuf writeUUID(UUID uniqueId) {
         this.byteBuf.writeLong(uniqueId.getMostSignificantBits());
         this.byteBuf.writeLong(uniqueId.getLeastSignificantBits());
+        return this;
     }
 
 }

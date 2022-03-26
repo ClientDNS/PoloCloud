@@ -19,8 +19,9 @@ public class CloudPlayerMessagePacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeUUID(uuid);
-        byteBuf.writeString(message);
+        byteBuf
+            .writeUUID(this.uuid)
+            .writeString(this.message);
     }
 
     @Override

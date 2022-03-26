@@ -55,17 +55,18 @@ public final class ServiceGroupUpdatePacket implements Packet {
 
     @Override
     public void write(final @NotNull NetworkBuf byteBuf) {
-        byteBuf.writeString(this.name);
-        byteBuf.writeString(this.node);
-        byteBuf.writeString(this.template);
-        byteBuf.writeString(this.motd);
-        byteBuf.writeInt(this.memory);
-        byteBuf.writeInt(this.minOnlineService);
-        byteBuf.writeInt(this.maxOnlineService);
-        byteBuf.writeInt(this.defaultMaxPlayers);
-        byteBuf.writeString(this.gameServerVersion.getName());
-        byteBuf.writeBoolean(this.fallback);
-        byteBuf.writeBoolean(this.maintenance);
+        byteBuf
+            .writeString(this.name)
+            .writeString(this.node)
+            .writeString(this.template)
+            .writeString(this.motd)
+            .writeInt(this.memory)
+            .writeInt(this.minOnlineService)
+            .writeInt(this.maxOnlineService)
+            .writeInt(this.defaultMaxPlayers)
+            .writeString(this.gameServerVersion.getName())
+            .writeBoolean(this.fallback)
+            .writeBoolean(this.maintenance);
     }
 
 }

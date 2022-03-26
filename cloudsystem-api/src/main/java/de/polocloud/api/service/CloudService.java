@@ -60,6 +60,7 @@ public interface CloudService {
 
     /**
      * sets the max players of the service
+     *
      * @param slots the amount to set
      */
     void setMaxPlayers(int slots);
@@ -85,6 +86,7 @@ public interface CloudService {
 
     /**
      * edits the properties of the service and update then
+     *
      * @param serviceConsumer the consumer to change the properties
      */
     void edit(@NotNull Consumer<CloudService> serviceConsumer);
@@ -96,12 +98,14 @@ public interface CloudService {
 
     /**
      * sets the motd of the service
+     *
      * @param motd the motd to set
      */
     void setMotd(@NotNull String motd);
 
     /**
      * sends a packet to a service
+     *
      * @param packet the packet to send
      */
     void sendPacket(@NotNull Packet packet);
@@ -125,14 +129,15 @@ public interface CloudService {
      * writes the service to a network buf
      */
     default void write(@NotNull NetworkBuf networkBuf) {
-        networkBuf.writeString(this.getGroup().getName());
-        networkBuf.writeInt(this.getServiceId());
-        networkBuf.writeString(this.getNode());
-        networkBuf.writeInt(this.getPort());
-        networkBuf.writeString(this.getHostName());
-        networkBuf.writeInt(this.getMaxPlayers());
-        networkBuf.writeString(this.getState());
-        networkBuf.writeString(this.getMotd());
+        networkBuf
+            .writeString(this.getGroup().getName())
+            .writeInt(this.getServiceId())
+            .writeString(this.getNode())
+            .writeInt(this.getPort())
+            .writeString(this.getHostName())
+            .writeInt(this.getMaxPlayers())
+            .writeString(this.getState())
+            .writeString(this.getMotd());
     }
 
     /**

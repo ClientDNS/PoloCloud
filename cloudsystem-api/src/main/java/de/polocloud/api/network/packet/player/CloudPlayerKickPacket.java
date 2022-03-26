@@ -20,16 +20,17 @@ public class CloudPlayerKickPacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeUUID(this.uuid);
-        byteBuf.writeString(this.proxyService);
-        byteBuf.writeString(this.reason);
+        byteBuf
+            .writeUUID(this.uuid)
+            .writeString(this.proxyService)
+            .writeString(this.reason);
     }
 
     @Override
     public void read(@NotNull NetworkBuf byteBuf) {
-        this.uuid =  byteBuf.readUUID();
-        this.proxyService =  byteBuf.readString();
-        this.reason =  byteBuf.readString();
+        this.uuid = byteBuf.readUUID();
+        this.proxyService = byteBuf.readString();
+        this.reason = byteBuf.readString();
     }
 
 }

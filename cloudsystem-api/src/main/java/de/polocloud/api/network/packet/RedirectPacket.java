@@ -20,8 +20,9 @@ public class RedirectPacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeString(this.client);
-        byteBuf.writeInt(CloudAPI.getInstance().getPacketHandler().getPacketId(this.packet.getClass()));
+        byteBuf
+            .writeString(this.client)
+            .writeInt(CloudAPI.getInstance().getPacketHandler().getPacketId(this.packet.getClass()));
         this.packet.write(byteBuf);
     }
 

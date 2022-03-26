@@ -26,10 +26,11 @@ public class ServiceUpdatePacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeString(this.service);
-        byteBuf.writeString(this.state);
-        byteBuf.writeInt(this.maxPlayers);
-        byteBuf.writeString(this.motd);
+        byteBuf
+            .writeString(this.service)
+            .writeString(this.state)
+            .writeInt(this.maxPlayers)
+            .writeString(this.motd);
     }
 
     @Override

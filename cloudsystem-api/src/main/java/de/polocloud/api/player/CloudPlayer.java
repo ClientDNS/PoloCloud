@@ -101,10 +101,11 @@ public interface CloudPlayer {
      * writes the player to a network buf
      */
     default void write(@NotNull NetworkBuf networkBuf) {
-        networkBuf.writeUUID(this.getUniqueId());
-        networkBuf.writeString(this.getUsername());
-        networkBuf.writeString(this.getProxyServer().getName());
-        networkBuf.writeString(this.getServer().getName());
+        networkBuf
+            .writeUUID(this.getUniqueId())
+            .writeString(this.getUsername())
+            .writeString(this.getProxyServer().getName())
+            .writeString(this.getServer().getName());
     }
 
     /**

@@ -27,9 +27,10 @@ public class CloudPlayerLoginPacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeString(this.username);
-        byteBuf.writeUUID(this.uuid);
-        byteBuf.writeString(this.proxyServer);
+        byteBuf
+            .writeString(this.username)
+            .writeUUID(this.uuid)
+            .writeString(this.proxyServer);
     }
 
 }

@@ -10,7 +10,8 @@ public final class NodeHandshakeAuthenticationPacket implements Packet {
     private String name;
     private NetworkType type;
 
-    public NodeHandshakeAuthenticationPacket() {}
+    public NodeHandshakeAuthenticationPacket() {
+    }
 
     public NodeHandshakeAuthenticationPacket(final String name, final NetworkType type) {
         this.name = name;
@@ -25,8 +26,9 @@ public final class NodeHandshakeAuthenticationPacket implements Packet {
 
     @Override
     public void write(@NotNull NetworkBuf byteBuf) {
-        byteBuf.writeEnum(this.type);
-        byteBuf.writeString(this.name);
+        byteBuf
+            .writeEnum(this.type)
+            .writeString(this.name);
     }
 
     public String getName() {
