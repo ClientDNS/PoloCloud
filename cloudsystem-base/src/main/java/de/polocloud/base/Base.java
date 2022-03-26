@@ -15,8 +15,6 @@ import de.polocloud.base.config.CloudConfiguration;
 import de.polocloud.base.console.SimpleConsoleManager;
 import de.polocloud.base.dependencies.Dependency;
 import de.polocloud.base.dependencies.DependencyHandler;
-import de.polocloud.base.exception.DefaultExceptionCodes;
-import de.polocloud.base.exception.ErrorHandler;
 import de.polocloud.base.group.SimpleGroupManager;
 import de.polocloud.base.logger.SimpleLogger;
 import de.polocloud.base.node.BaseNode;
@@ -79,12 +77,11 @@ public final class Base extends CloudAPI {
 
         this.logger = new SimpleLogger();
 
-        ErrorHandler.defaultInstance().registerDefaultThreadExceptionHandler()
-            .orElse((throwable, errorHandler) -> {
-                this.getLogger().log("§7Caught an §cunexpected error §7(§c" + throwable.getClass().getSimpleName() + "§7) " +
-                    "| (§b" + throwable.getMessage() + "§7)", LogType.ERROR);
-                throwable.printStackTrace();
-            });
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            this.getLogger().log("§7Caught an §cunexpected error §7(§c" + e.getClass().getSimpleName() + "§7) " +
+                "| (§b" + e.getMessage() + "§7)", LogType.ERROR);
+            e.printStackTrace();
+        });
 
         this.logger.log("§7Cloudsystem > §b@PoloCloud §7| " +
             "§7Developed by: §bHttpMarco §7| " +
@@ -97,8 +94,6 @@ public final class Base extends CloudAPI {
             return;
         }
         this.checkVersion();
-
-        new DefaultExceptionCodes();
 
         this.dependencyHandler.loadDependency(switch (this.config.getDatabaseConfiguration().getDatabaseType()) {
             case MYSQL -> Dependency.MYSQL_DRIVER;
