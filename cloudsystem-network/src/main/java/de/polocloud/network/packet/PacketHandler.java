@@ -1,17 +1,17 @@
 package de.polocloud.network.packet;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public final class PacketHandler {
 
     private final List<Class<? extends Packet>> packets;
+    @Getter private final Map<UUID, Consumer<Packet>> responses;
 
     @SuppressWarnings("rawtypes")
     private final Map<Class<? extends Packet>, List<PacketListener>> packetListener;
@@ -20,7 +20,8 @@ public final class PacketHandler {
     public PacketHandler(final Class<? extends Packet>... packets) {
         this.packets = Arrays.asList(packets);
 
-        this.packetListener = new ConcurrentHashMap<>();
+        this.packetListener = new HashMap<>();
+        this.responses = new HashMap<>();
     }
 
     public <T extends Packet> void registerPacketListener(final @NotNull Class<T> clazz, final @NotNull PacketListener<T> packetListener) {
