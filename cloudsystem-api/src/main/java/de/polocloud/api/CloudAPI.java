@@ -7,6 +7,7 @@ import de.polocloud.api.logger.Logger;
 import de.polocloud.api.network.packet.CustomPacket;
 import de.polocloud.api.network.packet.QueryPacket;
 import de.polocloud.api.network.packet.RedirectPacket;
+import de.polocloud.api.network.packet.ResponsePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupCacheUpdatePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupExecutePacket;
 import de.polocloud.api.network.packet.group.ServiceGroupUpdatePacket;
@@ -37,7 +38,7 @@ public abstract class CloudAPI {
 
         this.cloudAPITypes = cloudAPIType;
         this.packetHandler = new PacketHandler(
-            NodeHandshakeAuthenticationPacket.class, QueryPacket.class, RedirectPacket.class, CustomPacket.class,
+            NodeHandshakeAuthenticationPacket.class, QueryPacket.class, RedirectPacket.class, CustomPacket.class, ResponsePacket.class, ServiceMemoryRequest.class,
             ServiceGroupCacheUpdatePacket.class, ServiceGroupExecutePacket.class, ServiceGroupUpdatePacket.class,
             CacheInitPacket.class, CloudPlayerDisconnectPacket.class, CloudPlayerKickPacket.class,
             CloudPlayerLoginPacket.class, CloudPlayerMessagePacket.class, CloudPlayerSendServicePacket.class,

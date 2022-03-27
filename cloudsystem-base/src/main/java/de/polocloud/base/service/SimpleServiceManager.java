@@ -3,6 +3,7 @@ package de.polocloud.base.service;
 import de.polocloud.api.CloudAPI;
 import de.polocloud.api.event.service.CloudServiceUpdateEvent;
 import de.polocloud.api.network.packet.QueryPacket;
+import de.polocloud.api.network.packet.ResponsePacket;
 import de.polocloud.api.network.packet.service.ServiceCopyRequestPacket;
 import de.polocloud.api.network.packet.service.ServiceRequestShutdownPacket;
 import de.polocloud.api.network.packet.service.ServiceUpdatePacket;
@@ -11,6 +12,7 @@ import de.polocloud.api.service.ServiceManager;
 import de.polocloud.base.Base;
 import de.polocloud.network.NetworkType;
 import de.polocloud.network.packet.Packet;
+import de.polocloud.network.packet.PacketHandler;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,6 +80,11 @@ public final class SimpleServiceManager implements ServiceManager {
             (channelHandlerContext, packet) ->
                 Objects.requireNonNull(Base.getInstance().getServiceManager()
                     .getServiceByNameOrNull(packet.getService())).stop());
+
+        Base.getInstance().getPacketHandler().registerPacketListener(ResponsePacket.class, (channelHandlerContext, responsePacket) -> {
+            CloudAPI.getInstance().getPacketHandler().getResponses().get(responsePacket.getUuid()).accept(responsePacket.getPacket());
+        });
+
     }
 
     @NotNull
