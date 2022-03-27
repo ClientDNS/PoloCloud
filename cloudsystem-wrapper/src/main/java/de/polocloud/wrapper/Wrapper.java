@@ -57,6 +57,11 @@ public final class Wrapper extends CloudAPI {
 
             var classLoader = ClassLoader.getSystemClassLoader();
             if (Boolean.parseBoolean(arguments.remove(0))) {
+
+                /**
+                 * inspirited by @CloudNetServices
+                 * GitHub: https://github.com/CloudNetService/CloudNet-v3
+                 */
                 classLoader = new URLClassLoader(new URL[]{applicationFile.toUri().toURL()}, ClassLoader.getSystemClassLoader());
 
                 try (final var jarInputStream = new JarInputStream(Files.newInputStream(applicationFile))) {
@@ -130,6 +135,10 @@ public final class Wrapper extends CloudAPI {
         this.client.close();
     }
 
+    /**
+     * credits to @CloudNetServices
+     * GitHub: https://github.com/CloudNetService/CloudNet-v3
+     */
     private void addTransformer(final @NotNull Predicate<String> predicate, final @NotNull Transformer transformer) {
         instrumentation.addTransformer(new ClassTransformer(transformer, predicate, instrumentation));
     }
