@@ -21,7 +21,7 @@ public class DatabaseConfiguration {
         this.username = "admin";
         this.password = "password";
         this.port = 3306;
-        this.databaseType = DatabaseType.MYSQL;
+        this.databaseType = DatabaseType.H2;
     }
 
 }
