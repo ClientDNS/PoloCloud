@@ -58,6 +58,11 @@ public enum Dependency {
         "org.mongodb",
         "mongo-java-driver",
         "3.12.10"
+    ),
+    H2_DATABASE(
+        "com.h2database",
+        "h2",
+        "2.1.210"
     );
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

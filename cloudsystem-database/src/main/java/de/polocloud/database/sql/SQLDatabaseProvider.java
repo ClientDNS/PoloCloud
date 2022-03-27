@@ -6,32 +6,23 @@ import de.polocloud.api.groups.impl.SimpleServiceGroup;
 import de.polocloud.api.logger.LogType;
 import de.polocloud.api.version.GameServerVersion;
 import de.polocloud.database.CloudDatabaseProvider;
-import de.polocloud.database.DatabaseConfiguration;
 import de.polocloud.database.SimpleDatabaseManager;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SQLDatabaseProvider implements CloudDatabaseProvider {
 
-    private Connection connection;
+    private final Connection connection;
 
-    public SQLDatabaseProvider(final DatabaseConfiguration config, final String driver) {
-        try {
-            this.connection = DriverManager.getConnection(driver + "://" + config.getHostname() + ":"
-                + config.getPort() + "/" + config.getDatabase()
-                + "?user=" + config.getUsername() + "&password=" + config.getPassword() + "&serverTimezone=UTC&autoReconnect=true");
-
-            this.createTable();
-            CloudAPI.getInstance().getLogger().log("§7The connection is now §aestablished §7to the §bdatabase§7.", LogType.SUCCESS);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public SQLDatabaseProvider(final Connection connection) {
+        this.connection = connection;
+        this.createTable();
+        CloudAPI.getInstance().getLogger().log("§7The connection is now §aestablished §7to the §bdatabase§7.", LogType.SUCCESS);
     }
 
     @SneakyThrows
