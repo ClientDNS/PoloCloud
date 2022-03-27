@@ -8,9 +8,9 @@ import org.objectweb.asm.tree.*;
 
 /**
  *
- * This code was only created with the help of another person.
- * Credits go to @derklaro
- * GitHub: https://github.com/derklaro
+ * This code was only created with the help of another project.
+ * Credits go to @CloudNetService
+ * GitHub: https://github.com/CloudNetService/CloudNet-v3
  *
  */
 
