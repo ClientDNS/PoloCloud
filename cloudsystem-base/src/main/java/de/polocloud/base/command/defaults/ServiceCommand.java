@@ -71,6 +71,9 @@ public final class ServiceCommand extends CloudCommand {
                         "Players: §b" + service.getOnlineCount() + " &7/ Max: §b" + service.getMaxPlayers(),
                         "Host: §b" + service.getHostName() + " &7/ Port: §b" + service.getPort(),
                         "Motd: §b" + service.getMotd());
+
+                    //get current service memory
+                    ((LocalService)service).getMemory().thenAccept(integer -> logger.log("Current memory: §b" + integer + "mb"));
                 }
 
             }, () -> logger.log("This service does not exists.", LogType.WARNING));
