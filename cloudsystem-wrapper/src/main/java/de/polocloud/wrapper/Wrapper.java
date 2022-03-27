@@ -5,7 +5,9 @@ import de.polocloud.api.CloudAPIType;
 import de.polocloud.api.groups.GroupManager;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.Logger;
+import de.polocloud.api.network.packet.ResponsePacket;
 import de.polocloud.api.network.packet.init.CacheInitPacket;
+import de.polocloud.api.network.packet.service.ServiceMemoryRequest;
 import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceManager;
@@ -125,6 +127,13 @@ public final class Wrapper extends CloudAPI {
         this.client = new WrapperClient(this.packetHandler, property.getService(), property.getHostname(), property.getPort());
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::stop, "PoloCloud-Shutdown-Thread"));
+
+        packetHandler.registerPacketListener(ResponsePacket.class, (channelHandlerContext, packet) -> {
+            if(packet.getPacket() instanceof ServiceMemoryRequest memoryRequest) {
+                memoryRequest.setMemory((int)(calcMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())));
+            }
+            channelHandlerContext.channel().writeAndFlush(packet);
+        });
     }
 
     public static Wrapper getInstance() {
@@ -181,6 +190,10 @@ public final class Wrapper extends CloudAPI {
 
     public WrapperClient getClient() {
         return this.client;
+    }
+
+    private long calcMemory(final long memory) {
+        return memory / 1024 / 1024;
     }
 
 }

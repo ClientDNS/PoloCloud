@@ -4,6 +4,8 @@ import de.polocloud.api.CloudAPI;
 import de.polocloud.api.groups.ServiceGroup;
 import de.polocloud.api.json.Document;
 import de.polocloud.api.logger.LogType;
+import de.polocloud.api.network.packet.ResponsePacket;
+import de.polocloud.api.network.packet.service.ServiceMemoryRequest;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceState;
 import de.polocloud.api.version.GameServerVersion;
@@ -22,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
@@ -367,4 +370,9 @@ public class LocalService implements CloudService {
         CloudAPI.getInstance().getLogger().log("§7Downloading of (§3" + this.getName() + "§7)§a successfully §7completed.");
     }
 
+    public CompletableFuture<Integer> getMemory(){
+        CompletableFuture<Integer> result = new CompletableFuture<>();
+        sendPacket(new ResponsePacket(new ServiceMemoryRequest(), packet -> result.complete(((ServiceMemoryRequest) packet).getMemory())));
+        return result;
+    }
 }
