@@ -51,6 +51,11 @@ public final class Wrapper extends CloudAPI {
             final var main = arguments.remove(0);
             final var applicationFile = Paths.get(arguments.remove(0));
 
+            /**
+             * Credits to @CloudNetServices
+             * GitHub: https://github.com/CloudNetService/CloudNet-v3
+             */
+
             var classLoader = ClassLoader.getSystemClassLoader();
             if (Boolean.parseBoolean(arguments.remove(0))) {
 
