@@ -12,16 +12,11 @@ import de.polocloud.api.player.PlayerManager;
 import de.polocloud.api.service.CloudService;
 import de.polocloud.api.service.ServiceManager;
 import de.polocloud.wrapper.group.WrapperGroupManager;
+import de.polocloud.wrapper.loader.ApplicationExternalClassLoader;
 import de.polocloud.wrapper.logger.WrapperLogger;
 import de.polocloud.wrapper.network.WrapperClient;
 import de.polocloud.wrapper.player.CloudPlayerManager;
 import de.polocloud.wrapper.service.WrapperServiceManager;
-import de.polocloud.wrapper.transformer.ClassTransformer;
-import de.polocloud.wrapper.transformer.Transformer;
-import de.polocloud.wrapper.transformer.bukkit.BukkitCommodoreTransformer;
-import de.polocloud.wrapper.transformer.bukkit.BukkitMainTransformer;
-import de.polocloud.wrapper.transformer.bukkit.PaperConfigTransformer;
-import de.polocloud.wrapper.transformer.netty.NettyEpollTransformer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -33,7 +28,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -60,31 +54,22 @@ public final class Wrapper extends CloudAPI {
             var classLoader = ClassLoader.getSystemClassLoader();
             if (Boolean.parseBoolean(arguments.remove(0))) {
 
-                /**
-                 * inspirited by @CloudNetServices
-                 * GitHub: https://github.com/CloudNetService/CloudNet-v3
-                 */
-                classLoader = new URLClassLoader(new URL[]{applicationFile.toUri().toURL()}, ClassLoader.getSystemClassLoader());
-
+                classLoader = new ApplicationExternalClassLoader().addUrl(Paths.get(arguments.remove(0)));
                 try (final var jarInputStream = new JarInputStream(Files.newInputStream(applicationFile))) {
                     JarEntry jarEntry;
                     while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
                         if (jarEntry.getName().endsWith(".class")) {
-                            final var className = jarEntry.getName()
-                                .replace('/', '.').replace(".class", "");
-                            Class.forName(className, false, classLoader);
+                            Class.forName(jarEntry.getName().replace('/', '.').replace(".class", ""), false, classLoader);
                         }
                     }
                 }
             }
 
             instrumentation.appendToSystemClassLoaderSearch(new JarFile(applicationFile.toFile()));
-
             final var mainClass = Class.forName(main, true, classLoader);
-            final var method = mainClass.getMethod("main", String[].class);
             final var thread = new Thread(() -> {
                 try {
-                    method.invoke(null, (Object) arguments.toArray(new String[0]));
+                    mainClass.getMethod("main", String[].class).invoke(null, (Object) arguments.toArray(new String[0]));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
@@ -113,11 +98,6 @@ public final class Wrapper extends CloudAPI {
 
         instance = this;
 
-        this.addTransformer("org/bukkit/craftbukkit", "Main", new BukkitMainTransformer());
-        this.addTransformer("org/bukkit/craftbukkit", "Commodore", new BukkitCommodoreTransformer());
-        this.addTransformer("org/github/paperspigot", "PaperSpigotConfig", new PaperConfigTransformer());
-        this.addTransformer(name -> name.endsWith("Epoll") && name.startsWith("io") && name.contains("netty/channel/epoll/"), new NettyEpollTransformer());
-
         final var property = new Document(new File("property.json")).get(PropertyFile.class);
 
         this.logger = new WrapperLogger();
@@ -142,26 +122,6 @@ public final class Wrapper extends CloudAPI {
 
     private void stop() {
         this.client.close();
-    }
-
-    /**
-     * credits to @CloudNetServices
-     * GitHub: https://github.com/CloudNetService/CloudNet-v3
-     */
-    private void addTransformer(final @NotNull Predicate<String> predicate, final @NotNull Transformer transformer) {
-        instrumentation.addTransformer(new ClassTransformer(transformer, predicate, instrumentation));
-    }
-
-    private void addTransformer(final @NotNull String packagePrefix, final @NotNull String className, final @NotNull Transformer transformer) {
-        this.addTransformer(name -> {
-            if (!name.startsWith(packagePrefix)) return false;
-            final var lastSlash = name.lastIndexOf('/');
-            if (lastSlash != -1 && name.length() > lastSlash) {
-                var simpleName = name.substring(lastSlash + 1);
-                return className.equals(simpleName);
-            }
-            return false;
-        }, transformer);
     }
 
     @Override

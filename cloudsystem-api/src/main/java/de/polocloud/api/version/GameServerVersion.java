@@ -25,10 +25,6 @@ public final class GameServerVersion {
     public static final GameServerVersion PAPER_1_14_4 = new GameServerVersion("paper", "1.14.4");
     public static final GameServerVersion PAPER_1_13_2 = new GameServerVersion("paper", "1.13.2");
     public static final GameServerVersion PAPER_1_12_2 = new GameServerVersion("paper", "1.12.2");
-    public static final GameServerVersion PAPER_1_11_2 = new GameServerVersion("paper", "1.11.2");
-    public static final GameServerVersion PAPER_1_10_2 = new GameServerVersion("paper", "1.10.2");
-    public static final GameServerVersion PAPER_1_9_4 = new GameServerVersion("paper", "1.9.4");
-    public static final GameServerVersion PAPER_1_8_8 = new GameServerVersion("paper", "1.8.8");
     public static final GameServerVersion GLOWSTONE_1_12_2 = new GameServerVersion("glowstone", "1.12.2", "https://github.com/GlowstoneMC/Glowstone/releases/download/2021.7.0/glowstone.jar");
 
     private final String url;
