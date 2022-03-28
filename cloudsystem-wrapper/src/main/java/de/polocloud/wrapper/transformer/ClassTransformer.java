@@ -10,6 +10,10 @@ import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import java.util.function.Predicate;
 
+/**
+     * credits to @CloudNetServices
+     * GitHub: https://github.com/CloudNetService/CloudNet-v3
+*/
 public record ClassTransformer(
     @NotNull Transformer transformer,
     @NotNull Predicate<String> predicate,
