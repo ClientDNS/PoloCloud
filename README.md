@@ -11,7 +11,7 @@ Currently, we offer these **Server-Software's**:
 	- Waterfall
 	- Velocity
 - **Bukkit-Software's**
-	- Paper (1.8.8 - 1.18.2)
+	- Paper (1.12.2 - 1.18.2)
 
 :information_source: We recommend using Paper 1.18.2
 
