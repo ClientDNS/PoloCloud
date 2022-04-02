@@ -39,7 +39,6 @@ Currently, we offer these **Server-Software's**:
 
 #### Software-Requirements:
 - :warning: **Java 17**
-- Database (MySQL, MongoDB)
 
 #### Hardware-Requirements:
 - Minimum 2 Virtual CPU-Cores
