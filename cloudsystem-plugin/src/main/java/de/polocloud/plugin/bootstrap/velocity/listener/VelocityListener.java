@@ -14,6 +14,7 @@ import de.polocloud.api.player.impl.SimpleCloudPlayer;
 import de.polocloud.plugin.bootstrap.velocity.VelocityBootstrap;
 import de.polocloud.wrapper.Wrapper;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -26,7 +27,9 @@ public record VelocityListener(VelocityBootstrap bootstrap, ProxyServer proxySer
 
         if (CloudAPI.getInstance().getPlayerManager().getOnlineCount() >= Wrapper.getInstance().thisService().getMaxPlayers()) {
             if (!player.hasPermission("cloud.network.full.join")) {
-                player.disconnect(Component.text("§cThis network has reached the maximum number of players."));
+                player.disconnect(Component
+                    .text("This network has reached the maximum number of players.")
+                    .color(NamedTextColor.RED));
                 return;
             }
         }
