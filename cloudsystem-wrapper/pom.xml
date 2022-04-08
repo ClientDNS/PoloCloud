@@ -61,10 +61,6 @@
                             <shadedPattern>de.polocloud.relocate.com.google.gson</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>org.objectweb.asm</pattern>
-                            <shadedPattern>de.polocloud.relocate.org.objectweb.asm</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>META-INF/native/netty</pattern>
                             <shadedPattern>META-INF/native/de_polocloud_relocate_netty</shadedPattern>
                         </relocation>
@@ -104,12 +100,5 @@
             <artifactId>netty-codec</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-tree</artifactId>
-            <version>9.2</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
 </project>
